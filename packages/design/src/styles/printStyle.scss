@@ -1,0 +1,130 @@
+@media print {
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+
+// 文本
+.cp-print-text_container {
+
+  display: flex;
+  word-break: break-all;
+  outline: 0;
+  box-sizing: border-box;
+}
+
+.cp-print-text_label {
+  display: table-cell;
+  vertical-align: top;
+  word-break: break-all;
+  box-sizing: border-box;
+  outline: 0;
+}
+
+.cp-print-text_content {
+  display: table-cell;
+  vertical-align: top;
+  word-break: break-all;
+  box-sizing: border-box;
+  outline: 0;
+}
+
+// 横线
+.cp-horizontal-line__wrapper {
+  word-break: break-all;
+  cursor: move;
+  outline: none;
+}
+
+.cp-horizontal-line {
+  //background: black;
+  position: absolute;
+}
+
+// 矩形
+.cp-rect__wrapper {
+  word-break: break-all;
+  outline: #000 solid;
+  position: absolute;
+  cursor: text;
+}
+
+.cp-dotted-rect__wrapper {
+  word-break: break-all;
+  outline: #000 dotted;
+  position: absolute;
+  cursor: text;
+}
+
+// 表格
+.cp-print-table {
+  text-indent: initial;
+  border-collapse: collapse;
+  border-spacing: 0;
+  padding: 0;
+  word-break: break-all;
+  cursor: text;
+  display: table;
+  outline: none;
+}
+
+.cp-print-columnHead {
+  position: relative;
+  word-break: break-all;
+  text-align: center;
+  height: 100%;
+  border: 1px solid black;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.cp-print-columnHead__content {
+  height: 100%;
+}
+
+.cp-print-container {
+  width: var(--design-width);
+  max-width: var(--design-width);
+  height: var(--design-height);
+  max-height: var(--design-height);
+}
+
+.cp-print-table-column_body {
+  word-break: break-all;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.cp-print-container_over {
+  z-index: 1;
+  opacity: 0.6;
+  background: var(--page-header-drop-color);
+  outline: 4px solid var(--drag-h-color);
+}
+
+.cp-print-preview-wrap {
+  position: absolute;
+}
+
+.cp-print-preview-wrap_container{
+}
+
+.cp-print-preview-panel__wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.cp-print-preview-panel__content {
+  position: relative;
+}
+
+.cp-print-preview-panel__content_page {
+  position: relative;
+  overflow: hidden;
+  background: white;
+}

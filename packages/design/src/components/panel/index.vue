@@ -1,0 +1,136 @@
+<template>
+  <el-container :class="configStore.cursor">
+    <el-aside width="180" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
+      <options :module="data.template.module"/>
+    </el-aside>
+    <el-main>
+      <DesignContent/>
+    </el-main>
+  </el-container>
+</template>
+
+<script setup lang="ts">
+import { ElContainer, ElAside, ElMain } from 'element-plus'
+import Options from "./options/options.vue";
+import DesignContent from './content/index.vue'
+import {inject, onMounted, PropType, provide, reactive, ref, watch} from "vue";
+import {Element, Panel, Provider} from "@cp-print/design/types/entity";
+import {to} from "@cp-print/design/utils/utils";
+import {mittKey, panelKey, previewDataKey, providerKey} from "@cp-print/design/constants/keys";
+import {init} from "@cp-print/design/utils/historyUtil";
+import {setCurrentPanel, initElement, parentInitElement} from "@cp-print/design/utils/elementUtil";
+import {Module, Template} from "@cp-print/design/types/R";
+import {useConfigStore} from "@cp-print/design/stores/config";
+
+const configStore = useConfigStore()
+
+const provider = ref({} as Provider)
+const panel = reactive(<Panel>{})
+const mitt = inject(mittKey)
+const previewData = ref({})
+provide(panelKey, panel)
+provide(providerKey, provider)
+provide(previewDataKey, previewData)
+
+mitt.on('saveTemplate', saveTemplate)
+
+const props = defineProps({
+  template: {type: Object as PropType<Template>, default: () => ({} as Template)}
+})
+const data = reactive({
+  template: {} as Template
+})
+
+let template: Template
+
+watch(() => props.template.id, (n, o) => {
+  if (n != null) {
+    data.template = props.template
+    to(JSON.parse(props.template.content), panel)
+    previewData.value = JSON.parse(props.template.module.previewData)
+    setCurrentPanel(panel)
+    // console.log(panel.elementList)
+    panel.type = 'Panel'
+    if (!panel.watermarkContent) {
+      panel.watermarkContent = 'cp-print'
+    }
+    for (let i = 0; i < panel.elementList.length; i++) {
+      const element = panel.elementList[i]
+      // const element = toElement(elementObj)
+      parentInitElement(panel, element)
+      if (element.type == 'Table') {
+        for (let i = 0; i < element.columnList?.length; i++) {
+          // element.columnList[i] = toElement(element.columnList[i])
+          initElement(element.columnList[i])
+        }
+      }
+      // panel.elementList[i] = element
+    }
+    
+    parentInitElement(panel, panel.pageHeader)
+    parentInitElement(panel, panel.pageFooter)
+    
+    init()
+    // console.log(panel)
+    
+    provider.value = JSON.parse(data.template.module.provider)
+    console.log(provider.value.elementList)
+    if (provider.value.elementList) {
+      for (let elementListElement of provider.value.elementList) {
+        if (elementListElement.type == 'Table') {
+          let width = 0, height = 0
+          for (let columnListElement of elementListElement.columnList) {
+            width += columnListElement.width
+            height = Math.max(height, columnListElement.height)
+          }
+          elementListElement.width = width + 30
+          elementListElement.height = height * 2
+        }
+      }
+    }
+//   templateDetail(Number(templateId))
+//       .then(res => {
+//         // const panel = reactive(<Panel>JSON.parse(res.data.content))
+//         // console.log(panel)
+//
+//         // provide(panelKey, panel)
+//
+//       })
+  }
+})
+
+onMounted(() => {
+
+})
+
+function saveTemplate() {
+  // console.log(panel)
+  // console.log(template)
+  template.name = panel.name
+  template.content = JSON.stringify(panel, (key, value) => {
+    // console.log(key)
+    // 清除runtime参数
+    // console.log(this)
+    if ("runtimeOption" == key) return undefined
+    if ("status" == key) return undefined
+    return value
+  })
+  // templateUpdate(template)
+  //     .then(res => {
+  //       console.log(res)
+  //     })
+  // templateUpdate(props.panel)
+  // console.log(JSON.stringify(toRaw(unref(props.panel))))
+  
+}
+</script>
+
+<style scoped>
+.el-container {
+  height: 100%;
+}
+
+.el-main {
+  padding: 0;
+}
+</style>

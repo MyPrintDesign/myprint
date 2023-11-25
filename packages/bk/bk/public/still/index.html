@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        .title {
+            background-color: pink;
+            position: sticky;
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+<script src="stickyfill.min.js"></script>
+
+<script>
+    const ul = document.createElement('ul')
+    let html = ''
+    for (let i = 0; i < 10; i++) {
+        let content = ''
+        // for (let j = 0; j < 5; j++) content += `<div>内容${j}</div>`
+        for (let j = 0; j < 5; j++) content += '<div>内容' + j + '</div>'
+        // html += `<li>
+        //   <div class='title'>标题${i}</div>
+        //   ${content}
+        // </li>`
+        html += "<li><div class='title'>标题" + i + '</div>' + content + '</li>'
+    }
+    ul.innerHTML = html
+    document.body.appendChild(ul)
+
+    if (
+        !('CSS' in window && CSS.supports && CSS.supports('position', 'sticky'))
+    ) {
+        console.log('不支持sticky属性-这行代码只会在IE浏览器打印')
+        const elements = document.querySelectorAll('.title')
+        Stickyfill.add(elements)
+    }
+</script>
+</body>
+</html>

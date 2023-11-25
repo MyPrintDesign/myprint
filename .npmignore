@@ -1,0 +1,16 @@
+.git/                        // git历史
+src/                        // git历史
+node_modules/                // 安装后会重新生成，不需要了
+.Ds_store                    // Mac电脑的元数据
+npm-*.log                    // npm日志
+yarn-*.log                   // yarn日志
+coverage/                    // 测试报告
+test/                        // 测试用例
+.vscode/                     // vscode配置
+.npmrc                       // npm配置
+.npmignore                   // .npmignore自身
+package-lock.jsonyarn.lock   // Lock文件
+commitlint.config.json       // commitlint配置
+.release-it.json             // release-it配置
+prettierrc                   // prettier配置
+.eslintrc                    // eslint配置

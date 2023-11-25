@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>刻度尺</title>
+    <meta name="renderer" content="webkit">
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .ruler-wrap {
+            width: 100%;
+            max-width: 600px;
+            /*height: 60px;*/
+            line-height: 1px;
+            overflow: hidden;
+            margin: 0 auto 50px;
+        }
+
+        .text-input {
+            display: block;
+            width: 100px;
+            height: 30px;
+            border-radius: 5px;
+            background: #f6f6f6;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            color: #4142cc;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin: 0 auto;
+        }
+
+        .text-input:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 刻度尺容器(必要的) -->
+<div class="ruler-wrap" id="ruler"></div>
+
+<!-- 刻度尺容器(必要的) -->
+<div class="ruler-wrap" style="width: 90%;" id="ruler2"></div>
+
+
+<input id="rulerText3" class="text-input" type="text" readonly value="">
+
+<!-- 刻度尺容器(必要的) -->
+<div class="ruler-wrap" style="width: 80%;" id="ruler3"></div>
+
+
+<!-- 引入刻度尺插件js -->
+<script src="rule.js"></script>
+<script>
+
+    //调用刻度尺方法
+    ruler.initPlugin({
+        el: "ruler", //容器id
+        startValue: 100,
+        background: "#f5f5f5",
+        success: function (res) {
+            console.log(res);
+        }
+    });
+
+    //调用刻度尺方法
+    ruler.initPlugin({
+        el: "ruler2", //容器id
+        maxScale: 300, //最大刻度
+        startValue: 50, //刻度开始的初始值
+        region: [10, 200], //选择刻度的区间范围
+        background: "#2bd4bc", //刻度尺背景色
+        markColor: "#c968ff", //中心刻度标记颜色
+        success: function (res) {
+            console.log(res);
+        }
+    });
+
+
+    var rulerText3 = document.getElementById("rulerText3");
+    rulerText3.value = 200;
+    //调用刻度尺方法
+    ruler.initPlugin({
+        el: "ruler3", //容器id
+        height: 50, //刻度尺高度
+        maxScale: 300, //最大刻度
+        startValue: 200, //刻度开始的初始值
+        region: [50, 220], //选择刻度的区间范围
+        background: "#ffa43c", //刻度尺背景色
+        color: "#fff", //刻度线和字体的颜色
+        markColor: "#3786db", //中心刻度标记颜色
+        isConstant: true, //是否不断地获取值
+        success: function (res) {
+            console.log(res);
+            rulerText3.value = res;
+        }
+    });
+
+</script>
+
+</body>
+</html>

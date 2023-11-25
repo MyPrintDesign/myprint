@@ -1,0 +1,40 @@
+{
+  "name": "@cp-print/design",
+  "version": "0.0.200",
+  "main": "dist/lib/index.js",
+  "module": "dist/es/index.mjs",
+  "types": "dist/es/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/lib/index.js",
+      "import": "./dist/es/index.mjs",
+      "types": "./dist/es/index.d.ts"
+    },
+    "./es/*": {
+      "import": "./dist/es/*/index.mjs",
+      "types": "./dist/es/*/index.d.ts"
+    },
+    "./lib/*": {
+      "require": "./dist/lib/*/index.js",
+      "types": "./dist/lib/*/index.d.ts"
+    },
+    "./css/*": "./dist/css/*"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@types/qrcode": "^1.5.5",
+    "@vueuse/core": "^10.6.1",
+    "vue": "^3.2.39"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.39"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.1.0",
+    "element-plus": "^2.4.2",
+    "qrcode": "^1.5.3",
+    "vue-demi": "^0.14.6"
+  }
+}

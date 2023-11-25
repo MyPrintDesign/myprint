@@ -1,0 +1,29 @@
+<template>
+  <div class="cp-dotted-rect__wrapper"
+       ref="textRef"
+       :style="{maxWidth: widthValueUnit(data), width: valueUnit(trend1(data.width - 2 * data.option.borderWidth)),
+       height: valueUnit(trend1(data.height - 2 * data.option.borderWidth)),
+       margin: valueUnit(data.option.borderWidth),
+       outlineWidth: valueUnit(data.option.borderWidth),
+       }">
+  </div>
+</template>
+<script setup lang="ts">
+
+import {onUnmounted, PropType, ref} from "vue";
+import {Element} from "@cp-print/design/types/entity";
+import {trend1} from "@cp-print/design/utils/utils";
+import {valueUnit, widthValueUnit} from "@cp-print/design/utils/elementUtil";
+
+defineProps({
+  data: {type: Object as PropType<Element>, default: () => ({} as Element)}
+})
+const textRef = ref()
+onUnmounted(() => {
+
+})
+
+</script>
+<style scoped>
+
+</style>
