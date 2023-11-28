@@ -1,17 +1,16 @@
 import {parse, stringify} from "@cp-print/design/utils/utils";
 import {unit2px, px2unit} from "@cp-print/design/utils/devicePixelRatio";
-import {nextTick, reactive} from "vue";
-import {FormatterVariable, PreviewWrapper, RuntimeElementOption} from "@cp-print/design/types/entity";
+import {nextTick, reactive,Ref} from "vue";
+import {FormatterVariable, Panel, PreviewWrapper, RuntimeElementOption} from "@cp-print/design/types/entity";
 import {copyElementRefValueId, formatter, getCurrentPanel, initElement} from "@cp-print/design/utils/elementUtil";
-import {Ref} from "vue/dist/vue";
 import numberUtil from "@cp-print/design/utils/numberUtil";
 
-export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, itemRefs: any, previewData: Ref<any>) {
+export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLDivElement[]|undefined>, itemRefs: any, previewData: Ref<any>) {
     // console.log(itemRefs)
 
     const data = {
         panel: getCurrentPanel(),
-        currentPage: null,
+        currentPage: {} as any,
         top: 0,
         bottom: getCurrentPanel().height // 单位 mm
     }
@@ -26,52 +25,52 @@ export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, 
     await newPage()
 
     // 处理elementWrapper
-    const previewElementList = data.panel.elementList.map(v => {
+    const previewElementList = data.panel.elementList!.map(v => {
         return {element: copyElementRefValueId(v)} as PreviewWrapper
     })
 
     // 排序
     previewElementList.sort((o1, o2) => {
-        return o1.element.y - o2.element.y
+        return o1.element!.y! - o2.element!.y!
     })
 
     // 初始化element offsetTop
     let offsetLastElementTop = 0
 
     for (let previewWrapper of previewElementList) {
-        previewWrapper.offsetLastElementTop = numberUtil.subScale(previewWrapper.element.y, offsetLastElementTop)
-        offsetLastElementTop = numberUtil.sumScale(previewWrapper.element.y, previewWrapper.element.height)
+        previewWrapper.offsetLastElementTop = numberUtil.subScale(previewWrapper.element!.y, offsetLastElementTop)
+        offsetLastElementTop = numberUtil.sumScale(previewWrapper.element!.y, previewWrapper.element!.height)
         // console.log(previewWrapper.element.y, offsetLastElementTop, previewWrapper.element.label, previewWrapper)
     }
 
     let previewContext = {
         elementChangeHeightIs: false,
-        lastPreviewWrapper: null as PreviewWrapper
+        lastPreviewWrapper: undefined as PreviewWrapper | undefined
     }
 
     for (let i = 0; i < previewElementList.length; i++) {
         const previewWrapper = previewElementList[i];
-        let element = previewWrapper.element
+        let element = previewWrapper.element!
 
         // 计算顶部需不需要偏移
         if (element.label == '文本1112') {
             console.log(element.y)
         }
         // console.log(data.currentPage.offsetTop, previewWrapper.offsetLastElementTop)
-        if (data.currentPage.offsetTop > 0) {
+        if (data.currentPage!.offsetTop > 0) {
             if (previewContext.elementChangeHeightIs) {
-                element.y = numberUtil.sumScale(data.currentPage.offsetTop, previewWrapper.offsetLastElementTop)
+                element.y = numberUtil.sumScale(data.currentPage!.offsetTop, previewWrapper.offsetLastElementTop)
             } else {
                 if (previewContext.lastPreviewWrapper) {
-                    element.y = previewContext.lastPreviewWrapper.element.y + previewContext.lastPreviewWrapper.element.height + previewWrapper.offsetLastElementTop
+                    element.y = previewContext.lastPreviewWrapper.element!.y! + previewContext.lastPreviewWrapper.element!.height + previewWrapper.offsetLastElementTop
                 }
             }
         }
 
         // 判断需不需要分页
-        if (data.currentPage.elementList.length > 0 && (await isNeedNewPage(element.y, data.bottom) || await isNeedNewPage(element.y + element.height, data.bottom))) {
+        if (data.currentPage!.elementList!.length > 0 && (await isNeedNewPage(element.y, data.bottom) || await isNeedNewPage(element.y! + element.height, data.bottom))) {
             element.y = 1
-            data.currentPage.offsetTop = 1
+            data.currentPage!.offsetTop = 1
         }
 
         previewContext.elementChangeHeightIs = false
@@ -79,7 +78,7 @@ export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, 
         if (element.type == 'HorizontalLine' || element.type == 'VerticalLine'
             || element.type == 'DottedHorizontalLine' || element.type == 'DottedVerticalLine'
             || element.type == 'Rect') {
-            data.currentPage.elementList.push(previewWrapper);
+            data.currentPage!.elementList!.push(previewWrapper.element!);
             await nextTick()
         } else {
             // 需要data
@@ -102,31 +101,31 @@ export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, 
             }
             if (element.type == 'Image') {
                 element.data = previewDataTmp
-                data.currentPage.elementList.push(previewWrapper);
+                data.currentPage!.elementList!.push(previewWrapper.element!);
                 await nextTick()
             } else if (element.type == 'Text' || element.type == 'PageNum' || element.type == 'TextTime') {
                 if (element.contentType == 'Text') {
                     previewContext.elementChangeHeightIs = await autoTextElement(previewWrapper, previewDataTmp)
                 }
                 if (element.contentType == 'QrCode') {
-                    data.currentPage.elementList.push(previewWrapper);
+                    data.currentPage!.elementList!.push(previewWrapper.element!);
                     await nextTick()
                 }
                 if (element.contentType == 'Barcode') {
-                    data.currentPage.elementList.push(previewWrapper);
+                    data.currentPage!.elementList!.push(previewWrapper.element!);
                     await nextTick()
                 }
             } else if (element.type == 'Table') {
                 element.runtimeOption = parse(stringify(element.runtimeOption, 'parent'), {} as RuntimeElementOption)
                 element.runtimeOption.rowList = reactive([])
-                previewContext.elementChangeHeightIs = await autoTableRow(previewWrapper, previewDataTmp, 0)
+                previewContext.elementChangeHeightIs = (await autoTableRow(previewWrapper, previewDataTmp, 0))!
             }
         }
 
         if (previewContext.elementChangeHeightIs) {
             // 重新计算顶部偏移
-            data.currentPage.offsetTop = await computeBottom(previewWrapper)
-            console.log("顶部偏移" + data.currentPage.offsetTop)
+            data.currentPage!.offsetTop = await computeBottom(previewWrapper)
+            console.log("顶部偏移" + data.currentPage!.offsetTop)
         }
 
         previewContext.lastPreviewWrapper = previewWrapper
@@ -134,16 +133,16 @@ export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, 
 
     async function autoTextElement(previewWrapper: PreviewWrapper, previewData: string) {
         // let previewWrapper = {element: element} as PreviewWrapper
-        let element = previewWrapper.element
+        let element = previewWrapper.element!
         element.data = previewData
-        data.currentPage.elementList.push(previewWrapper);
+        data.currentPage!.elementList!.push(previewWrapper.element!);
         await nextTick()
         console.log(previewData)
 
-        const height = itemRefs[previewWrapper.element.id].$el.clientHeight;
+        const height = itemRefs[previewWrapper.element!.id].$el.clientHeight;
         // const height = itemRefs[previewWrapper.element.id].clientHeight;
         console.log(height)
-        if (previewWrapper.element.y + px2unit(height) < data.bottom) {
+        if (previewWrapper.element!.y! + px2unit(height) < data.bottom) {
             return false
         } else {
             console.log(element)
@@ -170,8 +169,8 @@ export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, 
     async function autoTableRow(previewWrapper: PreviewWrapper, previewData: Array<any>, index: number) {
         // console.log(data)
         // let previewWrapper = {element: element}
-        data.currentPage.elementList.push(previewWrapper);
-        let element = previewWrapper.element
+        data.currentPage!.elementList!.push(previewWrapper.element!);
+        let element = previewWrapper.element!
         await nextTick()
         const table = itemRefs[element.id]
         // console.log(table)
@@ -187,19 +186,19 @@ export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, 
                 // console.log(i + 1)
             }
             const rowList = []
-            for (let j = 0; j < element.columnList.length; j++) {
-                initElement(element.columnList[j])
-                element.columnList[j].data = datum[element.columnList[j].field]
-                rowList.push(copyElementRefValueId(element.columnList[j]))
+            for (let j = 0; j < element.columnList!.length; j++) {
+                initElement(element.columnList![j])
+                element.columnList![j].data = datum[element.columnList![j].field!]
+                rowList.push(copyElementRefValueId(element.columnList![j]))
             }
-            element.runtimeOption.rowList.push(rowList)
+            element.runtimeOption.rowList!.push(rowList)
             await nextTick()
             // console.log(table.height())
             // console.log(mm2px(element.y) + table.$el.clientHeight, mm2px(data.bottom))
             if (await isNeedNewPage(unit2px(element.y) + table.$el.clientHeight, unit2px(data.bottom))) {
                 // 删除刚才创建的
                 // console.log(element.runtimeOption.rowList)
-                element.runtimeOption.rowList.pop()
+                element.runtimeOption.rowList!.pop()
                 element = copyElementRefValueId(element)
                 previewWrapper.element = element
                 element.runtimeOption = parse(stringify(element.runtimeOption, 'parent'), {} as RuntimeElementOption)
@@ -218,8 +217,8 @@ export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, 
     /**
      * 单位 px
      */
-    async function isNeedNewPage(y: number, bottom: number, callback?: () => void) {
-        if (y > bottom) {
+    async function isNeedNewPage(y: number | undefined, bottom: number | undefined, callback?: () => void) {
+        if (y! > bottom!) {
             if (callback) {
                 callback()
             }
@@ -236,59 +235,59 @@ export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, 
             height: data.panel.height,
             offsetTop: 0,
             elementList: []
-        })
-        pageList.push(data.currentPage)
+        } as any)
+        pageList.push(data.currentPage!)
         // 处理页头，页脚
         await nextTick()
         getPanelDiv()
 
         if (data.panel.pageHeader) {
             let preview = {element: data.panel.pageHeader} as PreviewWrapper
-            data.currentPage.elementList.push(preview)
-            data.top = await computeBottom(preview)
+            data.currentPage!.elementList!.push(preview.element!)
+            data.top = (await computeBottom(preview))!
         }
         if (data.panel.pageFooter) {
             let preview = {element: data.panel.pageFooter} as PreviewWrapper
-            data.currentPage.elementList.push(preview)
-            data.bottom = await computeTop(preview)
+            data.currentPage!.elementList!.push(preview.element!)
+            data.bottom = (await computeTop(preview))!
         }
     }
 
     async function computeBottom(previewWrapper: PreviewWrapper) {
         await nextTick()
-        if (!itemRefs[previewWrapper.element.id]) {
+        if (!itemRefs[previewWrapper.element!.id]) {
             return
         }
-        const div = itemRefs[previewWrapper.element.id].$el as HTMLDivElement
+        const div = itemRefs[previewWrapper.element!.id].$el as HTMLDivElement
         return numberUtil.toFixed(px2unit(numberUtil.sumScale(div.offsetTop, div.offsetHeight)))
     }
 
     async function computeTop(previewWrapper: PreviewWrapper) {
         await nextTick()
-        if (!itemRefs[previewWrapper.element.id]) {
+        if (!itemRefs[previewWrapper.element!.id]) {
             return
         }
-        const div = itemRefs[previewWrapper.element.id].$el as HTMLDivElement
+        const div = itemRefs[previewWrapper.element!.id].$el as HTMLDivElement
         console.log(div.offsetTop)
         return numberUtil.toFixed(px2unit(div.offsetTop))
     }
 
     async function computeTextHeight(previewWrapper: PreviewWrapper, previewDataTmp: any) {
-        previewWrapper.element.data = previewDataTmp
+        previewWrapper.element!.data = previewDataTmp
         await nextTick()
-        const itemRef = itemRefs[previewWrapper.element.id];
+        const itemRef = itemRefs[previewWrapper.element!.id];
         // console.log(div)
         if (!itemRef) {
             debugger
             console.log(itemRef)
             return
         }
-        const height = itemRefs[previewWrapper.element.id].$el.clientHeight;
+        const height = itemRefs[previewWrapper.element!.id].$el.clientHeight;
         // const height = itemRefs[previewWrapper.element.id].clientHeight;
-        return previewWrapper.element.y + px2unit(height) < data.bottom;
+        return previewWrapper.element!.y! + px2unit(height) < data.bottom;
     }
 
-    async function binary_search(previewWrapper: PreviewWrapper, previewData: string, low: number, height: number) {
+    async function binary_search(previewWrapper: PreviewWrapper, previewData: string, low: number, height: number): Promise<any> {
         if (low > height) {
             // console.log("low > height")
             return -1;
@@ -318,7 +317,7 @@ export async function autoPage(pageList, previewContent: Ref<HTMLDivElement[]>, 
     }
 
     function getPanelDiv() {
-        return previewContent.value[previewContent.value.length - 1]
+        return previewContent.value![previewContent.value!.length - 1]
     }
 }
 

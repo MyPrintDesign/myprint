@@ -14,11 +14,10 @@ import glob from 'fast-glob';
 import type {OutputOptions} from 'rollup';
 import {resolvePackagePath} from './util';
 import path from "path";
-import postcss from 'rollup-plugin-postcss';
-// import babel from 'rollup-plugin-babel';
 
 const getExternal = async (pkgDirName: string) => {
     const pkgPath = resolvePackagePath(pkgDirName, 'package.json');
+    console.log(pkgPath)
     const manifest = require(pkgPath) as any;
     const {
         dependencies = {},
@@ -49,7 +48,7 @@ const build = async (pkgDirName: string) => {
         fs.rmSync(pkgDistPath, {recursive: true});
     }
 
-    const input = await glob(['**/*.{js,jsx,ts,tsx,vue}', '!node_modules'], {
+    const input = await glob(['**/*.{js,jsx,ts,tsx,vue,css}', '!node_modules'], {
         cwd: resolvePackagePath(pkgDirName, 'src'),
         absolute: true,
         onlyFiles: true
@@ -69,24 +68,18 @@ const build = async (pkgDirName: string) => {
                 }
             }),
             nodeResolve({
-                extensions: ['.mjs', '.js', '.json', '.ts']
+                extensions: ['.mjs', '.js', '.json', '.ts', '.css']
             }),
             alias({
                 entries: [{
                     find: '@cp-print/design',
-                    // customResolver: nodeResolve({
-                    //     extensions: ['.mjs', '.vue', '.js', '.json', '.ts']
-                    // }),
+                    customResolver: nodeResolve({
+                        extensions: ['.mjs', '.vue', '.js', '.json', '.ts', '.css']
+                    }),
                     replacement: path.resolve(__dirname, resolvePackagePath(pkgDirName, './src'))
                 } as Alias],
             }),
             commonjs(),
-            // babel({
-            //     exclude: 'node_modules/**', // 指定哪些文件夹时不进行babel编译的
-            // }),
-            postcss({
-                plugins:[]
-            }),
             esbuild({
                 sourceMap: true,
                 target: 'es2015',
@@ -123,6 +116,6 @@ const build = async (pkgDirName: string) => {
 };
 
 console.log('[TS] 开始编译所有子模块···');
-await build('design');
+await build('./');
 // await build('business');
 console.log('[TS] 编译所有子模块成功！');

@@ -21,7 +21,7 @@
             <el-text>{{ item.label }}</el-text>
           </el-col>
           <el-col :span="12">
-            <el-switch :name="item.label" :disabled="item.option.disableEnable" @change="changeColumn"
+            <el-switch :name="item.label!" :disabled="item.option.disableEnable" @change="changeColumn"
                        v-model="item.option.enable"/>
           </el-col>
         </el-row>
@@ -30,9 +30,8 @@
   </my-popover>
 </template>
 <script setup lang="ts">
-import { ElSwitch, ElRow, ElCol, ElCard } from 'element-plus'
+// import { ElSwitch, ElRow, ElCol, ElCard } from 'element-plus'
 import {
-  PropType,
   ref
 } from "vue";
 import {Element} from "@cp-print/design/types/entity";
@@ -40,20 +39,21 @@ import {CirclePlus} from "@element-plus/icons-vue";
 import MyPopover from "../../cp/cp-popover/cp-popover.vue";
 import TableView from "./tableView.vue";
 
-
-const props = defineProps({
-  element: {type: Object as PropType<Element>, default: () => ({} as Element)}
+withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
 
 const lock = ref(false)
 const tableRef = ref({})
 
 function changeColumn() {
-  const columnList = props.element.columnList
-  let columnTotalWidth = 0;
-  for (let i = 0; i < columnList.length; i++) {
-    columnTotalWidth += columnList[i].width
-  }
+  // const columnList = props.element.columnList
+  // let columnTotalWidth = 0;
+  // for (let i = 0; i < columnList!.length; i++) {
+  //   columnTotalWidth += columnList![i].width
+  // }
   // props.element.width = columnTotalWidth
   // tableRef.value.computedWidth()
 }

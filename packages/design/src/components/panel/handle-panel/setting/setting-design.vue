@@ -18,18 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import { ElForm, ElFormItem, ElSwitch } from 'element-plus'
+// import { ElForm, ElFormItem, ElSwitch } from 'element-plus'
 import {useConfigStore} from "@cp-print/design/stores/config";
 
 const configStore = useConfigStore()
 
 
 </script>
-
-<style scoped>
-.printer-panel {
-  padding: 20px;
-  height: calc(100% - 100px);
-  
-}
-</style>

@@ -2,7 +2,6 @@ import {
     Container, DisplayModel,
     Element,
     ElementOption,
-    ElementRelation,
     elementType, FormatterVariable, PageUnit,
     Panel,
     Position,
@@ -58,7 +57,7 @@ export function getCurrentElement(): Ref<Element> {
     return currentElement
 }
 
-export function valueUnit(value: number) {
+export function valueUnit(value: number | undefined) {
     return value + getCurrentPanel().pageUnit
 }
 
@@ -97,10 +96,10 @@ export function handleAspectRatioHeight(element: Element) {
     }
 }
 
-export function clearPanel(panel: Panel) {
-    panel.pageHeader = null
-    panel.pageFooter = null
-    panel.elementList = []
+export function clearPanel(panel?: Panel) {
+    panel!.pageHeader = undefined
+    panel!.pageFooter = undefined
+    panel!.elementList = []
 }
 
 export function getTranslate(element: Element) {
@@ -117,7 +116,7 @@ export function getTranslate(element: Element) {
     return 'none'
 }
 
-export function none(element: Element) {
+export function none(element?: Element) {
     if (element == null) {
         return
     }
@@ -133,8 +132,8 @@ export function selectAllElement() {
     selectElementList(currentPanel.elementList)
 }
 
-export function selectElementList(elementList: Array<Container>) {
-    for (let element of elementList) {
+export function selectElementList(elementList?: Array<Container>) {
+    for (let element of elementList!) {
         select(element)
         if (element.elementList && element.elementList.length > 0) {
             selectElementList(element.elementList)
@@ -142,8 +141,8 @@ export function selectElementList(elementList: Array<Container>) {
     }
 }
 
-export function select(element: Container) {
-    element.status = 'SELECT'
+export function select(element?: Container) {
+    element!.status = 'SELECT'
 }
 
 export function selectRemove(element: Container) {
@@ -164,7 +163,7 @@ export function computedHandles(element: Container): Array<handleConstantsType> 
     if (element.type == 'Table') {
         return ['lm', 'rm']
     }
-    return undefined
+    return []
 }
 
 export function computeDrag(element: Container): boolean {
@@ -181,12 +180,12 @@ export function computeTranslate(element: Element) {
     // complete 更改位置
     if (element.translateX != null) {
         element.x = numberUtil.sum(element.x, element.translateX)
-        element.translateX = null
+        element.translateX = undefined
     }
 
     if (element.translateY != null) {
         element.y = numberUtil.sum(element.y, element.translateY)
-        element.translateY = null
+        element.translateY = undefined
     }
 }
 
@@ -213,17 +212,17 @@ export function disableHandleList(element: Element) {
     return null
 }
 
-export function parentInitElement(parent: ElementRelation, element: Element) {
+export function parentInitElement(parent: Container, element?: Element) {
     initElement(element)
     installParentElement(parent, element)
-    if (element?.elementList?.length > 0) {
-        for (let elementTmp of element.elementList) {
-            parentInitElement(element, elementTmp);
+    if (element?.elementList?.length! > 0) {
+        for (let elementTmp of element!.elementList!) {
+            parentInitElement(element!, elementTmp);
         }
     }
 }
 
-export function initElement(element: Element) {
+export function initElement(element?: Element) {
     if (element == null) {
         return
     }
@@ -247,9 +246,9 @@ export function initElement(element: Element) {
             initHeight = 30
             element.runtimeOption.rowList = []
             const rowList = []
-            for (let i = 0; i < element.columnList.length; i++) {
-                initElement(element.columnList[i])
-                rowList.push(copyElementRefValueId(element.columnList[i]))
+            for (let i = 0; i < element.columnList!.length; i++) {
+                initElement(element.columnList![i])
+                rowList.push(copyElementRefValueId(element.columnList![i]))
             }
             element.runtimeOption.rowList.push(rowList)
             break
@@ -337,20 +336,20 @@ export function initElement(element: Element) {
 
 
 export function clearPanelParent(panel: Panel) {
-    clearParent(panel.pageHeader)
-    clearParent(panel.pageFooter)
+    clearParent(panel.pageHeader!)
+    clearParent(panel.pageFooter!)
     clearListParent(panel.elementList)
 }
 
 export function copyElementRefValueId(element: Element) {
-    element = to(element, reactive<Element>({}))
+    element = to(element, reactive<Element>({} as any))
     element.id = crypto.randomUUID()
     return element
 }
 
 
-export function clearListParent(elementList: Array<Element>) {
-    for (let element of elementList) {
+export function clearListParent(elementList?: Array<Element>) {
+    for (let element of elementList!) {
         clearParent(element)
         if (element.elementList != null) {
             clearListParent(element.elementList)
@@ -364,8 +363,8 @@ export function installPanelParentElement(panel: Panel) {
     installListParentElement(panel, panel.elementList)
 }
 
-export function installListParentElement(parent: ElementRelation, elementList: Array<Element>) {
-    for (let element of elementList) {
+export function installListParentElement(parent: Container, elementList?: Array<Element>) {
+    for (let element of elementList!) {
         installParentElement(parent, element)
         if (element.elementList != null) {
             installListParentElement(element, element.elementList)
@@ -374,7 +373,7 @@ export function installListParentElement(parent: ElementRelation, elementList: A
 
 }
 
-export function installParentElement(parent: ElementRelation, element: Element) {
+export function installParentElement(parent?: Container, element?: Element) {
     if (!element) {
         return
     }
@@ -382,13 +381,13 @@ export function installParentElement(parent: ElementRelation, element: Element) 
 }
 
 export function clearParent(element: Element) {
-    if (element.runtimeOption == null || element.runtimeOption.parent == null) {
+    if (element.runtimeOption == null || element.runtimeOption.parent == undefined) {
         return
     }
-    element.runtimeOption.parent = null
+    element.runtimeOption.parent = undefined
 }
 
-export function addElement(parent: ElementRelation, element: Element) {
+export function addElement(parent: Container, element: Element) {
     if (parent.elementList == null) {
         parent.elementList = []
     }
@@ -406,33 +405,33 @@ export function removeElement(element: Element) {
     }
     handleElementType(element)
         .handle('PageHeader', () =>
-            (element.runtimeOption.parent as Panel).pageHeader = null
+            (element.runtimeOption.parent as Panel).pageHeader = undefined
         )
         .handle('PageFooter', () =>
-            (element.runtimeOption.parent as Panel).pageFooter = null
+            (element.runtimeOption.parent as Panel).pageFooter = undefined
         )
         .handle('PrivateDragRectElement', () => {
                 const elementList = []
 
-                for (let valueElement of getCurrentPanel().elementList) {
+                for (let valueElement of getCurrentPanel().elementList!) {
                     if ('SELECT' == valueElement.status) {
                         elementList.push(valueElement)
                     }
                 }
 
                 for (let valueElement of elementList) {
-                    arrayRemove(valueElement.runtimeOption.parent.elementList, valueElement)
+                    arrayRemove(valueElement.runtimeOption.parent!.elementList, valueElement)
                 }
-                element.x = null
+                element.x = undefined
             }
         )
         .end(() => {
-            arrayRemove(element.runtimeOption.parent.elementList, element)
+            arrayRemove(element.runtimeOption.parent!.elementList, element)
         })
 }
 
 export function handleElementType(element: Container) {
-    const handleList = []
+    const handleList: any[] = []
     const handlers = {
         handle(type: elementType, callback: () => void) {
             handleList.push(type)
@@ -481,30 +480,30 @@ export function elementCommonStyle(element: Element, cssStyle?: CSSProperties): 
     if (cssStyle == null) {
         cssStyle = elementCommonPositionStyle(element)
     }
-
+    const option = element.option!
     let textDecoration = ''
-    if (element.option.underline) {
+    if (option.underline) {
         textDecoration = textDecoration + 'underline '
     }
-    if (element.option.lineThrough) {
+    if (option.lineThrough) {
         textDecoration = textDecoration + 'line-through '
     }
 
-    element.option.opacity != null && (cssStyle.opacity = element.option.opacity)
-    element.option.color && (cssStyle.color = element.option.color)
-    element.option.background && (cssStyle.background = element.option.background)
-    element.option.bold && (cssStyle.fontWeight = element.option.bold ? 'bold' : 'normal')
+    option.opacity != null && (cssStyle.opacity = option.opacity)
+    option.color && (cssStyle.color = option.color)
+    option.background && (cssStyle.background = option.background)
+    option.bold && (cssStyle.fontWeight = option.bold ? 'bold' : 'normal')
     textDecoration && (cssStyle.textDecoration = textDecoration)
-    element.option.italic && (cssStyle.fontStyle = element.option.italic ? 'italic' : 'normal')
-    if (element.option.textAlign) {
-        cssStyle.justifyContent = element.option.textAlign
+    option.italic && (cssStyle.fontStyle = option.italic ? 'italic' : 'normal')
+    if (option.textAlign) {
+        cssStyle.justifyContent = option.textAlign
     }
 
-    if (element.option.verticalAlign) {
-        cssStyle.alignItems = element.option.verticalAlign
+    if (option.verticalAlign) {
+        cssStyle.alignItems = option.verticalAlign
     }
 
-    if (element.option.borderAll) {
+    if (option.borderAll) {
         cssStyle.border = '1px solid #771082'
         cssStyle.boxSizing = 'border-box'
     }
@@ -532,10 +531,10 @@ export function getMouseOffsetTop(panel: Panel, element: Element) {
 
     const pageHeaderFooter = isPageHeaderFooter(element)
 
-    const parent = element.runtimeOption.parent as Container
-    let top = panelDivPosition.top
+    const parent = element.runtimeOption!.parent as Container
+    let top = panelDivPosition.top!
     if (!pageHeaderFooter || !isPageHeaderFooter(parent)) {
-        top = top + unit2px(panel.pageHeader?.height)
+        top = top + unit2px(panel!.pageHeader?.height)
     }
 
     // console.log(parent)
@@ -556,8 +555,8 @@ export function getMouseOffsetBottom(panel: Panel, element: Element) {
 
     const pageHeaderFooter = isPageHeaderFooter(element)
 
-    const parent = element.runtimeOption.parent as Container
-    let bottom = panelDivPosition.bottom
+    const parent = element.runtimeOption!.parent as Container
+    let bottom = panelDivPosition.bottom!
     if (!pageHeaderFooter || !isPageHeaderFooter(parent)) {
         bottom = bottom - unit2px(panel.pageHeader?.height)
     }
@@ -584,24 +583,24 @@ export function clearOption(element: Element) {
 // 返回相对于参考点旋转后的坐标
 export function rotatedPoint(element: Element) {
     const {x, y, width, height} = element
-    const centerX = x + width / 2;
-    const centerY = y + height / 2;
-    const rotate = element.option.rotate ? element.option.rotate : 0
+    const centerX = x! + width / 2;
+    const centerY = y! + height / 2;
+    const rotate = element.option!.rotate ? element.option!.rotate : 0
+    const runtimeOption = element.runtimeOption!
+    runtimeOption.TL = _rotatedPoint(centerX, centerY, x!, y!, rotate);
+    runtimeOption.TR = _rotatedPoint(centerX, centerY, x! + width, y!, rotate);
+    runtimeOption.BL = _rotatedPoint(centerX, centerY, x!, y! + height, rotate);
+    runtimeOption.BR = _rotatedPoint(centerX, centerY, x! + width, y! + height, rotate);
 
-    element.runtimeOption.TL = _rotatedPoint(centerX, centerY, x, y, rotate);
-    element.runtimeOption.TR = _rotatedPoint(centerX, centerY, x + width, y, rotate);
-    element.runtimeOption.BL = _rotatedPoint(centerX, centerY, x, y + height, rotate);
-    element.runtimeOption.BR = _rotatedPoint(centerX, centerY, x + width, y + height, rotate);
-
-    element.runtimeOption.bounds = {
-        top: Math.min(element.runtimeOption.TL.y, element.runtimeOption.TR.y, element.runtimeOption.BL.y, element.runtimeOption.BR.y),
-        bottom: Math.max(element.runtimeOption.TL.y, element.runtimeOption.TR.y, element.runtimeOption.BL.y, element.runtimeOption.BR.y),
-        left: Math.min(element.runtimeOption.TL.x, element.runtimeOption.TR.x, element.runtimeOption.BL.x, element.runtimeOption.BR.x),
-        right: Math.max(element.runtimeOption.TL.x, element.runtimeOption.TR.x, element.runtimeOption.BL.x, element.runtimeOption.BR.x)
+    runtimeOption.bounds = {
+        top: Math.min(runtimeOption.TL.y!, runtimeOption.TR.y!, runtimeOption.BL.y!, runtimeOption.BR.y!),
+        bottom: Math.max(runtimeOption.TL.y!, runtimeOption.TR.y!, runtimeOption.BL.y!, runtimeOption.BR.y!),
+        left: Math.min(runtimeOption.TL.x!, runtimeOption.TR.x!, runtimeOption.BL.x!, runtimeOption.BR.x!),
+        right: Math.max(runtimeOption.TL.x!, runtimeOption.TR.x!, runtimeOption.BL.x!, runtimeOption.BR.x!)
     } as Position
 }
 
-function _rotatedPoint(originX, originY, offsetX, offsetY, rotate = 0): Position {
+function _rotatedPoint(originX: number, originY: number, offsetX: number, offsetY: number, rotate = 0): Position {
     const rad = (Math.PI / 180) * rotate;
     const cos = Math.cos(rad);
     const sin = Math.sin(rad);
@@ -610,7 +609,7 @@ function _rotatedPoint(originX, originY, offsetX, offsetY, rotate = 0): Position
     return {
         x: x * cos - y * sin + originX,
         y: x * sin + y * cos + originY
-    }
+    } as any
 }
 
 
@@ -624,7 +623,7 @@ export function getAngle(x: number, y: number) {
 
 export const panelDivPosition = reactive({}) as Position
 
-export function initPanelDiv(panel: Panel, el) {
+export function initPanelDiv(panel: Panel, el: HTMLElement) {
     if (!panel.width) {
         return
     }
@@ -641,24 +640,25 @@ export function initPanelDiv(panel: Panel, el) {
 
 export function dragLimit(element: Element) {
     const {bounds, parent} = element.runtimeOption
-    let top = -bounds.top
-    let bottom = parent.height - bounds.bottom
 
-    if (parent.type == 'Panel') {
+    let top = -bounds.top
+    let bottom = parent!.height - bounds.bottom
+
+    if (parent!.type == 'Panel') {
         const panel = parent as Panel
-        top = -bounds.top + _defaultNum(panel.pageHeader?.height, 0)
-        bottom = parent.height - bounds.bottom - _defaultNum(panel.pageFooter?.height, 0)
+        top = -bounds.top + _defaultNum(panel.pageHeader?.height!, 0)
+        bottom = parent!.height - bounds.bottom - _defaultNum(panel.pageFooter?.height!, 0)
     }
     return {
         left: -bounds.left,
-        right: parent.width - bounds.right,
+        right: parent!.width - bounds.right,
         top: top,
         bottom: bottom
-    }
+    } as Position
 }
 
 export function formatter(element: Element, variable: FormatterVariable = {}): string {
-    if (element.option.formatter) {
+    if (element.option!.formatter) {
         let contentData = ''
         if (element.type == 'TextTime') {
             const variableNames = extractVariableNames(element.option.formatter)
@@ -677,13 +677,14 @@ export function formatter(element: Element, variable: FormatterVariable = {}): s
         // console.log(contentData)
         return contentData
     }
+    return ''
 }
 
 export function extractVariableNames(template: string): string[] {
     const regex = /\{\{(.+?)\}\}/g;
     const matches = template.match(regex);
     if (!matches) {
-        return null
+        return []
     }
     // console.log(matches)
     return matches.map(match => match.slice(2, -2));
@@ -724,7 +725,7 @@ export function replaceVariables(str: string, params: { [key: string]: any }): s
 }
 
 export function selectedElementBatchOperation(callback: (element: Element) => void) {
-    for (let valueElement of currentPanel.elementList) {
+    for (let valueElement of currentPanel.elementList!) {
         if (canMoveStatusList.includes(valueElement.status)) {
             callback(valueElement)
         }
@@ -735,7 +736,7 @@ export function selectedElementBatchOperation(callback: (element: Element) => vo
 
 }
 
-export function changePageSize(val) {
+export function changePageSize(val: any) {
     const panel = getCurrentPanel()
     panel.width = unit2unit('mm', panel.pageUnit, val.width)
     panel.height = unit2unit('mm', panel.pageUnit, val.height)
@@ -755,7 +756,7 @@ export function changePageUnit() {
     // console.log(panel.pageUnit)
     panel.width = unit2unit(lastPageUnit, panel.pageUnit, panel.width)
     panel.height = unit2unit(lastPageUnit, panel.pageUnit, panel.height)
-    for (let element of panel.elementList) {
+    for (let element of panel.elementList!) {
         element.x = unit2unit(lastPageUnit, panel.pageUnit, element.x)
         element.y = unit2unit(lastPageUnit, panel.pageUnit, element.y)
         element.width = unit2unit(lastPageUnit, panel.pageUnit, element.width)

@@ -12,10 +12,10 @@
     
     <cp-container v-else-if="element.type === 'Container'" :element="element"/>
     <cp-container v-else-if="element.type === 'PageHeader'" :element="element">
-      <element-list :element-list="element.elementList"/>
+<!--      <element-list :element-list="element.elementList"/>-->
     </cp-container>
     <cp-container v-else-if="element.type === 'PageFooter'" :element="element">
-      <element-list :element-list="element.elementList"/>
+<!--      <element-list :element-list="element.elementList"/>-->
     </cp-container>
   </cp-drag>
 </template>
@@ -26,7 +26,7 @@ import {Element} from "@cp-print/design/types/entity";
 import {PropType} from "vue";
 import {computedHandles, computeDrag} from "@cp-print/design/utils/elementUtil";
 import {CpContainer} from "./container";
-import ElementList from "./elementList.vue";
+// import ElementList from "./elementList.vue";
 import TablePopoverView from "./table/tablePopoverView.vue";
 
 defineProps({

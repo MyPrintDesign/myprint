@@ -6,11 +6,11 @@
 </template>
 
 <script setup lang="ts">
+defineOptions({name: 'CpGroupInput'})
 
 </script>
 
 <style lang="scss">
-
 .group-container {
   display: flex;
 }

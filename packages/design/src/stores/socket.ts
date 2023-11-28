@@ -7,8 +7,8 @@ let lockReconnect: any
 export const useSocket = defineStore('socket', {
     state: () => {
         return {
-            socket: null,
-            timer: null,
+            socket: undefined as any,
+            timer: undefined as any,
             connect: false,
             printerList: []
         }
@@ -17,6 +17,7 @@ export const useSocket = defineStore('socket', {
         INIT_SOCKET(onSocketMessage: Ref<Function>) {
             // console.log(onSocketMessage)
             let stateThis = this
+            let socket = this.socket! as any
             const reconnect = () => {
                 if (lockReconnect) return;
                 lockReconnect = true;
@@ -35,21 +36,21 @@ export const useSocket = defineStore('socket', {
             }
 
             const init = () => {
-                stateThis.socket.onopen = function (_event) {
+                socket.onopen = function (_event:any) {
                     console.log("WebSocket:已连接");
                     //心跳检测重置
                     stateThis.connect = true
                     // app.SET_CLIENT_CONNECT(true)
                     heartCheck.reset().start();
                     // 发送css样式过去
-                    stateThis.socket.send(JSON.stringify({
+                    socket.send(JSON.stringify({
                         content: printCssStyle(),
                         cmd: 'text/css',
                     }))
                 }
 
                 //接收到消息的回调方法
-                stateThis.socket.onmessage = function (event) {
+                socket.onmessage = function (event:any) {
                     const msgData = JSON.parse(event.data)
                     switch (msgData.cmd) {
                         case 'printerList':
@@ -68,7 +69,7 @@ export const useSocket = defineStore('socket', {
                 };
 
                 //连接发生错误的回调方法
-                stateThis.socket.onerror = function (_event) {
+                socket.onerror = function (_event:any) {
                     // console.log("WebSocket:发生错误");
                     stateThis.connect = false
                     // app.SET_CLIENT_CONNECT(false)
@@ -76,7 +77,7 @@ export const useSocket = defineStore('socket', {
                 };
 
                 //连接关闭的回调方法
-                stateThis.socket.onclose = function (_event) {
+                socket.onclose = function (_event:any) {
                     // console.log("WebSocket:已关闭");
                     heartCheck.reset();//心跳检测
                     stateThis.connect = false
@@ -88,7 +89,7 @@ export const useSocket = defineStore('socket', {
                 window.onbeforeunload = function () {
                     // app.SET_CLIENT_CONNECT(false)
                     stateThis.connect = false
-                    stateThis.socket.close();
+                    socket.close();
                 };
             }
 
@@ -122,13 +123,13 @@ export const useSocket = defineStore('socket', {
                     this.timeoutObj = setTimeout(function () {
                         //这里发送一个心跳，后端收到后，返回一个心跳消息，
                         //onmessage拿到返回的心跳就说明连接正常
-                        stateThis.socket.send(JSON.stringify({
+                        stateThis.socket!.send(JSON.stringify({
                             "cmd": "ping"
                         }));
                         // console.log('ping');
                         self.serverTimeoutObj = setTimeout(function () { // 如果超过一定时间还没重置，说明后端主动断开了
                             console.log('关闭服务');
-                            stateThis.socket.close();//如果onclose会执行reconnect，我们执行 websocket.close()就行了.如果直接执行 reconnect 会触发onclose导致重连两次
+                            stateThis.socket!.close();//如果onclose会执行reconnect，我们执行 websocket.close()就行了.如果直接执行 reconnect 会触发onclose导致重连两次
                         }, self.timeout)
                     }, this.timeout)
                 }
@@ -137,7 +138,7 @@ export const useSocket = defineStore('socket', {
             createSocket()
         },
         SEND(msg: any) {
-            this.socket.send(msg)
+            this.socket!.send(msg)
         }
     }
 })

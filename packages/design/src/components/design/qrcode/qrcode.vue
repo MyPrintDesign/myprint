@@ -8,13 +8,15 @@
 </template>
 
 <script setup lang="ts">
-import {TextElement} from "@cp-print/design/types/entity";
-import {ref, watch, PropType} from "vue";
+import {Element} from "@cp-print/design/types/entity";
+import {ref, watch} from "vue";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import QRCode from 'qrcode'
 import {heightValueUnit, widthValueUnit} from "@cp-print/design/utils/elementUtil";
-const props = defineProps({
-  element: {type: Object as PropType<TextElement>, default: () => ({})}
+const props = withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
 
 const qrCode = ref()

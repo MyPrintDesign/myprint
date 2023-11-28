@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElWatermark } from 'element-plus'
+// import { ElWatermark } from 'element-plus'
 import SelectRect from '../selectRect.vue'
 import VueDrag from "@cp-print/design/components/design/drag/index";
 import Rule from "../rule.vue";
@@ -79,19 +79,23 @@ import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vu
 import {ContentScaleVo, DragWrapper, Element, Point} from "@cp-print/design/types/entity";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {clearEventBubble} from "@cp-print/design/utils/event";
-import {mittKey, panelKey} from "@cp-print/design/constants/keys";
-import {canMoveStatusList, defaultDragRectElement, defaultElement} from "@cp-print/design/constants/common";
+import {
+  // mittKey,
+  panelKey} from "@cp-print/design/constants/keys";
+import {
+  // canMoveStatusList,
+  defaultDragRectElement, defaultElement} from "@cp-print/design/constants/common";
 import {ActionEnum, record, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {
   addElement,
-  computeTranslate,
+  // computeTranslate,
   handle,
   handleElementType,
   initElement,
   initPanelDiv,
   installParentElement,
   none,
-  removeElement, rotatedPoint,
+  // removeElement, rotatedPoint,
   select,
   selectRemove,
   setCurrentElement,
@@ -103,27 +107,27 @@ import ElementList from "../../design/elementList.vue";
 import {mountedKeyboardEvent, unMountedKeyboardEvent} from "@cp-print/design/utils/keyboardUtil";
 import ElementDrag from "../../design/elementDrag.vue";
 
-const panel = inject(panelKey)
-const mitt = inject(mittKey)
-const vLine = ref([])
-const hLine = ref([])
+const panel = inject(panelKey)!
+// const mitt = inject(mittKey)!
+// const vLine = ref([])
+// const hLine = ref([])
 
 // const panelRef = ref({})
 
-function getRefLineParams(params) {
-  const {vLine: vLine1, hLine: hLine1} = params;
-  // console.log(vLine1, hLine1)
-  vLine.value = vLine1;
-  hLine.value = hLine1;
-}
+// function getRefLineParams(params:any) {
+//   const {vLine: vLine1, hLine: hLine1} = params;
+//   // console.log(vLine1, hLine1)
+//   vLine.value = vLine1;
+//   hLine.value = hLine1;
+// }
 
 // 事件绑定
-mitt.on('elementClick', elementClick)
-mitt.on('elementMove', elementMove)
-mitt.on('elementUp', elementUp)
-mitt.on('elementRemove', elementRemove)
-mitt.on("scaleEvent", scaleEvent)
-mitt.on("panelSnapshot", panelSnapshot)
+// mitt.on('elementClick', elementClick)
+// mitt.on('elementMove', elementMove)
+// mitt.on('elementUp', elementUp)
+// mitt.on('elementRemove', elementRemove)
+// mitt.on("scaleEvent", scaleEvent)
+// mitt.on("panelSnapshot", panelSnapshot)
 
 const highlightRule = reactive({
   horizontalLeft: null,
@@ -146,7 +150,7 @@ const selectPoint = {
   y: 0,
   clientX: null,
   clientY: null
-}
+} as any
 const data = reactive({
   dropOver: false
 })
@@ -154,11 +158,11 @@ const visible = reactive({
   selectRect: false,
   dragRect: false,
 })
-const contentScale = reactive(<ContentScaleVo>{
-  scrollWidth: null,
-  scrollHeight: null,
+const contentScale = reactive({
+  scrollWidth: undefined,
+  scrollHeight: undefined,
   openIs: false
-})
+} as ContentScaleVo)
 
 onMounted(() => {
   // 挂载键盘事件
@@ -177,22 +181,22 @@ function computedSelection() {
   const startPoint = {x: 999999, y: 999999} as Point
   const endPoint = {x: 0, y: 0} as Point
   
-  for (let valueElement of panel.elementList) {
+  for (let valueElement of panel.elementList!) {
     const left = valueElement.runtimeOption.bounds.left
     const top = valueElement.runtimeOption.bounds.top
     const right = valueElement.runtimeOption.bounds.right
     const bottom = valueElement.runtimeOption.bounds.bottom
-    if (left >= selectRectElement.x && top >= selectRectElement.y
-        && right < selectRectElement.x + selectRectElement.width
-        && bottom < selectRectElement.y + selectRectElement.height) {
+    if (left >= selectRectElement.x! && top >= selectRectElement.y!
+        && right < selectRectElement.x! + selectRectElement.width
+        && bottom < selectRectElement.y! + selectRectElement.height) {
       select(valueElement)
       
       // 计算 拖拽矩形
       isShowDragRect = true
-      startPoint.x = Math.min(startPoint.x, left)
-      startPoint.y = Math.min(startPoint.y, top)
-      endPoint.x = Math.max(endPoint.x, right)
-      endPoint.y = Math.max(endPoint.y, bottom)
+      startPoint.x = Math.min(startPoint.x!, left)
+      startPoint.y = Math.min(startPoint.y!, top)
+      endPoint.x = Math.max(endPoint.x!, right)
+      endPoint.y = Math.max(endPoint.y!, bottom)
     } else {
       none(valueElement)
     }
@@ -203,11 +207,11 @@ function computedSelection() {
   if (isShowDragRect) {
     defaultDragRectElement.x = startPoint.x
     defaultDragRectElement.y = startPoint.y
-    defaultDragRectElement.width = endPoint.x - startPoint.x
-    defaultDragRectElement.height = endPoint.y - startPoint.y
+    defaultDragRectElement.width = endPoint.x! - startPoint.x!
+    defaultDragRectElement.height = endPoint.y! - startPoint.y!
     selectRemove(defaultDragRectElement)
   } else {
-    defaultDragRectElement.x = null
+    defaultDragRectElement.x = undefined
     defaultDragRectElement.width = 0
     defaultDragRectElement.height = 0
   }
@@ -268,16 +272,16 @@ function drop(dragData: any) {
   record(<Snapshot>{element: element, action: ActionEnum.ADD})
 }
 
-function panelSnapshot(snapshot: Snapshot) {
-  // console.log(123)
-  // console.log(action)
-  if (!snapshot.type) {
-    snapshot.type = 'PANEL'
-  }
-  record(snapshot)
-}
+// function panelSnapshot(snapshot: Snapshot) {
+//   // console.log(123)
+//   // console.log(action)
+//   if (!snapshot.type) {
+//     snapshot.type = 'PANEL'
+//   }
+//   record(snapshot)
+// }
 
-function dragover(ev) {
+function dragover(ev:DragEvent) {
   console.log(ev)
   data.dropOver = true
   // todo 高亮拖放位置
@@ -292,14 +296,14 @@ function dragover(ev) {
   // console.log('allowDrop', event)
 }
 
-function dragleave(_ev) {
+function dragleave(_ev:DragEvent) {
   data.dropOver = false
   
   // ev.target.toggleAttribute('over', false);
   // console.log('dragleave', ev)
 }
 
-function mousedown(ev) {
+function mousedown(ev:MouseEvent) {
   if (ev.defaultPrevented) {
     // 执行父组件的 mousedown 事件逻辑
     return
@@ -313,7 +317,7 @@ function mousedown(ev) {
   selectRectElement.x = selectPoint.x
   selectRectElement.y = selectPoint.y
   
-  function mousemove(ev) {
+  function mousemove(ev:MouseEvent) {
     // 鼠标移动时计算每次移动的距离，并改变拖拽元素的定位
     visible.selectRect = true
     // console.log(ev.clientX, ev.offsetX, ev.clientY, ev.offsetY, ev)
@@ -333,7 +337,7 @@ function mousedown(ev) {
     return false;
   }
   
-  function mouseup(ev) {
+  function mouseup(ev:MouseEvent) {
     
     // console.log('鼠标抬起')
     setCurrentElement(defaultElement)
@@ -352,85 +356,85 @@ function mousedown(ev) {
   clearEventBubble(ev)
 }
 
-function elementClick(element: Element) {
-  // console.log('elementClick')
-  // console.log('鼠标点击', element)
-  if (element.type == 'PrivateDragRectElement') {
-    return
-  }
-  contentScale.openIs = true
-  setCurrentElement(element)
-  none(panel.pageHeader)
-  none(panel.pageFooter)
-  elementListNone()
-  handle(element)
-  // contentScaleRef.fresh()
-}
+// function elementClick(element: Element) {
+//   // console.log('elementClick')
+//   // console.log('鼠标点击', element)
+//   if (element.type == 'PrivateDragRectElement') {
+//     return
+//   }
+//   contentScale.openIs = true
+//   setCurrentElement(element)
+//   none(panel.pageHeader)
+//   none(panel.pageFooter)
+//   elementListNone()
+//   handle(element)
+//   // contentScaleRef.fresh()
+// }
+//
+// function elementMove(element: Element) {
+//   // let element = point.element as Element;
+//   if (element.status == 'NONE') {
+//     elementListNone()
+//     select(element)
+//   }
+//
+//   // 寻找对齐的位置
+//   // computedAlign(point, alignLineDataList, props.panel.elementList)
+//
+//   // 高亮尺子刻度
+//   // highlightRule.horizontalLeft = mm2px(element.x + point.offsetX)
+//   // highlightRule.horizontalRight = mm2px(element.x + point.offsetX + element.width)
+//   // highlightRule.verticalLeft = mm2px(element.y + point.offsetY)
+//   // highlightRule.verticalRight = mm2px(element.y + point.offsetY + element.height)
+//
+//   // console.log(point)
+//   for (let valueElement of panel.elementList!) {
+//     if (canMoveStatusList.includes(valueElement.status)) {
+//       // console.log(valueElement)
+//       valueElement.translateX = element.translateX
+//       valueElement.translateY = element.translateY
+//     }
+//   }
+//
+//   // defaultDragRectElement.translateX = point.offsetX
+//   // defaultDragRectElement.translateY = point.offsetY
+// }
 
-function elementMove(element: Element) {
-  // let element = point.element as Element;
-  if (element.status == 'NONE') {
-    elementListNone()
-    select(element)
-  }
-  
-  // 寻找对齐的位置
-  // computedAlign(point, alignLineDataList, props.panel.elementList)
-  
-  // 高亮尺子刻度
-  // highlightRule.horizontalLeft = mm2px(element.x + point.offsetX)
-  // highlightRule.horizontalRight = mm2px(element.x + point.offsetX + element.width)
-  // highlightRule.verticalLeft = mm2px(element.y + point.offsetY)
-  // highlightRule.verticalRight = mm2px(element.y + point.offsetY + element.height)
-  
-  // console.log(point)
-  for (let valueElement of panel.elementList) {
-    if (canMoveStatusList.includes(valueElement.status)) {
-      // console.log(valueElement)
-      valueElement.translateX = element.translateX
-      valueElement.translateY = element.translateY
-    }
-  }
-  
-  // defaultDragRectElement.translateX = point.offsetX
-  // defaultDragRectElement.translateY = point.offsetY
-}
-
-function elementUp() {
-  // console.log(point)
-  const elementList = []
-  for (let valueElement of panel.elementList) {
-    if (canMoveStatusList.includes(valueElement.status)) {
-      elementList.push(valueElement)
-    }
-  }
-  
-  for (let valueElement of elementList) {
-    computeTranslate(valueElement)
-    
-    rotatedPoint(valueElement)
-  }
-  
-  computeTranslate(defaultDragRectElement)
-  
-  // let action = ActionEnum.MOVE
-  // if (elementList.length > 1) {
-  //   action = ActionEnum.BATCH_MOVE
-  // }
-  // record(<Snapshot>{
-  //   type: 'PANEL',
-  //   action: action,
-  //   panel: panel
-  // })
-  // console.log(history)
-  
-  alignLineDataList.length = 0
-  highlightRule.horizontalLeft = null
-  highlightRule.horizontalRight = null
-  highlightRule.verticalLeft = null
-  highlightRule.verticalRight = null
-  
-}
+// function elementUp() {
+//   // console.log(point)
+//   const elementList = []
+//   for (let valueElement of panel.elementList!) {
+//     if (canMoveStatusList.includes(valueElement.status)) {
+//       elementList.push(valueElement)
+//     }
+//   }
+//
+//   for (let valueElement of elementList) {
+//     computeTranslate(valueElement)
+//
+//     rotatedPoint(valueElement)
+//   }
+//
+//   computeTranslate(defaultDragRectElement)
+//
+//   // let action = ActionEnum.MOVE
+//   // if (elementList.length > 1) {
+//   //   action = ActionEnum.BATCH_MOVE
+//   // }
+//   // record(<Snapshot>{
+//   //   type: 'PANEL',
+//   //   action: action,
+//   //   panel: panel
+//   // })
+//   // console.log(history)
+//
+//   alignLineDataList.length = 0
+//   highlightRule.horizontalLeft = null
+//   highlightRule.horizontalRight = null
+//   highlightRule.verticalLeft = null
+//   highlightRule.verticalRight = null
+//
+// }
 
 function dropPreventDefault(dragData: DragWrapper) {
   const element = dragData.element
@@ -446,24 +450,24 @@ function dropPreventDefault(dragData: DragWrapper) {
   return true
 }
 
-function scaleEvent() {
-  let mmDiv = document.createElement("div");
-  designContentRef.value.appendChild(mmDiv)
-  nextTick(() => {
-    designContentRef.value.removeChild(mmDiv)
-    // scrollbarRef.value.update()
-  })
-}
-
-function elementRemove(element: Element) {
-  // console.log(element)
-  removeElement(element)
-  
-  record(<Snapshot>{element: element, action: ActionEnum.REMOVE})
-}
+// function scaleEvent() {
+//   let mmDiv = document.createElement("div");
+//   designContentRef.value.appendChild(mmDiv)
+//   nextTick(() => {
+//     designContentRef.value.removeChild(mmDiv)
+//     // scrollbarRef.value.update()
+//   })
+// }
+//
+// function elementRemove(element: Element) {
+//   // console.log(element)
+//   removeElement(element)
+//
+//   record(<Snapshot>{element: element, action: ActionEnum.REMOVE})
+// }
 
 function elementListNone() {
-  for (let valueElement of panel.elementList) {
+  for (let valueElement of panel.elementList!) {
     none(valueElement)
   }
 }
@@ -476,35 +480,3 @@ watch([() => panel.width, () => panel.height], (_w, _h) => {
   
 })
 </script>
-
-<style scoped>
-.design-content_over {
-  z-index: 1;
-  outline: 4px solid var(--drag-h-color);
-}
-
-.design-content {
-  position: relative;
-  background: white;
-  box-shadow: 5px 10px 15px 5px rgba(0, 21, 41, 0.08);
-}
-
-.design-content-bg {
-  background-image: -webkit-gradient(linear, left top, right top, color-stop(3%, rgba(0, 0, 0, .1)), color-stop(3%, transparent)), -webkit-gradient(linear, left bottom, left top, color-stop(3%, rgba(0, 0, 0, .1)), color-stop(3%, transparent));
-  background-image: linear-gradient(90deg, rgba(0, 0, 0, .1) 3%, transparent 0), linear-gradient(1turn, rgba(0, 0, 0, .1) 3%, transparent 0);
-  background-size: 5mm 5mm;
-  background-position: 0 0;
-}
-
-.cp-print-history {
-
-}
-
-
-.posts {
-  position: absolute;
-  width: 1px;
-  height: 100px;
-  background: black;
-}
-</style>

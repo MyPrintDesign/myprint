@@ -25,8 +25,8 @@
 </template>
 <script setup lang="ts">
 
-import {computed, onMounted, PropType, reactive, ref, watch, CSSProperties} from "vue";
-import {TextElement} from "@cp-print/design/types/entity";
+import {computed, onMounted, ref, watch, CSSProperties} from "vue";
+import {Element} from "@cp-print/design/types/entity";
 import CpBarcode from "@cp-print/design/components/design/barcode";
 import CpQrcode from "@cp-print/design/components/design/qrcode";
 
@@ -35,8 +35,10 @@ import {
   formatter
 } from "@cp-print/design/utils/elementUtil";
 
-const props = defineProps({
-  element: {type: Object as PropType<TextElement>, default: () => ({})}
+const props = withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
 const textRef = ref()
 
@@ -97,12 +99,12 @@ const contentStyle = computed(() => {
       }
     }
 )
-watch(() => props.element.contentType, (n, o) => {
+watch(() => props.element.contentType, (n, _o) => {
   if (n != 'QrCode') {
     props.element.option.aspectRatio = null
   }
 })
-watch(() => props.element.option.formatter, (n, o) => {
+watch(() => props.element.option.formatter, (_n, _o) => {
   const data = formatter(props.element)
   if (data != null) {
     props.element.data = data

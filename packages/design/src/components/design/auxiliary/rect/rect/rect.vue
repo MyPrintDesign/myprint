@@ -18,7 +18,7 @@ defineProps({
   element: {type: Object as PropType<Element>, default: () => ({} as Element)}
 })
 
-function drop(event: DragEvent) {
+function drop(_event: DragEvent) {
   console.log('drop')
   // event.stopPropagation()
 }

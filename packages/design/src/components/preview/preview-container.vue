@@ -8,11 +8,12 @@
 
 <script setup lang="ts">
 
-import {computed, PropType, CSSProperties} from "vue";
-import {Element, PreviewWrapper} from "@cp-print/design/types/entity";
-import {valueUnit} from "@cp-print/design/utils/elementUtil";
+import {computed, CSSProperties} from "vue";
+import {Element, PreviewWrapper} from "../../types/entity";
+import {valueUnit} from "../../utils/elementUtil";
 import Preview from "./preview.vue";
 
+console.log({} as PreviewWrapper)
 const style = computed(() => {
   return {
     width: valueUnit(props.element.width),
@@ -20,10 +21,11 @@ const style = computed(() => {
   } as CSSProperties
 })
 
-const props = defineProps({
-  element: {type: Object as PropType<Element>, default: () => ({} as Element)},
+const props = withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
-
 </script>
 <style scoped>
 

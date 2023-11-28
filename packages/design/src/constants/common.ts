@@ -92,7 +92,7 @@ export const elementSetting: Record<elementType, Array<elementSettingType>> =
         PrivateDragRectElement: [],
     }
 
-export function hasStyle(type: string, style: string) {
+export function hasStyle(type: elementType, style: elementSettingType) {
     const ele = elementSetting[type]
     if (ele) {
         return ele.includes(style)
@@ -206,16 +206,16 @@ export const barcodeTypes = [
 ]
 
 export const handleConstants = {
-    tl: {id: 'tl', index: 0, class: 'bg-none l t', x: null, y: null, width: 0, height: 0},
-    tm: {id: 'tm', index: 1, class: 't center-h', x: null, y: null, width: 0, height: 0},
-    tr: {id: 'tr', index: 2, class: 'bg-none r t', x: null, y: null, width: 0, height: 0},
-    rm: {id: 'rm', index: 3, class: 'r', x: null, y: null, width: 0, height: 0},
-    br: {id: 'br', index: 4, class: 'bg-none r b', x: null, y: null, width: 0, height: 0},
-    bm: {id: 'bm', index: 5, class: 'b', x: null, y: null, width: 0, height: 0},
-    bl: {id: 'bl', index: 6, class: 'bg-none l b', x: null, y: null, width: 0, height: 0},
-    lm: {id: 'lm', index: 7, class: 'l', x: null, y: null, width: 0, height: 0},
-    rot: {id: 'rot', index: 8, class: 'l', x: null, y: null, width: 0, height: 0}
-}
+    tl: {id: 'tl', index: 0, class: 'bg-none l t', x: null, y: null, width: 0, height: 0} as any,
+    tm: {id: 'tm', index: 1, class: 't center-h', x: null, y: null, width: 0, height: 0} as any,
+    tr: {id: 'tr', index: 2, class: 'bg-none r t', x: null, y: null, width: 0, height: 0} as any,
+    rm: {id: 'rm', index: 3, class: 'r', x: null, y: null, width: 0, height: 0} as any,
+    br: {id: 'br', index: 4, class: 'bg-none r b', x: null, y: null, width: 0, height: 0} as any,
+    bm: {id: 'bm', index: 5, class: 'b', x: null, y: null, width: 0, height: 0} as any,
+    bl: {id: 'bl', index: 6, class: 'bg-none l b', x: null, y: null, width: 0, height: 0} as any,
+    lm: {id: 'lm', index: 7, class: 'l', x: null, y: null, width: 0, height: 0} as any,
+    rot: {id: 'rot', index: 8, class: 'l', x: null, y: null, width: 0, height: 0} as any
+} as any
 
 export type handleConstantsType = keyof typeof handleConstants
 

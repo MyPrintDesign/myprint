@@ -4,24 +4,26 @@
 </template>
 
 <script setup lang="ts">
-import JsBarcode from "jsbarcode";
-import {TextElement} from "@cp-print/design/types/entity";
-import {reactive, ref, watch, PropType} from "vue";
-import {unit2px} from "@cp-print/design/utils/utils";
-import {_defaultNum} from "@cp-print/design/utils/numberUtil";
+// import JsBarcode from "jsbarcode";
+import {Element} from "@cp-print/design/types/entity";
+import {reactive, ref, watch} from "vue";
+// import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+// import {_defaultNum} from "@cp-print/design/utils/numberUtil";
 
-const props = defineProps({
-  element: {type: Object as PropType<TextElement>, default: () => ({})}
+const props = withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
 
 const barCode = ref()
 const data = reactive({
-  errorMsg: null
+  errorMsg: undefined as string | undefined
 })
 
 watch([() => barCode.value, () => props.element.data, () => props.element.option.barCodeType, () => props.element.height, () => props.element.option.fontSize,
   () => props.element.option.color, () => props.element.option.background], (_n, _o) => {
-  data.errorMsg = null
+  data.errorMsg = undefined
   if (barCode.value == null) {
     return
   }

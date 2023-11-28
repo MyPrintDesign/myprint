@@ -78,7 +78,7 @@
 
 </template>
 <script setup lang="ts">
-import { ElForm, ElFormItem, ElDivider, ElSwitch} from 'element-plus'
+// import { ElForm, ElFormItem, ElDivider, ElSwitch} from 'element-plus'
 import {inject} from "vue";
 import {i18n} from "@cp-print/design/locales";
 
@@ -90,7 +90,7 @@ import {changePageSize, changePageUnit} from "@cp-print/design/utils/elementUtil
 
 const panel = inject(panelKey)
 
-function selectPageSize(val) {
+function selectPageSize(val:any) {
   // console.log(123)
   for (let valueElement of pageSizeList) {
     if (valueElement.value == val) {
@@ -114,15 +114,3 @@ function selectPageUnit() {
   // }
 }
 </script>
-
-
-<style scoped>
-.num-2 {
-  width: 80px;
-}
-
-.num-4 {
-  width: 40px;
-}
-
-</style>

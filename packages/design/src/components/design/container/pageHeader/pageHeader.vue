@@ -15,14 +15,14 @@
   <!--    </cp-drop>-->
   <!--  </vue-drag>-->
   
-  <element-list :element-list="element.elementList"/>
+<!--  <element-list :element-list="element.elementList"/>-->
 
 </template>
 
 <script setup lang="ts">
 import {PropType} from "vue";
 import {Element} from "@cp-print/design/types/entity";
-import ElementList from "../../elementList.vue";
+// import ElementList from "../../elementList.vue";
 
 defineProps({
   element: {type: Object as PropType<Element>, default: () => ({} as Element)}

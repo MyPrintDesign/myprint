@@ -174,8 +174,8 @@
 
 </template>
 <script setup lang="ts">
-import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
-import {computed, inject, onMounted, reactive} from "vue";
+// import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
+import {computed, inject} from "vue";
 
 import {barcodeTypes, dottedStyleList, elementSetting, textContentTypes} from "@cp-print/design/constants/common";
 import {mittKey} from "@cp-print/design/constants/keys";
@@ -185,10 +185,10 @@ import {QuestionFilled} from "@element-plus/icons-vue";
 import GroupInput from "../../cp/cp-group/groupInput.vue";
 import {CpUnit, CpHistoryInput, CpHistorySelect, CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 
-const mitt = inject(mittKey)
-const data = reactive({
-  currentBarCodeEg: null
-})
+const mitt = inject(mittKey)!
+// const data = reactive({
+//   currentBarCodeEg: null
+// })
 const selectElement = getCurrentElement()
 
 
@@ -198,28 +198,16 @@ const currentBarCodeEg = computed(() => {
   }
 })
 
-function change(val) {
+function change(_val:any) {
   // record()
   mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: selectElement.value} as Snapshot)
   // console.log('change', val)
 }
 
-function changeBarCodeType(val) {
+function changeBarCodeType(val:any) {
   // record()
   // console.log('change', val)
-  return barcodeTypes.find(v => v.value == val).eg
+  return barcodeTypes.find(v => v.value == val)!.eg
 }
 
 </script>
-
-
-<style scoped>
-.num-2 {
-  width: 80px;
-}
-
-.num-4 {
-  width: 40px;
-}
-
-</style>

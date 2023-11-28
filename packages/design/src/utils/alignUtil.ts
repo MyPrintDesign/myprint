@@ -5,9 +5,9 @@ import {canMoveStatusList} from "@cp-print/design/constants/common";
 const alignThreshold = 2
 const alignRange = 10
 
-export function computedAlign(element :Element, alignLineDataList, elementList) {
-    let x = element.x + element.translateX
-    let y = element.y + element.translateY
+export function computedAlign(element: Element, alignLineDataList: any, elementList: any) {
+    let x = element.x! + element.translateX!
+    let y = element.y! + element.translateY!
     alignLineDataList.value = []
 
     let computeX = null, computeY = null, tmp = null
@@ -42,7 +42,7 @@ export function computedAlign(element :Element, alignLineDataList, elementList) 
             // 中心点
 
             if (computeX != null) {
-                element.translateX = computeX - element.x
+                element.translateX = computeX - element.x!
             }
         }
 
@@ -59,7 +59,7 @@ export function computedAlign(element :Element, alignLineDataList, elementList) 
             tmp = diffY(bottom, x, right, valueBottom, valueElement.x, valueRight, element.height, alignLineDataList, 0)
             if (computeY == null) computeY = tmp
             if (computeY != null) {
-                element.translateY = computeY - element.y
+                element.translateY = computeY - element.y!
             }
         }
         // 执行请求
@@ -90,7 +90,7 @@ export function computedAlign(element :Element, alignLineDataList, elementList) 
     }
 }
 
-function diffX(x, y, ye, targetX, targetY, targetYe, width, alignLineDataList, offset) {
+function diffX(x: any, y: any, ye: any, targetX: any, targetY: any, targetYe: any, width: any, alignLineDataList: any, offset: any) {
     if (Math.abs(x - targetX) < alignThreshold) {
         let minY = Math.min(y, ye, targetY, targetYe);
         alignLineDataList.value.push(buildAlignLineEntity(targetX + offset, minY - alignRange, px2unit(1), Math.max(y, ye, targetY, targetYe) - minY + 2 * alignRange, 'VerticalAlignLine'))
@@ -99,7 +99,7 @@ function diffX(x, y, ye, targetX, targetY, targetYe, width, alignLineDataList, o
     return null
 }
 
-function diffY(y, x, xe, targetY, targetX, targetXe, height, alignLineDataList, offset) {
+function diffY(y: any, x: any, xe: any, targetY: any, targetX: any, targetXe: any, height: any, alignLineDataList: any, offset: any) {
     if (Math.abs(y - targetY) < alignThreshold) {
         let minX = Math.min(x, xe, targetX, targetXe);
         alignLineDataList.value.push(buildAlignLineEntity(minX - alignRange, targetY + offset, Math.max(x, xe, targetX, targetXe) - minX + 2 * alignRange, px2unit(1), 'HorizontalAlignLine'))
@@ -109,7 +109,7 @@ function diffY(y, x, xe, targetY, targetX, targetXe, height, alignLineDataList, 
 }
 
 
-function buildAlignLineEntity(x, y, width, height, type) {
+function buildAlignLineEntity(x: any, y: any, width: any, height: any, type: any) {
     return {
         x, y, width, height, type
     }

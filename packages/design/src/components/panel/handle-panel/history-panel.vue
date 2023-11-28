@@ -32,22 +32,3 @@ import {useConfigStore} from "@cp-print/design/stores/config";
 const configStore = useConfigStore()
 
 </script>
-
-<style scoped lang="scss">
-
-
-.history-list {
-  font-size: 13px;
-  
-  .currentHistory {
-    color: white;
-    padding-left: 3px;
-    background: var(--drag-h-color);
-  }
-  
-  .history-list-item {
-    color: rgb(128, 128, 128);
-    padding-left: 3px;
-  }
-}
-</style>

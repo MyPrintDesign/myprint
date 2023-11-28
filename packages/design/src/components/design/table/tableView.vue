@@ -14,7 +14,7 @@
       <td class="cp-print-table-column_body" v-for="(rowColumn, index) in rowList" :key="index"
           @click="clickBody(rowColumn)"
           :style="bodyStyle(rowColumn)">
-        <TextView v-if="rowColumn.type === 'Text'" :element="rowColumn as TextElement"/>
+        <TextView v-if="rowColumn.type === 'Text'" :element="rowColumn"/>
         <!--        <ImageView v-if="column.type === 'Image'" :element="convert(column, rowData, indexTr)"/>-->
       </td>
     </tr>
@@ -25,42 +25,47 @@
 <script setup lang="ts">
 
 import ColumnView from "./columnView.vue";
-import ImageView from "../image/image.vue";
+// import ImageView from "../image/image.vue";
 import TextView from "../text/text.vue";
 import {
   computed,
   onMounted,
-  PropType,
   watch,
-  inject
+  // inject
 } from "vue";
-import {Element, ElementOption, TextElement} from "../../../types/entity";
+import {Element, ElementOption} from "../../../types/entity";
 import {sortColumn} from "../../../utils/utils";
 import {unit2px, px2unit} from "../../../utils/devicePixelRatio";
 import {clearEventBubble} from "../../../utils/event";
-import {mittKey} from "../../../constants/keys";
+// import {mittKey} from "../../../constants/keys";
 import {initElement, valueUnit} from "../../../utils/elementUtil";
 
-const props = defineProps({
-  element: {type: Object as PropType<Element>, default: () => ({} as Element)}
+const props = withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
 
 defineExpose({computedWidth})
 
-const mitt = inject(mittKey)
+// const mitt = inject(mittKey)!
 // console.log(selectElement)
-mitt.on('sortColumn', handleSortColumn)
+// mitt.on('sortColumn', handleSortColumn)
 
 const bodyStyle = (column: Element) => {
   // console.log(column)
-  const style = {maxWidth: valueUnit(column.width), width: valueUnit(column.width), height: valueUnit(column.height)}
+  const style = {
+    maxWidth: valueUnit(column.width),
+    width: valueUnit(column.width),
+    height: valueUnit(column.height)
+  } as any
   if (props.element.option.borderAll) {
     style['border'] = '1px solid #771082'
   }
   return style
 }
 
-watch(() => props.element.width, (newQuestion, oldQuestion) => {
+watch(() => props.element.width, (_newQuestion, _oldQuestion) => {
   computedWidth()
 })
 
@@ -70,10 +75,12 @@ const copyOption = ['font', 'fontSize', 'blob', 'italic', 'underline', 'lineThro
 const columnList = computed(() => {
   // console.log(props.element.data)
   
-  return props.element.columnList.filter(v => {
+  return props.element.columnList!.filter((v: any) => {
     
     for (let string of copyOption) {
-      v.option[string] = props.element.option[string]
+      let elementOption = props.element.option as any
+      let vOption = v.option as any
+      vOption[string] = elementOption[string]
     }
     
     return v.option.enable != false
@@ -107,9 +114,9 @@ onMounted(() => {
 function initTable() {
   
   let columnTotalWidth = 0, maxHeight = -1;
-  let tableData = {}
-  for (let i = 0; i < props.element.columnList.length; i++) {
-    const column = props.element.columnList[i]
+  let tableData = {} as any
+  for (let i = 0; i < props.element.columnList!.length; i++) {
+    const column = props.element.columnList![i]
     column.id = crypto.randomUUID()
     columnTotalWidth += column.width
     if (maxHeight < column.height) {
@@ -122,7 +129,7 @@ function initTable() {
     column.option.sort = i;
     column.option.enable = column.option.enable || column.option.enable == null;
     
-    tableData[column.field] = column.data
+    tableData[column.field!] = column.data
     
     column.runtimeOption.workEnvironment = 'Table'
     
@@ -143,8 +150,8 @@ function initTable() {
     // 加上2像素的border的高
     props.element.height = px2unit(unit2px(maxHeight * 2) + 2)
     // console.log(props.data!.height)
-    for (let i = 0; i < props.element.columnList.length; i++) {
-      props.element.columnList[i].height = maxHeight;
+    for (let i = 0; i < props.element.columnList!.length; i++) {
+      props.element.columnList![i].height = maxHeight;
     }
   }
   // console.log(maxHeight * 2)
@@ -161,12 +168,12 @@ function initTable() {
 
 function computedWidth() {
   let columnTotalWidth = 0;
-  let minColumnTotalWidth = 0;
+  // let minColumnTotalWidth = 0;
   // console.log(toRaw(unref(columnList.value)))
-  for (let i = 0; i < columnList.value.length; i++) {
-    columnTotalWidth += columnList.value[i].width
-    minColumnTotalWidth += columnList.value[i].minWidth
-  }
+  // for (let i = 0; i < columnList.value.length; i++) {
+  //   columnTotalWidth += columnList.value[i].width
+  //   minColumnTotalWidth += columnList.value[i].minWidth
+  // }
   // console.log('computedWidth', columnTotalWidth)
   
   // if (props.data!.width > columnTotalWidth) {
@@ -180,28 +187,28 @@ function computedWidth() {
   // }
 }
 
-function convert(column, rowData, indexTr) {
-  console.log("convert", indexTr)
-  column.data = rowData[column.field]
-  return column
-}
+// function convert(column, rowData, indexTr) {
+//   console.log("convert", indexTr)
+//   column.data = rowData[column.field]
+//   return column
+// }
 
 //
-function mousedown(_ev) {
+function mousedown(_ev: MouseEvent) {
   // ev.stopPropagation()
 }
 
-function drop(event) {
+function drop(event: MouseEvent) {
   console.log('drop1', event)
   clearEventBubble(event)
   event.preventDefault()
 }
 
-function handleSortColumn(data) {
+function handleSortColumn(data: any) {
   sortColumn(props.element?.columnList, data.dragData, data.b, data.flag)
 }
 
-function clickBody(_column) {
+function clickBody(_column: any) {
   // selectElement.value = column
 }
 

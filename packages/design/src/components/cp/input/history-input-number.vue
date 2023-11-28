@@ -3,28 +3,32 @@
                    ref="numRef"
                    class="custom-input-number"
                    :controls="false" :precision="2"
-                   @update:model-value="(val)=>emit('update:modelValue', val)"
-                   @change="val=>changeWrapper(val, historyLabel)">
+                   @update:model-value="(val:any)=>emit('update:modelValue', val)"
+                   @change="(val:any)=>changeWrapper(val, historyLabel)">
   </el-input-number>
 </template>
 
 <script setup lang="ts">
 
-import { ElInputNumber } from 'element-plus'
-import {definePropType} from "@cp-print/design/constants/common";
+// import { ElInputNumber } from 'element-plus'
+// import {definePropType} from "@cp-print/design/constants/common";
 import {changeWrapper} from "@cp-print/design/utils/historyUtil";
 import {onMounted, ref} from "vue";
 
 const emit = defineEmits(['update:modelValue'])
 const numRef = ref(<InstanceType<any>>{})
-const props = defineProps({
-  modelValue: {
-    type: definePropType<number | null | undefined>([
-      Number,
-      Object,
-    ]), default: null
-  },
-  historyLabel: String
+// const props = defineProps({
+//   modelValue: {
+//     type: , default: null
+//   },
+//   historyLabel: String
+// })
+withDefaults(defineProps<{
+  modelValue?: number | object,
+  historyLabel: string,
+}>(), {
+  modelValue: null,
+  historyLabel: null,
 })
 
 onMounted(() => {

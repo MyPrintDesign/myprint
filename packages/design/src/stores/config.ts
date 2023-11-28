@@ -16,7 +16,7 @@ export const useConfigStore = defineStore('config', {
                 operation: {visible: true},
                 history: {visible: true},
                 elementList: {visible: false},
-            },
+            } as any,
             settingDesign: {
                 autoAlign: false
             }
@@ -29,13 +29,14 @@ export const useConfigStore = defineStore('config', {
 
         },
         updateConfig(key: string, value: string) {
-            this[key] = value
+            let self = this as any
+            self[key] = value
             this.postConfig()
         },
         postConfig() {
 
         },
-        setCursor(cursor: any) {
+        changeCursor(cursor: any) {
             // if (this.data.cursor) {
             //     document.body.classList.remove(this.data.cursor)
             // }
@@ -45,8 +46,8 @@ export const useConfigStore = defineStore('config', {
             this.cursor = cursor
         }
     },
-    persist: {
-        // 需要持久化的状态
-        enabled: true,
-    },
+    // persist: {
+    //     // 需要持久化的状态
+    //     enabled: true,
+    // },
 })

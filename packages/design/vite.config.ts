@@ -26,12 +26,12 @@ export default defineConfig({
         }
     },
     plugins: [vue(),
-        // AutoImport({
-        //     resolvers: [ElementPlusResolver()],
-        // }),
-        // Components({
-        //     resolvers: [ElementPlusResolver()],
-        // }),
+        AutoImport({
+            resolvers: [ElementPlusResolver()],
+        }),
+        Components({
+            resolvers: [ElementPlusResolver()],
+        }),
     ],
 
     resolve: {

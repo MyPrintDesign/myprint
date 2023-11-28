@@ -13,10 +13,10 @@ const MathCalc = {
      ** 调用：sum(arg1,arg2)
      ** 返回值：arg1 加上 arg2 的精确结果
      **/
-    sumScale(arg1: number, arg2: number, scale = 2) {
+    sumScale(arg1 = 0, arg2 = 0, scale = 2) {
         return this.sum(this.toFixed(arg1, scale), this.toFixed(arg2, scale))
     },
-    sum(arg1: number, arg2: number) {
+    sum(arg1 = 0, arg2 = 0) {
         let r1, r2
         try {
             r1 = arg1.toString().split('.')[1].length
@@ -51,7 +51,7 @@ const MathCalc = {
      ** 调用：sub(arg1,arg2)
      ** 返回值：arg1 加上 arg2 的精确结果
      **/
-    subScale(arg1: number, arg2: number, scale = 2) {
+    subScale(arg1 = 0, arg2 = 0, scale = 2) {
         return this.sub(this.toFixed(arg1, scale), this.toFixed(arg2, scale))
     },
     sub(arg1: number, arg2: number) {

@@ -26,8 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { ElIcon, ElButton } from 'element-plus'
-import {inject, ref} from 'vue'
+// import { ElIcon, ElButton } from 'element-plus'
+import {inject} from 'vue'
 import StyleDesign from "./styleDesign.vue";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
 import {i18n} from "@cp-print/design/locales";
@@ -36,14 +36,14 @@ import {ActionEnum, record, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {Printer} from "@element-plus/icons-vue";
 
 const panel = inject(panelKey)
-const mitt = inject(mittKey)
+const mitt = inject(mittKey)!
 
 function preview() {
-  mitt.emit('previewPanel')
+  mitt.emit('previewPanel', {} as any)
 }
 
 function save() {
-  mitt.emit('saveTemplate')
+  mitt.emit('saveTemplate', {} as any)
 }
 
 function clearPanelClick() {
@@ -53,24 +53,3 @@ function clearPanelClick() {
   })
 }
 </script>
-
-<style lang="scss" scoped>
-.toolbar-container {
-  height: var(--header-height);
-  display: flex;
-  overflow: hidden;
-  position: relative;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-  
-  .toolbar-tool {
-    justify-content: center;
-  }
-}
-</style>
-
-<style>
-.el-input-group__append {
-  padding: 0;
-}
-
-</style>

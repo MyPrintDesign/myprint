@@ -61,19 +61,23 @@
 </template>
 
 <script setup lang="ts">
-import { ElDialog, ElScrollbar, ElButton, ElSelect, ElOption } from 'element-plus'
+// import { ElDialog, ElScrollbar, ElButton, ElSelect, ElOption } from 'element-plus'
 import {ref, inject, onMounted, reactive} from "vue";
 import {toPdf} from "@cp-print/design/utils/pdfUtil";
 import {download, printCssStyle} from "@cp-print/design/utils/utils";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import Preview from "./preview.vue";
-import {Element} from "@cp-print/design/types/entity";
-import {messageFun, mittKey, panelKey, previewDataKey} from "@cp-print/design/constants/keys";
+import {Element, Panel} from "@cp-print/design/types/entity";
+import {messageFun,
+  // mittKey,
+  panelKey
+  // , previewDataKey
+} from "@cp-print/design/constants/keys";
 import {useSocket} from "@cp-print/design/stores/socket";
 import {i18n} from "@cp-print/design/locales";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
 import {useConfigStore} from "@cp-print/design/stores/config";
-import {autoPage} from "./autoPage";
+// import {autoPage} from "./autoPage";
 
 const {SEND: socketSend, printerList, connect} = useSocket()
 const configStore = useConfigStore()
@@ -82,19 +86,19 @@ const data = reactive({
   printer: configStore.defaultPrinter,
   pageList: [] as any
 })
-const previewContent = ref<HTMLDivElement[]>([])
-const mitt = inject(mittKey)
-const panel = inject(panelKey);
-const onMessage = inject(messageFun);
-const previewData = inject(previewDataKey);
-let itemRefs = {};
+const previewContent = ref<HTMLDivElement[]>()!
+// const mitt = inject(mittKey)!
+const panel = inject(panelKey)! as Panel
+const onMessage = inject(messageFun)!
+// const previewData = inject(previewDataKey)!
+let itemRefs = {} as any;
 
-mitt.on('previewPanel', previewPanel)
+// mitt.on('previewPanel', previewPanel)
 
 function print() {
   let html = ''
-  for (let i = 0; i < previewContent.value.length; i++) {
-    html += previewContent.value[i].outerHTML
+  for (let i = 0; i < previewContent.value!.length; i++) {
+    html += previewContent.value![i].outerHTML
   }
   socketSend(JSON.stringify({
         content: {html, printer: data.printer},
@@ -108,8 +112,8 @@ function downloadPdf() {
   // console.log(previewContent.value)
   if (connect) {
     let html = ''
-    for (let i = 0; i < previewContent.value.length; i++) {
-      html += previewContent.value[i].outerHTML
+    for (let i = 0; i < previewContent.value!.length; i++) {
+      html += previewContent.value![i].outerHTML
     }
     socketSend(JSON.stringify({
           content: {html},
@@ -132,18 +136,18 @@ onMounted(() => {
 
 })
 
-function setItemRef(el, item: Element) {
+function setItemRef(el:any, item: Element) {
   // console.log('setItemRef', item.label)
   // console.log('setItemRef')
   itemRefs[item.id] = el
 }
 
-function previewPanel() {
-  data.dialogVisible = true
-  // console.log(itemRefs)
-  // console.log(previewData)
-  autoPage(data.pageList, previewContent, itemRefs, previewData)
-}
+// function previewPanel() {
+//   data.dialogVisible = true
+//   // console.log(itemRefs)
+//   // console.log(previewData)
+//   autoPage(data.pageList, previewContent, itemRefs, previewData)
+// }
 
 function closePreviewPanel() {
   data.pageList = []
@@ -151,8 +155,8 @@ function closePreviewPanel() {
 
 function printArea() {
   let html = '<div>'
-  for (let i = 0; i < previewContent.value.length; i++) {
-    html += previewContent.value[i].outerHTML
+  for (let i = 0; i < previewContent.value!.length; i++) {
+    html += previewContent.value![i].outerHTML
   }
   html += '</div>'
   // 创建iframe
@@ -167,7 +171,7 @@ function printArea() {
   // 在页面插入iframe
   document.body.appendChild(iframe);
   // 获取iframe内的html
-  let iframeDocument = iframe.contentWindow.document;
+  let iframeDocument = iframe.contentWindow!.document;
   // 经需要打印的DOM插入iframe
   
   const linkElement = iframeDocument.createElement('style');
@@ -192,9 +196,9 @@ function printArea() {
   // 关闭iframe
   iframeDocument.close();
   // 使iframe失去焦点
-  iframe.contentWindow.focus();
+  iframe.contentWindow!.focus();
   // 调用iframe的打印方法
-  iframe.contentWindow.print();
+  iframe.contentWindow!.print();
   // 移除iframe
   setTimeout(function () {
     document.body.removeChild(iframe);

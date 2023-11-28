@@ -1,0 +1,21 @@
+.toolbar-container {
+  height: var(--header-height);
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+
+  .toolbar-tool {
+    justify-content: center;
+  }
+}
+
+
+.cp-group {
+  padding: 2px;
+  display: flex;
+}
+
+.group-font {
+  width: 200px;
+}

@@ -29,17 +29,26 @@
 </template>
 
 <script setup lang="ts">
-import { ElPopover } from 'element-plus'
+// import { ElPopover } from 'element-plus'
 import {ref, computed} from "vue";
 import {onClickOutside} from '@vueuse/core'
 
-const props = defineProps({
-  trigger: {type: String, default: 'hover'},
-  placement: {type: String, default: 'top'},
-  popperStyle: {type: Object, default: () => ({})},
-  pressHide: {type: Boolean, default: false},
-  lock: {type: Boolean, default: false},
+export interface Props {
+  trigger:string
+  placement:string
+  popperStyle:any
+  pressHide:boolean
+  lock:boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  trigger: 'hover',
+  placement: 'top',
+  popperStyle: () => ({}),
+  pressHide: false,
+  lock: false,
 })
+
 const visible = ref({
   popover: false
 })
@@ -48,9 +57,9 @@ const mousedownFlag = ref(false)
 const popoverVisible = computed(() => {
   return props.lock || visible.value.popover
 })
-let timer = null
+let timer: any = null
 
-function mousedown(ev) {
+function mousedown(_ev: MouseEvent) {
   // ev.stopPropagation()
   if (props.pressHide) {
     visible.value.popover = false
@@ -58,7 +67,7 @@ function mousedown(ev) {
   mousedownFlag.value = true;
 }
 
-function mouseup(ev) {
+function mouseup(_ev: MouseEvent) {
   // ev.stopPropagation()
   if (props.trigger == 'click') {
     updateVisible(!visible.value.popover)
@@ -73,7 +82,7 @@ function mouseup(ev) {
   
 }
 
-function hover(flag) {
+function hover(flag: boolean) {
   if (props.trigger == 'click') {
     return;
   }
@@ -84,7 +93,7 @@ function hover(flag) {
   updateVisible(flag)
 }
 
-function updateVisible(flag) {
+function updateVisible(flag: boolean) {
   
   if (timer != null) {
     clearTimeout(timer)

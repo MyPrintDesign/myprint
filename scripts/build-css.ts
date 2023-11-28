@@ -28,7 +28,7 @@ function compileLess(file: string): Promise<string> {
 
 async function build(pkgDirName: string) {
   const pkgDir = resolvePackagePath(pkgDirName, 'src');
-  const filePaths = await glob(['**/style/index.less'], {
+  const filePaths = await glob(['./styles/*.*'], {
     cwd: pkgDir
   });
   const indexLessFilePath = resolvePackagePath(pkgDirName, 'src', 'index.less');

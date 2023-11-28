@@ -22,7 +22,7 @@
 //     return i18nInit.global.t(msg)
 // }
 export function i18n(msg: any) {
-    return 'i18nInit.global.t(msg)' + msg
+    return '-' + msg
 }
 
 // export default i18nInit

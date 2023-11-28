@@ -30,31 +30,31 @@
         title="图片裁剪"
         append-to-body>
       <div style="width: 600px; height: 500px">
-        <VueCropper ref="cropper"
-                    :img="sourceBase64"
-                    :outputSize="option.outputSize"
-                    :outputType="option.outputType"
-                    :info="option.info"
-                    :canScale="option.canScale"
-                    :autoCrop="option.autoCrop"
-                    :autoCropWidth="option.autoCropWidth"
-                    :autoCropHeight="option.autoCropHeight"
-                    :fixed="option.fixed"
-                    :fixedNumber="option.fixedNumber"
-                    :full="option.full"
-                    :fixedBox="option.fixedBox"
-                    :canMove="option.canMove"
-                    :canMoveBox="option.canMoveBox"
-                    :original="option.original"
-                    :centerBox="option.centerBox"
-                    :height="option.height"
-                    :infoTrue="option.infoTrue"
-                    :maxImgSize="option.maxImgSize"
-                    :enlarge="option.enlarge"
-                    :mode="option.mode"
-                    @realTime="realTime"
-                    @imgLoad="imgLoad">
-        </VueCropper>
+<!--        <VueCropper ref="cropper"-->
+<!--                    :img="sourceBase64"-->
+<!--                    :outputSize="option.outputSize"-->
+<!--                    :outputType="option.outputType"-->
+<!--                    :info="option.info"-->
+<!--                    :canScale="option.canScale"-->
+<!--                    :autoCrop="option.autoCrop"-->
+<!--                    :autoCropWidth="option.autoCropWidth"-->
+<!--                    :autoCropHeight="option.autoCropHeight"-->
+<!--                    :fixed="option.fixed"-->
+<!--                    :fixedNumber="option.fixedNumber"-->
+<!--                    :full="option.full"-->
+<!--                    :fixedBox="option.fixedBox"-->
+<!--                    :canMove="option.canMove"-->
+<!--                    :canMoveBox="option.canMoveBox"-->
+<!--                    :original="option.original"-->
+<!--                    :centerBox="option.centerBox"-->
+<!--                    :height="option.height"-->
+<!--                    :infoTrue="option.infoTrue"-->
+<!--                    :maxImgSize="option.maxImgSize"-->
+<!--                    :enlarge="option.enlarge"-->
+<!--                    :mode="option.mode"-->
+<!--                    @realTime="realTime"-->
+<!--                    @imgLoad="imgLoad">-->
+<!--        </VueCropper>-->
       
       </div>
       <div class="image-handle-wrapper">
@@ -80,14 +80,19 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ElIcon, ElDialog } from 'element-plus'
-import 'vue-cropper/dist/index.css'
-import {VueCropper} from 'vue-cropper'
+// import { ElIcon, ElDialog } from 'element-plus'
+// import 'vue-cropper/dist/index.css'
+// import {VueCropper} from 'vue-cropper'
 
-import {onMounted, PropType, reactive, ref} from "vue";
+import {onMounted, reactive, ref} from "vue";
 import {Element} from "@cp-print/design/types/entity";
-import {useBase64} from "@vueuse/core";
-import {aspectRatioHeight, displayModelPreview, handleAspectRatioHeight, valueUnit} from "@cp-print/design/utils/elementUtil";
+// import {useBase64} from "@vueuse/core";
+import {
+  // aspectRatioHeight,
+  displayModelPreview,
+  handleAspectRatioHeight,
+  valueUnit
+} from "@cp-print/design/utils/elementUtil";
 import {
   Crop,
   MoreFilled,
@@ -100,11 +105,13 @@ import {
 } from "@element-plus/icons-vue";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 
-const props = defineProps({
-  element: {type: Object as PropType<Element>, default: () => ({} as Element)}
+const props = withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
-
-const cropper = ref<InstanceType<typeof VueCropper>>()
+// type s = typeof VueCropper
+const cropper = ref({} as InstanceType<any>)
 const uploadFileRef = ref<HTMLInputElement>()
 const sourceBase64 = ref()
 const contentBase64 = ref()
@@ -130,6 +137,7 @@ const option = {
   enlarge: 1, //图片根据截图框输出比例倍数
   mode: '600px 600px' //图片默认渲染方式
 }
+console.log(option)
 const data = reactive({
   cropVisible: false,
   dragFlag: false
@@ -145,12 +153,12 @@ function editImgClick() {
   data.cropVisible = true
 }
 
-function realTime(_data) {
+// function realTime(_data: any) {
   // console.log(data)
   // let that = this
   // that.previews = data
   
-}
+// }
 
 function imageZoomIn() {
   cropper.value.changeScale(1)
@@ -170,8 +178,8 @@ function rotateRight() {
 }
 
 function sureClip() {
-  cropper.value.getCropBlob(result => {
-    blobToDataURI(result, function (res) {
+  cropper.value.getCropBlob((result: any) => {
+    blobToDataURI(result, function (res: any) {
       // console.log(res)
       // that.previewImg = res
       props.element.data = res
@@ -181,19 +189,19 @@ function sureClip() {
   })
 }
 
-function blobToDataURI(blob, callback) {
+function blobToDataURI(blob: any, callback: any) {
   var reader = new FileReader();
   reader.readAsDataURL(blob);
   reader.onload = function (e) {
-    callback(e.target.result);
+    callback(e.target!.result);
   }
 }
 
-function imgLoad() {
+// function imgLoad() {
+//
+// }
 
-}
-
-function selectImg(event) {
+function selectImg(event: any) {
   let file = event.target.files[0]
   if (!/\.(jpg|jpeg|png|JPG|PNG)$/.test(event.target.value)) {
     // this.$message({
@@ -207,11 +215,11 @@ function selectImg(event) {
   let reader = new FileReader()
   reader.onload = (e) => {
     // console.log('选择图片1', e.target.result)
-    if (typeof e.target.result === 'object') {
-      sourceBase64.value = window.URL.createObjectURL(new Blob([e.target.result]))
+    if (typeof e.target!.result === 'object') {
+      sourceBase64.value = window.URL.createObjectURL(new Blob([e.target!.result!]))
       // console.log('选择图片3')
     } else {
-      sourceBase64.value = e.target.result
+      sourceBase64.value = e.target!.result
       props.element.data = sourceBase64.value
       // console.log(sourceBase64.value)
       // console.log('选择图片2', props.element.data)
@@ -222,12 +230,12 @@ function selectImg(event) {
   reader.readAsDataURL(file)
 }
 
-function chooseImg(_ev) {
+function chooseImg(_ev: any) {
   if (data.dragFlag) {
     data.dragFlag = false
     return
   }
-  uploadFileRef.value.click()
+  uploadFileRef.value!.click()
 }
 
 const imgRef = ref<HTMLImageElement>()
@@ -250,7 +258,7 @@ onMounted(() => {
 })
 
 function loadImg() {
-  const ratioTmp = imgRef.value.width / imgRef.value.height
+  const ratioTmp = imgRef.value!.width / imgRef.value!.height
   props.element.option.aspectRatio = ratioTmp
   handleAspectRatioHeight(props.element)
   return ratioTmp

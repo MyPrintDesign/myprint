@@ -11,7 +11,7 @@ interface keyListener {
 }
 
 const eventListeners: Array<keyListener> = [];
-const downKeyList = {};
+const downKeyList = {} as any;
 
 export function mountedKeyboardEvent() {
     addKeyboardEvent()
@@ -65,37 +65,37 @@ export function mountedKeyboardEvent() {
 
         .subscribe([isShift, 'ArrowUp'], () => {
             // console.log('ArrowUp')
-            selectedElementBatchOperation(element => element.y = element.y - px2unit(10))
+            selectedElementBatchOperation(element => element.y = element.y! - px2unit(10))
         })
         .subscribe([isShift, 'ArrowDown'], () => {
             // console.log('ArrowDown')
-            selectedElementBatchOperation(element => element.y = element.y + px2unit(10))
+            selectedElementBatchOperation(element => element.y = element.y! + px2unit(10))
         })
         .subscribe([isShift, 'ArrowLeft'], () => {
             // console.log('ArrowLeft')
-            selectedElementBatchOperation(element => element.x = element.x - px2unit(10))
+            selectedElementBatchOperation(element => element.x = element.x! - px2unit(10))
         })
         .subscribe([isShift, 'ArrowRight'], () => {
             // console.log('ArrowRight')
-            selectedElementBatchOperation(element => element.x = element.x + px2unit(10))
+            selectedElementBatchOperation(element => element.x = element.x! + px2unit(10))
         })
 
 
         .subscribe(['ArrowUp'], () => {
             // console.log('ArrowUp')
-            selectedElementBatchOperation(element => element.y = element.y - px2unit(1))
+            selectedElementBatchOperation(element => element.y = element.y! - px2unit(1))
         })
         .subscribe(['ArrowDown'], () => {
             // console.log('ArrowDown')
-            selectedElementBatchOperation(element => element.y = element.y + px2unit(1))
+            selectedElementBatchOperation(element => element.y = element.y! + px2unit(1))
         })
         .subscribe(['ArrowLeft'], () => {
             // console.log('ArrowLeft')
-            selectedElementBatchOperation(element => element.x = element.x - px2unit(1))
+            selectedElementBatchOperation(element => element.x = element.x! - px2unit(1))
         })
         .subscribe(['ArrowRight'], () => {
             // console.log('ArrowRight')
-            selectedElementBatchOperation(element => element.x = element.x + px2unit(1))
+            selectedElementBatchOperation(element => element.x = element.x! + px2unit(1))
         })
 
         .subscribe([isDelete], () => {

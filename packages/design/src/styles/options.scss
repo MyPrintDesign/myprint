@@ -1,0 +1,81 @@
+.option-container {
+  width: 180px;
+  height: 100%;
+  overflow: hidden;
+
+  .option-bottom {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 3px;
+
+    .cp-logo {
+      width: 100px;
+    }
+
+    .cp-version {
+      display: flex;
+      align-items: flex-end;
+      margin-left: 10px;
+    }
+  }
+
+  .header {
+    height: var(--header-height);
+    align-items: center;
+
+    .header-back-icon {
+      margin-left: 2px;
+      padding: 6px;
+    }
+
+    .header-back-icon:hover {
+      border-radius: 4px;
+      color: white;
+      background: var(--drag-h-color);
+    }
+  }
+}
+
+// basic
+.options {
+  text-align: center;
+  width: 60px;
+
+  .icon {
+    width: 60px;
+    height: 40px;
+    display: inline-block;
+    line-height: 1;
+    font-size: 40px;
+  }
+
+  .icon:hover {
+    border-radius: 5px;
+    background: var(--bg-highlight-color);
+  }
+
+  .icon:hover ~ .icon-tip {
+    visibility: visible;
+  }
+
+  .icon-tip {
+    visibility: hidden;
+    width: 60px;
+    height: 20px;
+    white-space: normal;
+    user-select: none;
+  }
+}
+
+.options-business {
+  justify-content: center;
+  align-items: center;
+  width: 85px;
+  height: 30px;
+  display: inline-flex;
+  overflow: hidden;
+  position: relative;
+  border-radius: 4px;
+  border: 1px var(--border-highlight-color) solid;
+  box-sizing: border-box;
+}

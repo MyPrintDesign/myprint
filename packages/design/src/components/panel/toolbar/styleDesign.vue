@@ -136,12 +136,14 @@
 </template>
 
 <script setup lang="ts">
-import { ElSelect, ElOption } from 'element-plus'
+// import { ElSelect, ElOption } from 'element-plus'
 import GroupInput from "../../cp/cp-group/groupInput.vue";
 import cpColorPicker from "../../cp/cp-colorPicker/cp-colorPicker.vue";
 import StyleIcon from "@cp-print/design/components/cp/icon";
 import {i18n} from "@cp-print/design/locales";
-import {elementSetting, fontList, fontSizeList, hasStyle} from "@cp-print/design/constants/common";
+import {
+  // elementSetting,
+  fontList, fontSizeList, hasStyle} from "@cp-print/design/constants/common";
 import {getCurrentElement} from "@cp-print/design/utils/elementUtil";
 import {CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 
@@ -163,19 +165,3 @@ const selectElement = getCurrentElement()
 // })
 
 </script>
-
-
-<style scoped>
-
-.cp-group {
-  padding: 2px;
-  display: flex;
-}
-
-.group-font {
-  width: 200px;
-}
-
-
-</style>
-

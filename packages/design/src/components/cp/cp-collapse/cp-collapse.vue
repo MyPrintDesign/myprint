@@ -10,43 +10,52 @@
           {{ element.label }}
           <slot name="head"/>
         </div>
-
+        
         <el-icon class="cp-handle-panel-icon" @click="clickHead">
           <ArrowRight class="collapse-panel-head-right-icon" :class="{'is-active': data.show }"/>
         </el-icon>
-
+        
         <el-icon class="collapse-panel-head-right-close cursor-pointer" @click="clickHeadClose">
           <Close class="collapse-panel-head-right-icon"/>
         </el-icon>
-
+      
       </div>
       <el-scrollbar style="height: calc(100% - 24px);">
         <slot/>
       </el-scrollbar>
       <div @mousedown="resize" v-if="data.show" class="collapse-panel-resize"></div>
-
+    
     </div>
   </Teleport>
 </template>
 <script setup lang="ts">
-import { ElIcon, ElScrollbar } from 'element-plus'
-import {computed, nextTick, onMounted, PropType, reactive, ref, CSSProperties} from "vue";
+// import {ElIcon, ElScrollbar} from 'element-plus'
+import {computed, nextTick, onMounted, reactive, ref, CSSProperties} from "vue";
 import {ArrowRight, Close} from "@element-plus/icons-vue";
-import {HandlePanel} from "@cp-print/design/types/entity";
+// import {HandlePanel} from "@cp-print/design/types/entity";
 import {useConfigStore} from "@cp-print/design/stores/config";
 import {getCollapsePanelZIndex} from "@cp-print/design/utils/utils";
-import { hasInjectionContext } from 'vue-demi';
-const props = defineProps({
-  element: {type: Object as PropType<HandlePanel>, default: () => ({} as HandlePanel)},
-  modelValue: {
-    type: Boolean,
-    default: false,
-  },
+// import {Props} from "@cp-print/design/types/props";
+import {HandlePanel} from "@cp-print/design/types/entity";
+// import {buildProps} from "@cp-print/design/utils/runtime";
+// import {propsHandlePanel} from "@cp-print/design/types/props";
+
+// export type Mutable<T> = { -readonly [P in keyof T]: T[P] }
+// const props = buildProps([propsHandlePanel])
+export interface Props {
+  element?: HandlePanel
+  modelValue?: boolean
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  element: () => ({} as HandlePanel),
+  modelValue: false,
 })
+
 const emit = defineEmits(['update:modelValue'])
 
-const {setCursor} = useConfigStore()
-const headRef = ref({} as HTMLDivElement)
+const useConfigStore1 = useConfigStore()
+const headRef = ref<HTMLDivElement>()!
 const data = reactive({
   x: 0,
   y: 0,
@@ -60,10 +69,9 @@ const data = reactive({
   loaded: false
 })
 
-
 onMounted(() => {
   data.zIndex = getCollapsePanelZIndex(data.zIndex)
-  const boundingClientRect = headRef.value.getBoundingClientRect();
+  const boundingClientRect = headRef.value!.getBoundingClientRect();
   const left = boundingClientRect.left
   const right = boundingClientRect.right
   data.x = left
@@ -97,8 +105,8 @@ const style = computed(() => {
   } as CSSProperties
 })
 
-function headMouseDown(e) {
-  setCursor('cursor-move')
+function headMouseDown(e:MouseEvent) {
+  useConfigStore1.changeCursor('cursor-move')
   data.zIndex = getCollapsePanelZIndex(data.zIndex)
   e.preventDefault();
   const disX = e.clientX
@@ -110,9 +118,9 @@ function headMouseDown(e) {
   let translateXTmp = data.translateX
   let translateYTmp = data.translateY
 
-  let height = headRef.value.offsetHeight
+  let height = headRef.value!.offsetHeight
 
-  const boundingClientRect = headRef.value.getBoundingClientRect();
+  const boundingClientRect = headRef.value!.getBoundingClientRect();
 
   document.onmousemove = function (e) {
     // 通过事件委托，计算移动的距离
@@ -147,7 +155,7 @@ function headMouseDown(e) {
   }
 
   document.onmouseup = function (_e) {
-    setCursor(null)
+    useConfigStore1.changeCursor(null)
     document.onmousemove = null
     document.onmouseup = null
   }
@@ -155,9 +163,9 @@ function headMouseDown(e) {
 
 }
 
-function resize(e) {
+function resize(e:MouseEvent) {
   e.preventDefault();
-  setCursor('cursor-ns-resize')
+  useConfigStore1.changeCursor('cursor-ns-resize')
   data.resizeIs = true
   const disY = e.clientY
   let tmpHeight = data.bodyResizeHeight
@@ -174,7 +182,7 @@ function resize(e) {
 
 
   document.onmouseup = function (_e) {
-    setCursor(null)
+    useConfigStore1.changeCursor(null)
     data.resizeIs = false
     document.onmousemove = null
     document.onmouseup = null
@@ -195,25 +203,26 @@ function resize(e) {
   border: 1px solid var(--drag-h-color);
   box-sizing: border-box;
   border-radius: 3px;
-
-
+  
+  
   .collapse-panel-head {
     cursor: move;
     overflow: hidden;
-
+    
     background: var(--drag-h-color);
     color: white;
     height: 20px;
     border-bottom: 1px solid #ebeef5;
-
+    
     .collapse-panel-head-title {
       flex: 1;
       font-size: 14px;
     }
+    
     .collapse-panel-head-right-icon {
       transition: transform var(--el-transition-duration);
     }
-
+    
     .collapse-panel-head-right-close {
       font-size: 20px;
       height: 16px;
@@ -222,34 +231,34 @@ function resize(e) {
       background: var(--drag-h-color);
       overflow: hidden;
       border-radius: 3px;
-
+      
       .collapse-panel-head-right-icon {
         transition: transform var(--el-transition-duration);
       }
-
+      
       :hover {
         background: red;
       }
     }
-
+    
   }
-
+  
   .is-active {
     transform: rotate(90deg);
   }
-
+  
   .collapse-panel-resize {
     width: 100%;
     height: 3px;
     opacity: 0.8;
     cursor: ns-resize;
   }
-
+  
   .collapse-panel-resize:hover {
     opacity: 0.8;
     background: var(--drag-h-color);
   }
-
+  
 }
 
 .disable-collapse-panel-height-duration {

@@ -8,7 +8,7 @@ export const customProvider: Array<Element> = [
         "data": "自定义文本",
         "width": 50,
         "height": 10
-    } as Element,
+    } as any,
     {
         "type": "TextTime",
         contentType: "Text",
@@ -17,7 +17,7 @@ export const customProvider: Array<Element> = [
         option: {formatter: "{{yyyy-MM-dd hh:mm:ss}}"} as ElementOption,
         "width": 43,
         "height": 5
-    } as Element,
+    } as any,
     {
         "type": "Image",
         iconClass: 'iconfont-color icon-color-img',
@@ -25,7 +25,7 @@ export const customProvider: Array<Element> = [
         "data": null,
         "width": 50.25,
         "height": 30
-    } as Element,
+    } as any,
     {
         "type": "HorizontalLine",
         iconClass: 'iconfont-color icon-color-vertical_solidline',
@@ -34,7 +34,7 @@ export const customProvider: Array<Element> = [
         "option": {
             borderWidth: 0.3
         } as ElementOption
-    } as Element,
+    } as any,
     {
         "type": "VerticalLine",
         iconClass: 'iconfont-color icon-color-crossrange_solidline',
@@ -43,7 +43,7 @@ export const customProvider: Array<Element> = [
         "option": {
             borderWidth: 0.3
         } as ElementOption,
-    } as Element,
+    } as any,
     {
         "type": "DottedHorizontalLine",
         iconClass: 'iconfont-color icon-color-vertical_dottedline',
@@ -51,7 +51,7 @@ export const customProvider: Array<Element> = [
         "option": {
             borderWidth: 0.3
         } as ElementOption,
-    } as Element,
+    } as any,
     {
         "type": "DottedVerticalLine",
         iconClass: 'iconfont-color icon-color-crossrange_dottedline',
@@ -59,7 +59,7 @@ export const customProvider: Array<Element> = [
         option: {
             borderWidth: 0.3
         } as ElementOption,
-    } as Element,
+    } as any,
     {
         type: "Rect",
         iconClass: 'iconfont icon-rectangle_solidline',
@@ -69,7 +69,7 @@ export const customProvider: Array<Element> = [
             borderWidth: 0.3
         } as ElementOption,
         "height": 30,
-    } as Element,
+    } as any,
     // {
     //     type: "Container",
     //     iconClass: 'iconfont-color icon-color-container',
@@ -82,13 +82,13 @@ export const customProvider: Array<Element> = [
         iconClass: 'iconfont-color icon-color-page_header',
         "data": "",
         "height": 30,
-    } as Element,
+    } as any,
     {
         type: "PageFooter",
         iconClass: 'iconfont-color icon-color-page_footer',
         "data": "",
         "height": 30,
-    } as Element,
+    } as any,
     {
         field: "",
         type: "PageNum",
@@ -102,5 +102,5 @@ export const customProvider: Array<Element> = [
 
         width: 30,
         height: 6,
-    } as Element
+    } as any
 ]

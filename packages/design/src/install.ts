@@ -1,19 +1,13 @@
 import {App, ref} from 'vue'
-import './styles/style.css'
-import './styles/var.scss'
-import './styles/commStyle.scss'
 
-import './styles/iconfont.css'
-import './styles/iconfont-color.css'
-import './styles/font.scss'
-import './styles/printStyle.scss'
-import './styles/element-plus-ui-cover.scss'
 import "vue3-colorpicker/style.css";
 
 import {messageFun, mittKey} from "./constants/keys";
 
+// @ts-ignore
 import mitt from 'mitt'
 import {createPinia} from "pinia";
+// @ts-ignore
 import piniaPersist from 'pinia-plugin-persist';
 // import Vue3ColorPicker from "vue3-colorpicker";
 // import i18n from "./locales";
@@ -50,7 +44,7 @@ const install = {
             pinia.use(piniaPersist)
             app.use(pinia)
         }
-        app
+        // app
             // .use(ElButton)
             // .use(ElSelect)
             // .use(ElOption)

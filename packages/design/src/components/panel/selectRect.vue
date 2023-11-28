@@ -16,12 +16,3 @@ defineProps({
 })
 
 </script>
-
-<style scoped>
-.selectRect {
-  z-index: 99999;
-  overflow: hidden;
-  outline: 1px solid slateblue;
-  position: absolute;
-}
-</style>

@@ -22,7 +22,7 @@
                class="pointer-events "
                :style="{left : valueUnit(element.x), top : valueUnit(element.y), width: valueUnit(element.width) , height: valueUnit(element.height),
                transform: getTranslate(element)}">
-            <TextView v-if="element.type == 'Text'" :element="element as TextElement"/>
+            <TextView v-if="element.type == 'Text'" :element="element"/>
             <ImageView v-if="element.type === 'Image'" :element="element"/>
             <TablePopoverView v-if="element.type === 'Table'" :element="element"/>
             <RectView v-if="element.type === 'Rect'" :element="element"/>
@@ -54,9 +54,9 @@
 </template>
 
 <script setup lang="ts">
-import { ElRow, ElCol } from 'element-plus'
+// import { ElRow, ElCol } from 'element-plus'
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
-import {computed, inject, onMounted, PropType, reactive, ref} from "vue";
+import {computed, inject, onMounted, reactive} from "vue";
 import HorizontalLine from "../../design/auxiliary/line//horizontalLine/horizontalLine.vue";
 import RectView from "../../design/auxiliary/rect/rect/rect.vue";
 import DottedHorizontalLine from "../../design/auxiliary/line/dottedHorizontalLine/dottedHorizontalLine.vue";
@@ -66,20 +66,21 @@ import DottedVerticalLine from "../../design/auxiliary/line/dottedVerticalLine/d
 import ImageView from "../../design/image/image.vue";
 import TablePopoverView from "../../design/table/tablePopoverView.vue";
 import {mm2pxNoScale} from "@cp-print/design/utils/utils";
-import {ContentScaleVo, TextElement} from "@cp-print/design/types/entity";
+import {ContentScaleVo} from "@cp-print/design/types/entity";
 import {clearEventBubble} from "@cp-print/design/utils/event";
 import MathCalc from "@cp-print/design/utils/numberUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {getCurrentElement, getTranslate, valueUnit} from "@cp-print/design/utils/elementUtil";
 
 const emit = defineEmits(['scale'])
-const panel = inject(panelKey)
-const mitt = inject(mittKey)
-
-const props = defineProps({
-  data: {type: Object as PropType<ContentScaleVo>, default: () => ({})}
+const panel = inject(panelKey)!
+const mitt = inject(mittKey)!
+const props = withDefaults(defineProps<{
+  data?: ContentScaleVo
+}>(), {
+  data: () => ({} as ContentScaleVo)
 })
-const scalePreviewRef = ref(<HTMLDivElement>{})
+// const scalePreviewRef = ref<HTMLDivElement>()!
 const translate = reactive({
   onScroll: true,
   x: 0,
@@ -116,7 +117,7 @@ const calc = computed(() => {
 
 const lookStyle = computed(() => {
   
-  const style = {}
+  const style = {} as any
   const screenWidth = props.data.scrollWidth;
   const screenHeight = props.data.scrollHeight;
   
@@ -132,7 +133,7 @@ const lookStyle = computed(() => {
   return style;
 })
 
-function mousedown(ev) {
+function mousedown(ev:MouseEvent) {
   const tmpX = ev.clientX;
   const tmpY = ev.clientY;
   // // 鼠标按下，计算当前元素距离可视区的距离
@@ -140,7 +141,7 @@ function mousedown(ev) {
   document.addEventListener('mouseup', mouseup);
   translate.onScroll = false
   
-  function mousemove(ev) {
+  function mousemove(ev:MouseEvent) {
     // console.log(ev)
     // 移动当前元素
     let offsetX = (ev.clientX - tmpX) / calc.value
@@ -159,7 +160,7 @@ function mousedown(ev) {
     return true
   }
   
-  function mouseup(ev) {
+  function mouseup(ev:MouseEvent) {
     // console.log(ev)
     
     clearEventBubble(ev)
@@ -187,7 +188,7 @@ function fresh() {
   // }
 }
 
-function scaleLoopMove(data) {
+function scaleLoopMove(data:any) {
   if (!translate.onScroll) {
     return
   }

@@ -34,21 +34,26 @@
 
 <script setup lang="ts">
 
-import {ColorPicker} from "vue3-colorpicker";
+// import {ColorPicker} from "vue3-colorpicker";
 import MyPopover from "../cp-popover/cp-popover.vue";
-import {rgbaToHex} from "@cp-print/design/utils/utils";
+// import {rgbaToHex} from "@cp-print/design/utils/utils";
 
-
-const props = defineProps({
-  enable: {type: Boolean, default: false},
-  modelValue: {type: String, default: ''},
-})
-const emit = defineEmits(['update:modelValue'])
-
-function changeFontColor(val) {
-  const hexColor = rgbaToHex(val);
-  emit('update:modelValue', hexColor)
+export interface Props {
+  enable?: boolean
+  modelValue?: string
 }
+
+const props = withDefaults(defineProps<Props>(), {
+  enable: false,
+  modelValue: '',
+})
+
+// const emit = defineEmits(['update:modelValue'])
+
+// function changeFontColor(val:any) {
+//   const hexColor = rgbaToHex(val);
+//   emit('update:modelValue', hexColor)
+// }
 
 
 

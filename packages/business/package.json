@@ -19,7 +19,6 @@
     "html2canvas": "^1.4.1",
     "jsbarcode": "^3.11.5",
     "jspdf": "^2.5.1",
-    "mitt": "^3.0.0",
     "pinia": "^2.1.4",
     "pinia-plugin-persist": "^1.0.0",
     "qrcode": "^1.5.3",

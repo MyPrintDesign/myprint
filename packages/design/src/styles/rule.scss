@@ -1,0 +1,24 @@
+.verticalRule {
+  background: #fcfcfd;
+  display: block;
+}
+
+.sticky-left {
+  position: -webkit-sticky;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+.sticky-top {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+
+.rule {
+  position: relative;
+  left: 0;
+}

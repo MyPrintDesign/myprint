@@ -35,7 +35,7 @@ export const useConfigStore = defineStore('config', {
         postConfig() {
 
         },
-        setCursor(cursor) {
+        changeCursor(cursor) {
             // if (this.data.cursor) {
             //     document.body.classList.remove(this.data.cursor)
             // }

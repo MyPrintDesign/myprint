@@ -49,7 +49,7 @@ function init() {
     record(<Snapshot>{
         type: "PANEL",
         action: ActionEnum.INIT,
-        element: getCurrentElement()
+        element: getCurrentElement().value
     })
     clear()
     // console.log(panel.elementList)
@@ -57,7 +57,7 @@ function init() {
 
 function record(snapshot: Snapshot) {
     let action = snapshot.action as any
-    let label: string
+    let label: any
     if (snapshot.element) {
         label = snapshot.element.label
         if (!label) {
@@ -69,7 +69,7 @@ function record(snapshot: Snapshot) {
     if (action == ActionEnum.UPDATE_STYLE) {
 
         // console.log('修改', title)
-        if (snapshot.element.id != null) {
+        if (snapshot.element!.id != null) {
             action = action.replace('{element}', label).replace("{content}", snapshot.content)
         } else {
             action = action.replace('{element}', '面板').replace("{content}", snapshot.content)
@@ -140,12 +140,12 @@ function redoPanel() {
     // copyBasicType(historyRecord.value.target, panel)
 }
 
-export function changeWrapper(val: string | number, title: string, callback?: (arg: typeof val) => void) {
-    record(<Snapshot>{
-        element: getCurrentElement(),
+export function changeWrapper(val: string | number, title?: string, callback?: (arg: typeof val) => void) {
+    record({
+        element: getCurrentElement().value,
         content: title,
         action: ActionEnum.UPDATE_STYLE
-    })
+    } as Snapshot)
     if (callback) {
         callback(val)
     }

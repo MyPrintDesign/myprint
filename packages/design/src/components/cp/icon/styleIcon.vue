@@ -18,21 +18,27 @@
 </template>
 
 <script setup lang="ts">
-import { ElTooltip } from 'element-plus'
-import {inject, nextTick, ref} from "vue";
+// import {ElTooltip} from 'element-plus'
+import {inject, ref} from "vue";
 import {mittKey} from "@cp-print/design/constants/keys";
 import {ActionEnum, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {getCurrentElement} from "@cp-print/design/utils/elementUtil";
 
 const emit = defineEmits(['update:modelValue'])
-const mitt = inject(mittKey)
+const mitt = inject(mittKey)!
 
-const props = defineProps({
-  tips: {type: String, default: ""},
-  enable: {type: Boolean, default: false},
-  modelValue: {type: Boolean, default: false},
-  marginTop: {type: String, default: ""}
-})
+const props = withDefaults(defineProps<{
+      tips?: string,
+      enable?: boolean,
+      modelValue?: boolean,
+      marginTop?: string,
+    }>(),
+    {
+      tips: "",
+      enable: false,
+      modelValue: false,
+      marginTop: ""
+    })
 
 const hoverFlag = ref(false)
 
@@ -44,7 +50,7 @@ function click() {
   mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: getCurrentElement().value} as Snapshot)
 }
 
-function hover(flag) {
+function hover(flag: boolean) {
   hoverFlag.value = flag
 }
 

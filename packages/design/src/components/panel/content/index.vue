@@ -28,13 +28,15 @@
 </template>
 
 <script setup lang="ts">
-import { ElScrollbar } from 'element-plus'
-import {inject, onMounted, ref} from "vue";
+// import { ElScrollbar } from 'element-plus'
+import {
+  // inject,
+  onMounted, ref} from "vue";
 
 import Toolbar from '../toolbar/toolbar.vue'
 import PreviewPanel from "../../preview/previewPanel.vue";
-import {mittKey} from "@cp-print/design/constants/keys";
-import {ScrollbarInstance} from "element-plus";
+// import {mittKey} from "@cp-print/design/constants/keys";
+// import {ScrollbarInstance} from "element-plus";
 // import ElementResizeDetectorMaker from "element-resize-detector";
 // import _ from 'lodash'
 import CpPanel from "./cp-panel.vue";
@@ -46,18 +48,18 @@ import {useConfigStore} from "@cp-print/design/stores/config";
 
 const configStore = useConfigStore()
 
-const scrollbarRef = ref(<ScrollbarInstance>{})
+const scrollbarRef = ref<HTMLElement>()!
 
-const mitt = inject(mittKey)
+// const mitt = inject(mittKey)!
 // 事件绑定
 // mitt.on("preview", preview)
-mitt.on('scaleMove', scaleMove)
+// mitt.on('scaleMove', scaleMove)
 
 /**
  * 滑动事件
  * @param data
  */
-function scroll(_data) {
+function scroll(_data:any) {
   // console.log(data)
   // contentScaleRef.value.scaleLoopMove({x: data.scrollLeft, y: data.scrollTop})
 }
@@ -66,11 +68,11 @@ function scroll(_data) {
  * minimap 的 移动事件
  * @param data
  */
-function scaleMove(data) {
-  scrollbarRef.value.scrollTo(data.x, data.y)
-}
+// function scaleMove(data:any) {
+//   scrollbarRef.value!.scrollTo(data.x, data.y)
+// }
 
-function clickHandlePanelIcon(key: string) {
+function clickHandlePanelIcon(key: any) {
   configStore.settingPanel[key].visible = !configStore.settingPanel[key].visible
 }
 
@@ -104,50 +106,3 @@ onMounted(() => {
 
 
 </script>
-
-<style scoped>
-.design-container {
-  flex: 1;
-  position: relative;
-  height: 100%;
-  transition: width 0.28s;
-}
-
-.design-panel {
-  display: flex;
-  position: relative;
-  box-sizing: border-box;
-  height: calc(100% - var(--header-height));
-  background: #eef0f5;
-}
-
-.advanced-config {
-  overflow: hidden;
-  background: white;
-}
-
-.handle-panel-icon {
-  color: var(--drag-h-color);
-  width: 18px;
-  height: 18px;
-  margin-left: 1px;
-  margin-right: 1px;
-  margin-top: 5px;
-  font-size: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 2px;
-}
-
-.handle-panel-icon:hover {
-  background: var(--bg-highlight-color);
-}
-
-.handle-panel-icon-active {
-  color: white;
-  background: var(--drag-h-color);
-}
-
-
-</style>

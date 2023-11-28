@@ -1,6 +1,6 @@
 <template>
   <div class="options">
-    <div :class="data.iconClass" class="icon"
+    <div :class="(data as any).iconClass" class="icon"
          draggable="true"
          @dragstart.native="dragStart($event)"
          @dragend.native="dragEnd($event)"
@@ -11,21 +11,23 @@
 </template>
 <script setup lang="ts">
 
-import {inject, PropType, ref} from "vue";
+import {inject, ref} from "vue";
 import {Element, elementTypeFormat} from "@cp-print/design/types/entity";
 import {dragDataStore} from "@cp-print/design/stores/dragStore";
 import {dragImg, removeDragImg} from "@cp-print/design/utils/utils";
 import {unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
 
-const mitt = inject(mittKey)
-const panel = inject(panelKey)
+const mitt = inject(mittKey)!
+const panel = inject(panelKey)!
 
 const dragDataValueStore = dragDataStore()
 const isDrop = ref(false)
 
-const props = defineProps({
-  data: {type: Object as PropType<Element>, default: () => ({} as Element)}
+const props = withDefaults(defineProps<{
+  data?: Element
+}>(), {
+  data: () => ({} as Element)
 })
 
 function dragStart(ev: DragEvent) {
@@ -44,35 +46,3 @@ function dragEnd(_ev: DragEvent) {
   dragDataValueStore.data.dragIng = false
 }
 </script>
-
-<style scoped>
-.options {
-  text-align: center;
-  width: 60px;
-}
-
-.icon {
-  width: 60px;
-  height: 40px;
-  display: inline-block;
-  line-height: 1;
-  font-size: 40px;
-}
-
-.icon:hover {
-  border-radius: 5px;
-  background: var(--bg-highlight-color);
-}
-
-.icon:hover ~ .icon-tip {
-  visibility: visible;
-}
-
-.icon-tip {
-  visibility: hidden;
-  width: 60px;
-  height: 20px;
-  white-space: normal;
-  user-select: none;
-}
-</style>

@@ -23,13 +23,13 @@ export interface Point {
 }
 
 export interface Container extends Point, ElementRelation {
-    id?: string
-    status?: string;
-    width?: number;
-    height?: number;
-    minWidth?: number;
-    minHeight?: number;
-    type?: elementType
+    id: string
+    status: string;
+    width: number;
+    height: number;
+    minWidth: number;
+    minHeight: number;
+    type: elementType
 }
 
 export interface Panel extends Container {
@@ -42,13 +42,13 @@ export interface Panel extends Container {
     watermarkContent: string
     design: Design
     orientation?: "p" | "portrait" | "l" | "landscape"
-    pageHeader: Element
-    pageFooter: Element
+    pageHeader?: Element
+    pageFooter?: Element
 }
 
 
-export class PreviewWrapper {
-    element: Element
+export interface PreviewWrapper {
+    element: Element | undefined
     offsetLastElementTop: number
 }
 
@@ -105,9 +105,9 @@ export interface HandlePanel extends Container {
 
 
 export interface Element extends Container {
-    id?: string
-    minWidth?: number
-    minHeight?: number
+    id: string
+    minWidth: number
+    minHeight: number
 
     contentType?: textContentType
     field?: string
@@ -118,13 +118,13 @@ export interface Element extends Container {
     data?: any
 
     columnList?: Element[]
-    status?: elementStatus
-    option?: ElementOption
+    status: elementStatus
+    option: ElementOption
 
     /**
      * 运行时配置
      */
-    runtimeOption?: RuntimeElementOption
+    runtimeOption: RuntimeElementOption
     /**
      * 是否锁定
      */
@@ -163,8 +163,8 @@ export interface RuntimeElementOption extends Position {
 }
 
 export interface ElementOption {
-    barCodeType?: string
-    aspectRatio?: number
+    barCodeType: string
+    aspectRatio: number
     font: string
     fontSize: number
     opacity: number
@@ -175,7 +175,7 @@ export interface ElementOption {
     lineThrough: boolean
     italic: boolean
     borderAll: boolean
-    borderWidth?: number
+    borderWidth: number
     rotate: number
     textType: string
     textAlign: textAlign
@@ -196,15 +196,15 @@ export interface ElementOption {
 }
 
 export interface Position extends Point {
-    top?: number
-    bottom?: number
-    left?: number
-    right?: number
+    top: number
+    bottom: number
+    left: number
+    right: number
 }
 
 export interface ContentScaleVo {
-    scrollWidth: number,
-    scrollHeight: number,
+    scrollWidth?: number,
+    scrollHeight?: number,
     openIs: boolean
 }
 

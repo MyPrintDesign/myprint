@@ -8,30 +8,30 @@
 </template>
 
 <script setup lang="ts">
-import {inject} from "vue";
-import {mittKey} from "@cp-print/design/constants/keys";
+// import {inject} from "vue";
+// import {mittKey} from "@cp-print/design/constants/keys";
 import {dragDataStore} from "@cp-print/design/stores/dragStore";
 
 const emit = defineEmits(['drop', 'dragover', 'dragleave'])
 
-const props = defineProps({
-  onPreventDefault: {
-    type: Function,
-    default: () => true
-  },
+const props = withDefaults(defineProps<{
+  onPreventDefault?: Function
+}>(), {
+  onPreventDefault: () => true
 })
-const mitt = inject(mittKey)
 
-mitt.on('optionsDragStart', optionsDragStart)
+// const mitt = inject(mittKey)!
+
+// mitt.on('optionsDragStart', optionsDragStart)
 const {data: dragData} = dragDataStore()
 
 // prevent
-function optionsDragStart(ev) {
-  dragData.start.x = ev.offsetX
-  dragData.start.y = ev.offsetY
-}
+// function optionsDragStart(ev: DragEvent) {
+//   dragData.start.x = ev.offsetX
+//   dragData.start.y = ev.offsetY
+// }
 
-function drop(ev) {
+function drop(ev: DragEvent) {
   ev.preventDefault()
   ev.stopPropagation()
   
@@ -42,7 +42,7 @@ function drop(ev) {
   emit('drop', dragData)
 }
 
-function dragover(ev) {
+function dragover(ev: DragEvent) {
   if (props.onPreventDefault(dragData)) {
     ev.preventDefault()
     ev.stopPropagation()
@@ -50,7 +50,7 @@ function dragover(ev) {
   }
 }
 
-function dragleave(ev) {
+function dragleave(ev: DragEvent) {
   ev.preventDefault()
   ev.stopPropagation()
   emit('dragleave', 'dragleave')

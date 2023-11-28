@@ -1,8 +1,9 @@
-import {InjectionKey, Ref} from "vue/dist/vue";
-import {Emitter} from "mitt";
+import {InjectionKey, Ref} from "vue";
 import {Element, Panel, Provider} from "@cp-print/design/types/entity";
 import {EventTypes} from "@cp-print/design/types/eventType";
 
+// @ts-ignore
+import {Emitter} from 'mitt'
 export const mittKey: InjectionKey<Emitter<EventTypes>> =
     Symbol('mittKey')
 

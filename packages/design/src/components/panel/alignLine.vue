@@ -9,27 +9,29 @@
   />
 </template>
 <script setup lang="ts">
-import {PropType} from "vue";
 import {Element} from "@cp-print/design/types/entity";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
 
-const props = defineProps({
-  data: {type: Object as PropType<Element>, default: () => ({} as Element)}
+withDefaults(defineProps<{
+  data?: Element
+}>(), {
+  data: () => ({} as Element)
 })
+
 
 function getStyle() {
   let classObj = {
     verticalAlignLine: false,
     horizontalAlignLine: false
   }
-  switch (props.data.type) {
-    case 'VerticalAlignLine' :
-      classObj.verticalAlignLine = true
-      break
-    case 'HorizontalAlignLine' :
-      classObj.horizontalAlignLine = true
-      break
-  }
+  // switch (props.data.type) {
+  //   case 'VerticalAlignLine' :
+  //     classObj.verticalAlignLine = true
+  //     break
+  //   case 'HorizontalAlignLine' :
+  //     classObj.horizontalAlignLine = true
+  //     break
+  // }
   return classObj
 }
 

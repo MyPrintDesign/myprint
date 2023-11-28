@@ -30,14 +30,14 @@
     /* Interop Constraints */
     "esModuleInterop": true,
     /* Type Checking */
-    "strict": false,
+    "strict": true,
     "noImplicitAny": true,
     "strictFunctionTypes": false,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     /* Completeness */
-    "skipLibCheck": true
+    "skipLibCheck": true,
   },
   "include": [
     "src/**/*.ts",

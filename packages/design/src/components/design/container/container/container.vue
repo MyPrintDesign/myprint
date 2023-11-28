@@ -13,20 +13,21 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, PropType} from "vue";
+import {onMounted} from "vue";
 import {DragWrapper, Element} from "@cp-print/design/types/entity";
 // 可以接收拖动组件
-import {inject, reactive} from "vue";
-import {mittKey} from "@cp-print/design/constants/keys";
+import {reactive} from "vue";
 import CpDrop from "@cp-print/design/components/cp/drop";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {addElement} from "@cp-print/design/utils/elementUtil";
 
-const props = defineProps({
-  element: {type: Object as PropType<Element>, default: () => ({} as Element)}
+const props = withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
 
-const mitt = inject(mittKey)
+// const mitt = inject(mittKey)
 const data = reactive({
   dropOver: false
 })
@@ -40,20 +41,20 @@ function drop(dragData: DragWrapper) {
   console.log(dragData.element)
   const dragElement = dragData.element
   
-  dragElement.x = px2unit(dragData.end.x - dragData.start.x)
-  dragElement.y = px2unit(dragData.end.y - dragData.start.y)
+  dragElement.x = px2unit(dragData.end.x! - dragData.start.x!)
+  dragElement.y = px2unit(dragData.end.y! - dragData.start.y!)
   addElement(props.element, dragElement)
   
   data.dropOver = false
 }
 
-function dragover(msg) {
+function dragover(msg: string) {
   console.log(msg)
   
   data.dropOver = true
 }
 
-function dragleave(msg) {
+function dragleave(msg: string) {
   console.log(msg)
   data.dropOver = false
 }

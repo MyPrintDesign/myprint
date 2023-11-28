@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElForm, ElFormItem, ElSwitch, ElSelect, ElOption } from 'element-plus'
+// import { ElForm, ElFormItem, ElSwitch, ElSelect, ElOption } from 'element-plus'
 import {useSocket} from "@cp-print/design/stores/socket";
 import {computed} from "vue";
 import {clientProtocolList} from "@cp-print/design/constants/common";
@@ -73,22 +73,3 @@ const statusName = computed(() => {
 })
 
 </script>
-
-<style scoped>
-.printer-panel {
-  padding: 20px;
-  height: calc(100% - 100px);
-  
-  .printer-status-icon {
-    border-radius: 10px;
-  }
-  
-  .printer-status-icon-normal {
-    color: #0ec300;
-  }
-  
-  .printer-status-icon-error {
-    color: darkred;
-  }
-}
-</style>

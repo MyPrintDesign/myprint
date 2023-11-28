@@ -6,7 +6,7 @@ import {arrayIndexOf, arrayRemove} from "@cp-print/design/utils/arrays";
 let collapsePanelZIndex = 1000
 
 
-export function sortColumn(arr:any, dragData:any, b:any, flag:any) {
+export function sortColumn(arr: any, dragData: any, b: any, flag: any) {
     arrayRemove(arr, dragData)
     // console.log(arr)
     let index = arrayIndexOf(arr, b)
@@ -17,7 +17,7 @@ export function sortColumn(arr:any, dragData:any, b:any, flag:any) {
     }
 }
 
-export function click(ev: any, realFun: ()=>{}) {
+export function click(ev: any, realFun: () => void) {
     clearEventBubble(ev)
     realFun()
 }
@@ -33,27 +33,27 @@ export function to<T>(targetObj: any, target: T): T {
     //     target[targetObjKey] = targetObj[targetObjKey]
     // }
     // return target;
-    return Object.assign(target, targetObj);
+    return Object.assign(target as any, targetObj);
 }
 
-export function copyBasicType<T>(sourceObj: any, target: T) {
-    for (let targetObjKey in sourceObj) {
-        let pro = sourceObj[targetObjKey]
-        if (pro instanceof Object) {
-            copyBasicType(pro, target[targetObjKey])
-            console.log(targetObjKey, 'true')
-        } else {
-            target[targetObjKey] = pro
-        }
-    }
-}
+// export function copyBasicType<T>(sourceObj: any, target: T) {
+//     for (let targetObjKey in sourceObj) {
+//         let pro = sourceObj[targetObjKey]
+//         if (pro instanceof Object) {
+//             copyBasicType(pro, target[targetObjKey] )
+//             console.log(targetObjKey, 'true')
+//         } else {
+//             target[targetObjKey] = pro
+//         }
+//     }
+// }
 
-export function swap<T>(targetObj: any, target: T) {
-    const tmp = {}
-    Object.assign(tmp, target);
-    Object.assign(target, targetObj);
-    Object.assign(targetObj, tmp);
-}
+// export function swap<T>(targetObj: any, target: T) {
+//     const tmp = {}
+//     Object.assign(tmp, target);
+//     Object.assign(target, targetObj);
+//     Object.assign(targetObj, tmp);
+// }
 
 // export function toElement(targetObj: any): Element {
 //     let element: Element
@@ -87,8 +87,8 @@ export const canvas = document.createElement('canvas');
 canvas.width = 200;
 canvas.height = 200;
 // 获取绘图上下文
-const context = canvas.getContext('2d');
-let image
+const context = canvas.getContext('2d')!
+let image: any
 
 export function dragImg(panel: Panel, element: Element, event: DragEvent) {
     // 创建一个新的canvas元素
@@ -129,7 +129,7 @@ export function dragImg(panel: Panel, element: Element, event: DragEvent) {
     image.src = canvas.toDataURL();
     document.body.appendChild(image);
 
-    event.dataTransfer.setDragImage(image, offsetX, offsetY)
+    event.dataTransfer!.setDragImage(image, offsetX, offsetY)
 }
 
 export function removeDragImg() {
@@ -146,7 +146,7 @@ export function mm2pxNoScale(mm: number) {
 }
 
 
-export function stringify(obj: any, ...ignore) {
+export function stringify(obj: any, ...ignore: any[]) {
     return JSON.stringify(obj, (key, value) => {
         if (ignore.includes(key)) return undefined
         return value
@@ -160,8 +160,8 @@ export function getCollapsePanelZIndex(zIndex: number) {
     return ++collapsePanelZIndex
 }
 
-export function rgbaToHex(rgba) {
-    const rgbaValues = rgba.match(/\d+/g);
+export function rgbaToHex(rgba: string) {
+    const rgbaValues = rgba.match(/\d+/g)!
     const r = Math.round(parseInt(rgbaValues[0]));
     const g = Math.round(parseInt(rgbaValues[1]));
     const b = Math.round(parseInt(rgbaValues[2]));
@@ -177,7 +177,7 @@ export function rgbaToHex(rgba) {
     return '#' + hexR + hexG + hexB + hexA;
 }
 
-let printCssStyleCache = null
+let printCssStyleCache: any = undefined
 
 export function printCssStyle() {
     if (printCssStyleCache) {

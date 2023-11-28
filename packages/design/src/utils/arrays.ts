@@ -1,11 +1,11 @@
-export function arrayRemove(val, pro) {
+export function arrayRemove(val:any, pro:any) {
     const index = arrayIndexOf(val, pro)
     if (index > -1) {
         val.splice(index, 1)
     }
 }
 
-export function arrayIndexOf(val, pro) {
+export function arrayIndexOf(val:any, pro:any) {
     for (let i = 0; i < val.length; i++) {
         if (pro === undefined) {
             if (val[i] === pro) return i

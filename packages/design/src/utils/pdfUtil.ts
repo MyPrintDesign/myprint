@@ -21,8 +21,8 @@ let defaultOptions = {
  * @param pageDomList
  * @param options
  */
-export async function toPdf(pageDomList, options) {
-    let doc = new JsPDF(null, 'px', [options.width, options.height]);
+export async function toPdf(pageDomList:any, options:any) {
+    let doc = new JsPDF(undefined, 'px', [options.width, options.height]);
     // options = Object.assign(defaultOptions, options);
     // console.log(pageDomList)
     console.log(options)
@@ -62,7 +62,7 @@ export async function toPdf(pageDomList, options) {
 
         // doc.output('dataurlnewwindow');
         // doc.save(options.name + '.pdf');
-        
+
         if (i + 1 < pageDomList.length) {
             doc.addPage()
         }

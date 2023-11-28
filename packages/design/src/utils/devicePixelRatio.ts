@@ -3,7 +3,7 @@ import {PageUnit} from "@cp-print/design/types/entity";
 // import {lastPageUnit} from "@cp-print/design/utils/elementUtil";
 const lastPageUnit = 'px' as PageUnit
 let mmDiv = document.createElement("div");
-let body = document.querySelector("body")
+let body = document.querySelector("body")!
 mmDiv.id = "mm";
 mmDiv.style.width = "1mm";
 mmDiv.className = "scrollbar-measure";
@@ -24,13 +24,13 @@ export {
 }
 
 
-export function px2unit(val: number) {
+export function px2unit(val: number): number {
     // 获取每毫米的像素值
     return unit2unit('px', lastPageUnit, val)
 }
 
-export function unit2px(val: number) {
-    if (isNaN(val)) {
+export function unit2px(val: number | undefined) {
+    if (isNaN(val!)) {
         return 0
     }
     // 获取每毫米的像素值
@@ -46,11 +46,11 @@ const unitConvert = {
         px: {ratio: displayRatio, compute: 'mul'},
         cm: {ratio: 10, compute: 'div'},
     },
-};
+} as any;
 
-export function unit2unit(oldUnit: PageUnit, newUnit: PageUnit, val: number) {
+export function unit2unit(oldUnit: PageUnit, newUnit: PageUnit, val: number | undefined): number {
     if (val == null) {
-        return null
+        return 0
     }
     if (isNaN(val)) {
         return 0

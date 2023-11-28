@@ -46,13 +46,13 @@
 
 <script setup lang="ts">
 import {computed, inject, PropType, ref} from "vue";
-import {Element} from "@cp-print/design/types/entity";
-import {clearEventBubble} from "@cp-print/design/utils/event";
-import {click, unit2px, px2unit} from "@cp-print/design/utils/utils";
-import {mittKey} from "@cp-print/design/constants/keys";
-import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
-import {disableHandleList, getTranslate, valueUnit} from "@cp-print/design/utils/elementUtil";
-import {ActionEnum, Snapshot} from "@cp-print/design/utils/historyUtil";
+import {Element} from "packages/design/src/types/entity";
+import {clearEventBubble} from "packages/design/src/utils/event";
+import {click, unit2px, px2unit} from "packages/design/src/utils/utils";
+import {mittKey} from "packages/design/src/constants/keys";
+import {scaleUtil} from "packages/design/src/utils/scaleUtil";
+import {disableHandleList, getTranslate, valueUnit} from "packages/design/src/utils/elementUtil";
+import {ActionEnum, Snapshot} from "packages/design/src/utils/historyUtil";
 
 const mitt = inject(mittKey)
 

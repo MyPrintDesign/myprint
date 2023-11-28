@@ -21,21 +21,23 @@
 </template>
 <script setup lang="ts">
 
-import {computed, inject, PropType, reactive, ref, CSSProperties} from "vue";
+import {computed, inject, reactive, ref, CSSProperties} from "vue";
 import {DragWrapper, Element} from "../../../types/entity";
 import {clearEventBubble} from "../../../utils/event";
 import {dragDataStore} from "../../../stores/dragStore";
 import {mittKey} from "../../../constants/keys";
 import {elementCommonStyle, valueUnit} from "../../../utils/elementUtil";
 
-const mitt = inject(mittKey)
+const mitt = inject(mittKey)!
 
-const props = defineProps({
-  element: {type: Object as PropType<Element>, default: () => ({} as Element)}
+const props = withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
 
 const data = reactive({
-  sortTipLine: null
+  sortTipLine: undefined as string | undefined
 })
 
 const columnRef = ref()
@@ -62,7 +64,7 @@ const headContentStyle = computed(() => {
   return elementCommonStyle(props.element)
 })
 
-function drop(ev) {
+function drop(ev: DragEvent) {
   // 判断排序
   clearTip(ev)
   let dragData = dragDataValueStore.data as DragWrapper;
@@ -77,7 +79,7 @@ function drop(ev) {
   })
 }
 
-function dragover(ev) {
+function dragover(ev: DragEvent) {
   let dragData = dragDataValueStore.data as DragWrapper;
   let column = dragData.element
   ev.preventDefault()
@@ -92,16 +94,16 @@ function dragover(ev) {
   }
 }
 
-function dragleave(ev) {
+function dragleave(ev: DragEvent) {
   clearTip(ev)
 }
 
-function clearTip(ev) {
-  data.sortTipLine = null
+function clearTip(ev: DragEvent) {
+  data.sortTipLine = undefined
   clearEventBubble(ev)
 }
 
-function mousedown(ev) {
+function mousedown(ev: DragEvent) {
   // console.log('down', ev)
   if (props.element.option.disableSort) {
     return
