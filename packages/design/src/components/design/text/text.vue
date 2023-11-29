@@ -111,7 +111,3 @@ watch(() => props.element.option.formatter, (_n, _o) => {
   }
 })
 </script>
-<style scoped>
-
-
-</style>

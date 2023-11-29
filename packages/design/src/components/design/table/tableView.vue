@@ -213,7 +213,3 @@ function clickBody(_column: any) {
 }
 
 </script>
-
-<style scoped>
-
-</style>

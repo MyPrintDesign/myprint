@@ -14,8 +14,6 @@ import glob from 'fast-glob';
 import type {OutputOptions} from 'rollup';
 import {resolvePackagePath} from './util';
 import path from "path";
-import postcss from 'rollup-plugin-postcss';
-// import babel from 'rollup-plugin-babel';
 
 const getExternal = async (pkgDirName: string) => {
     const pkgPath = resolvePackagePath(pkgDirName, 'package.json');
@@ -84,9 +82,6 @@ const build = async (pkgDirName: string) => {
             // babel({
             //     exclude: 'node_modules/**', // 指定哪些文件夹时不进行babel编译的
             // }),
-            postcss({
-                plugins:[]
-            }),
             esbuild({
                 sourceMap: true,
                 target: 'es2015',

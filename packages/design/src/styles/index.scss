@@ -1,11 +1,21 @@
 @use './commStyle.scss';
 // component styles
+@use './cp-colorPicker.scss';
+@use './cp-icon.scss';
+@use './cp-image.scss';
+@use './cp-input-group.scss';
+@use './cp-other.scss';
+@use './cp-popover.scss';
 @use './element-plus-ui-cover.scss';
 @use './font.scss';
-@use './handle-panel';
+@use './handle-panel.scss';
+@use './iconfont.css';
+@use './iconfont-color.css';
 @use './options.scss';
 @use './panel.scss';
+@use './preview.scss';
 @use './printStyle.scss';
-@use './rule';
-@use './toolbar';
+@use './rule.scss';
+@use './style.scss';
+@use './toolbar.scss';
 @use './var.scss';

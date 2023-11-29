@@ -1,10 +1,6 @@
 import {createApp} from 'vue'
-import './style.css'
-import './styles/var.scss'
-import './styles/commStyle.scss'
+import '@cp-print/design/styles/index.scss'
 
-import './styles/font.scss'
-import './styles/element-plus-ui-cover.scss'
 import {mittKey} from "@/constants/keys";
 import router from './router'
 import App from './App.vue'
@@ -19,12 +15,11 @@ pinia.use(piniaPersist)
 const app = createApp(App)
 app.use(pinia)
 
-import ElementPlus from 'element-plus'
-app.use(ElementPlus)
+// import ElementPlus from 'element-plus'
+// app.use(ElementPlus)
 
 app.use(createPrint)
 app.provide(mittKey, mitt())
-
 
 app
     .use(router)

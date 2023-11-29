@@ -50,7 +50,3 @@ watch([() => qrCode.value, () => props.element.data, () => props.element.height,
   props.element.option.aspectRatio = 1
 }, {immediate: true})
 </script>
-
-<style scoped>
-
-</style>

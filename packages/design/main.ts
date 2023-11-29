@@ -1,17 +1,12 @@
 import { createApp } from 'vue';
 import Example from './example.vue';
-import './src/index.less';
 
-import './src/styles/style.css'
-import '@cp-print/design/styles/var.scss'
-import '@cp-print/design/styles/commStyle.scss'
+// import './src/styles/index.scss'
+// import Vue3ColorPicker from "vue3-colorpicker";
 
-import './styles/iconfont.css'
-import './styles/iconfont-color.css'
-import '@cp-print/design/styles/font.scss'
-import '@cp-print/design/styles/printStyle.scss'
-import '@cp-print/design/styles/element-plus-ui-cover.scss'
 const app = createApp(Example);
+// app
+//     .use(Vue3ColorPicker)
 
 app.mount(document.querySelector('#app') as HTMLDivElement)
 

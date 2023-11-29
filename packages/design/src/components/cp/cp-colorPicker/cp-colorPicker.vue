@@ -3,7 +3,7 @@
       trigger="click"
       placement="bottom">
     <template #reference>
-      <div class="display-flex font-style font-color" :class="{'cp-icon-disabled': !enable}">
+      <div class="display-flex font-style font-color" :class="{'cp-icon-disabled': !enable}" @click="changeFontColor">
         <div class="display-flex">
           <div class="display-flex-column">
             <slot/>
@@ -18,13 +18,13 @@
       
       </div>
     </template>
-<!--    <color-picker is-widget-->
-<!--                  format="rgb"-->
-<!--                  shape="circle"-->
-<!--                  :disableAlpha="true"-->
-<!--                  roundHistory-->
-<!--                  @pureColorChange="changeFontColor">-->
-<!--    </color-picker>-->
+    <color-picker is-widget
+                  format="rgb"
+                  shape="circle"
+                  :disableAlpha="true"
+                  roundHistory
+                  @pureColorChange="changeFontColor">
+    </color-picker>
     
     <!--          <el-button type="primary" @click="confirm">确定</el-button>-->
     <!--          <el-button @click="isShowColorPicker(false)">关闭</el-button>-->
@@ -33,10 +33,10 @@
 </template>
 
 <script setup lang="ts">
-
+// import "vue3-colorpicker/style.css";
 // import {ColorPicker} from "vue3-colorpicker";
 import MyPopover from "../cp-popover/cp-popover.vue";
-// import {rgbaToHex} from "@cp-print/design/utils/utils";
+import {rgbaToHex} from "@cp-print/design/utils/utils";
 
 export interface Props {
   enable?: boolean
@@ -48,25 +48,10 @@ const props = withDefaults(defineProps<Props>(), {
   modelValue: '',
 })
 
-// const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue'])
 
-// function changeFontColor(val:any) {
-//   const hexColor = rgbaToHex(val);
-//   emit('update:modelValue', hexColor)
-// }
-
-
-
-</script>
-
-<style scoped>
-.font-color-display {
-  width: 20px;
-  height: 2px;
+function changeFontColor(val:any) {
+  const hexColor = rgbaToHex(val);
+  emit('update:modelValue', hexColor)
 }
-
-</style>
-
-<style lang="scss">
-
-</style>
+</script>

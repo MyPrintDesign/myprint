@@ -32,16 +32,10 @@
 // import {ElIcon, ElScrollbar} from 'element-plus'
 import {computed, nextTick, onMounted, reactive, ref, CSSProperties} from "vue";
 import {ArrowRight, Close} from "@element-plus/icons-vue";
-// import {HandlePanel} from "@cp-print/design/types/entity";
 import {useConfigStore} from "@cp-print/design/stores/config";
 import {getCollapsePanelZIndex} from "@cp-print/design/utils/utils";
-// import {Props} from "@cp-print/design/types/props";
 import {HandlePanel} from "@cp-print/design/types/entity";
-// import {buildProps} from "@cp-print/design/utils/runtime";
-// import {propsHandlePanel} from "@cp-print/design/types/props";
 
-// export type Mutable<T> = { -readonly [P in keyof T]: T[P] }
-// const props = buildProps([propsHandlePanel])
 export interface Props {
   element?: HandlePanel
   modelValue?: boolean

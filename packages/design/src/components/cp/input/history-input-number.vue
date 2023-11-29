@@ -27,8 +27,8 @@ withDefaults(defineProps<{
   modelValue?: number | object,
   historyLabel: string,
 }>(), {
-  modelValue: null,
-  historyLabel: null,
+  modelValue: undefined,
+  historyLabel: undefined,
 })
 
 onMounted(() => {
@@ -38,10 +38,3 @@ onMounted(() => {
 })
 
 </script>
-
-
-<style lang="scss">
-.custom-input-number .el-input__wrapper {
-  padding: 0 !important;
-}
-</style>

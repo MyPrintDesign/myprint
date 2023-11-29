@@ -34,3 +34,48 @@
   outline: 1px solid slateblue;
   position: absolute;
 }
+
+
+//content
+.design-container {
+  flex: 1;
+  position: relative;
+  height: 100%;
+  transition: width 0.28s;
+
+  .design-panel {
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    height: calc(100% - var(--header-height));
+    background: #eef0f5;
+  }
+
+  .advanced-config {
+    overflow: hidden;
+    background: white;
+  }
+
+  .handle-panel-icon {
+    color: var(--drag-h-color);
+    width: 18px;
+    height: 18px;
+    margin-left: 1px;
+    margin-right: 1px;
+    margin-top: 5px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+  }
+
+  .handle-panel-icon:hover {
+    background: var(--bg-highlight-color);
+  }
+
+  .handle-panel-icon-active {
+    color: white;
+    background: var(--drag-h-color);
+  }
+}

@@ -1,54 +1,94 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/ban-types */
-import fs from 'node:fs';
-import path from 'node:path';
-import glob from 'fast-glob';
-import less from 'less';
-import { resolvePackagePath, writeFile } from './util';
+import path from 'path'
+import chalk from 'chalk'
+// @ts-ignore
+import {dest, parallel, series, src} from 'gulp'
+import gulpSass from 'gulp-sass'
+import * as dartSass from 'sass'
+import autoprefixer from 'gulp-autoprefixer'
+import cleanCSS from 'gulp-clean-css'
+import rename from 'gulp-rename'
+import consola from 'consola'
+import {resolvePackagePath} from './util';
 
-function compileLess(file: string): Promise<string> {
-  return new Promise((resolve: Function, reject: Function) => {
-    const content = fs.readFileSync(file, { encoding: 'utf8' });
-    less
-      .render(content, {
-        paths: [path.dirname(file)],
-        filename: file,
-        plugins: [],
-        javascriptEnabled: true
-      })
-      .then((result: { css: any }) => {
-        resolve(result.css);
-      })
-      .catch((err: any) => {
-        reject(err);
-      });
-  });
+const pkgDirName = 'design'
+
+const distFolder = resolvePackagePath(pkgDirName, 'dist', 'css', 'styles')
+const distBundle = resolvePackagePath(pkgDirName, 'dist')
+// console.log(distFolder)
+// console.log(distBundle)
+
+/**
+ * compile theme-chalk scss & minify
+ * not use sass.sync().on('error', sass.logError) to throw exception
+ * @returns
+ */
+function buildThemeChalk() {
+  const sass = gulpSass(dartSass)
+  const noElPrefixFile = /(index|base|display)/
+  return src(resolvePackagePath(pkgDirName, 'src/styles/*.scss'))
+      .pipe(sass.sync())
+      .pipe(autoprefixer({cascade: false}))
+      .pipe(
+          cleanCSS({}, (details) => {
+            consola.success(
+                `${chalk.cyan(details.name)}: ${chalk.yellow(
+                    details.stats.originalSize / 1000
+                )} KB -> ${chalk.green(details.stats.minifiedSize / 1000)} KB`
+            )
+          })
+      )
+      .pipe(
+          rename((path) => {
+            // if (!noElPrefixFile.test(path.basename)) {
+            //   path.basename = `el-${path.basename}`
+            // }
+          })
+      )
+      .pipe(dest(distFolder))
 }
 
-async function build(pkgDirName: string) {
-  const pkgDir = resolvePackagePath(pkgDirName, 'src');
-  const filePaths = await glob(['./styles/*.*'], {
-    cwd: pkgDir
-  });
-  const indexLessFilePath = resolvePackagePath(pkgDirName, 'src', 'index.less');
-  if (fs.existsSync(indexLessFilePath)) {
-    filePaths.push('index.less');
-  }
-  for (let i = 0; i < filePaths.length; i++) {
-    const file = filePaths[i];
-    const absoluteFilePath = resolvePackagePath(pkgDirName, 'src', file);
-    const cssContent = await compileLess(absoluteFilePath);
-    const cssPath = resolvePackagePath(
-      pkgDirName,
-      'dist',
-      'css',
-      file.replace(/.less$/, '.css')
-    );
-    writeFile(cssPath, cssContent);
-  }
+/**
+ * Build dark Css Vars
+ * @returns
+ */
+function buildDarkCssVars() {
+  const sass = gulpSass(dartSass)
+  return src(path.resolve(__dirname, 'src/dark/css-vars.scss'))
+      .pipe(sass.sync())
+      .pipe(autoprefixer({cascade: false}))
+      .pipe(
+          cleanCSS({}, (details) => {
+            consola.success(
+                `${chalk.cyan(details.name)}: ${chalk.yellow(
+                    details.stats.originalSize / 1000
+                )} KB -> ${chalk.green(details.stats.minifiedSize / 1000)} KB`
+            )
+          })
+      )
+      .pipe(dest(`${distFolder}/dark`))
 }
-console.log('[CSS] 开始编译Less文件···');
-await build('design');
-// await build('business');
-console.log('[CSS] 编译Less成功！');
+
+/**
+ * copy from packages/theme-chalk/dist to dist/element-plus/theme-chalk
+ */
+export function copyThemeChalkBundle() {
+  return src(`${distFolder}/**`).pipe(dest(distBundle))
+}
+
+/**
+ * copy source file to packages
+ */
+
+export function copyThemeChalkSource() {
+  // console.log(resolvePackagePath(pkgDirName, 'src/assets/fonts/**'))
+  return src(resolvePackagePath(pkgDirName, 'src/assets/fonts/**')).pipe(
+      dest(resolvePackagePath(pkgDirName, 'dist/css/assets/fonts'))
+  )
+}
+
+export const build = parallel(
+    copyThemeChalkSource,
+    series(buildThemeChalk)
+)
+
+build()

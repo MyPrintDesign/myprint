@@ -9,36 +9,3 @@
 defineOptions({name: 'CpGroupInput'})
 
 </script>
-
-<style lang="scss">
-.group-container {
-  display: flex;
-}
-
-.group-container > :not(:last-child) {
-  margin-right: -1px;
-  border-right-width: 1px;
-}
-
-.group-container > :not(:first-child) {
-}
-
-.group-container > :not(:last-child) .el-input__wrapper {
-  border-top-right-radius: 0 !important;
-  border-bottom-right-radius: 0 !important;
-}
-.group-container .is-focus {
-  z-index: 2;
-}
-
-.group-container > :not(:first-child) .el-input__wrapper {
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
-}
-
-.group-container > :not(:first-child) .el-input__wrapper {
-  border-top-left-radius: 0 !important;
-  border-bottom-left-radius: 0 !important;
-}
-
-</style>

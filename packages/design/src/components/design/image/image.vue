@@ -30,31 +30,31 @@
         title="图片裁剪"
         append-to-body>
       <div style="width: 600px; height: 500px">
-<!--        <VueCropper ref="cropper"-->
-<!--                    :img="sourceBase64"-->
-<!--                    :outputSize="option.outputSize"-->
-<!--                    :outputType="option.outputType"-->
-<!--                    :info="option.info"-->
-<!--                    :canScale="option.canScale"-->
-<!--                    :autoCrop="option.autoCrop"-->
-<!--                    :autoCropWidth="option.autoCropWidth"-->
-<!--                    :autoCropHeight="option.autoCropHeight"-->
-<!--                    :fixed="option.fixed"-->
-<!--                    :fixedNumber="option.fixedNumber"-->
-<!--                    :full="option.full"-->
-<!--                    :fixedBox="option.fixedBox"-->
-<!--                    :canMove="option.canMove"-->
-<!--                    :canMoveBox="option.canMoveBox"-->
-<!--                    :original="option.original"-->
-<!--                    :centerBox="option.centerBox"-->
-<!--                    :height="option.height"-->
-<!--                    :infoTrue="option.infoTrue"-->
-<!--                    :maxImgSize="option.maxImgSize"-->
-<!--                    :enlarge="option.enlarge"-->
-<!--                    :mode="option.mode"-->
-<!--                    @realTime="realTime"-->
-<!--                    @imgLoad="imgLoad">-->
-<!--        </VueCropper>-->
+        <VueCropper ref="cropper"
+                    :img="sourceBase64"
+                    :outputSize="option.outputSize"
+                    :outputType="option.outputType"
+                    :info="option.info"
+                    :canScale="option.canScale"
+                    :autoCrop="option.autoCrop"
+                    :autoCropWidth="option.autoCropWidth"
+                    :autoCropHeight="option.autoCropHeight"
+                    :fixed="option.fixed"
+                    :fixedNumber="option.fixedNumber"
+                    :full="option.full"
+                    :fixedBox="option.fixedBox"
+                    :canMove="option.canMove"
+                    :canMoveBox="option.canMoveBox"
+                    :original="option.original"
+                    :centerBox="option.centerBox"
+                    :height="option.height"
+                    :infoTrue="option.infoTrue"
+                    :maxImgSize="option.maxImgSize"
+                    :enlarge="option.enlarge"
+                    :mode="option.mode"
+                    @realTime="realTime"
+                    @imgLoad="imgLoad">
+        </VueCropper>
       
       </div>
       <div class="image-handle-wrapper">
@@ -81,8 +81,6 @@
 </template>
 <script setup lang="ts">
 // import { ElIcon, ElDialog } from 'element-plus'
-// import 'vue-cropper/dist/index.css'
-// import {VueCropper} from 'vue-cropper'
 
 import {onMounted, reactive, ref} from "vue";
 import {Element} from "@cp-print/design/types/entity";
@@ -153,12 +151,12 @@ function editImgClick() {
   data.cropVisible = true
 }
 
-// function realTime(_data: any) {
-  // console.log(data)
+function realTime(_data: any) {
+  console.log(data)
   // let that = this
   // that.previews = data
   
-// }
+}
 
 function imageZoomIn() {
   cropper.value.changeScale(1)
@@ -197,9 +195,9 @@ function blobToDataURI(blob: any, callback: any) {
   }
 }
 
-// function imgLoad() {
-//
-// }
+function imgLoad() {
+
+}
 
 function selectImg(event: any) {
   let file = event.target.files[0]
@@ -263,74 +261,4 @@ function loadImg() {
   handleAspectRatioHeight(props.element)
   return ratioTmp
 }
-
-
 </script>
-<style scoped>
-.choose-img_wrapper {
-  width: 100%;
-  height: 100%;
-}
-
-.img_wrapper {
-  display: flex;
-}
-
-.img_wrapper:hover .img-tool_wrapper {
-  visibility: visible;
-}
-
-.img-tool_wrapper {
-  width: 50px;
-  height: 30px;
-  color: white;
-  background: var(--drag-h-color);
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom-left-radius: 5px;
-  right: 0;
-  top: 0;
-  z-index: 1;
-  
-  .img-tool-icon {
-    font-size: 20px;
-    margin: 0 2px;
-  }
-}
-
-.avatar-uploader-icon {
-  background-color: #fafafa;;
-  font-size: 28px;
-  color: #8c939d;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-}
-
-.image-handle-wrapper {
-  height: 44px;
-  width: 200px;
-  margin: 20px auto 0 auto;
-  padding-left: 22px;
-  padding-right: 22px;
-  border-radius: 44px;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  background: #606266;
-  
-  .image-handle-icon {
-    color: white;
-    font-size: 20px;
-    margin: auto 10px;
-  }
-  
-  .image-handle-icon-sure {
-    color: #65DB79;
-    font-size: 20px;
-    margin: auto 10px;
-  }
-}
-</style>

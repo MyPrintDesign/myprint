@@ -55,18 +55,3 @@ function hover(flag: boolean) {
 }
 
 </script>
-
-<style scoped>
-
-.focus {
-  background: #a0cfff;
-}
-
-.style-icon {
-  text-align: center;
-  border-radius: 3px;
-  width: 23px;
-  height: 23px;
-}
-
-</style>

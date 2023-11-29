@@ -1,6 +1,6 @@
 <template>
   <el-popover
-      popper-class="my-popover"
+      popper-class="cp-popover"
       :popper-style="popperStyle"
       :placement="placement"
       :visible="popoverVisible"
@@ -11,8 +11,7 @@
       <div @mousedown="mousedown($event)"
            @mouseup="mouseup($event)"
            @mouseover="hover(true)"
-           @mouseleave="hover(false)"
-      >
+           @mouseleave="hover(false)">
         <slot name="reference"/>
       </div>
     </template>
@@ -34,11 +33,11 @@ import {ref, computed} from "vue";
 import {onClickOutside} from '@vueuse/core'
 
 export interface Props {
-  trigger:string
-  placement:string
-  popperStyle:any
-  pressHide:boolean
-  lock:boolean
+  trigger?: string
+  placement?: string
+  popperStyle?: any
+  pressHide?: boolean
+  lock?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -118,27 +117,3 @@ function updateVisible(flag: boolean) {
 let stop: ReturnType<typeof onClickOutside>
 
 </script>
-
-<style lang="scss" scoped>
-
-</style>
-<!--
--->
-<style lang="scss">
-.my-popover {
-  background-color: transparent !important;
-  border-color: transparent !important;
-  padding: 0 !important;
-  width: auto !important;
-  min-width: auto !important;
-  box-shadow: none !important;
-}
-
-.my-popover .el-popover__title {
-  color: black;
-}
-
-.my-popover .popper__arrow::after {
-  border-top-color: #090d29 !important;
-}
-</style>

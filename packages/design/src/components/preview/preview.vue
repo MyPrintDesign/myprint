@@ -36,6 +36,3 @@ const props = withDefaults(defineProps<{
 const element = computed(() => props.preview.element)!
 
 </script>
-<style scoped>
-
-</style>

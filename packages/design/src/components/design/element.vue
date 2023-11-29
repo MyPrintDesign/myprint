@@ -14,14 +14,11 @@ import CpText from './text'
 import CpImage from "./image";
 import {CpDottedHorizontalLine, CpDottedVerticalLine, CpHorizontalLine, CpVerticalLine, CpRect} from "./auxiliary";
 
-import {Element, TextElement} from "@cp-print/design/types/entity";
-import {PropType} from "vue";
+import {Element} from "@cp-print/design/types/entity";
 
-console.log({} as TextElement)
-defineProps({
-  element: {type: Object as PropType<Element>, default: () => ({} as Element)}
+withDefaults(defineProps<{
+  element?: Element
+}>(), {
+  element: () => ({} as Element)
 })
 </script>
-<style scoped>
-
-</style>

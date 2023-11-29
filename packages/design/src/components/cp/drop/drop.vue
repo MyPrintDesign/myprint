@@ -56,7 +56,3 @@ function dragleave(ev: DragEvent) {
   emit('dragleave', 'dragleave')
 }
 </script>
-
-<style scoped>
-
-</style>

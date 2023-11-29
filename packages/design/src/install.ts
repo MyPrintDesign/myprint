@@ -9,7 +9,9 @@ import mitt from 'mitt'
 import {createPinia} from "pinia";
 // @ts-ignore
 import piniaPersist from 'pinia-plugin-persist';
-// import Vue3ColorPicker from "vue3-colorpicker";
+import Vue3ColorPicker from "vue3-colorpicker";
+import VueCropper from 'vue-cropper';
+import 'vue-cropper/dist/index.css'
 // import i18n from "./locales";
 // import {useSocket} from "@/stores/socket";
 // import 'element-plus/es/components/button/style/index'
@@ -24,10 +26,7 @@ import piniaPersist from 'pinia-plugin-persist';
 // import {ElButton, ElSelect, ElOption, ElIcon, ElScrollbar, ElPopover,ElTooltip,ElInput,ElInputNumber,
 //     ElContainer, ElAside, ElMain, ElRow,ElCol,ElForm,ElFormItem,ElDivider,ElSwitch} from 'element-plus'
 
-
-
 const onSocketMessage = ref<Function>()
-
 
 const install = {
     install(app: App<any>): any {
@@ -44,7 +43,7 @@ const install = {
             pinia.use(piniaPersist)
             app.use(pinia)
         }
-        // app
+        app
             // .use(ElButton)
             // .use(ElSelect)
             // .use(ElOption)
@@ -64,7 +63,8 @@ const install = {
             // .use(ElDivider)
             // .use(ElSwitch)
             // .use(i18n)
-            // .use(Vue3ColorPicker)
+            .use(VueCropper)
+            .use(Vue3ColorPicker)
         app.provide(messageFun, onSocketMessage)
         app.provide(mittKey, mitt())
     }

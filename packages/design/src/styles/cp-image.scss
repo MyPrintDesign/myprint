@@ -1,0 +1,69 @@
+
+.choose-img_wrapper {
+  width: 100%;
+  height: 100%;
+
+  .avatar-uploader-icon {
+    background-color: #fafafa;;
+    font-size: 28px;
+    color: #8c939d;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+  }
+}
+
+.img_wrapper {
+  display: flex;
+}
+
+.img_wrapper:hover .img-tool_wrapper {
+  visibility: visible;
+}
+
+.img-tool_wrapper {
+  width: 50px;
+  height: 30px;
+  color: white;
+  background: var(--drag-h-color);
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-left-radius: 5px;
+  right: 0;
+  top: 0;
+  z-index: 1;
+
+  .img-tool-icon {
+    font-size: 20px;
+    margin: 0 2px;
+  }
+}
+
+
+
+.image-handle-wrapper {
+  height: 44px;
+  width: 200px;
+  margin: 20px auto 0 auto;
+  padding-left: 22px;
+  padding-right: 22px;
+  border-radius: 44px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  background: #606266;
+
+  .image-handle-icon {
+    color: white;
+    font-size: 20px;
+    margin: auto 10px;
+  }
+
+  .image-handle-icon-sure {
+    color: #65DB79;
+    font-size: 20px;
+    margin: auto 10px;
+  }
+}

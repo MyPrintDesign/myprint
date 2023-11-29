@@ -1,0 +1,16 @@
+.cp-popover {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  padding: 0 !important;
+  width: auto !important;
+  min-width: auto !important;
+  box-shadow: none !important;
+}
+
+.cp-popover .el-popover__title {
+  color: black;
+}
+
+.cp-popover .popper__arrow::after {
+  border-top-color: #090d29 !important;
+}

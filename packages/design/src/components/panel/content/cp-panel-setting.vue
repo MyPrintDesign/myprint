@@ -88,7 +88,7 @@ import {CpUnit, CpHistoryInput, CpHistorySelect, CpHistoryInputNumber} from "@cp
 import GroupInput from "../../cp/cp-group/groupInput.vue";
 import {changePageSize, changePageUnit} from "@cp-print/design/utils/elementUtil";
 
-const panel = inject(panelKey)
+const panel = inject(panelKey)!
 
 function selectPageSize(val:any) {
   // console.log(123)
