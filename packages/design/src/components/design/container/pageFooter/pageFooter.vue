@@ -1,5 +1,4 @@
 <template>
-  
   <cp-drag
       :element="element"
       snap
@@ -16,7 +15,7 @@
         @dragover="dragover"
         @dragleave="dragleave"
         @preventDefault="dropPreventDefault">
-<!--      <element-list :element-list="element.elementList"/>-->
+      <element-list :element-list="element.elementList"/>
     </cp-drop>
   </cp-drag>
 
@@ -26,15 +25,11 @@
 import {onMounted} from "vue";
 import {DragWrapper, Element} from "@cp-print/design/types/entity";
 import CpDrag from "@cp-print/design/components/design/drag";
-import {reactive,
-  // watch
-} from "vue";
+import {reactive} from "vue";
 import CpDrop from "@cp-print/design/components/cp/drop";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
-import {addElement,
-  // initElement
-} from "@cp-print/design/utils/elementUtil";
-// import ElementList from "../../elementList.vue";
+import {addElement} from "@cp-print/design/utils/elementUtil";
+import ElementList from "@cp-print/design/components/design/elementList.vue";
 
 const props = withDefaults(defineProps<{
   element?: Element
@@ -62,13 +57,13 @@ function drop(dragData: DragWrapper) {
   data.dropOver = false
 }
 
-function dragover(msg:string) {
+function dragover(msg: string) {
   console.log(msg)
   
   data.dropOver = true
 }
 
-function dragleave(msg:string) {
+function dragleave(msg: string) {
   console.log(msg)
   data.dropOver = false
 }

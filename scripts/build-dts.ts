@@ -104,6 +104,7 @@ async function generateTypesDefinitions(
 ) {
   const compilerOptions: CompilerOptions = {
     emitDeclarationOnly: true,
+    strict: false,
     outDir
   };
   const project = new Project({

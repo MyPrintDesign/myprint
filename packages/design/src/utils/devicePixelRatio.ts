@@ -1,7 +1,10 @@
 import numberUtil from "@cp-print/design/utils/numberUtil";
 import {PageUnit} from "@cp-print/design/types/entity";
+import {useAppStoreHook} from "@cp-print/design/stores/app";
+
+const appStore = useAppStoreHook()
+
 // import {lastPageUnit} from "@cp-print/design/utils/elementUtil";
-const lastPageUnit = 'px' as PageUnit
 let mmDiv = document.createElement("div");
 let body = document.querySelector("body")!
 mmDiv.id = "mm";
@@ -23,10 +26,9 @@ export {
     displayRatio
 }
 
-
 export function px2unit(val: number): number {
     // 获取每毫米的像素值
-    return unit2unit('px', lastPageUnit, val)
+    return unit2unit('px', appStore.lastPageUnit, val)
 }
 
 export function unit2px(val: number | undefined) {
@@ -34,7 +36,7 @@ export function unit2px(val: number | undefined) {
         return 0
     }
     // 获取每毫米的像素值
-    return unit2unit(lastPageUnit, 'px', val)
+    return unit2unit(appStore.lastPageUnit, 'px', val)
 }
 
 const unitConvert = {

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/vue3-components.iml" filepath="$PROJECT_DIR$/.idea/vue3-components.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/cp-print.iml" filepath="$PROJECT_DIR$/.idea/cp-print.iml" />
     </modules>
   </component>
 </project>

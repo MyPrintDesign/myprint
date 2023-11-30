@@ -1,6 +1,6 @@
 {
   "name": "@cp-print/design",
-  "version": "0.0.226",
+  "version": "0.0.227",
   "main": "dist/lib/index.js",
   "module": "dist/es/index.mjs",
   "types": "dist/es/index.d.ts",

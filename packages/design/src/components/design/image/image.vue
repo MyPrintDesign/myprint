@@ -81,6 +81,8 @@
 </template>
 <script setup lang="ts">
 // import { ElIcon, ElDialog } from 'element-plus'
+import 'vue-cropper/dist/index.css'
+import { VueCropper }  from "vue-cropper";
 
 import {onMounted, reactive, ref} from "vue";
 import {Element} from "@cp-print/design/types/entity";

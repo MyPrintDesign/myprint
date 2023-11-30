@@ -26,6 +26,8 @@
     "gulp-autoprefixer": "^8.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-rename": "^2.0.0",
-    "gulp-sass": "^5.1.0"
+    "gulp-sass": "^5.1.0",
+    "rollup-plugin-typescript2": "^0.31.2",
+    "ts-morph": "^16.0.0"
   }
 }

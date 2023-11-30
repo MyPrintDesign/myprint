@@ -1,5 +1,4 @@
 <template>
-  
   <cp-drop
       @drop="drop"
       class="container"
@@ -13,10 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted} from "vue";
-import {DragWrapper, Element} from "@cp-print/design/types/entity";
 // 可以接收拖动组件
-import {reactive} from "vue";
+
+import {DragWrapper, Element} from "@cp-print/design/types/entity";
+import {onMounted, reactive} from "vue";
 import CpDrop from "@cp-print/design/components/cp/drop";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {addElement} from "@cp-print/design/utils/elementUtil";

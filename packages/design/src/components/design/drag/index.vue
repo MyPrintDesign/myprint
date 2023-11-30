@@ -107,50 +107,50 @@ const mouseTips = reactive({x: 0, y: 0, handle: null as (handleConstantsType | n
 const dRef = ref()
 
 const props = withDefaults(defineProps<{
-  element: Element,
-  className: string,
-  classNameDraggable: string,
-  classNameResizable: string,
-  classNameDragging: string,
-  classNameResizing: string,
+  element?: Element,
+  className?: string,
+  classNameDraggable?: string,
+  classNameResizable?: string,
+  classNameDragging?: string,
+  classNameResizing?: string,
 // 新增组件处于旋转时的自定义类名
-  classNameRotating: string,
-  classNameActive: string,
-  classNameHandle: string,
-  preventDeactivation: boolean,
+  classNameRotating?: string,
+  classNameActive?: string,
+  classNameHandle?: string,
+  preventDeactivation?: boolean,
 // 新增 旋转 默认为false 不开启
-  drag: boolean,
-  minWidth: number,
-  minHeight: number,
-  maxWidth: number,
-  maxHeight: number,
-  z: string | number,
+  drag?: boolean,
+  minWidth?: number,
+  minHeight?: number,
+  maxWidth?: number,
+  maxHeight?: number,
+  z?: string | number,
 // 新增 旋转手柄 rot
-  handles: Array<handleConstantsType>,
-  dragHandle: string,
-  dragCancel: string,
-  axis: "x" | "y" | "both",
-  grid: Array<number>,
-  parent: boolean | string,
-  onDragStart: Function,
-  onDrag: Function,
-  onResizeStart: Function,
-  onResize: Function,
+  handles?: Array<handleConstantsType>,
+  dragHandle?: string,
+  dragCancel?: string,
+  axis?: "x" | "y" | "both",
+  grid?: Array<number>,
+  parent?: boolean | string,
+  onDragStart?: Function,
+  onDrag?: Function,
+  onResizeStart?: Function,
+  onResize?: Function,
 // 新增 回调事件
-  onRotateStart: Function,
-  onRotate: Function,
+  onRotateStart?: Function,
+  onRotate?: Function,
 // 冲突检测
-  isConflictCheck: boolean,
+  isConflictCheck?: boolean,
 // 元素对齐
-  snap: boolean,
+  snap?: boolean,
 // 新增 是否对齐容器边界
-  snapBorder: boolean,
+  snapBorder?: boolean,
 // 当调用对齐时，用来设置组件与组件之间的对齐距离，以像素为单位
-  snapTolerance: number,
+  snapTolerance?: number,
 // 缩放比例
-  scaleRatio: number,
+  scaleRatio?: number,
 // handle是否缩放
-  handleInfo: Object
+  handleInfo?: Object
 }>(), {
   element: () => ({} as Element),
   className: "vdr",
@@ -172,8 +172,8 @@ const props = withDefaults(defineProps<{
   z: "auto",
   // 新增 旋转手柄 rot
   handles: () => ["tl", "tm", "tr", "rm", "br", "bm", "bl", "lm", "rot"],
-  dragHandle: null,
-  dragCancel: null,
+  dragHandle: undefined,
+  dragCancel: undefined,
   axis: "both",
   grid: () => [1, 1],
   parent: false,
@@ -203,169 +203,6 @@ const props = withDefaults(defineProps<{
     };
   }
 })
-
-// const props = defineProps({
-//   element: {type: Object as PropType<Element>, default: () => ({} as Element)},
-//   className: {
-//     type: String,
-//     default: "vdr"
-//   },
-//   classNameDraggable: {
-//     type: String,
-//     default: "draggable"
-//   },
-//   classNameResizable: {
-//     type: String,
-//     default: "resizable"
-//   },
-//   classNameDragging: {
-//     type: String,
-//     default: "dragging"
-//   },
-//   classNameResizing: {
-//     type: String,
-//     default: "resizing"
-//   },
-//   // 新增组件处于旋转时的自定义类名
-//   classNameRotating: {
-//     type: String,
-//     default: "rotating"
-//   },
-//   classNameActive: {
-//     type: String,
-//     default: "active"
-//   },
-//   classNameHandle: {
-//     type: String,
-//     default: "handle"
-//   },
-//   preventDeactivation: {
-//     type: Boolean,
-//     default: false
-//   },
-//
-//   // 新增 旋转 默认为false 不开启
-//   drag: {
-//     type: Boolean,
-//     default: true
-//   },
-//   minWidth: {
-//     type: Number,
-//     default: 0,
-//     validator: (val: number) => val >= 0
-//   },
-//   minHeight: {
-//     type: Number,
-//     default: 0,
-//     validator: (val: number) => val >= 0
-//   },
-//   maxWidth: {
-//     type: Number,
-//     default: Infinity,
-//     validator: (val: number) => val >= 0
-//   },
-//   maxHeight: {
-//     type: Number,
-//     default: Infinity,
-//     validator: (val: number) => val >= 0
-//   },
-//   z: {
-//     type: [String, Number],
-//     default: "auto",
-//     validator: (val: number) => (typeof val === "string" ? val === "auto" : val >= 0)
-//   },
-//   // 新增 旋转手柄 rot
-//   handles: {
-//     type: Array<handleConstantsType>,
-//     default: () => ["tl", "tm", "tr", "rm", "br", "bm", "bl", "lm", "rot"]
-//   },
-//   dragHandle: {
-//     type: String,
-//     default: null
-//   },
-//   dragCancel: {
-//     type: String,
-//     default: null
-//   },
-//   axis: {
-//     type: String,
-//     default: "both",
-//     validator: (val: string) => ["x", "y", "both"].includes(val)
-//   },
-//   grid: {
-//     type: Array<number>,
-//     default: () => [1, 1]
-//   },
-//   parent: {
-//     type: [Boolean, String],
-//     default: false
-//   },
-//   onDragStart: {
-//     type: Function,
-//     default: () => true
-//   },
-//   onDrag: {
-//     type: Function,
-//     default: () => true
-//   },
-//   onResizeStart: {
-//     type: Function,
-//     default: () => true
-//   },
-//   onResize: {
-//     type: Function,
-//     default: () => true
-//   },
-//   // 新增 回调事件
-//   onRotateStart: {
-//     type: Function,
-//     default: () => true
-//   },
-//   onRotate: {
-//     type: Function,
-//     default: () => true
-//   },
-//   // 冲突检测
-//   isConflictCheck: {
-//     type: Boolean,
-//     default: false
-//   },
-//   // 元素对齐
-//   snap: {
-//     type: Boolean,
-//     default: false
-//   },
-//   // 新增 是否对齐容器边界
-//   snapBorder: {
-//     type: Boolean,
-//     default: false
-//   },
-//   // 当调用对齐时，用来设置组件与组件之间的对齐距离，以像素为单位
-//   snapTolerance: {
-//     type: Number,
-//     default: 20,
-//     validator: function (val) {
-//       return typeof val === "number";
-//     }
-//   },
-//   // 缩放比例
-//   scaleRatio: {
-//     type: Number,
-//     default: 1,
-//     validator: val => typeof val === "number"
-//   },
-//   // handle是否缩放
-//   handleInfo: {
-//     type: Object,
-//     default: () => {
-//       return {
-//         size: 8,
-//         offset: -4,
-//         switch: true
-//       };
-//     }
-//   }
-// })
 
 const mouseClickPosition = ref(
     {

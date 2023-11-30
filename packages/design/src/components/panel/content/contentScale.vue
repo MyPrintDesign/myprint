@@ -1,6 +1,6 @@
 <template>
   <div class="content-scale"
-       :class="{run: getCurrentElement().value.id == null}">
+       :class="{run: getCurrentElement().id == null}">
     
     <div class="scale-preview" ref="scalePreviewRef">
       <div class="scale-design-content"
@@ -118,8 +118,8 @@ const calc = computed(() => {
 const lookStyle = computed(() => {
   
   const style = {} as any
-  const screenWidth = props.data.scrollWidth;
-  const screenHeight = props.data.scrollHeight;
+  const screenWidth = props.data.scrollWidth!;
+  const screenHeight = props.data.scrollHeight!;
   
   let w = screenWidth * calc.value
   let h = screenHeight * calc.value

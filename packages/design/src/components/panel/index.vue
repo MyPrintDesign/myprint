@@ -15,12 +15,14 @@ import Options from "./options/options.vue";
 import DesignContent from './content/index.vue'
 import {
   // inject,
-  onMounted, provide, reactive, ref, watch} from "vue";
+  onMounted, provide, reactive, ref, watch
+} from "vue";
 import {Panel, Provider} from "@cp-print/design/types/entity";
 import {to} from "@cp-print/design/utils/utils";
 import {
   // mittKey,
-  panelKey, previewDataKey, providerKey} from "@cp-print/design/constants/keys";
+  panelKey, previewDataKey, providerKey
+} from "@cp-print/design/constants/keys";
 import {init} from "@cp-print/design/utils/historyUtil";
 import {setCurrentPanel, initElement, parentInitElement} from "@cp-print/design/utils/elementUtil";
 import {Template} from "@cp-print/design/types/R";
@@ -103,7 +105,7 @@ watch(() => props.template.id, (n, _o) => {
 //
 //       })
   }
-})
+}, {immediate: true})
 
 onMounted(() => {
 

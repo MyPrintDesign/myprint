@@ -193,14 +193,14 @@ const selectElement = getCurrentElement()
 
 
 const currentBarCodeEg = computed(() => {
-  if (selectElement.value.option && selectElement.value.option.barCodeType) {
-    return changeBarCodeType(selectElement.value.option.barCodeType)
+  if (selectElement.option && selectElement.option.barCodeType) {
+    return changeBarCodeType(selectElement.option.barCodeType)
   }
 })
 
 function change(_val:any) {
   // record()
-  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: selectElement.value} as Snapshot)
+  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: selectElement} as Snapshot)
   // console.log('change', val)
 }
 

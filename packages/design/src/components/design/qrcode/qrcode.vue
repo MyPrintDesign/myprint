@@ -13,6 +13,7 @@ import {ref, watch} from "vue";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import QRCode from 'qrcode'
 import {heightValueUnit, widthValueUnit} from "@cp-print/design/utils/elementUtil";
+
 const props = withDefaults(defineProps<{
   element?: Element
 }>(), {
@@ -25,6 +26,13 @@ watch([() => qrCode.value, () => props.element.data, () => props.element.height,
   if (qrCode.value == null) {
     return
   }
+  if (props.element.data == null) {
+    return
+  }
+  if (props.element.data == '') {
+    return
+  }
+  console.log(props.element.data)
   
   QRCode.toDataURL(props.element.data, {
     // version: 1,
@@ -42,7 +50,7 @@ watch([() => qrCode.value, () => props.element.data, () => props.element.height,
       console.error(error)
       return
     }
-
+    
     src.value = url
     console.log('success!')
   })

@@ -14,6 +14,17 @@ import glob from 'fast-glob';
 import type {OutputOptions} from 'rollup';
 import {resolvePackagePath} from './util';
 import path from "path";
+// import typescript from 'rollup-plugin-typescript2'
+
+const overrides = {
+    compilerOptions: { declaration: true }, // 是否创建 typescript 声明文件
+    exclude: [
+        // 排除项
+        'node_modules',
+        'src/App.vue',
+        'src/main.ts'
+    ]
+}
 
 const getExternal = async (pkgDirName: string) => {
     const pkgPath = resolvePackagePath(pkgDirName, 'package.json');
@@ -61,7 +72,8 @@ const build = async (pkgDirName: string) => {
                 setupSFC: false,
                 plugins: {
                     vue: vue({
-                        isProduction: true
+                        isProduction: true,
+                        reactivityTransform: true
                     }),
                     vueJsx: vueJsx()
                 }
@@ -78,6 +90,7 @@ const build = async (pkgDirName: string) => {
                     replacement: path.resolve(__dirname, resolvePackagePath(pkgDirName, './src'))
                 } as Alias],
             }),
+            // typescript({ tsconfigOverride: overrides }),
             commonjs(),
             // babel({
             //     exclude: 'node_modules/**', // 指定哪些文件夹时不进行babel编译的

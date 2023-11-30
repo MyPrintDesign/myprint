@@ -2,7 +2,7 @@ import {
     Container, DisplayModel,
     Element,
     ElementOption,
-    elementType, FormatterVariable, PageUnit,
+    elementType, FormatterVariable,
     Panel,
     Position,
     RuntimeElementOption
@@ -10,23 +10,21 @@ import {
 import {
     canMoveStatusList,
     defaultDragRectElement,
-    defaultElement,
     handleConstantsType
 } from "@cp-print/design/constants/common";
 import {to} from "./utils";
 import {_defaultNum} from "@cp-print/design/utils/numberUtil";
-import {reactive, ref, CSSProperties, Ref} from "vue";
+import {reactive, CSSProperties} from "vue";
 import {formatDate} from "./timeUtil";
 import numberUtil from "./numberUtil";
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
+import {useAppStoreHook} from "@cp-print/design/stores/app";
 
-let currentPanel: Panel = {} as Panel
-let currentElement = ref(defaultElement as Element)
+const appStore = useAppStoreHook()
 let runtime = {
     displayModel: 'design' as DisplayModel
-};
-export let lastPageUnit = 'px' as PageUnit
+}
 
 export function displayModel(displayModel?: DisplayModel) {
     if (displayModel) {
@@ -39,22 +37,26 @@ export function displayModelPreview() {
     return runtime.displayModel == 'preview'
 }
 
-
 export function setCurrentPanel(panel: Panel) {
-    currentPanel = panel
-    lastPageUnit = currentPanel.pageUnit
+    // currentPanel = panel
+    // console.log(JSON.stringify(panel))
+    // console.log("useappStore.SET_LOCALE(\"123\")")
+    appStore.currentPanel = panel
+    appStore.lastPageUnit = panel.pageUnit
 }
 
 export function getCurrentPanel(): Panel {
-    return currentPanel
+    // console.log("useappStore.SET_LOCALE(\"123\")")
+    // console.log(JSON.stringify(appStore.currentPanel))
+    return appStore.currentPanel
 }
 
 export function setCurrentElement(element: Element) {
-    currentElement.value = element
+    appStore.currentElement = element
 }
 
-export function getCurrentElement(): Ref<Element> {
-    return currentElement
+export function getCurrentElement(): Element {
+    return appStore.currentElement
 }
 
 export function valueUnit(value: number | undefined) {
@@ -129,7 +131,7 @@ export function none(element?: Element) {
 }
 
 export function selectAllElement() {
-    selectElementList(currentPanel.elementList)
+    selectElementList(getCurrentPanel().elementList)
 }
 
 export function selectElementList(elementList?: Array<Container>) {
@@ -725,7 +727,7 @@ export function replaceVariables(str: string, params: { [key: string]: any }): s
 }
 
 export function selectedElementBatchOperation(callback: (element: Element) => void) {
-    for (let valueElement of currentPanel.elementList!) {
+    for (let valueElement of getCurrentPanel().elementList!) {
         if (canMoveStatusList.includes(valueElement.status)) {
             callback(valueElement)
         }
@@ -754,18 +756,18 @@ export function changePageUnit() {
     const panel = getCurrentPanel()
     // console.log(lastPageUnit)
     // console.log(panel.pageUnit)
-    panel.width = unit2unit(lastPageUnit, panel.pageUnit, panel.width)
-    panel.height = unit2unit(lastPageUnit, panel.pageUnit, panel.height)
+    panel.width = unit2unit(appStore.lastPageUnit, panel.pageUnit, panel.width)
+    panel.height = unit2unit(appStore.lastPageUnit, panel.pageUnit, panel.height)
     for (let element of panel.elementList!) {
-        element.x = unit2unit(lastPageUnit, panel.pageUnit, element.x)
-        element.y = unit2unit(lastPageUnit, panel.pageUnit, element.y)
-        element.width = unit2unit(lastPageUnit, panel.pageUnit, element.width)
-        element.height = unit2unit(lastPageUnit, panel.pageUnit, element.height)
+        element.x = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.x)
+        element.y = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.y)
+        element.width = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.width)
+        element.height = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.height)
         if (element.option.lineHeight != null) {
-            element.option.lineHeight = unit2unit(lastPageUnit, panel.pageUnit, element.option.lineHeight)
+            element.option.lineHeight = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.option.lineHeight)
         }
     }
-    lastPageUnit = panel.pageUnit
+    appStore.lastPageUnit = panel.pageUnit
 }
 
 

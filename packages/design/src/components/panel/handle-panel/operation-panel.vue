@@ -3,7 +3,7 @@
     <template #head>
       | {{ title }}
     </template>
-    <CpElementSetting v-if="getCurrentElement().value.id" class="advanced-config"/>
+    <CpElementSetting v-if="getCurrentElement().id" class="advanced-config"/>
     <CpPanelSetting v-else class="advanced-config"/>
   </cp-collapse>
 </template>
@@ -23,7 +23,7 @@ import {useConfigStore} from "@cp-print/design/stores/config";
 const configStore = useConfigStore()
 
 const title = computed(() => {
-  const current = getCurrentElement().value;
+  const current = getCurrentElement();
   if (current.id == null) {
     return '面板'
   }

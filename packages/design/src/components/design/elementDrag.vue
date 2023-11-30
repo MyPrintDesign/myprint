@@ -15,7 +15,7 @@
       <element-list :element-list="element.elementList"/>
     </cp-container>
     <cp-container v-else-if="element.type === 'PageFooter'" :element="element">
-<!--      <element-list :element-list="element.elementList"/>-->
+      <element-list :element-list="element.elementList"/>
     </cp-container>
   </cp-drag>
 </template>

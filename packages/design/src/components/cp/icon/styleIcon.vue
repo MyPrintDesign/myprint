@@ -47,7 +47,7 @@ function click() {
     return
   }
   emit('update:modelValue', !props.modelValue)
-  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: getCurrentElement().value} as Snapshot)
+  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: getCurrentElement()} as Snapshot)
 }
 
 function hover(flag: boolean) {
