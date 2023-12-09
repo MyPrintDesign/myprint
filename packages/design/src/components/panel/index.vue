@@ -14,14 +14,13 @@
 import Options from "./options/options.vue";
 import DesignContent from './content/index.vue'
 import {
-  // inject,
+  inject,
   onMounted, provide, reactive, ref, watch
 } from "vue";
 import {Panel, Provider} from "@cp-print/design/types/entity";
 import {to} from "@cp-print/design/utils/utils";
 import {
-  // mittKey,
-  panelKey, previewDataKey, providerKey
+  mittKey, panelKey, previewDataKey, providerKey
 } from "@cp-print/design/constants/keys";
 import {init} from "@cp-print/design/utils/historyUtil";
 import {setCurrentPanel, initElement, parentInitElement} from "@cp-print/design/utils/elementUtil";
@@ -30,15 +29,17 @@ import {useConfigStore} from "@cp-print/design/stores/config";
 
 const configStore = useConfigStore()
 
+const $emit = defineEmits(["saveTemplate"])
+
 const provider = ref<Provider>({} as Provider)
 const panel = reactive(<Panel>{})
-// const mitt = inject(mittKey)!
+const mitt = inject(mittKey)!
 const previewData = ref<any>({} as any)
 provide(panelKey, panel)
 provide(providerKey, provider)
 provide(previewDataKey, previewData)
 
-// mitt.on('saveTemplate', saveTemplate)
+mitt.on('saveTemplate', saveTemplate)
 
 const props = withDefaults(defineProps<{
   template?: Template
@@ -111,26 +112,22 @@ onMounted(() => {
 
 })
 
-// function saveTemplate() {
-//   // console.log(panel)
-//   // console.log(template)
-//   template.name = panel.name
-//   template.content = JSON.stringify(panel, (key, value) => {
-//     // console.log(key)
-//     // 清除runtime参数
-//     // console.log(this)
-//     if ("runtimeOption" == key) return undefined
-//     if ("status" == key) return undefined
-//     return value
-//   })
-//   // templateUpdate(template)
-//   //     .then(res => {
-//   //       console.log(res)
-//   //     })
-//   // templateUpdate(props.panel)
-//   // console.log(JSON.stringify(toRaw(unref(props.panel))))
-//
-// }
+function saveTemplate() {
+  // console.log(panel)
+  // console.log(template)
+  const template = {} as Template
+  template.name = panel.name
+  template.content = JSON.stringify(panel, (key, value) => {
+    // console.log(key)
+    // 清除runtime参数
+    // console.log(this)
+    if ("runtimeOption" == key) return undefined
+    if ("status" == key) return undefined
+    return value
+  })
+  
+  $emit("saveTemplate", template);
+}
 </script>
 
 <style scoped>

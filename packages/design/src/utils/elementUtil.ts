@@ -19,9 +19,8 @@ import {formatDate} from "./timeUtil";
 import numberUtil from "./numberUtil";
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
-import {useAppStoreHook} from "@cp-print/design/stores/app";
+import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
 
-const appStore = useAppStoreHook()
 let runtime = {
     displayModel: 'design' as DisplayModel
 }
@@ -40,23 +39,19 @@ export function displayModelPreview() {
 export function setCurrentPanel(panel: Panel) {
     // currentPanel = panel
     // console.log(JSON.stringify(panel))
-    // console.log("useappStore.SET_LOCALE(\"123\")")
-    appStore.currentPanel = panel
-    appStore.lastPageUnit = panel.pageUnit
+    // console.log("useappStore().SET_LOCALE(\"123\")")
+    appStore().currentPanel = panel
+    appStore().lastPageUnit = panel.pageUnit
 }
 
 export function getCurrentPanel(): Panel {
-    // console.log("useappStore.SET_LOCALE(\"123\")")
-    // console.log(JSON.stringify(appStore.currentPanel))
-    return appStore.currentPanel
+    // console.log("useappStore().SET_LOCALE(\"123\")")
+    // console.log(JSON.stringify(appStore().currentPanel))
+    return appStore().currentPanel
 }
 
 export function setCurrentElement(element: Element) {
-    appStore.currentElement = element
-}
-
-export function getCurrentElement(): Element {
-    return appStore.currentElement
+    appStore().currentElement = element
 }
 
 export function valueUnit(value: number | undefined) {
@@ -155,7 +150,7 @@ export function handle(element: Container) {
     element.status = 'HANDLE'
 }
 
-export function computedHandles(element: Container): Array<handleConstantsType> {
+export function computedHandles(element: Container): Array<handleConstantsType> | undefined {
     if (element.type == 'PageHeader') {
         return ['bm']
     }
@@ -165,7 +160,7 @@ export function computedHandles(element: Container): Array<handleConstantsType> 
     if (element.type == 'Table') {
         return ['lm', 'rm']
     }
-    return []
+    return undefined
 }
 
 export function computeDrag(element: Container): boolean {
@@ -756,18 +751,18 @@ export function changePageUnit() {
     const panel = getCurrentPanel()
     // console.log(lastPageUnit)
     // console.log(panel.pageUnit)
-    panel.width = unit2unit(appStore.lastPageUnit, panel.pageUnit, panel.width)
-    panel.height = unit2unit(appStore.lastPageUnit, panel.pageUnit, panel.height)
+    panel.width = unit2unit(appStore().lastPageUnit, panel.pageUnit, panel.width)
+    panel.height = unit2unit(appStore().lastPageUnit, panel.pageUnit, panel.height)
     for (let element of panel.elementList!) {
-        element.x = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.x)
-        element.y = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.y)
-        element.width = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.width)
-        element.height = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.height)
+        element.x = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.x)
+        element.y = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.y)
+        element.width = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.width)
+        element.height = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.height)
         if (element.option.lineHeight != null) {
-            element.option.lineHeight = unit2unit(appStore.lastPageUnit, panel.pageUnit, element.option.lineHeight)
+            element.option.lineHeight = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.option.lineHeight)
         }
     }
-    appStore.lastPageUnit = panel.pageUnit
+    appStore().lastPageUnit = panel.pageUnit
 }
 
 

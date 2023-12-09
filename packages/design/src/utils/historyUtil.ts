@@ -2,11 +2,10 @@ import {ref} from "vue";
 import {Element, elementTypeFormat, Panel} from "@cp-print/design/types/entity";
 import {useManualRefHistory} from '@vueuse/core';
 import {
-    getCurrentElement,
     getCurrentPanel,
     installPanelParentElement
 } from "./elementUtil";
-
+import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
 export enum ActionEnum {
     INIT = '加载',
     ADD = '添加<{element}>',
@@ -49,7 +48,7 @@ function init() {
     record(<Snapshot>{
         type: "PANEL",
         action: ActionEnum.INIT,
-        element: getCurrentElement().value
+        element: appStore().currentElement
     })
     clear()
     // console.log(panel.elementList)
@@ -142,7 +141,7 @@ function redoPanel() {
 
 export function changeWrapper(val: string | number, title?: string, callback?: (arg: typeof val) => void) {
     record({
-        element: getCurrentElement().value,
+        element: appStore().currentElement,
         content: title,
         action: ActionEnum.UPDATE_STYLE
     } as Snapshot)

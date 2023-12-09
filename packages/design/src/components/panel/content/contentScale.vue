@@ -1,6 +1,6 @@
 <template>
   <div class="content-scale"
-       :class="{run: getCurrentElement().id == null}">
+       :class="{run: appStore.currentElement.id == null}">
     
     <div class="scale-preview" ref="scalePreviewRef">
       <div class="scale-design-content"
@@ -70,8 +70,9 @@ import {ContentScaleVo} from "@cp-print/design/types/entity";
 import {clearEventBubble} from "@cp-print/design/utils/event";
 import MathCalc from "@cp-print/design/utils/numberUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
-import {getCurrentElement, getTranslate, valueUnit} from "@cp-print/design/utils/elementUtil";
+import {useAppStoreHook} from "@cp-print/design/stores/app";
 
+const appStore = useAppStoreHook()
 const emit = defineEmits(['scale'])
 const panel = inject(panelKey)!
 const mitt = inject(mittKey)!

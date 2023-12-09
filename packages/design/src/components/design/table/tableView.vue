@@ -31,13 +31,13 @@ import {
   computed,
   onMounted,
   watch,
-  // inject
+  inject
 } from "vue";
 import {Element, ElementOption} from "../../../types/entity";
 import {sortColumn} from "../../../utils/utils";
 import {unit2px, px2unit} from "../../../utils/devicePixelRatio";
 import {clearEventBubble} from "../../../utils/event";
-// import {mittKey} from "../../../constants/keys";
+import {mittKey} from "../../../constants/keys";
 import {initElement, valueUnit} from "../../../utils/elementUtil";
 
 const props = withDefaults(defineProps<{
@@ -48,9 +48,9 @@ const props = withDefaults(defineProps<{
 
 defineExpose({computedWidth})
 
-// const mitt = inject(mittKey)!
+const mitt = inject(mittKey)!
 // console.log(selectElement)
-// mitt.on('sortColumn', handleSortColumn)
+mitt.on('sortColumn', handleSortColumn)
 
 const bodyStyle = (column: Element) => {
   // console.log(column)

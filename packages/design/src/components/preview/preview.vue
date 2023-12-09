@@ -3,7 +3,7 @@
        ref="previewWrapRef"
        :style="style">
     <element-view :element="element"/>
-    <TableView v-if="element.type === 'Table'" :element="element"/>
+    <TableView v-if="element!.type === 'Table'" :element="element"/>
 <!--    <preview-container v-if="element.type === 'PageHeader'" :element="element"/>-->
 <!--    <preview-container v-if="element.type === 'PageFooter'" :element="element"/>-->
   

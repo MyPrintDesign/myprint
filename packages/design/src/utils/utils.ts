@@ -5,7 +5,6 @@ import {arrayIndexOf, arrayRemove} from "@cp-print/design/utils/arrays";
 
 let collapsePanelZIndex = 1000
 
-
 export function sortColumn(arr: any, dragData: any, b: any, flag: any) {
     arrayRemove(arr, dragData)
     // console.log(arr)

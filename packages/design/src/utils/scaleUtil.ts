@@ -1,7 +1,6 @@
 import {Design} from "@cp-print/design/types/entity";
 import {reactive} from "vue";
 
-
 export const scaleUtil = {
     miniMap: reactive<Design>(
         {

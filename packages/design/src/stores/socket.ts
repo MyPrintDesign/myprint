@@ -14,10 +14,10 @@ export const useSocket = defineStore('socket', {
         }
     },
     actions: {
-        INIT_SOCKET(onSocketMessage: Ref<Function>) {
+        INIT_SOCKET(onSocketMessage: Ref<Function | undefined>) {
             // console.log(onSocketMessage)
+            // console.log('初始化INIT_SOCKET')
             let stateThis = this
-            let socket = this.socket! as any
             const reconnect = () => {
                 if (lockReconnect) return;
                 lockReconnect = true;
@@ -36,21 +36,21 @@ export const useSocket = defineStore('socket', {
             }
 
             const init = () => {
-                socket.onopen = function (_event:any) {
+                this.socket!.onopen = function (_event: any) {
                     console.log("WebSocket:已连接");
                     //心跳检测重置
                     stateThis.connect = true
                     // app.SET_CLIENT_CONNECT(true)
                     heartCheck.reset().start();
                     // 发送css样式过去
-                    socket.send(JSON.stringify({
+                    stateThis.socket!.send(JSON.stringify({
                         content: printCssStyle(),
                         cmd: 'text/css',
                     }))
                 }
 
                 //接收到消息的回调方法
-                socket.onmessage = function (event:any) {
+                this.socket!.onmessage = function (event: any) {
                     const msgData = JSON.parse(event.data)
                     switch (msgData.cmd) {
                         case 'printerList':
@@ -69,7 +69,7 @@ export const useSocket = defineStore('socket', {
                 };
 
                 //连接发生错误的回调方法
-                socket.onerror = function (_event:any) {
+                this.socket!.onerror = function (_event: any) {
                     // console.log("WebSocket:发生错误");
                     stateThis.connect = false
                     // app.SET_CLIENT_CONNECT(false)
@@ -77,7 +77,7 @@ export const useSocket = defineStore('socket', {
                 };
 
                 //连接关闭的回调方法
-                socket.onclose = function (_event:any) {
+                this.socket!.onclose = function (_event: any) {
                     // console.log("WebSocket:已关闭");
                     heartCheck.reset();//心跳检测
                     stateThis.connect = false
@@ -89,7 +89,7 @@ export const useSocket = defineStore('socket', {
                 window.onbeforeunload = function () {
                     // app.SET_CLIENT_CONNECT(false)
                     stateThis.connect = false
-                    socket.close();
+                    stateThis.socket!.close();
                 };
             }
 
@@ -100,7 +100,7 @@ export const useSocket = defineStore('socket', {
                     stateThis.socket = new WebSocket(useConfigStore().clientUrl.replace("https", "ws").replace("http", "ws"));
                     init();
                 } catch (e) {
-                    console.log("catch" + e)
+                    console.log(e)
                     reconnect()
                 }
             }

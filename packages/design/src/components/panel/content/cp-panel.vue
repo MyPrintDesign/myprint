@@ -79,12 +79,8 @@ import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vu
 import {ContentScaleVo, DragWrapper, Element, Point} from "@cp-print/design/types/entity";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {clearEventBubble} from "@cp-print/design/utils/event";
-import {
-  mittKey,
-  panelKey} from "@cp-print/design/constants/keys";
-import {
-  canMoveStatusList,
-  defaultDragRectElement, defaultElement} from "@cp-print/design/constants/common";
+import {mittKey, panelKey} from "@cp-print/design/constants/keys";
+import {canMoveStatusList, defaultDragRectElement, defaultElement} from "@cp-print/design/constants/common";
 import {ActionEnum, record, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {
   addElement,

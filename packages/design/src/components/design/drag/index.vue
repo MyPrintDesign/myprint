@@ -331,8 +331,8 @@ function elementDown(e: MouseEvent) {
   rotatedPoint(props.element)
   
   //  按下鼠标表示保存当前状态
-  // mouseClickPosition.value.mouseX = e.touches ? e.touches[0].pageX : e.pageX;
-  // mouseClickPosition.value.mouseY = e.touches ? e.touches[0].pageY : e.pageY;
+  mouseClickPosition.value.mouseX = e.pageX;
+  mouseClickPosition.value.mouseY = e.pageY;
   containerBounds.value = calcDragLimits();
   
   // console.log(JSON.stringify(containerBounds))
@@ -363,8 +363,8 @@ function handleDown(handle: any, e: MouseEvent) {
   props.element.runtimeOption!.centerY = window.pageYOffset + props.element.runtimeOption!.top! + props.element.runtimeOption!.height / 2;
   
   //  保存鼠标按下时的当前状态
-  // mouseClickPosition.value.mouseX = e.touches ? e.touches[0].pageX : e.pageX;
-  // mouseClickPosition.value.mouseY = e.touches ? e.touches[0].pageY : e.pageY;
+  mouseClickPosition.value.mouseX = e.pageX;
+  mouseClickPosition.value.mouseY = e.pageY;
   mouseClickPosition.value.width = props.element.width!
   mouseClickPosition.value.height = props.element.height!
   // 计算边界

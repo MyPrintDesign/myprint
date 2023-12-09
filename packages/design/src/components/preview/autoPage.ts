@@ -78,7 +78,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
         if (element.type == 'HorizontalLine' || element.type == 'VerticalLine'
             || element.type == 'DottedHorizontalLine' || element.type == 'DottedVerticalLine'
             || element.type == 'Rect') {
-            data.currentPage!.elementList!.push(previewWrapper.element!);
+            data.currentPage!.elementList!.push(previewWrapper);
             await nextTick()
         } else {
             // 需要data
@@ -101,18 +101,18 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
             }
             if (element.type == 'Image') {
                 element.data = previewDataTmp
-                data.currentPage!.elementList!.push(previewWrapper.element!);
+                data.currentPage!.elementList!.push(previewWrapper);
                 await nextTick()
             } else if (element.type == 'Text' || element.type == 'PageNum' || element.type == 'TextTime') {
                 if (element.contentType == 'Text') {
                     previewContext.elementChangeHeightIs = await autoTextElement(previewWrapper, previewDataTmp)
                 }
                 if (element.contentType == 'QrCode') {
-                    data.currentPage!.elementList!.push(previewWrapper.element!);
+                    data.currentPage!.elementList!.push(previewWrapper);
                     await nextTick()
                 }
                 if (element.contentType == 'Barcode') {
-                    data.currentPage!.elementList!.push(previewWrapper.element!);
+                    data.currentPage!.elementList!.push(previewWrapper);
                     await nextTick()
                 }
             } else if (element.type == 'Table') {
@@ -135,7 +135,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
         // let previewWrapper = {element: element} as PreviewWrapper
         let element = previewWrapper.element!
         element.data = previewData
-        data.currentPage!.elementList!.push(previewWrapper.element!);
+        data.currentPage!.elementList!.push(previewWrapper);
         await nextTick()
         console.log(previewData)
 
@@ -169,7 +169,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
     async function autoTableRow(previewWrapper: PreviewWrapper, previewData: Array<any>, index: number) {
         // console.log(data)
         // let previewWrapper = {element: element}
-        data.currentPage!.elementList!.push(previewWrapper.element!);
+        data.currentPage!.elementList!.push(previewWrapper);
         let element = previewWrapper.element!
         await nextTick()
         const table = itemRefs[element.id]
@@ -243,12 +243,12 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
 
         if (data.panel.pageHeader) {
             let preview = {element: data.panel.pageHeader} as PreviewWrapper
-            data.currentPage!.elementList!.push(preview.element!)
+            data.currentPage!.elementList!.push(preview)
             data.top = (await computeBottom(preview))!
         }
         if (data.panel.pageFooter) {
             let preview = {element: data.panel.pageFooter} as PreviewWrapper
-            data.currentPage!.elementList!.push(preview.element!)
+            data.currentPage!.elementList!.push(preview)
             data.bottom = (await computeTop(preview))!
         }
     }

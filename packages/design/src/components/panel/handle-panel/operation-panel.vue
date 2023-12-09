@@ -3,7 +3,7 @@
     <template #head>
       | {{ title }}
     </template>
-    <CpElementSetting v-if="getCurrentElement().id" class="advanced-config"/>
+    <CpElementSetting v-if="appStore.currentElement.id" class="advanced-config"/>
     <CpPanelSetting v-else class="advanced-config"/>
   </cp-collapse>
 </template>
@@ -12,18 +12,18 @@
 <script setup lang="ts">
 
 import {handlePanelElementList} from "@cp-print/design/constants/settingPanel";
-import {getCurrentElement} from "@cp-print/design/utils/elementUtil";
 import CpCollapse from "../../cp/cp-collapse/cp-collapse.vue";
 import CpElementSetting from "../content/cp-element-setting.vue";
 import CpPanelSetting from "../content/cp-panel-setting.vue";
 import {elementTypeFormat} from "@cp-print/design/types/entity";
 import {computed} from "vue";
 import {useConfigStore} from "@cp-print/design/stores/config";
-
+import {useAppStoreHook} from "@cp-print/design/stores/app";
+const appStore = useAppStoreHook()
 const configStore = useConfigStore()
 
 const title = computed(() => {
-  const current = getCurrentElement();
+  const current = appStore.currentElement;
   if (current.id == null) {
     return '面板'
   }

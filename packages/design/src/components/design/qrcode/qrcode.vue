@@ -52,7 +52,7 @@ watch([() => qrCode.value, () => props.element.data, () => props.element.height,
     }
     
     src.value = url
-    console.log('success!')
+    // console.log('success!')
   })
   props.element.height = props.element.width
   props.element.option.aspectRatio = 1

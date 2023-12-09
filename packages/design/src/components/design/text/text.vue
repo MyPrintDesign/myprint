@@ -2,7 +2,6 @@
   <div class="cp-print-text_container"
        ref="textRef"
        :style="style">
-    123
     <cp-barcode v-if="element.contentType === 'Barcode'" :element="element"/>
     <cp-qrcode v-else-if="element.contentType === 'QrCode'" :element="element"/>
     <template v-else>

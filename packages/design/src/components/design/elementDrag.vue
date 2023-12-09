@@ -34,6 +34,3 @@ withDefaults(defineProps<{
   element: () => ({} as Element)
 })
 </script>
-<style scoped>
-
-</style>

@@ -9,6 +9,7 @@ import cleanCSS from 'gulp-clean-css'
 import rename from 'gulp-rename'
 import consola from 'consola'
 import {resolvePackagePath} from './util';
+import fs from "node:fs";
 
 const pkgDirName = 'design'
 
@@ -91,4 +92,13 @@ export const build = parallel(
     series(buildThemeChalk)
 )
 
-build()
+await build()
+
+setTimeout(()=>{
+    const pkgDistPath = resolvePackagePath(pkgDirName, 'dist');
+    if (fs.existsSync(pkgDistPath) && fs.statSync(pkgDistPath).isDirectory()) {
+        fs.rmSync(pkgDistPath, {recursive: true});
+    }
+}, 1000)
+
+

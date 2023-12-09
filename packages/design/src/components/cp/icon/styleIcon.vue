@@ -22,8 +22,8 @@
 import {inject, ref} from "vue";
 import {mittKey} from "@cp-print/design/constants/keys";
 import {ActionEnum, Snapshot} from "@cp-print/design/utils/historyUtil";
-import {getCurrentElement} from "@cp-print/design/utils/elementUtil";
-
+import {useAppStoreHook} from "@cp-print/design/stores/app";
+const appStore = useAppStoreHook()
 const emit = defineEmits(['update:modelValue'])
 const mitt = inject(mittKey)!
 
@@ -47,7 +47,7 @@ function click() {
     return
   }
   emit('update:modelValue', !props.modelValue)
-  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: getCurrentElement()} as Snapshot)
+  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: appStore.currentElement} as Snapshot)
 }
 
 function hover(flag: boolean) {

@@ -13,7 +13,7 @@ import Vue3ColorPicker from "vue3-colorpicker";
 // import VueCropper from 'vue-cropper';
 // import 'vue-cropper/dist/index.css'
 // import i18n from "./locales";
-// import {useSocket} from "@/stores/socket";
+import {useSocket} from "./stores/socket";
 // import 'element-plus/es/components/button/style/index'
 // import 'element-plus/es/components/scrollbar/style/index'
 // import 'element-plus/es/components/switch/style/index'
@@ -25,7 +25,6 @@ import Vue3ColorPicker from "vue3-colorpicker";
 
 // import {ElButton, ElSelect, ElOption, ElIcon, ElScrollbar, ElPopover,ElTooltip,ElInput,ElInputNumber,
 //     ElContainer, ElAside, ElMain, ElRow,ElCol,ElForm,ElFormItem,ElDivider,ElSwitch} from 'element-plus'
-
 const onSocketMessage = ref<Function>()
 
 const install = {
@@ -67,9 +66,13 @@ const install = {
             .use(Vue3ColorPicker)
         app.provide(messageFun, onSocketMessage)
         app.provide(mittKey, mitt())
+
+        useSocket().INIT_SOCKET(onSocketMessage)
     }
 }
 export {install}
+
+
 // export * from './index'
 // function loadFonts() {
 
@@ -90,20 +93,3 @@ export {install}
 // fontStyles.rel = 'stylesheet';
 // document.head.appendChild(fontStyles);
 // }
-
-
-// app.use(pinia)
-// const socket = useSocket()
-// socket.INIT_SOCKET(onSocketMessage)
-
-// app.use(i18n)
-//     .use(Vue3ColorPicker)
-//     .use(router)
-//     .mixin({
-//         beforeMount() {
-//             loadFonts()
-//         },
-//     })
-//     .mount('#app');
-
-
