@@ -33,7 +33,7 @@ export function displayModel(displayModel?: DisplayModel) {
 }
 
 export function displayModelPreview() {
-    return runtime.displayModel == 'preview'
+    return runtime.displayModel != 'preview'
 }
 
 export function setCurrentPanel(panel: Panel) {
@@ -47,7 +47,7 @@ export function setCurrentPanel(panel: Panel) {
 export function getCurrentPanel(): Panel {
     // console.log("useappStore().SET_LOCALE(\"123\")")
     // console.log(JSON.stringify(appStore().currentPanel))
-    return appStore().currentPanel
+    return appStore().currentPanel as Panel
 }
 
 export function setCurrentElement(element: Element) {
@@ -242,7 +242,7 @@ export function initElement(element?: Element) {
             initWidth = 200
             initHeight = 30
             element.runtimeOption.rowList = []
-            const rowList = []
+            const rowList: Array<Element> = []
             for (let i = 0; i < element.columnList!.length; i++) {
                 initElement(element.columnList![i])
                 rowList.push(copyElementRefValueId(element.columnList![i]))
@@ -325,7 +325,11 @@ export function initElement(element?: Element) {
     if (element.option.padding == null) {
         element.option.padding = {} as Position
     }
-
+    console.log(appStore().lastPageUnit)
+    element.runtimeOption.width = unit2px(element.width)
+    element.runtimeOption.height = unit2px(element.height)
+    element.runtimeOption.x = unit2px(element.x)
+    element.runtimeOption.y = unit2px(element.y)
     if (element.option.margin == null) {
         element.option.margin = {} as Position
     }
@@ -339,7 +343,7 @@ export function clearPanelParent(panel: Panel) {
 }
 
 export function copyElementRefValueId(element: Element) {
-    element = to(element, reactive<Element>({} as any))
+    element = to(element, reactive({}) as Element)
     element.id = crypto.randomUUID()
     return element
 }
@@ -408,7 +412,7 @@ export function removeElement(element: Element) {
             (element.runtimeOption.parent as Panel).pageFooter = undefined
         )
         .handle('PrivateDragRectElement', () => {
-                const elementList = []
+                const elementList: Array<Element> = []
 
                 for (let valueElement of getCurrentPanel().elementList!) {
                     if ('SELECT' == valueElement.status) {
@@ -464,10 +468,12 @@ export function handleElementType(element: Container) {
 
 export function elementCommonPositionStyle(element: Element): CSSProperties {
     return {
-        width: widthValueUnit(element),
-        maxWidth: widthValueUnit(element),
-        height: heightValueUnit(element),
-        maxHeight: heightValueUnit(element),
+        // width: element.runtimeOption.width + 'px',
+        // left: element.runtimeOption.x + 'px',
+        // top: element.runtimeOption.y + 'px',
+        // maxWidth: widthValueUnit(element),
+        // height: element.runtimeOption.height + 'px',
+        // maxHeight: heightValueUnit(element),
         fontFamily: element.option.font,
         fontSize: element.option.fontSize + 'px',
     } as CSSProperties
@@ -765,4 +771,6 @@ export function changePageUnit() {
     appStore().lastPageUnit = panel.pageUnit
 }
 
-
+export function newPanel(): Panel {
+    return {} as Panel
+}

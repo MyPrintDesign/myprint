@@ -5,10 +5,15 @@
   }
 }
 
+.cp-element-wrapper {
+  position: absolute;
+}
+
 
 // 文本
 .cp-print-text_container {
-
+  width: 100%;
+  height: 100%;
   display: flex;
   word-break: break-all;
   outline: 0;
@@ -109,7 +114,7 @@
   position: absolute;
 }
 
-.cp-print-preview-wrap_container{
+.cp-print-preview-wrap_container {
 }
 
 .cp-print-preview-panel__wrap {

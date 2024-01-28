@@ -1,0 +1,253 @@
+.moveable-control {
+  position: absolute;
+  //width: var(--ss) !important;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-sizing: border-box;
+  background: var(--drag-h-color) !important;
+  margin-top: -7px;
+  margin-left: -7px;
+  z-index: 10;
+}
+
+//左上
+.moveable-nw {
+  border-radius: 0 !important;
+  width: calc(var(--direction-width) * 1px) !important;
+  height: calc(var(--direction-height) * 1px) !important;
+  margin-left: calc(var(--direction-width) / -2 * 1px) !important;
+  margin-top: calc(var(--direction-height) / -2 * 1px) !important;
+  background: transparent !important;
+  border: none !important;
+
+  &:before {
+    content: " ";
+    width: calc(var(--direction-width) * 1px);
+    height: 3px;
+    position: absolute;
+    background: var(--drag-h-color);
+    left: calc((var(--direction-width) - 2) / 2 * 1px);
+    top: calc((var(--direction-height) - 2) / 2 * 1px);
+  }
+
+  &:after {
+    content: " ";
+    width: 3px;
+    height: calc(var(--direction-height) * 1px);
+    position: absolute;
+    background: var(--drag-h-color);
+    left: calc((var(--direction-width) - 2) / 2 * 1px);
+    top: calc((var(--direction-height) - 2) / 2 * 1px);
+  }
+}
+
+
+//右上
+.moveable-ne {
+  border-radius: 0 !important;
+  width: calc(var(--direction-width) * 1px) !important;
+  height: calc(var(--direction-height) * 1px) !important;
+  margin-left: calc(var(--direction-width) / -2 * 1px) !important;
+  margin-top: calc(var(--direction-height) / -2 * 1px) !important;
+  background: transparent !important;
+  border: none !important;
+
+  &:before {
+    content: " ";
+    width: calc(var(--direction-width) * 1px);
+    height: 3px;
+    position: absolute;
+    background: var(--drag-h-color);
+    left: calc((var(--direction-width) - 2) / -2 * 1px);
+    top: calc((var(--direction-height) - 2) / 2 * 1px);
+  }
+
+  &:after {
+    content: " ";
+    width: 3px;
+    height: calc(var(--direction-height) * 1px);
+    position: absolute;
+    background: var(--drag-h-color);
+    left: calc(((var(--direction-width) - 2) / 2 - 1) * 1px);
+    top: calc((var(--direction-height) - 2) / 2 * 1px);
+  }
+}
+
+//左下
+.moveable-sw {
+  border-radius: 0 !important;
+  width: calc(var(--direction-width) * 1px) !important;
+  height: calc(var(--direction-height) * 1px) !important;
+  margin-left: calc(var(--direction-width) / -2 * 1px) !important;
+  margin-top: calc(var(--direction-height) / -2 * 1px) !important;
+  background: transparent !important;
+  border: none !important;
+
+  &:before {
+    content: " ";
+    width: calc(var(--direction-width) * 1px);
+    height: 3px;
+    position: absolute;
+    background: var(--drag-h-color);
+    left: calc((var(--direction-width) - 2) / 2 * 1px);
+    top: calc(((var(--direction-height) - 2) / 2 - 1) * 1px);
+  }
+
+  &:after {
+    content: " ";
+    width: 3px;
+    height: calc(var(--direction-height) * 1px);
+    position: absolute;
+    background: var(--drag-h-color);
+    left: calc((var(--direction-width) - 2) / 2 * 1px);
+    top: calc((var(--direction-height) - 2) / -2 * 1px);
+  }
+}
+
+//右下
+.moveable-se {
+  border-radius: 0 !important;
+  width: calc(var(--direction-width) * 1px) !important;
+  height: calc(var(--direction-height) * 1px) !important;
+  margin-left: calc(var(--direction-width) / -2 * 1px) !important;
+  margin-top: calc(var(--direction-height) / -2 * 1px) !important;
+  background: transparent !important;
+  border: none !important;
+
+  &:before {
+    content: " ";
+    width: calc(var(--direction-width) * 1px);
+    height: 3px;
+    position: absolute;
+    background: var(--drag-h-color);
+    left: calc((var(--direction-width) - 2) / -2 * 1px);
+    top: calc(((var(--direction-height) - 2) / 2 - 1) * 1px);
+  }
+
+  &:after {
+    content: " ";
+    width: 3px;
+    height: calc(var(--direction-height) * 1px);
+    position: absolute;
+    background: var(--drag-h-color);
+    left: calc(((var(--direction-width) - 2) / 2 - 1) * 1px);
+    top: calc((var(--direction-height) - 2) / -2 * 1px);
+  }
+}
+
+// 左中
+.moveable-w {
+  border-radius: 0 !important;
+  width: 3px !important;
+  height: calc(var(--direction-height) * 1px) !important;
+  margin-left: -1px !important;
+  margin-top: calc(var(--direction-height) / -2 * 1px) !important;
+  background: transparent !important;
+  border-left: solid 3px var(--drag-h-color) !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  border-right: none !important;
+}
+
+// 上中
+.moveable-n {
+  border-radius: 0 !important;
+  width: calc(var(--direction-width) * 1px) !important;
+  height: 3px !important;
+  margin-left: calc(var(--direction-width) / -2 * 1px) !important;
+  margin-top: -1px !important;
+  background: transparent !important;
+  border-top: solid 3px var(--drag-h-color) !important;
+  border-bottom: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+// 右中
+.moveable-e {
+  border-radius: 0 !important;
+  width: 3px !important;
+  height: calc(var(--direction-height) * 1px) !important;
+  margin-left: -2px !important;
+  margin-top: calc(var(--direction-height) / -2 * 1px) !important;
+  background: var(--drag-h-color) !important;
+  border: none !important;
+}
+
+// 下中
+.moveable-s {
+  border-radius: 0 !important;
+  width: calc(var(--direction-width) * 1px) !important;
+  height: 3px !important;
+  margin-left: calc(var(--direction-width) / -2 * 1px) !important;
+  margin-top: -2px !important;
+  background: transparent !important;
+  border-bottom: solid 3px var(--drag-h-color) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+// 中间
+.moveable-origin {
+  background: transparent !important;
+  border: none !important;
+}
+
+.moveable-origin:before {
+  content: " ";
+  width: 1px;
+  height: 7px;
+  position: absolute;
+  background: var(--drag-h-color);
+  left: 6px;
+  top: 3px;
+}
+
+.moveable-origin:after {
+  content: " ";
+  width: 7px;
+  height: 1px;
+  position: absolute;
+  background: var(--drag-h-color);
+  left: 3px;
+  top: 6px;
+}
+
+.moveable-line {
+  background: transparent !important;
+  border-bottom: 1px dashed var(--drag-h-color);
+}
+
+.moveable-guideline {
+  background: var(--bounds-color) !important;
+}
+
+.moveable-bounds {
+  background: var(--bounds-color) !important;
+}
+
+
+.moveable-rotation {
+  height: calc(20px * var(--zoom)) !important;
+
+  .moveable-rotation-line {
+    //margin-left: -1px;
+    //border-right: 1px dashed var(--drag-h-color);
+  }
+
+  .moveable-rotation-control {
+    border: none !important;
+    width: 10px !important;
+    height: 10px !important;
+    margin-left: -5px !important;
+  }
+
+}
+
+
+.selectClass {
+  background: var(--drag-h-color1) !important;
+  border: 1px solid var(--drag-h-color) !important;
+}

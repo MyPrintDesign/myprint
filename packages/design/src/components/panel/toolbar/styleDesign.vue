@@ -143,7 +143,8 @@ import StyleIcon from "@cp-print/design/components/cp/icon";
 import {i18n} from "@cp-print/design/locales";
 import {
   // elementSetting,
-  fontList, fontSizeList, hasStyle} from "@cp-print/design/constants/common";
+  fontList, fontSizeList, hasStyle
+} from "@cp-print/design/constants/common";
 import {CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 

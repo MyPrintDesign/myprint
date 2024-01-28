@@ -4,6 +4,7 @@
       :popper-style="popperStyle"
       :placement="placement"
       :visible="popoverVisible"
+      :disabled="disabled"
       :show-arrow="false"
       :hide-after="0"
       :trigger="trigger">
@@ -37,6 +38,7 @@ export interface Props {
   placement?: string
   popperStyle?: any
   pressHide?: boolean
+  disabled?: boolean
   lock?: boolean
 }
 
@@ -45,6 +47,7 @@ const props = withDefaults(defineProps<Props>(), {
   placement: 'top',
   popperStyle: () => ({}),
   pressHide: false,
+  disabled: false,
   lock: false,
 })
 

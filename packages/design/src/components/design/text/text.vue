@@ -1,6 +1,5 @@
 <template>
   <div class="cp-print-text_container"
-       ref="textRef"
        :style="style">
     <cp-barcode v-if="element.contentType === 'Barcode'" :element="element"/>
     <cp-qrcode v-else-if="element.contentType === 'QrCode'" :element="element"/>
@@ -24,7 +23,7 @@
 </template>
 <script setup lang="ts">
 
-import {computed, onMounted, ref, watch, CSSProperties} from "vue";
+import {computed, onMounted, watch, CSSProperties} from "vue";
 import {Element} from "@cp-print/design/types/entity";
 import CpBarcode from "@cp-print/design/components/design/barcode";
 import CpQrcode from "@cp-print/design/components/design/qrcode";
@@ -39,14 +38,12 @@ const props = withDefaults(defineProps<{
 }>(), {
   element: () => ({} as Element)
 })
-const textRef = ref()
 
 onMounted(() => {
   const data = formatter(props.element)
   if (data != null) {
     props.element.data = data
   }
-  
 })
 
 const style = computed(() => {
@@ -100,7 +97,7 @@ const contentStyle = computed(() => {
 )
 watch(() => props.element.contentType, (n, _o) => {
   if (n != 'QrCode') {
-    props.element.option.aspectRatio = null
+    // props.element.option.aspectRatio = null
   }
 })
 watch(() => props.element.option.formatter, (_n, _o) => {

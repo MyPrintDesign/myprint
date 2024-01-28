@@ -15,9 +15,9 @@ import Options from "./options/options.vue";
 import DesignContent from './content/index.vue'
 import {
   inject,
-  onMounted, provide, reactive, ref, watch
+  onMounted, provide, reactive, Ref, ref, watch
 } from "vue";
-import {Panel, Provider} from "@cp-print/design/types/entity";
+import {Container, Panel, Provider} from "@cp-print/design/types/entity";
 import {to} from "@cp-print/design/utils/utils";
 import {
   mittKey, panelKey, previewDataKey, providerKey
@@ -31,8 +31,8 @@ const configStore = useConfigStore()
 
 const $emit = defineEmits(["saveTemplate"])
 
-const provider = ref<Provider>({} as Provider)
-const panel = reactive(<Panel>{})
+const provider = ref({}) as Ref<Provider>
+const panel = reactive({}) as Panel
 const mitt = inject(mittKey)!
 const previewData = ref<any>({} as any)
 provide(panelKey, panel)
@@ -66,7 +66,7 @@ watch(() => props.template.id, (n, _o) => {
     for (let i = 0; i < panel.elementList!.length; i++) {
       const element = panel.elementList![i]
       // const element = toElement(elementObj)
-      parentInitElement(panel, element)
+      parentInitElement(panel as Container, element)
       if (element.type == 'Table') {
         for (let i = 0; i < element.columnList!.length; i++) {
           // element.columnList[i] = toElement(element.columnList[i])
@@ -105,6 +105,9 @@ watch(() => props.template.id, (n, _o) => {
 //         // provide(panelKey, panel)
 //
 //       })
+    
+    mitt.emit('updatePanel')
+    
   }
 }, {immediate: true})
 

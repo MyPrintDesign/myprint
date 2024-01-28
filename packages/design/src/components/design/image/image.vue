@@ -30,31 +30,31 @@
         title="图片裁剪"
         append-to-body>
       <div style="width: 600px; height: 500px">
-        <VueCropper ref="cropper"
-                    :img="sourceBase64"
-                    :outputSize="option.outputSize"
-                    :outputType="option.outputType"
-                    :info="option.info"
-                    :canScale="option.canScale"
-                    :autoCrop="option.autoCrop"
-                    :autoCropWidth="option.autoCropWidth"
-                    :autoCropHeight="option.autoCropHeight"
-                    :fixed="option.fixed"
-                    :fixedNumber="option.fixedNumber"
-                    :full="option.full"
-                    :fixedBox="option.fixedBox"
-                    :canMove="option.canMove"
-                    :canMoveBox="option.canMoveBox"
-                    :original="option.original"
-                    :centerBox="option.centerBox"
-                    :height="option.height"
-                    :infoTrue="option.infoTrue"
-                    :maxImgSize="option.maxImgSize"
-                    :enlarge="option.enlarge"
-                    :mode="option.mode"
-                    @realTime="realTime"
-                    @imgLoad="imgLoad">
-        </VueCropper>
+<!--        <VueCropper ref="cropper"-->
+<!--                    :img="sourceBase64"-->
+<!--                    :outputSize="option.outputSize"-->
+<!--                    :outputType="option.outputType"-->
+<!--                    :info="option.info"-->
+<!--                    :canScale="option.canScale"-->
+<!--                    :autoCrop="option.autoCrop"-->
+<!--                    :autoCropWidth="option.autoCropWidth"-->
+<!--                    :autoCropHeight="option.autoCropHeight"-->
+<!--                    :fixed="option.fixed"-->
+<!--                    :fixedNumber="option.fixedNumber"-->
+<!--                    :full="option.full"-->
+<!--                    :fixedBox="option.fixedBox"-->
+<!--                    :canMove="option.canMove"-->
+<!--                    :canMoveBox="option.canMoveBox"-->
+<!--                    :original="option.original"-->
+<!--                    :centerBox="option.centerBox"-->
+<!--                    :height="option.height"-->
+<!--                    :infoTrue="option.infoTrue"-->
+<!--                    :maxImgSize="option.maxImgSize"-->
+<!--                    :enlarge="option.enlarge"-->
+<!--                    :mode="option.mode"-->
+<!--                    @realTime="realTime"-->
+<!--                    @imgLoad="imgLoad">-->
+<!--        </VueCropper>-->
       
       </div>
       <div class="image-handle-wrapper">
@@ -81,8 +81,8 @@
 </template>
 <script setup lang="ts">
 // import { ElIcon, ElDialog } from 'element-plus'
-import 'vue-cropper/dist/index.css'
-import { VueCropper }  from "vue-cropper";
+// import 'vue-cropper/dist/index.css'
+// import { VueCropper }  from "vue-cropper";
 
 import {onMounted, reactive, ref} from "vue";
 import {Element} from "@cp-print/design/types/entity";
@@ -153,12 +153,12 @@ function editImgClick() {
   data.cropVisible = true
 }
 
-function realTime(_data: any) {
-  console.log(data)
-  // let that = this
-  // that.previews = data
-  
-}
+// function realTime(_data: any) {
+//   console.log(data)
+//   // let that = this
+//   // that.previews = data
+//
+// }
 
 function imageZoomIn() {
   cropper.value.changeScale(1)
@@ -197,9 +197,9 @@ function blobToDataURI(blob: any, callback: any) {
   }
 }
 
-function imgLoad() {
-
-}
+// function imgLoad() {
+//
+// }
 
 function selectImg(event: any) {
   let file = event.target.files[0]

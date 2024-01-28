@@ -2,8 +2,6 @@ import numberUtil from "@cp-print/design/utils/numberUtil";
 import {PageUnit} from "@cp-print/design/types/entity";
 import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
 
-
-// import {lastPageUnit} from "@cp-print/design/utils/elementUtil";
 let mmDiv = document.createElement("div");
 let body = document.querySelector("body")!
 mmDiv.id = "mm";
@@ -13,12 +11,12 @@ body.appendChild(mmDiv);
 // 原生方法获取浏览器对元素的计算值
 let mmDivRect = mmDiv.getBoundingClientRect();
 
-let scrollbarWidth = mmDiv.offsetWidth - mmDiv.clientWidth;
-console.log(scrollbarWidth);
+// let scrollbarWidth = mmDiv.offsetWidth - mmDiv.clientWidth;
+// console.log(scrollbarWidth);
 
 body.removeChild(mmDiv)
 // console.log(mm1);
-console.log(mmDivRect.width)
+// console.log(mmDivRect.width)
 const displayRatio = numberUtil.ceil(mmDivRect.width);
 console.log(displayRatio)
 export {

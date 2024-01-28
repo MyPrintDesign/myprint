@@ -150,6 +150,7 @@ export interface RuntimeElementOption extends Position {
     BR: Position
     bounds: Position
     parent?: Container
+    target?: any
 
     /**
      * 工作环境，如果是在表格中，填充满整个cell
@@ -214,3 +215,7 @@ export interface FormatterVariable {
     pageSize?: number,
     nowDate?: Date
 }
+
+// export type CpHtmlElement = HTMLElement & {
+//     element: Element
+// }

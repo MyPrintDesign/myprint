@@ -8,7 +8,7 @@ import {messageFun, mittKey} from "./constants/keys";
 import mitt from 'mitt'
 import {createPinia} from "pinia";
 // @ts-ignore
-import piniaPersist from 'pinia-plugin-persist';
+// import piniaPersist from 'pinia-plugin-persist';
 import Vue3ColorPicker from "vue3-colorpicker";
 // import VueCropper from 'vue-cropper';
 // import 'vue-cropper/dist/index.css'
@@ -39,7 +39,7 @@ const install = {
             // Pinia 插件已安装
         } else {
             const pinia = createPinia()
-            pinia.use(piniaPersist)
+            // pinia.use(piniaPersist)
             app.use(pinia)
         }
         app

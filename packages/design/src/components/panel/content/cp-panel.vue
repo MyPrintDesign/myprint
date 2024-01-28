@@ -10,77 +10,122 @@
     <rule direction="vertical"
           :length="panel.height"
           :highlight="[highlightRule.verticalLeft, highlightRule.verticalRight]"/>
-    <el-watermark :content="panel.watermark?panel.watermarkContent:''">
-      <cp-drop
-          ref="designContentRef"
-          class="design-content design-content-bg"
-          :class="{'design-content_over': data.dropOver}"
-          :style="{transformOrigin: 'left top',
+    <!--    <el-watermark :content="panel.watermark?panel.watermarkContent:''">-->
+    <cp-drop
+        ref="designContentRef"
+        class="design-content design-content-bg"
+        :class="{'design-content_over': data.dropOver}"
+        :style="{transformOrigin: 'left top',
                           transform: 'scale('+scaleUtil.miniMap.scale+')',
                             minWidth: valueUnit(panel.width),
                             width: valueUnit(panel.width),
                             height: valueUnit(panel.height),
                            }"
-          @drop="drop"
-          @dragover="dragover"
-          @dragleave="dragleave"
-          @preventDefault="dropPreventDefault"
-          @mousedown="mousedown($event)">
-        
-        <element-drag v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
-        <element-drag v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
-        
-        <element-list :elementList="panel.elementList"/>
-        <!--      <span-->
-        <!--          class="ref-line v-line"-->
-        <!--          v-for="(item, index) in vLine"-->
-        <!--          :key="'v_' + index"-->
-        <!--          v-show="item.display"-->
-        <!--          :style="{-->
-        <!--          left: item.position,-->
-        <!--          top: item.origin,-->
-        <!--          height: item.lineLength-->
-        <!--        }"-->
-        <!--      />-->
-        <!--      <span-->
-        <!--          class="ref-line h-line"-->
-        <!--          v-for="(item, index) in hLine"-->
-        <!--          :key="'h_' + index"-->
-        <!--          :style="{-->
-        <!--          top: item.position,-->
-        <!--          left: item.origin,-->
-        <!--          width: item.lineLength-->
-        <!--        }"-->
-        <!--      />-->
-        <!--    选择框    -->
-        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>
-        <!--    拖拽矩形    -->
-        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">
-          <DragRect :element="defaultDragRectElement"/>
-        </vue-drag>
-        <!--    对齐辅助线    -->
-        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>
-      </cp-drop>
-    </el-watermark>
+        @drop="drop"
+        @dragover="dragover"
+        @dragleave="dragleave"
+        @preventDefault="dropPreventDefault"
+    >
+      <!--         @mousedown="mousedown($event)"-->
+      <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
+      <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
+      
+      <element-list :elementList="panel.elementList"/>
+      <!--      <span-->
+      <!--          class="ref-line v-line"-->
+      <!--          v-for="(item, index) in vLine"-->
+      <!--          :key="'v_' + index"-->
+      <!--          v-show="item.display"-->
+      <!--          :style="{-->
+      <!--          left: item.position,-->
+      <!--          top: item.origin,-->
+      <!--          height: item.lineLength-->
+      <!--        }"-->
+      <!--      />-->
+      <!--      <span-->
+      <!--          class="ref-line h-line"-->
+      <!--          v-for="(item, index) in hLine"-->
+      <!--          :key="'h_' + index"-->
+      <!--          :style="{-->
+      <!--          top: item.position,-->
+      <!--          left: item.origin,-->
+      <!--          width: item.lineLength-->
+      <!--        }"-->
+      <!--      />-->
+      <!--    选择框    -->
+      <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
+      <!--    拖拽矩形    -->
+      <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
+      <!--          <DragRect :element="defaultDragRectElement"/>-->
+      <!--        </vue-drag>-->
+      <!--    对齐辅助线    -->
+      <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
+      
+      <Moveable
+          ref="moveableRef"
+          :draggable="true"
+          :rotatable="true"
+          :scalable="true"
+          :resizable="true"
+          :target="targets"
+          :bounds="bounds"
+          @drag="onDrag"
+          @dragStart="onDragStart"
+          @dragEnd="onDragEnd"
+          @dragGroup="onDragGroup"
+          @rotateStart="onRotateStart"
+          @rotateEnd="onRotateEnd"
+          @rotate="rotate"
+          @rotateGroup="rotateGroup"
+          
+          :ables="[DimensionViewable, Editable]"
+          :props="({ dimensionViewable: tipsStatus != null, editable: true })"
+          
+          @resizeStart="onResizeStart"
+          @resize="resize"
+          @resizeGroup="resizeGroup"
+          @resizeEnd="onResizeEnd"
+          @beforeResize="onBeforeResize"
+          
+          @beforeRotate="onBeforeRotate"
+          @round="round"
+          @roundGroup="roundGroup"
+          
+          @bound="bound"
+          
+          :individualGroupable="false"
+          :keepRatio="false"
+          
+          @render="onRender"
+          @renderGroup="onRenderGroup"
+          
+          :snappable="true"
+          :isDisplaySnapDigit="true"
+          :isDisplayInnerSnapDigit="false"
+          :snapGap="false"
+      ></Moveable>
+     
+    </cp-drop>
+    <!--    </el-watermark>-->
   
   </div>
 </template>
 
 <script setup lang="ts">
 // import { ElWatermark } from 'element-plus'
-import SelectRect from '../selectRect.vue'
-import VueDrag from "@cp-print/design/components/design/drag/index";
 import Rule from "../rule.vue";
-import DragRect from "../dragRect.vue";
-import AlignLine from "../alignLine.vue";
+
+// import {
+//   BoundType
+// } from 'react-moveable/declaration/types'
 // import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
-import {ContentScaleVo, DragWrapper, Element, Point} from "@cp-print/design/types/entity";
+import {ContentScaleVo, DragWrapper, Element} from "@cp-print/design/types/entity";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
-import {clearEventBubble} from "@cp-print/design/utils/event";
+// import {clearEventBubble} from "@cp-print/design/utils/event";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
-import {canMoveStatusList, defaultDragRectElement, defaultElement} from "@cp-print/design/constants/common";
+import {canMoveStatusList, defaultDragRectElement} from "@cp-print/design/constants/common";
 import {ActionEnum, record, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {
   addElement,
@@ -93,7 +138,6 @@ import {
   none,
   removeElement, rotatedPoint,
   select,
-  selectRemove,
   setCurrentElement,
   valueUnit
 } from "@cp-print/design/utils/elementUtil";
@@ -101,12 +145,44 @@ import {
 import CpDrop from "@cp-print/design/components/cp/drop";
 import ElementList from "../../design/elementList.vue";
 import {mountedKeyboardEvent, unMountedKeyboardEvent} from "@cp-print/design/utils/keyboardUtil";
-import ElementDrag from "../../design/elementDrag.vue";
+import {
+  onDrag,
+  setMoveable,
+  onDragStart,
+  targets,
+  updatePanel,
+  onDragEnd,
+  onDragGroup,
+  onRotateStart,
+  onRotateEnd,
+  rotate,
+  rotateGroup,
+  DimensionViewable,
+  Editable,
+  tipsStatus,
+  onResizeStart,
+  resize,
+  resizeGroup,
+  onResizeEnd,
+  onBeforeResize,
+  onBeforeRotate, round, roundGroup, bound, onRender, onRenderGroup, initSelect,
+} from "@cp-print/design/components/moveable/moveable";
+// import VanillaSelecto, { SelectoOptions, SelectoMethods } from "selecto";
+// import Selecto from "vue3-selecto";
+import Moveable from "vue3-moveable";
+// import {
+//   MoveableInterface,
+//   // MoveableOptions, MoveableProperties,
+// } from "react-moveable/declaration/types";
+import Design from "@cp-print/design/components/design/design.vue";
+import {BoundType} from "@cp-print/design/components/moveable/types";
 
 const panel = inject(panelKey)!
 const mitt = inject(mittKey)!
 // const vLine = ref([])
 // const hLine = ref([])
+const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"} as BoundType;
+
 
 // const panelRef = ref({})
 
@@ -124,6 +200,7 @@ mitt.on('elementUp', elementUp)
 mitt.on('elementRemove', elementRemove)
 mitt.on("scaleEvent", scaleEvent)
 mitt.on("panelSnapshot", panelSnapshot)
+mitt.on('updatePanel', updatePanel)
 
 const highlightRule = reactive({
   horizontalLeft: null,
@@ -135,85 +212,104 @@ const highlightRule = reactive({
 const alignLineDataList = reactive<Element[]>([])
 const designContentRef = ref<InstanceType<any>>()
 // console.log($t('menus.home'))
-const selectRectElement = reactive(<Element>{
-  width: 0,
-  height: 0
-})
+// const selectRectElement = reactive(<Element>{
+//   width: 0,
+//   height: 0
+// })
 // const configStoreData = configStore()
 // console.log(configStoreData.data.unit)
-const selectPoint = {
-  x: 0,
-  y: 0,
-  clientX: null,
-  clientY: null
-} as any
+// const selectPoint = {
+//   x: 0,
+//   y: 0,
+//   clientX: null,
+//   clientY: null
+// } as any
 const data = reactive({
   dropOver: false
 })
-const visible = reactive({
-  selectRect: false,
-  dragRect: false,
-})
+// const visible = reactive({
+//   selectRect: false,
+//   dragRect: false,
+// })
 const contentScale = reactive({
   scrollWidth: undefined,
   scrollHeight: undefined,
   openIs: false
 } as ContentScaleVo)
-
 onMounted(() => {
   // 挂载键盘事件
   mountedKeyboardEvent()
+  console.log(moveableRef)
+  setMoveable(moveableRef)
+  // setSelecto(selectoRef)
+  initSelect()
+  document.documentElement.style.setProperty('--direction-width', '20');
+  document.documentElement.style.setProperty('--direction-height', '20');
+  // getMoveable().bounds = null
+  // getMoveable().rotatable = false
+  // getMoveable().renderDirections = ['w'];
+  // console.log(getMoveable().bounds)
+  // :selectableTargets="['.design-select']"
+// :hitRate="0"
+// :selectByClick="true"
+// :selectFromInside="false"
+// :ratio="0"
+//   className="selectClass"
+// @dragStart="onSelectDragStart"
+// @select="onSelect"
+// @selectEnd="onSelectEnd"
+
 })
 
 onUnmounted(() => {
   unMountedKeyboardEvent()
 })
 
-function computedSelection() {
-  // console.log('computedSelection')
-  let isShowDragRect = false
-  none(panel.pageHeader)
-  none(panel.pageFooter)
-  const startPoint = {x: 999999, y: 999999} as Point
-  const endPoint = {x: 0, y: 0} as Point
-  
-  for (let valueElement of panel.elementList!) {
-    const left = valueElement.runtimeOption.bounds.left
-    const top = valueElement.runtimeOption.bounds.top
-    const right = valueElement.runtimeOption.bounds.right
-    const bottom = valueElement.runtimeOption.bounds.bottom
-    if (left >= selectRectElement.x! && top >= selectRectElement.y!
-        && right < selectRectElement.x! + selectRectElement.width
-        && bottom < selectRectElement.y! + selectRectElement.height) {
-      select(valueElement)
-      
-      // 计算 拖拽矩形
-      isShowDragRect = true
-      startPoint.x = Math.min(startPoint.x!, left)
-      startPoint.y = Math.min(startPoint.y!, top)
-      endPoint.x = Math.max(endPoint.x!, right)
-      endPoint.y = Math.max(endPoint.y!, bottom)
-    } else {
-      none(valueElement)
-    }
-  }
-  
-  selectRectElement.width = 0
-  selectRectElement.height = 0
-  if (isShowDragRect) {
-    defaultDragRectElement.x = startPoint.x
-    defaultDragRectElement.y = startPoint.y
-    defaultDragRectElement.width = endPoint.x! - startPoint.x!
-    defaultDragRectElement.height = endPoint.y! - startPoint.y!
-    selectRemove(defaultDragRectElement)
-  } else {
-    defaultDragRectElement.x = undefined
-    defaultDragRectElement.width = 0
-    defaultDragRectElement.height = 0
-  }
-  
-  visible.dragRect = isShowDragRect
-}
+// function computedSelection() {
+//   // console.log('computedSelection')
+//   let isShowDragRect = false
+//   none(panel.pageHeader)
+//   none(panel.pageFooter)
+//   const startPoint = {x: 999999, y: 999999} as Point
+//   const endPoint = {x: 0, y: 0} as Point
+//
+//   for (let valueElement of panel.elementList!) {
+//     const left = valueElement.runtimeOption.bounds.left
+//     const top = valueElement.runtimeOption.bounds.top
+//     const right = valueElement.runtimeOption.bounds.right
+//     const bottom = valueElement.runtimeOption.bounds.bottom
+//     if (left >= selectRectElement.x! && top >= selectRectElement.y!
+//         && right < selectRectElement.x! + selectRectElement.width
+//         && bottom < selectRectElement.y! + selectRectElement.height) {
+//       select(valueElement)
+//
+//       // 计算 拖拽矩形
+//       isShowDragRect = true
+//       startPoint.x = Math.min(startPoint.x!, left)
+//       startPoint.y = Math.min(startPoint.y!, top)
+//       endPoint.x = Math.max(endPoint.x!, right)
+//       endPoint.y = Math.max(endPoint.y!, bottom)
+//     } else {
+//       none(valueElement)
+//     }
+//   }
+//
+//   selectRectElement.width = 0
+//   selectRectElement.height = 0
+//   if (isShowDragRect) {
+//     defaultDragRectElement.x = startPoint.x
+//     defaultDragRectElement.y = startPoint.y
+//     defaultDragRectElement.width = endPoint.x! - startPoint.x!
+//     defaultDragRectElement.height = endPoint.y! - startPoint.y!
+//     selectRemove(defaultDragRectElement)
+//   } else {
+//     defaultDragRectElement.x = undefined
+//     defaultDragRectElement.width = 0
+//     defaultDragRectElement.height = 0
+//   }
+//
+//   visible.dragRect = isShowDragRect
+// }
 
 function drop(dragData: any) {
   // let elementStr = ev.dataTransfer.getData('element');
@@ -233,7 +329,7 @@ function drop(dragData: any) {
   
   handleElementType(element)
       .handle('PageHeader', () => {
-            if (panel.pageHeader != null) {
+            if (panel.pageHeader != undefined) {
               return
             }
             panel.pageHeader = element
@@ -244,7 +340,7 @@ function drop(dragData: any) {
           }
       )
       .handle('PageFooter', () => {
-            if (panel.pageFooter != null) {
+            if (panel.pageFooter != undefined) {
               return
             }
             panel.pageFooter = element
@@ -277,7 +373,7 @@ function panelSnapshot(snapshot: Snapshot) {
   record(snapshot)
 }
 
-function dragover(ev:DragEvent) {
+function dragover(ev: DragEvent) {
   console.log(ev)
   data.dropOver = true
   // todo 高亮拖放位置
@@ -292,65 +388,65 @@ function dragover(ev:DragEvent) {
   // console.log('allowDrop', event)
 }
 
-function dragleave(_ev:DragEvent) {
+function dragleave(_ev: DragEvent) {
   data.dropOver = false
   
   // ev.target.toggleAttribute('over', false);
   // console.log('dragleave', ev)
 }
 
-function mousedown(ev:MouseEvent) {
-  if (ev.defaultPrevented) {
-    // 执行父组件的 mousedown 事件逻辑
-    return
-  }
-  // console.log(ev)
-  selectPoint.x = ev.offsetX
-  selectPoint.y = ev.offsetY
-  selectPoint.clientX = ev.clientX
-  selectPoint.clientY = ev.clientY
-  
-  selectRectElement.x = selectPoint.x
-  selectRectElement.y = selectPoint.y
-  
-  function mousemove(ev:MouseEvent) {
-    // 鼠标移动时计算每次移动的距离，并改变拖拽元素的定位
-    visible.selectRect = true
-    // console.log(ev.clientX, ev.offsetX, ev.clientY, ev.offsetY, ev)
-    //计算需要移动的距离
-    let offsetX = scaleUtil.scaleDiv(px2unit(ev.clientX - selectPoint.clientX))
-    let offsetY = scaleUtil.scaleDiv(px2unit(ev.clientY - selectPoint.clientY))
-    let x = px2unit(selectPoint.x)
-    let y = px2unit(selectPoint.y)
-    selectRectElement.x = Math.min(x, x + offsetX)
-    selectRectElement.y = Math.min(y, y + offsetY)
-    
-    selectRectElement.width = Math.abs(offsetX)
-    selectRectElement.height = Math.abs(offsetY)
-    
-    clearEventBubble(ev)
-    // 阻止事件的默认行为，可以解决选中文本的时候拖不动
-    return false;
-  }
-  
-  function mouseup(ev:MouseEvent) {
-    
-    // console.log('鼠标抬起')
-    setCurrentElement(defaultElement)
-    
-    visible.selectRect = false
-    defaultDragRectElement.runtimeOption.parent = panel
-    contentScale.openIs = false
-    computedSelection()
-    document.removeEventListener('mousemove', mousemove);
-    document.removeEventListener('mouseup', mouseup);
-    ev.stopPropagation()
-  }
-  
-  document.addEventListener('mousemove', mousemove)
-  document.addEventListener('mouseup', mouseup);
-  clearEventBubble(ev)
-}
+// function mousedown(ev: MouseEvent) {
+//   if (ev.defaultPrevented) {
+//     // 执行父组件的 mousedown 事件逻辑
+//     return
+//   }
+//   // console.log(ev)
+//   selectPoint.x = ev.offsetX
+//   selectPoint.y = ev.offsetY
+//   selectPoint.clientX = ev.clientX
+//   selectPoint.clientY = ev.clientY
+//
+//   selectRectElement.x = selectPoint.x
+//   selectRectElement.y = selectPoint.y
+//
+//   function mousemove(ev: MouseEvent) {
+//     // 鼠标移动时计算每次移动的距离，并改变拖拽元素的定位
+//     visible.selectRect = true
+//     // console.log(ev.clientX, ev.offsetX, ev.clientY, ev.offsetY, ev)
+//     //计算需要移动的距离
+//     let offsetX = scaleUtil.scaleDiv(px2unit(ev.clientX - selectPoint.clientX))
+//     let offsetY = scaleUtil.scaleDiv(px2unit(ev.clientY - selectPoint.clientY))
+//     let x = px2unit(selectPoint.x)
+//     let y = px2unit(selectPoint.y)
+//     selectRectElement.x = Math.min(x, x + offsetX)
+//     selectRectElement.y = Math.min(y, y + offsetY)
+//
+//     selectRectElement.width = Math.abs(offsetX)
+//     selectRectElement.height = Math.abs(offsetY)
+//
+//     clearEventBubble(ev)
+//     // 阻止事件的默认行为，可以解决选中文本的时候拖不动
+//     return false;
+//   }
+//
+//   function mouseup(ev: MouseEvent) {
+//
+//     // console.log('鼠标抬起')
+//     setCurrentElement(defaultElement)
+//
+//     visible.selectRect = false
+//     defaultDragRectElement.runtimeOption.parent = panel
+//     contentScale.openIs = false
+//     computedSelection()
+//     document.removeEventListener('mousemove', mousemove);
+//     document.removeEventListener('mouseup', mouseup);
+//     ev.stopPropagation()
+//   }
+//
+//   document.addEventListener('mousemove', mousemove)
+//   document.addEventListener('mouseup', mouseup);
+//   clearEventBubble(ev)
+// }
 
 function elementClick(element: Element) {
   // console.log('elementClick')
@@ -373,16 +469,16 @@ function elementMove(element: Element) {
     elementListNone()
     select(element)
   }
-
+  
   // 寻找对齐的位置
   // computedAlign(point, alignLineDataList, props.panel.elementList)
-
+  
   // 高亮尺子刻度
   // highlightRule.horizontalLeft = mm2px(element.x + point.offsetX)
   // highlightRule.horizontalRight = mm2px(element.x + point.offsetX + element.width)
   // highlightRule.verticalLeft = mm2px(element.y + point.offsetY)
   // highlightRule.verticalRight = mm2px(element.y + point.offsetY + element.height)
-
+  
   // console.log(point)
   for (let valueElement of panel.elementList!) {
     if (canMoveStatusList.includes(valueElement.status)) {
@@ -391,28 +487,28 @@ function elementMove(element: Element) {
       valueElement.translateY = element.translateY
     }
   }
-
+  
   // defaultDragRectElement.translateX = point.offsetX
   // defaultDragRectElement.translateY = point.offsetY
 }
 
 function elementUp() {
   // console.log(point)
-  const elementList = []
+  const elementList: Array<Element> = []
   for (let valueElement of panel.elementList!) {
     if (canMoveStatusList.includes(valueElement.status)) {
       elementList.push(valueElement)
     }
   }
-
+  
   for (let valueElement of elementList) {
     computeTranslate(valueElement)
-
+    
     rotatedPoint(valueElement)
   }
-
-  computeTranslate(defaultDragRectElement)
-
+  
+  computeTranslate(defaultDragRectElement as Element)
+  
   // let action = ActionEnum.MOVE
   // if (elementList.length > 1) {
   //   action = ActionEnum.BATCH_MOVE
@@ -423,13 +519,13 @@ function elementUp() {
   //   panel: panel
   // })
   // console.log(history)
-
+  
   alignLineDataList.length = 0
   highlightRule.horizontalLeft = null
   highlightRule.horizontalRight = null
   highlightRule.verticalLeft = null
   highlightRule.verticalRight = null
-
+  
 }
 
 function dropPreventDefault(dragData: DragWrapper) {
@@ -458,7 +554,7 @@ function scaleEvent() {
 function elementRemove(element: Element) {
   // console.log(element)
   removeElement(element)
-
+  
   record(<Snapshot>{element: element, action: ActionEnum.REMOVE})
 }
 
@@ -475,4 +571,8 @@ watch([() => panel.width, () => panel.height], (_w, _h) => {
   })
   
 })
+
+const moveableRef = ref();
+// const selectoRef = ref();
+
 </script>

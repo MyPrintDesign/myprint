@@ -1,6 +1,6 @@
 <template>
   <template v-for="(element) in elementList">
-    <ElementDrag :element="element"/>
+    <Design :element="element"/>
 
   </template>
 </template>
@@ -8,7 +8,7 @@
 <script setup lang="ts">
 
 import {Element} from "@cp-print/design/types/entity";
-import ElementDrag from "./elementDrag.vue";
+import Design from "@cp-print/design/components/design/design.vue";
 
 withDefaults(defineProps<{
   elementList?: Array<Element>

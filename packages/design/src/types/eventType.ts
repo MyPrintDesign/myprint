@@ -17,4 +17,5 @@ export type EventTypes = {
     clearPanel: Panel;
     panelSnapshot: Snapshot;
     sortColumn: any;
+    updatePanel: any;
 }

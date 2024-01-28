@@ -14,7 +14,7 @@ export const useConfigStore = defineStore('config', {
             settingPanel: {
                 setting: {visible: false},
                 operation: {visible: true},
-                history: {visible: true},
+                history: {visible: false},
                 elementList: {visible: false},
             } as any,
             settingDesign: {

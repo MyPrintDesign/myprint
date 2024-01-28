@@ -2,3 +2,98 @@
   width: 20px;
   height: 2px;
 }
+
+.vc-colorpicker {
+  width: 210px !important;
+
+  .vc-colorpicker--container {
+    padding: 6px !important;
+
+    .vc-fk-colorPicker {
+      .vc-fk-colorPicker__inner {
+
+        .vc-fk-colorPicker__header {
+          //display: none;
+        }
+
+        .vc-compact {
+          width: 100%;
+          box-shadow: none !important;
+          margin-bottom: 0;
+
+          .vc-compact__row {
+            height: 23px !important;
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+
+            .vc-compact__color-cube--wrap {
+              width: 18px !important;
+              height: 18px !important;
+              box-shadow: 0 0 3px #00000026;
+            }
+          }
+
+          &:before {
+            margin-top: -7px;
+            margin-bottom: 7px;
+            content: "主题颜色";
+            width: 100%;
+            text-align: center;
+            display: block;
+          }
+        }
+
+        .vc-display {
+          margin-top: 5px;
+          height: 20px !important;
+
+          .vc-color-input {
+            &:before {
+              position: absolute;
+              left: 38px;
+              top: 2px;
+              color: #090d29;
+              pointer-events: none;
+              content: "#";
+              text-align: center;
+            }
+          }
+        }
+
+        .vc-lightness-slider {
+          margin-bottom: 0;
+        }
+
+        .vc-colorPicker__record {
+          margin-top: 5px;
+        }
+
+        .vc-colorPicker__record {
+          display: block;
+
+          .color-list {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+
+            .color-item {
+              width: 18px !important;
+              height: 18px !important;
+              box-shadow: 0 0 3px #00000026;
+            }
+          }
+
+          &:before {
+            margin-top: 3px;
+            margin-bottom: 7px;
+            content: "历史颜色";
+            width: 100%;
+            text-align: center;
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

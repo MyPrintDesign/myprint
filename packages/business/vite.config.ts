@@ -13,8 +13,8 @@ export default defineConfig({
         port: 7080,
         proxy: { //配置多个代理
             '/api': {
-                // target: "http://127.0.0.1:2020/",
-                target: "http://q-jiang.com:35009/",
+                target: "http://127.0.0.1:2020/",
+                // target: "http://q-jiang.com:35009/",
                 changeOrigin: true,///设置访问目标地址允许跨域
                 rewrite: (p) => p.replace(/^\/api/, '')
             }
