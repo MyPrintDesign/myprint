@@ -27,14 +27,15 @@ import {deepFlat, throttle} from "@daybrush/utils";
 import {removeElement, setCurrentElement} from "@cp-print/design/utils/elementUtil";
 import {defaultElement} from "@cp-print/design/constants/common";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
-import Selecto from "selecto";
+import Selecto, {OnDragStart as OnSelectDragStart, OnSelectEnd, OnSelect} from "selecto";
 import Moveable from "moveable";
 import {CpHtmlElement} from "@cp-print/design/types/entity";
 // import {MoveableOptions} from "react-moveable";
 let moveable: Moveable & MoveableOptions
+let selecto: Selecto
 
 export const snapElementList: Ref<Array<ElementGuidelineValueOption | MoveableRefType<CpHtmlElement>>> = ref([".design-content"])
-export const elementList:Ref<Array<CpHtmlElement>> = ref([])
+export const elementList: Ref<Array<CpHtmlElement>> = ref([])
 const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"} as BoundType;
 export const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
 export const targets = ref([]) as Ref<Array<CpHtmlElement>>
@@ -60,7 +61,7 @@ export const DimensionViewable = {
                 break
         }
 
-        const  ss = React.createElement("div", {
+        const ss = React.createElement("div", {
             key: "dimension-viewer",
             className: "moveable-dimension",
             style: {
@@ -311,6 +312,7 @@ function bound(e: OnBound) {
 }
 
 export const setSelectedTargets = (nextTargetes: any) => {
+    console.log(nextTargetes)
     selecto.setSelectedTargets(deepFlat(nextTargetes));
     targets.value = nextTargetes;
     moveable.target = nextTargetes
@@ -350,40 +352,50 @@ export const setSelectedTargets = (nextTargetes: any) => {
     // moveable.elementGuidelines = snapElementList.value
 }
 
-
-
-const onSelectDragStart = (e: any) => {
+const onSelectDragStart = (e: OnSelectDragStart) => {
     // const moveable = moveableRef.value;
     const target = e.inputEvent.target;
     // console.log(targets.value)
     const flatted = deepFlat(targets.value!);
     // console.log(moveable!.isMoveableElement(target))
     // @ts-ignore
-    if (target.tagName === "BUTTON" || moveable!.isMoveableElement(target)
+    if (target.tagName === "BUTTON" || moveable.isMoveableElement(target)
         || flatted.some(t => t === target || t.contains(target))
     ) {
-        // console.log(123)
+        console.log(123)
         e.stop();
     }
+
+    if (e.currentTarget.getSelectedTargets().length == 1) {
+        console.log(333)
+        const currentSelect = e.currentTarget.getSelectedTargets()[0] as CpHtmlElement
+        if (currentSelect.element.type != 'PageFooter') {
+            stop()
+        }
+    }
+
+    console.log(e)
     // console.log(targets.value)
+    // e.data.startTargets = targets.value;
     e.data.startTargets = targets.value;
 }
 
-const onSelect = (e: any) => {
+const onSelect = (e: OnSelect) => {
     const {startAdded, startRemoved, isDragStartEnd} = e;
     if (isDragStartEnd) {
         return;
     }
-    // console.log(e.data.startTargets, startAdded, startRemoved)
+    console.log(e.data.startTargets, startAdded, startRemoved)
     const nextChilds = groupManager.selectSameDepthChilds(
         e.data.startTargets,
         startAdded,
         startRemoved
     );
+    const targetList = nextChilds.targets().filter((v: CpHtmlElement) => v.element.type != 'PageFooter')
     // console.log(nextChilds.targets())
-    setSelectedTargets(nextChilds.targets());
+    setSelectedTargets(targetList);
 };
-const onSelectEnd = (e: any) => {
+const onSelectEnd = (e: OnSelectEnd) => {
     const {
         isDragStartEnd,
         isClick,
@@ -391,7 +403,7 @@ const onSelectEnd = (e: any) => {
         removed,
         inputEvent,
     } = e;
-
+    console.log('select-end')
     // console.log(e)
     for (let snapElement of removed) {
         snapElement.classList.add('snap')
@@ -422,11 +434,12 @@ const onSelectEnd = (e: any) => {
             removed
         );
     }
-    e.currentTarget.setSelectedTargets(nextChilds.flatten());
+    const targetList = nextChilds.targets().filter((v: CpHtmlElement) => v.element.type != 'PageFooter')
+
+    e.currentTarget.setSelectedTargets(targetList);
     // console.log(nextChilds.targets())
-    setSelectedTargets(nextChilds.targets());
+    setSelectedTargets(targetList);
 };
-let selecto: Selecto
 
 export function initMoveable() {
 
@@ -441,7 +454,7 @@ export function initMoveable() {
         // The area to drag selection element (default: container)
         // dragContainer: Element,
         // Targets to select. You can register a queryselector or an Element.
-        selectableTargets: [".design-select", document.querySelector(".design-select") as HTMLElement],
+        selectableTargets: [".design-select"],
         // Whether to select by click (default: true)
         selectByClick: true,
         // Whether to select from the target inside (default: true)
@@ -472,18 +485,23 @@ export function initMoveable() {
         scalable: true,
         rotatable: true,
         snappable: true,
+        // individualGroupable: true,
+        // individualGroupableProps(element, index) {
+        //     console.log(element, index)
+        //     return {aa:123}
+        // },
         snapGap: true,
-        snapRotationDegrees: [0, 45, 90, 135, 180, 225, 270],
+        snapRotationDegrees: [0, 45, 90, 135, 180, 225, 270, 315],
         ables: [DimensionViewable, Editable],
-        props: ({ dimensionViewable: tipsStatus != null, editable: true }),
-        snapDirections: ({ top: true, left: true, bottom: true, right: true, center: true, middle: true }),
-        elementSnapDirections: ({ top: true, left: true, bottom: true, right: true, center: true, middle: true }),
+        props: ({dimensionViewable: tipsStatus != null, editable: true}),
+        snapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
+        elementSnapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
         // warpable: false,
         // Enabling pinchable lets you use events that
         // can be used in draggable, resizable, scalable, and rotateable.
         // pinchable: true, // ["resizable", "scalable", "rotatable"]
         // origin: true,
-        individualGroupable: false,
+        // individualGroupable: false,
         keepRatio: false,
         // Resize, Scale Events at edges.
         edge: false,

@@ -7,6 +7,7 @@
         }"
       @dragover="dragover"
       @dragleave="dragleave">
+    <div class="container-edit-icon" @click="test">123</div>
     <slot/>
   </cp-drop>
 </template>
@@ -19,6 +20,7 @@ import {onMounted, reactive} from "vue";
 import CpDrop from "@cp-print/design/components/cp/drop";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {addElement} from "@cp-print/design/utils/elementUtil";
+import {setSelectedTargets} from "@cp-print/design/components/moveable/moveable";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -33,6 +35,10 @@ const data = reactive({
 
 onMounted(() => {
 })
+
+function test() {
+  setSelectedTargets([props.element.runtimeOption.target])
+}
 
 function drop(dragData: DragWrapper) {
   console.log("页脚拖放")
@@ -76,6 +82,11 @@ function dropPreventDefault(dragData: DragWrapper) {
 .container {
   width: 100%;
   height: 100%;
+}
+
+.container-edit-icon {
+  color: white;
+  transform: translate(100%, -20px);
 }
 
 .container_over {

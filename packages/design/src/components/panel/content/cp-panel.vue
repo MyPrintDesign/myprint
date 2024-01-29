@@ -164,20 +164,6 @@ onMounted(() => {
   // 挂载键盘事件
   mountedKeyboardEvent()
   initMoveable()
-  // getMoveable().bounds = null
-  // getMoveable().rotatable = false
-  // getMoveable().renderDirections = ['w'];
-  // console.log(getMoveable().bounds)
-  // :selectableTargets="['.design-select']"
-// :hitRate="0"
-// :selectByClick="true"
-// :selectFromInside="false"
-// :ratio="0"
-//   className="selectClass"
-// @dragStart="onSelectDragStart"
-// @select="onSelect"
-// @selectEnd="onSelectEnd"
-
 })
 
 onUnmounted(() => {
@@ -263,12 +249,12 @@ function drop(dragData: any) {
               return
             }
             panel.pageFooter = element
-            element.width = unit2px(panel.width)
-            element.runtimeOption.width = element.width
+            element.width = panel.width
+            element.runtimeOption.width = unit2px(panel.width)
             element.runtimeOption.x = 0
             element.x = 0
-            element.y = unit2px(panel.height - element.height)
-            element.runtimeOption.y = element.y
+            element.y = panel.height - element.height
+            element.runtimeOption.y = unit2px(panel.height - element.height)
             installParentElement(panel, element)
           }
       ).end(() => {
