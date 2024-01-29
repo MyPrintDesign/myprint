@@ -15,9 +15,10 @@ import {
     OnRotateEnd,
     OnRotate,
     OnBound,
-    MoveableInterface,
+    // MoveableInterface,
     MoveableManagerInterface, Renderer,
-    MoveableOptions, BoundType, MoveableRefType, ElementGuidelineValueOption
+    MoveableOptions,
+    BoundType, MoveableRefType, ElementGuidelineValueOption
 } from './types'
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {nextTick, Ref, ref} from "vue";
@@ -27,27 +28,25 @@ import {removeElement, setCurrentElement} from "@cp-print/design/utils/elementUt
 import {defaultElement} from "@cp-print/design/constants/common";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
 import Selecto from "selecto";
+import Moveable from "moveable";
 import {CpHtmlElement} from "@cp-print/design/types/entity";
 // import {MoveableOptions} from "react-moveable";
-let moveable: MoveableOptions
-export const snapElementList: Ref<Array<ElementGuidelineValueOption | MoveableRefType<CpHtmlElement> | String>> = ref([".design-content"])
+let moveable: Moveable & MoveableOptions
+
+export const snapElementList: Ref<Array<ElementGuidelineValueOption | MoveableRefType<CpHtmlElement>>> = ref([".design-content"])
 export const elementList:Ref<Array<CpHtmlElement>> = ref([])
-let moveableRef: Ref<MoveableInterface>;
 const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"} as BoundType;
 export const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
 export const targets = ref([]) as Ref<Array<CpHtmlElement>>
 const groupManager = new GroupManager([]);
 
-
 export const DimensionViewable = {
     name: "dimensionViewable",
     props: [],
     events: [],
-    render(moveable: MoveableManagerInterface, React: Renderer) {
-        // console.log(moveable)
+    render(moveableInner: MoveableManagerInterface, React: Renderer) {
         // console.log(React)
-        const rect = moveable.getRect();
-        // console.log(moveable.events)
+        const rect = moveableInner.getRect();
         let value = ''
         switch (tipsStatus.value) {
             case "resize":
@@ -60,7 +59,8 @@ export const DimensionViewable = {
                 value = `(${Math.round(rect.left)}, ${Math.round(rect.top)})`
                 break
         }
-        return React.createElement("div", {
+
+        const  ss = React.createElement("div", {
             key: "dimension-viewer",
             className: "moveable-dimension",
             style: {
@@ -80,6 +80,8 @@ export const DimensionViewable = {
         }, [
             value,
         ]);
+        // console.log(ss)
+        return ss
     }
 }
 
@@ -87,13 +89,13 @@ export const Editable = {
     name: "editable",
     props: [],
     events: [],
-    render(moveable: MoveableManagerInterface & {
+    render(moveableInner: MoveableManagerInterface & {
         _dragTarget: any
     }, React: Renderer) {
         // console.log(moveable)
-        const rect = moveable.getRect();
-        const {pos2} = moveable.state;
-        const EditableViewer = moveable.useCSS("div", `
+        const rect = moveableInner.getRect();
+        const {pos2} = moveableInner.state;
+        const EditableViewer = moveableInner.useCSS("div", `
         {
             position: absolute;
             left: 0px;
@@ -125,8 +127,8 @@ export const Editable = {
                 onClick: () => {
                     // alert("+");
 
-                    removeElement(moveable._dragTarget.element)
-                    arrayRemove(targets.value, moveable._dragTarget)
+                    removeElement(moveableInner._dragTarget.element)
+                    arrayRemove(targets.value, moveableInner._dragTarget)
                     // for (let valueElement of targets.value) {
                     // }
                 }
@@ -146,13 +148,6 @@ export function updatePanel() {
     })
 }
 
-export function setMoveable(_moveable: Ref<MoveableInterface>) {
-    moveableRef = _moveable
-    moveable = moveableRef.value['$_moveable']
-    moveable.bounds = bounds
-    // console.log(moveable)
-}
-
 function updateLocation(e: OnDrag) {
     // console.log('location,x: ', e.translate[0], ' y: ', e.translate[1])
     const target = (e.target as CpHtmlElement)
@@ -160,7 +155,7 @@ function updateLocation(e: OnDrag) {
     // console.log(rect)
     // target.element.x = px2unit(rect.left)
     // target.element.y = px2unit(rect.top)
-    console.log(e.translate[0], target.element.runtimeOption.x!, e.translate[1], target.element.runtimeOption.y!)
+    // console.log(e.translate[0], target.element.runtimeOption.x!, e.translate[1], target.element.runtimeOption.y!)
     target.element.x = px2unit(target.element.runtimeOption.x! + e.translate[0])
     target.element.y = px2unit(target.element.runtimeOption.y! + e.translate[1])
 
@@ -199,12 +194,12 @@ function updateRotate(e: OnRotate) {
 
 }
 
-export const onRender = (e: any) => {
+const onRender = (e: any) => {
     // console.log(e)
     e.target.style.cssText += e.cssText;
 };
 
-export const onRenderGroup = (e: any) => {
+const onRenderGroup = (e: any) => {
     // console.log(e)
     // console.log(e)
     e.events.forEach((ev: any) => {
@@ -212,26 +207,24 @@ export const onRenderGroup = (e: any) => {
     });
 };
 
-// export function onDragStart(_e: OnDragStart) {
-//     // console.log('onDrag', e)
-//     // updateLocation(e)
-//     // e.target.style.transform = e.transform;
-// }
-//
-export function onDragEnd(_e: OnDragEnd) {
+const onDragStart = (_e: OnDragStart) => {
+    tipsStatus.value = 'drag'
+}
+
+function onDragEnd(_e: OnDragEnd) {
     tipsStatus.value = undefined
     // console.log('onDrag', e)
     // updateLocation(e)
     // e.target.style.transform = e.transform;
 }
 
-export function onDrag(e: OnDrag) {
+function onDrag(e: OnDrag) {
     // console.log('onDrag', e)
     updateLocation(e)
     // e.target.style.transform = e.transform;
 }
 
-export function onDragGroup(e: OnDragGroup) {
+function onDragGroup(e: OnDragGroup) {
     console.log('onDragGroup', e)
     for (let event of e.events) {
         updateLocation(event)
@@ -239,31 +232,31 @@ export function onDragGroup(e: OnDragGroup) {
     // e.target.style.transform = e.transform;
 }
 
-export const onBeforeRotate = (e: any) => {
+const onBeforeRotate = (e: any) => {
     e.setRotation(throttle(e.rotation, 1));
 };
 
-export function rotate(e: OnRotate) {
+function rotate(e: OnRotate) {
     // console.log('rotate', e)
     updateRotate(e)
     // e.target.style.transform = e.transform;
 }
 
-export function onRotateStart(_e: OnRotateStart) {
+function onRotateStart(_e: OnRotateStart) {
     tipsStatus.value = 'rotate'
     // console.log('rotate', e)
     // updateRotate(e)
     // e.target.style.transform = e.transform;
 }
 
-export function onRotateEnd(_e: OnRotateEnd) {
+function onRotateEnd(_e: OnRotateEnd) {
     tipsStatus.value = undefined
     // console.log('rotate', e)
     // updateRotate(e)
     // e.target.style.transform = e.transform;
 }
 
-export function rotateGroup(e: OnRotateGroup) {
+function rotateGroup(e: OnRotateGroup) {
     // console.log('rotateGroup', e)
     for (let event of e.events) {
         updateRotate(event)
@@ -271,7 +264,7 @@ export function rotateGroup(e: OnRotateGroup) {
     // e.target.style.transform = e.transform;
 }
 
-export function resize(e: OnResize) {
+function resize(e: OnResize) {
     console.log('resize', e)
     // e.target.element.runtimeOption.width = e.width
     // e.target.element.runtimeOption.height =e.height
@@ -280,21 +273,21 @@ export function resize(e: OnResize) {
     // e.target.style.transform = e.transform;
 }
 
-export function onResizeEnd(_e: OnResizeEnd) {
+function onResizeEnd(_e: OnResizeEnd) {
     // console.log('onResizeEnd', e)
     tipsStatus.value = undefined
 }
 
-export function onResizeStart(_e: OnResizeStart) {
+function onResizeStart(_e: OnResizeStart) {
     // console.log('onResizeStart', _e)
     tipsStatus.value = 'resize'
 }
 
-export function onBeforeResize(_e: OnBeforeResize) {
+function onBeforeResize(_e: OnBeforeResize) {
     // console.log('onBeforeResize', _e)
 }
 
-export function resizeGroup(e: OnResizeGroup) {
+function resizeGroup(e: OnResizeGroup) {
     // console.log('resizeGroup', e)
     for (let event of e.events) {
         updateRect(event)
@@ -302,17 +295,17 @@ export function resizeGroup(e: OnResizeGroup) {
     // e.target.style.transform = e.transform;
 }
 
-export function round(_e: OnRound) {
+function round(_e: OnRound) {
     // console.log('round', e)
     // e.target.style.transform = e.transform;
 }
 
-export function roundGroup(_e: OnRoundGroup) {
+function roundGroup(_e: OnRoundGroup) {
     // console.log('roundGroup', e)
     // e.target.style.transform = e.transform;
 }
 
-export function bound(e: OnBound) {
+function bound(e: OnBound) {
     console.log('round', e)
     // e.target.style.transform = e.transform;
 }
@@ -320,6 +313,7 @@ export function bound(e: OnBound) {
 export const setSelectedTargets = (nextTargetes: any) => {
     selecto.setSelectedTargets(deepFlat(nextTargetes));
     targets.value = nextTargetes;
+    moveable.target = nextTargetes
     setCurrentElement(defaultElement)
 
     // console.log(targets.value)
@@ -344,7 +338,6 @@ export const setSelectedTargets = (nextTargetes: any) => {
             moveable.snapContainer = '.container'
         } else {
             moveable.snapContainer = null
-
         }
     }
 
@@ -354,28 +347,18 @@ export const setSelectedTargets = (nextTargetes: any) => {
             snapElementList.value.push({element: element})
         }
     }
+    // moveable.elementGuidelines = snapElementList.value
 }
 
 
-export const onDragStart = (_e: OnDragStart) => {
-    tipsStatus.value = 'drag'
+
+const onSelectDragStart = (e: any) => {
     // const moveable = moveableRef.value;
-    // const target = e.inputEvent.target;
-    // // console.log(targets.value)
-    // const flatted = deepFlat(targets.value!);
-    // if (target.tagName === "BUTTON" || moveable!.isMoveableElement(target)
-    //     || flatted.some(t => t === target || t.contains(target))
-    // ) {
-    //     e.stop();
-    // }
-    // e.data.startTargets = targets.value;
-}
-export const onSelectDragStart = (e: any) => {
-    const moveable = moveableRef.value;
     const target = e.inputEvent.target;
     // console.log(targets.value)
     const flatted = deepFlat(targets.value!);
     // console.log(moveable!.isMoveableElement(target))
+    // @ts-ignore
     if (target.tagName === "BUTTON" || moveable!.isMoveableElement(target)
         || flatted.some(t => t === target || t.contains(target))
     ) {
@@ -386,7 +369,7 @@ export const onSelectDragStart = (e: any) => {
     e.data.startTargets = targets.value;
 }
 
-export const onSelect = (e: any) => {
+const onSelect = (e: any) => {
     const {startAdded, startRemoved, isDragStartEnd} = e;
     if (isDragStartEnd) {
         return;
@@ -400,7 +383,7 @@ export const onSelect = (e: any) => {
     // console.log(nextChilds.targets())
     setSelectedTargets(nextChilds.targets());
 };
-export const onSelectEnd = (e: any) => {
+const onSelectEnd = (e: any) => {
     const {
         isDragStartEnd,
         isClick,
@@ -410,7 +393,6 @@ export const onSelectEnd = (e: any) => {
     } = e;
 
     // console.log(e)
-
     for (let snapElement of removed) {
         snapElement.classList.add('snap')
     }
@@ -419,10 +401,9 @@ export const onSelectEnd = (e: any) => {
     }
 
     // console.log(removed)
-
-    const moveable = moveableRef.value;
     if (isDragStartEnd) {
         inputEvent.preventDefault();
+        // @ts-ignore
         moveable.waitToChangeTarget().then(() => {
             moveable.dragStart(inputEvent);
         });
@@ -447,7 +428,11 @@ export const onSelectEnd = (e: any) => {
 };
 let selecto: Selecto
 
-export function initSelect() {
+export function initMoveable() {
+
+    document.documentElement.style.setProperty('--direction-width', '20');
+    document.documentElement.style.setProperty('--direction-height', '20');
+
     selecto = new Selecto({
         // The container to add a selection element
         container: document.querySelector('.affix-container') as HTMLElement,
@@ -475,4 +460,56 @@ export function initSelect() {
     selecto.on("dragStart", onSelectDragStart);
     selecto.on("select", onSelect);
     selecto.on("selectEnd", onSelectEnd);
+
+    moveable = new Moveable(document.querySelector(".design-content") as HTMLElement, {
+        target: targets.value,
+        // If the container is null, the position is fixed. (default: parentElement(document.body))
+        // container: document.querySelector(".design-content") as HTMLElement,
+        elementGuidelines: snapElementList.value,
+        bounds: bounds,
+        draggable: true,
+        resizable: true,
+        scalable: true,
+        rotatable: true,
+        snappable: true,
+        snapGap: true,
+        snapRotationDegrees: [0, 45, 90, 135, 180, 225, 270],
+        ables: [DimensionViewable, Editable],
+        props: ({ dimensionViewable: tipsStatus != null, editable: true }),
+        snapDirections: ({ top: true, left: true, bottom: true, right: true, center: true, middle: true }),
+        elementSnapDirections: ({ top: true, left: true, bottom: true, right: true, center: true, middle: true }),
+        // warpable: false,
+        // Enabling pinchable lets you use events that
+        // can be used in draggable, resizable, scalable, and rotateable.
+        // pinchable: true, // ["resizable", "scalable", "rotatable"]
+        // origin: true,
+        individualGroupable: false,
+        keepRatio: false,
+        // Resize, Scale Events at edges.
+        edge: false,
+        // throttleDrag: 0,
+        // throttleResize: 0,
+        // throttleScale: 0,
+        // throttleRotate: 0,
+    });
+
+    moveable.on('drag', onDrag)
+    moveable.on('dragStart', onDragStart)
+    moveable.on('dragEnd', onDragEnd)
+    moveable.on('dragGroup', onDragGroup)
+    moveable.on('rotateStart', onRotateStart)
+    moveable.on('rotateEnd', onRotateEnd)
+    moveable.on('rotate', rotate)
+    moveable.on('rotateGroup', rotateGroup)
+    moveable.on('resizeStart', onResizeStart)
+    moveable.on('resize', resize)
+    moveable.on('resizeGroup', resizeGroup)
+    moveable.on('resizeEnd', onResizeEnd)
+    moveable.on('beforeResize', onBeforeResize)
+    moveable.on('beforeRotate', onBeforeRotate)
+    moveable.on('round', round)
+    moveable.on('roundGroup', roundGroup)
+    moveable.on('bound', bound)
+    moveable.on('render', onRender)
+    moveable.on('renderGroup', onRenderGroup)
 }

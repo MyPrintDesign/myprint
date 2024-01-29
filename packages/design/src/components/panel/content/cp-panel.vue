@@ -60,51 +60,6 @@
       <!--        </vue-drag>-->
       <!--    对齐辅助线    -->
       <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
-<!--
-          snapContainer=".container"
--->
-      <Moveable
-          ref="moveableRef"
-          :draggable="true"
-          :rotatable="true"
-          :scalable="true"
-          :resizable="true"
-          :target="targets"
-          @drag="onDrag"
-          @dragStart="onDragStart"
-          @dragEnd="onDragEnd"
-          @dragGroup="onDragGroup"
-          @rotateStart="onRotateStart"
-          @rotateEnd="onRotateEnd"
-          @rotate="rotate"
-          @rotateGroup="rotateGroup"
-          :snapRotationDegrees="[0, 90, 180, 270]"
-          :ables="[DimensionViewable, Editable]"
-          :props="({ dimensionViewable: tipsStatus != null, editable: true })"
-          
-          @resizeStart="onResizeStart"
-          @resize="resize"
-          @resizeGroup="resizeGroup"
-          @resizeEnd="onResizeEnd"
-          @beforeResize="onBeforeResize"
-          @beforeRotate="onBeforeRotate"
-          @round="round"
-          @roundGroup="roundGroup"
-          
-          @bound="bound"
-          
-          :individualGroupable="false"
-          :keepRatio="false"
-          
-          @render="onRender"
-          @renderGroup="onRenderGroup"
-          :elementGuidelines="snapElementList"
-          :snapDirections="({ top: true, left: true, bottom: true, right: true, center: true, middle: true })"
-          :elementSnapDirections="({ top: true, left: true, bottom: true, right: true, center: true, middle: true })"
-          :snappable="true"
-          :snapGap="true"
-      ></Moveable>
-    
     </cp-drop>
     <!--    </el-watermark>-->
   
@@ -114,10 +69,6 @@
 <script setup lang="ts">
 // import { ElWatermark } from 'element-plus'
 import Rule from "../rule.vue";
-
-// import {
-//   BoundType
-// } from 'react-moveable/declaration/types'
 // import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
@@ -146,32 +97,9 @@ import CpDrop from "@cp-print/design/components/cp/drop";
 import ElementList from "../../design/elementList.vue";
 import {mountedKeyboardEvent, unMountedKeyboardEvent} from "@cp-print/design/utils/keyboardUtil";
 import {
-  onDrag,
-  setMoveable,
-  onDragStart,
-  targets,
   updatePanel,
-  onDragEnd,
-  onDragGroup,
-  onRotateStart,
-  onRotateEnd,
-  rotate,
-  rotateGroup,
-  DimensionViewable,
-  Editable,
-  tipsStatus,
-  onResizeStart,
-  resize,
-  resizeGroup,
-  onResizeEnd,
-  onBeforeResize,
-  onBeforeRotate, round, roundGroup, bound, onRender, onRenderGroup, initSelect, snapElementList,
+  initMoveable,
 } from "@cp-print/design/components/moveable/moveable";
-import Moveable from "vue3-moveable";
-// import {
-//   MoveableInterface,
-//   // MoveableOptions, MoveableProperties,
-// } from "react-moveable/declaration/types";
 import Design from "@cp-print/design/components/design/design.vue";
 
 const panel = inject(panelKey)!
@@ -235,12 +163,7 @@ const contentScale = reactive({
 onMounted(() => {
   // 挂载键盘事件
   mountedKeyboardEvent()
-  console.log(moveableRef)
-  setMoveable(moveableRef)
-  // setSelecto(selectoRef)
-  initSelect()
-  document.documentElement.style.setProperty('--direction-width', '20');
-  document.documentElement.style.setProperty('--direction-height', '20');
+  initMoveable()
   // getMoveable().bounds = null
   // getMoveable().rotatable = false
   // getMoveable().renderDirections = ['w'];
@@ -572,7 +495,7 @@ watch([() => panel.width, () => panel.height], (_w, _h) => {
   
 })
 
-const moveableRef = ref();
+// const moveableRef = ref();
 // const selectoRef = ref();
 
 </script>
