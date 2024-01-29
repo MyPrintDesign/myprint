@@ -9,13 +9,13 @@
   />
 </template>
 <script setup lang="ts">
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
 
 withDefaults(defineProps<{
-  data?: Element
+  data?: CpElement
 }>(), {
-  data: () => ({} as Element)
+  data: () => ({} as CpElement)
 })
 
 

@@ -12,7 +12,7 @@
 <script setup lang="ts">
 
 import {inject, ref} from "vue";
-import {Element, elementTypeFormat} from "@cp-print/design/types/entity";
+import {CpElement, elementTypeFormat} from "@cp-print/design/types/entity";
 import {dragDataStore} from "@cp-print/design/stores/dragStore";
 import {dragImg, removeDragImg} from "@cp-print/design/utils/utils";
 import {unit2unit} from "@cp-print/design/utils/devicePixelRatio";
@@ -25,9 +25,9 @@ const dragDataValueStore = dragDataStore()
 const isDrop = ref(false)
 
 const props = withDefaults(defineProps<{
-  data?: Element
+  data?: CpElement
 }>(), {
-  data: () => ({} as Element)
+  data: () => ({} as CpElement)
 })
 
 function dragStart(ev: DragEvent) {

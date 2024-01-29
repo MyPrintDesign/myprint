@@ -60,7 +60,9 @@
       <!--        </vue-drag>-->
       <!--    对齐辅助线    -->
       <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
-      
+<!--
+          snapContainer=".container"
+-->
       <Moveable
           ref="moveableRef"
           :draggable="true"
@@ -68,7 +70,6 @@
           :scalable="true"
           :resizable="true"
           :target="targets"
-          :bounds="bounds"
           @drag="onDrag"
           @dragStart="onDragStart"
           @dragEnd="onDragEnd"
@@ -77,7 +78,7 @@
           @rotateEnd="onRotateEnd"
           @rotate="rotate"
           @rotateGroup="rotateGroup"
-          
+          :snapRotationDegrees="[0, 90, 180, 270]"
           :ables="[DimensionViewable, Editable]"
           :props="({ dimensionViewable: tipsStatus != null, editable: true })"
           
@@ -86,7 +87,6 @@
           @resizeGroup="resizeGroup"
           @resizeEnd="onResizeEnd"
           @beforeResize="onBeforeResize"
-          
           @beforeRotate="onBeforeRotate"
           @round="round"
           @roundGroup="roundGroup"
@@ -98,13 +98,13 @@
           
           @render="onRender"
           @renderGroup="onRenderGroup"
-          
+          :elementGuidelines="snapElementList"
+          :snapDirections="({ top: true, left: true, bottom: true, right: true, center: true, middle: true })"
+          :elementSnapDirections="({ top: true, left: true, bottom: true, right: true, center: true, middle: true })"
           :snappable="true"
-          :isDisplaySnapDigit="true"
-          :isDisplayInnerSnapDigit="false"
-          :snapGap="false"
+          :snapGap="true"
       ></Moveable>
-     
+    
     </cp-drop>
     <!--    </el-watermark>-->
   
@@ -121,8 +121,8 @@ import Rule from "../rule.vue";
 // import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
-import {ContentScaleVo, DragWrapper, Element} from "@cp-print/design/types/entity";
-import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
+import {ContentScaleVo, DragWrapper, CpElement} from "@cp-print/design/types/entity";
+import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 // import {clearEventBubble} from "@cp-print/design/utils/event";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
 import {canMoveStatusList, defaultDragRectElement} from "@cp-print/design/constants/common";
@@ -165,23 +165,19 @@ import {
   resizeGroup,
   onResizeEnd,
   onBeforeResize,
-  onBeforeRotate, round, roundGroup, bound, onRender, onRenderGroup, initSelect,
+  onBeforeRotate, round, roundGroup, bound, onRender, onRenderGroup, initSelect, snapElementList,
 } from "@cp-print/design/components/moveable/moveable";
-// import VanillaSelecto, { SelectoOptions, SelectoMethods } from "selecto";
-// import Selecto from "vue3-selecto";
 import Moveable from "vue3-moveable";
 // import {
 //   MoveableInterface,
 //   // MoveableOptions, MoveableProperties,
 // } from "react-moveable/declaration/types";
 import Design from "@cp-print/design/components/design/design.vue";
-import {BoundType} from "@cp-print/design/components/moveable/types";
 
 const panel = inject(panelKey)!
 const mitt = inject(mittKey)!
 // const vLine = ref([])
 // const hLine = ref([])
-const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"} as BoundType;
 
 
 // const panelRef = ref({})
@@ -209,7 +205,7 @@ const highlightRule = reactive({
   verticalRight: null,
 })
 // 辅助线
-const alignLineDataList = reactive<Element[]>([])
+const alignLineDataList = reactive<CpElement[]>([])
 const designContentRef = ref<InstanceType<any>>()
 // console.log($t('menus.home'))
 // const selectRectElement = reactive(<Element>{
@@ -319,7 +315,7 @@ function drop(dragData: any) {
   if (dragData.type == 'column') {
     return
   }
-  let element = dragData.element
+  let element = dragData.element as CpElement
   
   element.x = px2unit(dragData.end.x - dragData.start.x)
   element.y = px2unit(dragData.end.y - dragData.start.y)
@@ -344,22 +340,26 @@ function drop(dragData: any) {
               return
             }
             panel.pageFooter = element
-            element.width = panel.width
+            element.width = unit2px(panel.width)
+            element.runtimeOption.width = element.width
+            element.runtimeOption.x = 0
             element.x = 0
-            element.y = panel.height - element.height
+            element.y = unit2px(panel.height - element.height)
+            element.runtimeOption.y = element.y
             installParentElement(panel, element)
           }
       ).end(() => {
     if (element.type == 'Table') {
-      for (let i = 0; i < element.columnList?.length; i++) {
+      for (let i = 0; i < element.columnList!.length; i++) {
         // element.columnList[i] = to(element.columnList[i], {} as Element)
-        initElement(element.columnList[i])
+        initElement(element.columnList![i])
       }
     }
     addElement(panel, element)
   })
   elementListNone()
   handle(element)
+  updatePanel()
   
   record(<Snapshot>{element: element, action: ActionEnum.ADD})
 }
@@ -448,7 +448,7 @@ function dragleave(_ev: DragEvent) {
 //   clearEventBubble(ev)
 // }
 
-function elementClick(element: Element) {
+function elementClick(element: CpElement) {
   // console.log('elementClick')
   // console.log('鼠标点击', element)
   if (element.type == 'PrivateDragRectElement') {
@@ -463,7 +463,7 @@ function elementClick(element: Element) {
   // contentScaleRef.fresh()
 }
 
-function elementMove(element: Element) {
+function elementMove(element: CpElement) {
   // let element = point.element as Element;
   if (element.status == 'NONE') {
     elementListNone()
@@ -494,7 +494,7 @@ function elementMove(element: Element) {
 
 function elementUp() {
   // console.log(point)
-  const elementList: Array<Element> = []
+  const elementList: Array<CpElement> = []
   for (let valueElement of panel.elementList!) {
     if (canMoveStatusList.includes(valueElement.status)) {
       elementList.push(valueElement)
@@ -507,7 +507,7 @@ function elementUp() {
     rotatedPoint(valueElement)
   }
   
-  computeTranslate(defaultDragRectElement as Element)
+  computeTranslate(defaultDragRectElement as CpElement)
   
   // let action = ActionEnum.MOVE
   // if (elementList.length > 1) {
@@ -551,7 +551,7 @@ function scaleEvent() {
   })
 }
 
-function elementRemove(element: Element) {
+function elementRemove(element: CpElement) {
   // console.log(element)
   removeElement(element)
   

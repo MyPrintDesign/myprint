@@ -1,5 +1,5 @@
 import {ref} from "vue";
-import {Element, elementTypeFormat, Panel} from "@cp-print/design/types/entity";
+import {CpElement, elementTypeFormat, Panel} from "@cp-print/design/types/entity";
 import {useManualRefHistory} from '@vueuse/core';
 import {
     getCurrentPanel,
@@ -22,7 +22,7 @@ let max = 50
 
 export interface Snapshot {
     panel?: Panel
-    element?: Element
+    element?: CpElement
     content?: string
     action: ActionEnum,
     type?: 'Element' | 'PANEL'
@@ -85,6 +85,7 @@ function record(snapshot: Snapshot) {
     // console.log(snapshot)
     historyRecord.value = JSON.parse(JSON.stringify(snapshot, (key, value) => {
         if ("parent" == key) return undefined
+        if ("target" == key) return undefined
         return value
     }))
     commit()
@@ -150,7 +151,7 @@ export function changeWrapper(val: string | number, title?: string, callback?: (
     }
 }
 
-export function changeLog(action: ActionEnum, element: Element) {
+export function changeLog(action: ActionEnum, element: CpElement) {
     record(<Snapshot>{
         element: element,
         action: action,

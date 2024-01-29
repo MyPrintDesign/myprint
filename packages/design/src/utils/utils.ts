@@ -1,5 +1,5 @@
 import {clearEventBubble} from "./event"
-import {Element, Panel} from "@cp-print/design/types/entity";
+import {CpElement, Panel} from "@cp-print/design/types/entity";
 import {displayRatio, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {arrayIndexOf, arrayRemove} from "@cp-print/design/utils/arrays";
 
@@ -89,7 +89,7 @@ canvas.height = 200;
 const context = canvas.getContext('2d')!
 let image: any
 
-export function dragImg(panel: Panel, element: Element, event: DragEvent) {
+export function dragImg(panel: Panel, element: CpElement, event: DragEvent) {
     // 创建一个新的canvas元素
     context.clearRect(0, 0, canvas.width, canvas.height);
     canvas.width = unit2px(_width(element));
@@ -219,14 +219,14 @@ export function download(blob: Blob, fileName: string) {
 }
 
 
-export function _width(element: Element) {
+export function _width(element: CpElement) {
     if (['DottedVerticalLine', 'VerticalLine'].includes(element.type)) {
         return element.option.borderWidth + 0.6
     }
     return element.width
 }
 
-export function _height(element: Element) {
+export function _height(element: CpElement) {
     if (['DottedHorizontalLine', 'HorizontalLine'].includes(element.type)) {
         return element.option.borderWidth + 2
     }

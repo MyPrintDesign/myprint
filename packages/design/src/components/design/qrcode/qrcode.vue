@@ -8,16 +8,16 @@
 </template>
 
 <script setup lang="ts">
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import {ref, watch} from "vue";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import QRCode from 'qrcode'
 import {heightValueUnit, widthValueUnit} from "@cp-print/design/utils/elementUtil";
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 
 const qrCode = ref()

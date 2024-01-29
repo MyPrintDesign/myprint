@@ -3,7 +3,7 @@ import {CpPanel, CpText} from '@cp-print/design/index'
 import {templateDetail, templateUpdate} from "@/api/template";
 import {onMounted, reactive} from "vue";
 import {useRoute} from "vue-router";
-import {Element, ElementOption, TextElement} from "@cp-print/design/types/entity";
+import {CpElement, ElementOption, TextElement} from "@cp-print/design/types/entity";
 import {initElement} from "@cp-print/design/utils/elementUtil";
 import {Template} from "@cp-print/design/types/R";
 

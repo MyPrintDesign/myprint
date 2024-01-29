@@ -22,15 +22,15 @@
 <script setup lang="ts">
 import CpDrag from "./drag";
 import ElementView from "./element.vue";
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import {computedHandles, computeDrag} from "@cp-print/design/utils/elementUtil";
 import {CpContainer} from "./container";
 import ElementList from "./elementList.vue";
 import TablePopoverView from "./table/tablePopoverView.vue";
 
 withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 </script>

@@ -14,11 +14,11 @@ import CpText from './text'
 import CpImage from "./image";
 import {CpDottedHorizontalLine, CpDottedVerticalLine, CpHorizontalLine, CpVerticalLine, CpRect} from "./auxiliary";
 
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 
 withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 </script>

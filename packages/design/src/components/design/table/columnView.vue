@@ -22,7 +22,7 @@
 <script setup lang="ts">
 
 import {computed, inject, reactive, ref, CSSProperties} from "vue";
-import {DragWrapper, Element} from "../../../types/entity";
+import {DragWrapper, CpElement} from "../../../types/entity";
 import {clearEventBubble} from "../../../utils/event";
 import {dragDataStore} from "../../../stores/dragStore";
 import {mittKey} from "../../../constants/keys";
@@ -31,9 +31,9 @@ import {elementCommonStyle, valueUnit} from "../../../utils/elementUtil";
 const mitt = inject(mittKey)!
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 
 const data = reactive({

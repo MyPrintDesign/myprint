@@ -21,11 +21,11 @@
 
 <script setup lang="ts">
 import {PropType} from "vue";
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 // import ElementList from "../../elementList.vue";
 
 defineProps({
-  element: {type: Object as PropType<Element>, default: () => ({} as Element)}
+  element: {type: Object as PropType<CpElement>, default: () => ({} as CpElement)}
 })
 
 </script>

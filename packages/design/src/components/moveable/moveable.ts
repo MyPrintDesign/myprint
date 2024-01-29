@@ -16,27 +16,28 @@ import {
     OnRotate,
     OnBound,
     MoveableInterface,
-    MoveableManagerInterface, Renderer
+    MoveableManagerInterface, Renderer,
+    MoveableOptions, BoundType, MoveableRefType, ElementGuidelineValueOption
 } from './types'
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {nextTick, Ref, ref} from "vue";
 import {GroupManager} from "@moveable/helper";
 import {deepFlat, throttle} from "@daybrush/utils";
-// import Selecto from "vue3-selecto";
 import {removeElement, setCurrentElement} from "@cp-print/design/utils/elementUtil";
 import {defaultElement} from "@cp-print/design/constants/common";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
 import Selecto from "selecto";
-// import {BoundType} from "react-moveable";
-// import {CpHtmlElement} from "@cp-print/design/types/entity";
-// let moveable: MoveableOptions
+import {CpHtmlElement} from "@cp-print/design/types/entity";
+// import {MoveableOptions} from "react-moveable";
+let moveable: MoveableOptions
+export const snapElementList: Ref<Array<ElementGuidelineValueOption | MoveableRefType<CpHtmlElement> | String>> = ref([".design-content"])
+export const elementList:Ref<Array<CpHtmlElement>> = ref([])
 let moveableRef: Ref<MoveableInterface>;
-// let selectoRef: Ref<Selecto | undefined>;
+const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"} as BoundType;
 export const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
-export const directionStyle = ref({
-    '--width': 20,
-    '--height': 20
-})
+export const targets = ref([]) as Ref<Array<CpHtmlElement>>
+const groupManager = new GroupManager([]);
+
 
 export const DimensionViewable = {
     name: "dimensionViewable",
@@ -136,38 +137,35 @@ export const Editable = {
     }
 }
 
-// const defaultTarget: TargetGroupsType = []
-
-export const targets = ref([]) as Ref<Array<any>>
-// targets.value = []
-const groupManager = new GroupManager([]);
-
 export function updatePanel() {
-    nextTick(()=>{
-        const elements = selecto.getSelectableElements();
-        console.log(elements)
-        groupManager.set([], elements);
+    nextTick(() => {
+        elementList.value = selecto.getSelectableElements() as Array<CpHtmlElement>;
+        // console.log(elements)
+        // console.log(snapElementList)
+        groupManager.set([], elementList.value);
     })
 }
 
 export function setMoveable(_moveable: Ref<MoveableInterface>) {
     moveableRef = _moveable
-    // moveable = moveableRef.value.$_moveable
+    moveable = moveableRef.value['$_moveable']
+    moveable.bounds = bounds
+    // console.log(moveable)
 }
-
-export function setSelecto(_selecto: Ref) {
-    // selectoRef = _selecto
-}
-
-// export function getMoveable(): MoveableOptions {
-//     return moveable
-// }
 
 function updateLocation(e: OnDrag) {
     // console.log('location,x: ', e.translate[0], ' y: ', e.translate[1])
-    const target = (e.target as any)
-    target.element.x = px2unit(e.translate[0])
-    target.element.y = px2unit(e.translate[1])
+    const target = (e.target as CpHtmlElement)
+    // const rect = e.moveable.getRect();
+    // console.log(rect)
+    // target.element.x = px2unit(rect.left)
+    // target.element.y = px2unit(rect.top)
+    console.log(e.translate[0], target.element.runtimeOption.x!, e.translate[1], target.element.runtimeOption.y!)
+    target.element.x = px2unit(target.element.runtimeOption.x! + e.translate[0])
+    target.element.y = px2unit(target.element.runtimeOption.y! + e.translate[1])
+
+    // target.element.x = px2unit(e.left + target.element.runtimeOption.x!)
+    // target.element.y = px2unit(e.top+ target.element.runtimeOption.y!)
 }
 
 function updateRect(e: OnResize) {
@@ -185,12 +183,20 @@ function updateRect(e: OnResize) {
             // directionStyle.value["--height"] =
         });
     }
+
+    target.element.x = px2unit(target.element.runtimeOption.x! + e.drag.translate[0])
+    target.element.y = px2unit(target.element.runtimeOption.y! + e.drag.translate[1])
+
     target.element.width = px2unit(e.width)
     target.element.height = px2unit(e.height)
 }
 
-function updateRotate(_e: OnRotate) {
+function updateRotate(e: OnRotate) {
     // console.log('rotate,r: ', e.rotation)
+    const target = (e.target as CpHtmlElement)
+    // console.log(e.rotation)
+    target.element.option.rotate = e.rotation % 360
+
 }
 
 export const onRender = (e: any) => {
@@ -200,7 +206,7 @@ export const onRender = (e: any) => {
 
 export const onRenderGroup = (e: any) => {
     // console.log(e)
-    console.log(e)
+    // console.log(e)
     e.events.forEach((ev: any) => {
         ev.target.style.cssText += ev.cssText;
     });
@@ -266,7 +272,7 @@ export function rotateGroup(e: OnRotateGroup) {
 }
 
 export function resize(e: OnResize) {
-    // console.log('resize', e)
+    console.log('resize', e)
     // e.target.element.runtimeOption.width = e.width
     // e.target.element.runtimeOption.height =e.height
     // e.target.style.cssText += "width: "+ e.width+"px; height:"+ e.height+"px";
@@ -296,13 +302,13 @@ export function resizeGroup(e: OnResizeGroup) {
     // e.target.style.transform = e.transform;
 }
 
-export function round(e: OnRound) {
-    console.log('round', e)
+export function round(_e: OnRound) {
+    // console.log('round', e)
     // e.target.style.transform = e.transform;
 }
 
-export function roundGroup(e: OnRoundGroup) {
-    console.log('roundGroup', e)
+export function roundGroup(_e: OnRoundGroup) {
+    // console.log('roundGroup', e)
     // e.target.style.transform = e.transform;
 }
 
@@ -319,6 +325,34 @@ export const setSelectedTargets = (nextTargetes: any) => {
     // console.log(targets.value)
     if (targets.value.length == 1) {
         setCurrentElement(targets.value[0].element)
+    }
+    if (targets.value.length > 0) {
+        if (targets.value[0].element.type == 'PageFooter') {
+            // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
+            moveable.renderDirections = ["n"]
+            moveable.draggable = false
+            moveable.rotatable = false
+            moveable.bounds = null
+        } else {
+            moveable.bounds = bounds
+            moveable.rotatable = true
+            moveable.draggable = true
+            moveable.renderDirections = ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
+        }
+
+        if (targets.value[0].element.runtimeOption.parent!.type == 'PageFooter') {
+            moveable.snapContainer = '.container'
+        } else {
+            moveable.snapContainer = null
+
+        }
+    }
+
+    snapElementList.value.length = 1
+    for (let element of elementList.value) {
+        if (element.classList.contains("snap")) {
+            snapElementList.value.push({element: element})
+        }
     }
 }
 
@@ -411,9 +445,10 @@ export const onSelectEnd = (e: any) => {
     // console.log(nextChilds.targets())
     setSelectedTargets(nextChilds.targets());
 };
-let selecto:Selecto
-export function initSelect(){
-    selecto  = new Selecto({
+let selecto: Selecto
+
+export function initSelect() {
+    selecto = new Selecto({
         // The container to add a selection element
         container: document.querySelector('.affix-container') as HTMLElement,
         // Selecto's root container (No transformed container. (default: null)

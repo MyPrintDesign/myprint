@@ -9,7 +9,7 @@
 <script setup lang="ts">
 
 import {computed, CSSProperties} from "vue";
-import {Element, PreviewWrapper} from "../../types/entity";
+import {CpElement, PreviewWrapper} from "../../types/entity";
 import {valueUnit} from "../../utils/elementUtil";
 import Preview from "./preview.vue";
 
@@ -22,8 +22,8 @@ const style = computed(() => {
 })
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 </script>

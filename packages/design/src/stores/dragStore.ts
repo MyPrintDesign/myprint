@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {Element, DragWrapper} from "../types/entity";
+import {CpElement, DragWrapper} from "../types/entity";
 
 export const dragDataStore = defineStore('dragData', {
     state: () => {
@@ -14,7 +14,7 @@ export const dragDataStore = defineStore('dragData', {
     // 也可以这样定义
     // state: () => ({ count: 0 })
     actions: {
-        set(type: string, element: Element) {
+        set(type: string, element: CpElement) {
             this.data.element = element
             this.data.type = type
         },

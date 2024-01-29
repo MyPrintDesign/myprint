@@ -7,12 +7,12 @@
 
 <script setup lang="ts">
 
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import Design from "@cp-print/design/components/design/design.vue";
 
 withDefaults(defineProps<{
-  elementList?: Array<Element>
+  elementList?: Array<CpElement>
 }>(), {
-  elementList: () => ([] as Array<Element>)
+  elementList: () => ([] as Array<CpElement>)
 })
 </script>

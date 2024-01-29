@@ -16,15 +16,15 @@
 </template>
 <script setup lang="ts">
 import ElementView from "./element.vue";
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 // import {CpContainer} from "./container";
 // import ElementList from "./elementList.vue";
 // import TablePopoverView from "./table/tablePopoverView.vue";
 
 withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 
 </script>

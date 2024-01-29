@@ -215,13 +215,29 @@
   top: 6px;
 }
 
-.moveable-line {
-  background: transparent !important;
-  border-bottom: 1px dashed var(--drag-h-color);
+.moveable-control-box {
+
+  .moveable-line {
+    background: transparent !important;
+    border-bottom: 1px dashed var(--drag-h-color);
+  }
+
+  .moveable-line.moveable-guideline.moveable-horizontal {
+    background: transparent !important;
+    border-bottom: none !important;
+  }
+
+  .moveable-guideline-group {
+    .moveable-guideline.moveable-gap {
+      background: var(--drag-h-color) !important;
+    }
+
+  }
 }
 
+
 .moveable-guideline {
-  background: var(--bounds-color) !important;
+  //background: var(--bounds-color) !important;
 }
 
 .moveable-bounds {

@@ -6,7 +6,7 @@ export interface Option {
 export interface Provider {
     width: number;
     height: number;
-    elementList: Element[];
+    elementList: CpElement[];
 }
 
 export interface Design {
@@ -14,7 +14,7 @@ export interface Design {
 }
 
 export interface ElementRelation {
-    elementList?: Element[]
+    elementList?: CpElement[]
 }
 
 export interface Point {
@@ -42,20 +42,20 @@ export interface Panel extends Container {
     watermarkContent: string
     design: Design
     orientation?: "p" | "portrait" | "l" | "landscape"
-    pageHeader?: Element
-    pageFooter?: Element
+    pageHeader?: CpElement
+    pageFooter?: CpElement
 }
 
 
 export interface PreviewWrapper {
-    element: Element | undefined
+    element: CpElement | undefined
     offsetLastElementTop: number
 }
 
 export interface DragWrapper {
     dragIng: boolean
     type: string
-    element: Element,
+    element: CpElement,
     start: Position
     end: Position
 }
@@ -103,8 +103,7 @@ export interface HandlePanel extends Container {
     right: number
 }
 
-
-export interface Element extends Container {
+export interface CpElement extends Container {
     id: string
     minWidth: number
     minHeight: number
@@ -117,7 +116,7 @@ export interface Element extends Container {
     label?: string
     data?: any
 
-    columnList?: Element[]
+    columnList?: CpElement[]
     status: elementStatus
     option: ElementOption
 
@@ -131,7 +130,7 @@ export interface Element extends Container {
     lock?: number
 }
 
-export interface TextElement extends Element {
+export interface TextElement extends CpElement {
     labelOption?: ElementOption
     contentType: textContentType
 }
@@ -151,13 +150,14 @@ export interface RuntimeElementOption extends Position {
     bounds: Position
     parent?: Container
     target?: any
+    rotate: number
 
     /**
      * 工作环境，如果是在表格中，填充满整个cell
      */
     workEnvironment: elementType
 
-    rowList?: Array<Element[]>
+    rowList?: Array<CpElement[]>
 
     onDragStart: () => void
     onDragEnd: () => void
@@ -216,6 +216,6 @@ export interface FormatterVariable {
     nowDate?: Date
 }
 
-// export type CpHtmlElement = HTMLElement & {
-//     element: Element
-// }
+export type CpHtmlElement = HTMLElement & {
+    element: CpElement
+}

@@ -14,16 +14,16 @@
 <script setup lang="ts">
 // 可以接收拖动组件
 
-import {DragWrapper, Element} from "@cp-print/design/types/entity";
+import {DragWrapper, CpElement} from "@cp-print/design/types/entity";
 import {onMounted, reactive} from "vue";
 import CpDrop from "@cp-print/design/components/cp/drop";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {addElement} from "@cp-print/design/utils/elementUtil";
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 
 // const mitt = inject(mittKey)

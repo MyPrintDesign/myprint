@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import {onMounted} from "vue";
-import {DragWrapper, Element} from "@cp-print/design/types/entity";
+import {DragWrapper, CpElement} from "@cp-print/design/types/entity";
 import CpDrag from "@cp-print/design/components/design/drag";
 import {reactive} from "vue";
 import CpDrop from "@cp-print/design/components/cp/drop";
@@ -32,9 +32,9 @@ import {addElement} from "@cp-print/design/utils/elementUtil";
 import ElementList from "@cp-print/design/components/design/elementList.vue";
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 
 const data = reactive({

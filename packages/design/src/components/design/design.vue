@@ -1,7 +1,14 @@
 <template>
-  <div class="cp-element-wrapper design-select design-border" :style="style"
+  <div class="cp-element-wrapper design-select design-border snap" :style="style"
        ref="designRef">
     <element-view :element="element"/>
+    
+    <cp-container v-if="element.type === 'PageHeader'" :element="element">
+      <element-list :element-list="element.elementList"/>
+    </cp-container>
+    <cp-container v-else-if="element.type === 'PageFooter'" :element="element">
+      <element-list :element-list="element.elementList"/>
+    </cp-container>
   </div>
 
 </template>
@@ -10,17 +17,17 @@
 
 import ElementView from "@cp-print/design/components/design/element.vue";
 
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import {computed, CSSProperties, onMounted, ref} from "vue";
-// import {CpContainer} from "./container";
-// import ElementList from "./elementList.vue";
+import {CpContainer} from "./container";
+import ElementList from "./elementList.vue";
 // import TablePopoverView from "./table/tablePopoverView.vue";
 const designRef = ref()
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 
 onMounted(() => {
@@ -32,6 +39,7 @@ const style = computed(() => {
   return {
     left: props.element.runtimeOption.x + 'px',
     top: props.element.runtimeOption.y + 'px',
+    transform: `translate(0px, 0px) rotate(${props.element.runtimeOption.rotate}deg)`,
     width: props.element.runtimeOption.width + 'px',
     height: props.element.runtimeOption.height + 'px',
     // maxWidth: widthValueUnit(element),
@@ -41,5 +49,4 @@ const style = computed(() => {
 </script>
 
 <style scoped>
-
 </style>

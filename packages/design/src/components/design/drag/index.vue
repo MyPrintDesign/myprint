@@ -64,7 +64,7 @@ import {
   // snapToGrid
 } from "@cp-print/design/utils/fns";
 import {onMounted, computed, ref, reactive, watch, onBeforeUnmount, inject, CSSProperties} from "vue";
-import {Element, elementType, Position} from "@cp-print/design/types/entity";
+import {CpElement, elementType, Position} from "@cp-print/design/types/entity";
 import {click, to} from "@cp-print/design/utils/utils";
 import {unit2px, px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {
@@ -107,7 +107,7 @@ const mouseTips = reactive({x: 0, y: 0, handle: null as (handleConstantsType | n
 const dRef = ref()
 
 const props = withDefaults(defineProps<{
-  element?: Element,
+  element?: CpElement,
   className?: string,
   classNameDraggable?: string,
   classNameResizable?: string,
@@ -152,7 +152,7 @@ const props = withDefaults(defineProps<{
 // handle是否缩放
   handleInfo?: Object
 }>(), {
-  element: () => ({} as Element),
+  element: () => ({} as CpElement),
   className: "vdr",
   classNameDraggable: "draggable",
   classNameResizable: "resizable",

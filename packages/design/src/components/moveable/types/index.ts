@@ -1,5 +1,736 @@
 import {IObject} from "@daybrush/utils";
 
+/**
+ * @typedef
+ * @memberof Moveable.Warpable
+ * @extends Moveable.RenderDirections
+ */
+export interface WarpableOptions extends RenderDirections {
+    /**
+     * Whether or not target can be warped.
+     * @default false
+     */
+    warpable?: boolean;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ */
+export interface SnapDirections {
+    /**
+     * Whether to snap the top of the element
+     * @default true
+     */
+    left?: boolean;
+    /**
+     * Whether to snap the left of the element
+     * @default true
+     */
+    top?: boolean;
+    /**
+     * Whether to snap the right of the element
+     * @default true
+     */
+    right?: boolean;
+    /**
+     * Whether to snap the bottom of the element
+     * @default true
+     */
+    bottom?: boolean;
+    /**
+     * Whether to snap the center((left + right) / 2) of the element
+     * @default false
+     */
+    center?: boolean;
+    /**
+     * Whether to snap the middle((top + bottom) / 2) of the element
+     * @default false
+     */
+    middle?: boolean;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ */
+export interface PosGuideline {
+    /**
+     * guideline pos
+     */
+    pos: number | string;
+    /**
+     * class names to add to guideline
+     * @default ""
+     */
+    className?: string;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ */
+export interface InnerBoundType {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ * @extends Moveable.Snappable.SnapDirections
+ */
+export interface ElementGuidelineValueOption extends SnapDirections {
+    /**
+     * guideline element
+     */
+    element: MoveableRefType<Element>;
+    /**
+     * class names to add to guideline
+     * @default ""
+     */
+    className?: string;
+    /**
+     * Whether to update the element size at every render
+     * @default false
+     */
+    refresh?: boolean;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Snappable
+ */
+export interface SnappableOptions {
+    /**
+     * Whether or not target can be snapped to the guideline.
+     * @default false
+     */
+    snappable?: boolean | string[];
+    /**
+     * A snap container that is the basis for snap, bounds, and innerBounds.
+     * @default null
+     */
+    snapContainer?: MoveableRefType<HTMLElement | SVGElement>;
+    /**
+     * You can specify the directions to snap to the target.
+     * @default true (true is all directions)
+     */
+    snapDirections?: boolean | SnapDirections;
+    /**
+     * You can specify the snap directions of elements.
+     * @default true (true is all directions)
+     */
+    elementSnapDirections?: boolean | SnapDirections;
+    /**
+     * When you drag, make the gap snap in the element guidelines.
+     * @default true
+     */
+    snapGap?: boolean;
+    /**
+     /**
+     * Distance value that can snap to guidelines.
+     * Use `snapHorizontalThreshold` and `snapVerticalThreshold`
+     * @default 0
+     * @depreacted
+     */
+    snapThreshold?: number;
+    /**
+     * Distance horizontal between horizontal value that can snap to guidelines.
+     * @default 5
+     */
+    snapHorizontalThreshold?: number;
+    /**
+     * Distance Horizontal value that can snap to guidelines.
+     * @default 5
+     */
+    snapVerticalThreshold?: number;
+    /**
+     * Distance value that render snapped guidelines.
+     * @default 1
+     */
+    snapRenderThreshold?: number;
+    /**
+     * snap distance digits.
+     * @default 0
+     */
+    snapDigit?: number;
+    /**
+     * Whether to show guideline of snap by grid
+     * @default false
+     */
+    isDisplayGridGuidelines?: boolean;
+    /**
+     * Snap works if `abs(current rotation - snapRotationDegrees) < snapRotationThreshold`.
+     * @default 5
+     */
+    snapRotationThreshold?: number;
+    /**
+     * degree angles to snap to rotation
+     * @default []
+     */
+    snapRotationDegrees?: number[];
+    /**
+     * If width size is greater than 0, you can vertical snap to the grid.
+     * @default 0 (0 is not used)
+     */
+    snapGridWidth?: number;
+    /**
+     * If height size is greater than 0, you can horizontal snap to the grid.
+     * @default 0 (0 is not used)
+     */
+    snapGridHeight?: number;
+    /**
+     * In the case of a group, if `snapGridWidth` and `snapGridHeight` are used, all children can be snapped.
+     * Custom fixed directions are not yet allowed. Also, it cannot be applied if rotated.
+     * @default false
+     */
+    snapGridAll?: boolean;
+    /**
+     * Whether to show snap distance.
+     * @default true
+     */
+    isDisplaySnapDigit?: boolean;
+    /**
+     * Whether to show element inner snap distance
+     * @default false
+     */
+    isDisplayInnerSnapDigit?: boolean;
+    /**
+     * Add guidelines in the horizontal direction.
+     * @default []
+     */
+    horizontalGuidelines?: Array<PosGuideline | number | string>;
+    /**
+     * Add guidelines in the vertical direction.
+     * @default []
+     */
+    verticalGuidelines?: Array<PosGuideline | number | string>;
+    /**
+     * Add guidelines for the element.
+     * @default []
+     */
+    elementGuidelines?: Array<ElementGuidelineValueOption | MoveableRefType<Element>>;
+    /**
+     * Maximum distance to which element guidelines can be snapped.
+     * @default Infinity
+     */
+    maxSnapElementGuidelineDistance?: number;
+    /**
+     * Maximum distance to which element gap guidelines can be snapped.
+     * @default Infinity
+     */
+    maxSnapElementGapDistance?: number;
+    /**
+     * You can set up boundaries.
+     * @default null
+     */
+    bounds?: BoundType | null;
+    /**
+     * You can set up inner boundaries.
+     * @default null
+     */
+    innerBounds?: InnerBoundType | null;
+    /**
+     * You can set the text format of the distance shown in the guidelines.
+     * @default oneself
+     */
+    snapDistFormat?: (distance: number, type: "vertical" | "horizontal") => number | string;
+}
+
+/**
+ * @typedef
+ * @options
+ * @memberof Moveable.Scrollable
+ */
+export interface ScrollableOptions {
+    /**
+     * Whether or not target can be scrolled to the scroll container
+     * @default false
+     */
+    scrollable?: boolean;
+    /**
+     * The container to which scroll is applied
+     * @deprecated
+     * @default container
+     */
+    scrollContainer?: MoveableRefType<HTMLElement>;
+    /**
+     * Expand the range of the scroll check area.
+     * @deprecated
+     * @default 0
+     */
+    scrollThreshold?: number;
+    /**
+     * Time interval that occurs when scrolling occurs when dragging is maintained
+     * If set to 0, it does not occur.
+     * @deprecated
+     * @default 0
+     */
+    scrollThrottleTime?: number;
+    /**
+     * Sets a function to get the scroll position.
+     * @deprecated
+     * @default scrollContainer's scrollTop, scrollLeft
+     */
+    getScrollPosition?: (e: { scrollContainer: HTMLElement, direction: number[] }) => number[];
+    /**
+     * Option to scroll with dragging
+     * @since 0.43.0
+     * @story support-scroll--scrolling-scrollable
+     * @example
+     * const scrollOptions = {
+     *     container: () => viewer.getContainer(),
+     *     threshold: 20,
+     *     getScrollPosition: () => {
+     *         return [
+     *             viewer.getScrollLeft({ absolute: true }),
+     *             viewer.getScrollTop({ absolute: true }),
+     *         ];
+     *     },
+     * };
+     */
+    // scrollOptions?: Partial<DragScrollOptions> | null;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Scalable
+ * @extends Moveable.RenderDirections
+ */
+export interface ScalableOptions extends RenderDirections {
+    /**
+     * Whether or not target can be scaled.
+     * @default false
+     */
+    scalable?: boolean | ScalableOptions;
+    /**
+     * throttle of scaleX, scaleY when scale.
+     * @default 0
+     */
+    throttleScale?: number;
+    /**
+     * When resize or scale, keeps a ratio of the width, height.
+     * @default false
+     */
+    keepRatio?: boolean;
+    /**
+     * Whether to scale and resize through edge lines.
+     * You can use "n", "w", "s", "e" in LineDirection array.
+     * @default false
+     */
+    edge?: boolean | Array<LineDirection>;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Roundable
+ */
+export interface RoundableOptions {
+    /**
+     * Whether to show and drag border-radius.
+     * @default false
+     */
+    roundable?: boolean;
+    /**
+     * % Can be used instead of the absolute px
+     * @default false
+     */
+    roundRelative?: boolean;
+    /**
+     * Minimum number of round controls. It moves in proportion by control. [horizontal, vertical]
+     * @default [0, 0]
+     */
+    minRoundControls?: number[];
+    /**
+     * Maximum number of round controls. It moves in proportion by control. [horizontal, vertical]
+     * @default [4, 4]
+     */
+    maxRoundControls?: number[];
+    /**
+     * Whether you can add/delete round controls by double-clicking a line or control.
+     * @default true
+     */
+    roundClickable?: boolean | "line" | "control";
+    /**
+     * Whether to show a round control that does not actually exist as a shadow
+     * @default false
+     */
+    isDisplayShadowRoundControls?: boolean | "horizontal";
+    /**
+     * The padding value of the position of the round control
+     * @default 0
+     */
+    roundPadding?: number;
+}
+
+export type RotationPosition
+    = "top" | "bottom"
+    | "left" | "right"
+    | "top-right" | "top-left"
+    | "bottom-right" | "bottom-left"
+    | "left-top" | "left-bottom"
+    | "right-top" | "right-bottom"
+    | "none";
+
+/**
+ * @typedef
+ * @memberof Moveable
+ */
+export interface RenderDirections {
+    /**
+     * Set directions to show the control box.
+     * @default false if rotatable, ["n", "nw", "ne", "s", "se", "sw", "e", "w"] otherwise
+     */
+    renderDirections?: boolean | string[];
+    /**
+     * Whether to scale and resize through edge lines.
+     * You can use "n", "w", "s", "e" in LineDirection array.
+     * @default false
+     */
+    edge?: boolean | Array<LineDirection>;
+    /**
+     * You can expand the area around the control.
+     * Either `rotateAroundControls` or `displayAroundControls` can be used.
+     * You can set the area through the `controlPadding` value.
+     * @since 0.44.0
+     * @story options--options-control-padding
+     * @default false
+     */
+    displayAroundControls?: boolean;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Rotatable
+ * @extends Moveable.RenderDirections
+ */
+export interface RotatableOptions extends RenderDirections {
+    /**
+     * Whether or not target can be rotated.
+     * @default false
+     */
+    rotatable?: boolean | RotatableOptions;
+    /**
+     * You can specify the position of the rotation.
+     * @default "top"
+     */
+    rotationPosition?: RotationPosition | RotationPosition[];
+    /**
+     * You can rotate around direction controls.
+     * Either `rotateAroundControls` or `displayAroundControls` can be used.
+     * @default 0
+     */
+    rotateAroundControls?: boolean;
+    /**
+     * Sets the control that will cause resize along with rotate. (Only Single Target, Only resizable, Beta)
+     * @default null
+     */
+    resolveAblesWithRotatable?: Record<string, LineDirection[]> | null | undefined;
+    /**
+     * throttle of angle(degree) when rotate.
+     * @default 0
+     */
+    throttleRotate?: number;
+
+    /**
+     * Set additional rotationTargets.
+     * @default null
+     */
+    rotationTarget?: MoveableRefType | ArrayFormat<MoveableRefType> | false;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Resizable
+ * @extends Moveable.RenderDirections
+ */
+export interface ResizableOptions extends RenderDirections {
+    /**
+     * Whether or not target can be resized.
+     * @default false
+     */
+    resizable?: boolean | ResizableOptions;
+    /**
+     * throttle of width, height when resize.
+     * @default 1
+     */
+    throttleResize?: number;
+    /**
+     * When resize or scale, keeps a ratio of the width, height.
+     * @default false
+     */
+    keepRatio?: boolean;
+    /**
+     * The size can be changed by format and throttle, but the ratio is maintained at the end. Forced true when using groups.
+     * @default false
+     */
+    keepRatioFinally?: boolean;
+    /**
+     * Function to convert size for resize.
+     * @default oneself
+     */
+    resizeFormat?: (size: number[]) => number[];
+    /**
+     * Whether to scale and resize through edge lines.
+     * You can use "n", "w", "s", "e" in LineDirection array.
+     * @default false
+     */
+    edge?: boolean | Array<LineDirection>;
+    /**
+     * Whether to recalculate when the size to be calculated is different from the actual size
+     * @default true
+     */
+    checkResizableError?: boolean;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.Pinchable
+ */
+export interface PinchableOptions {
+    /**
+     * Whether or not target can be pinched with draggable, resizable, scalable, rotatable.
+     * @default false
+     */
+    pinchable?: boolean | Array<"rotatable" | "resizable" | "scalable">;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable.OriginDraggable
+ */
+export interface OriginDraggableOptions {
+    /**
+     * Whether to drag origin.
+     * @default false
+     */
+    originDraggable?: boolean;
+    /**
+     * % Can be used instead of the absolute px.
+     * @default true
+     */
+    originRelative?: boolean;
+}
+
+export type ExcludeKeys<T extends IObject<any>, U> = Pick<T, Exclude<keyof T, U>>;
+
+export interface ArrayFormat<T = any> {
+    length: number;
+    [key: number]: T;
+}
+
+/**
+ * @memberof Moveable
+ * @typedef
+ */
+export type MoveableRefTargetType = MoveableRefType | ArrayFormat<MoveableRefTargetType>;
+
+export interface MoveableInitalOptions extends ExcludeKeys<MoveableDefaultOptions, "target"> {
+    target?: MoveableRefTargetType;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ */
+export type LineDirection = "n" | "e" | "s" | "w" | "nw" | "ne" | "sw" | "se";
+
+
+/**
+ * @typedef
+ * @memberof Moveable.IndividualGroup
+ */
+export interface IndividualGroupableOptions {
+    /**
+     * Create targets individually, not as a group.
+     * @story individual-group--individual-group-draggable-scalable-rotatable
+     */
+    individualGroupable?: boolean;
+    /**
+     * When using individualGroupable you can pass props to child moveable.
+     * @story individual-group--individual-group-groupable-props
+     * @since 0.44.0
+     */
+    individualGroupableProps?: (
+        element: HTMLElement | SVGElement | null | undefined,
+        index: number,
+    ) => Record<string, any> | undefined | null | void;
+}
+
+/**
+ * @typedef
+ * @memberof Moveable
+ */
+export type MoveableTargetGroupsType = Array<HTMLElement | SVGElement | MoveableTargetGroupsType>;
+
+
+/**
+ * @typedef
+ * @memberof Moveable.Group
+ */
+export interface GroupableOptions {
+    /**
+     * Sets the initial rotation of the group.
+     * @default 0
+     */
+    defaultGroupRotate?: number;
+    /**
+     * Use the defaultGroupRotate even if the children's rotations match.
+     * @default false
+     */
+    useDefaultGroupRotate?: boolean;
+    /**
+     * Sets the initial transform origin of the group.
+     * @default  "50% 50%"
+     */
+    defaultGroupOrigin?: string;
+    /**
+     * @default
+     */
+    targetGroups?: MoveableTargetGroupsType;
+    /**
+     * @private
+     */
+    groupable?: boolean;
+    /**
+     * Whether to hide the line in child moveable for group corresponding to the rect of the target.
+     * @default false
+     */
+    hideChildMoveableDefaultLines?: boolean;
+    /**
+     * Props that work when group
+     * @example
+     * ```js
+     * {
+     *     roundable: true,
+     *     groupableProps: {
+     *         roundable: false,
+     *     },
+     * }
+     * ```
+     */
+    groupableProps?: Record<string, any>;
+}
+
+export interface DraggableOptions {
+    /**
+     * Whether or not target can be dragged.
+     * @default false
+     */
+    draggable?: boolean;
+    /**
+     * throttle of x, y when drag.
+     * @default 0
+     */
+    throttleDrag?: number;
+    /**
+     * throttle of angle(degree) of x,y when drag.
+     * @default 0
+     */
+    throttleDragRotate?: number;
+    /**
+     * Hides the guidelines that appear when using the `throttleDragRotate` prop.
+     * @default false
+     */
+    hideThrottleDragRotateLine?: boolean;
+    /**
+     * start angle(degree) of x,y for throttleDragRotate when drag.
+     * @default 0
+     */
+    startDragRotate?: number;
+    /**
+     * Whether to move by dragging the edge line
+     * @default false
+     */
+    edgeDraggable?: boolean | Array<LineDirection>;
+}
+
+export interface ClippableOptions {
+    /**
+     * Whether to clip the target.
+     * @default false
+     */
+    clippable?: boolean | ClippableOptions;
+    /**
+     * Whether to keep the ratio of size if your clipPath is 'inset', 'rect', 'ellipse' type
+     * @default false
+     */
+    keepRatio?: boolean;
+    /**
+     * You can force the custom clipPath. (defaultClipPath < style < customClipPath < dragging clipPath)
+     */
+    customClipPath?: string;
+    /**
+     * If clippath is not set, the default value can be set. (defaultClipPath < style < customClipPath < dragging clipPath)
+     */
+    defaultClipPath?: string;
+    /**
+     * % Can be used instead of the absolute px (`rect` not possible)
+     * @default false
+     */
+    clipRelative?: boolean;
+    /**
+     * When dragging the target, the clip also moves.
+     * @default true
+     */
+    dragWithClip?: boolean;
+    /**
+     * You can drag the clip by setting clipArea.
+     * @default false
+     */
+    clipArea?: boolean;
+    /**
+     * Whether the clip is bound to the target.
+     * @default false
+     */
+    clipTargetBounds?: boolean;
+    /**
+     * Add clip guidelines in the vertical direction.
+     * @default []
+     */
+    clipVerticalGuidelines?: Array<string | number>;
+    /**
+     * Add clip guidelines in the horizontal direction.
+     * @default []
+     */
+    clipHorizontalGuidelines?: Array<string | number>;
+    /**
+     * Distance value that can snap to clip guidelines.
+     * @default 5
+     */
+    clipSnapThreshold?: number;
+}
+
+export interface ClickableOptions {
+    /**
+     * Whether to trigger the moveable's click event.
+     * @default true
+     */
+    clickable?: boolean;
+}
+
+export interface MoveableOptions extends
+    MoveableInitalOptions,
+    DraggableOptions,
+    DragAreaOptions,
+    OriginDraggableOptions,
+    RotatableOptions,
+    ResizableOptions,
+    ScalableOptions,
+    WarpableOptions,
+    PinchableOptions,
+    GroupableOptions,
+    IndividualGroupableOptions,
+    SnappableOptions,
+    ScrollableOptions,
+    ClippableOptions,
+    RoundableOptions,
+    ClickableOptions {
+}
+
 export interface BoundType {
     /**
      * If position is css, right and bottom are calculated as css right and css bottom of container.

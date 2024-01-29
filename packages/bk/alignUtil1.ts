@@ -1,4 +1,4 @@
-import {Element} from "../design/src/types/entity";
+import {CpElement} from "../design/src/types/entity";
 import {px2unit} from "../design/src/utils/utils";
 import {canMoveStatusList} from "../design/src/constants/common";
 
@@ -6,7 +6,7 @@ const alignThreshold = 2
 const alignRange = 10
 
 export function computedAlign(point, alignLineDataList, elementList) {
-    let element = point.element as Element;
+    let element = point.element as CpElement;
     let x = element.x + point.offsetX
     let y = element.y + point.offsetY
     alignLineDataList.value = []

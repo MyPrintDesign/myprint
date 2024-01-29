@@ -85,7 +85,7 @@
 // import { VueCropper }  from "vue-cropper";
 
 import {onMounted, reactive, ref} from "vue";
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 // import {useBase64} from "@vueuse/core";
 import {
   // aspectRatioHeight,
@@ -106,9 +106,9 @@ import {
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 // type s = typeof VueCropper
 const cropper = ref({} as InstanceType<any>)

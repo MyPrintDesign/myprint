@@ -11,12 +11,12 @@
 <script setup lang="ts">
 
 import {onUnmounted, PropType, ref} from "vue";
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import {trend1} from "@cp-print/design/utils/utils";
 import {valueUnit, widthValueUnit} from "@cp-print/design/utils/elementUtil";
 
 defineProps({
-  data: {type: Object as PropType<Element>, default: () => ({} as Element)}
+  data: {type: Object as PropType<CpElement>, default: () => ({} as CpElement)}
 })
 const textRef = ref()
 onUnmounted(() => {

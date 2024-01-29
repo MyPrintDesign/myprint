@@ -33,7 +33,7 @@ import {
   watch,
   inject
 } from "vue";
-import {Element, ElementOption} from "../../../types/entity";
+import {CpElement, ElementOption} from "../../../types/entity";
 import {sortColumn} from "../../../utils/utils";
 import {unit2px, px2unit} from "../../../utils/devicePixelRatio";
 import {clearEventBubble} from "../../../utils/event";
@@ -41,9 +41,9 @@ import {mittKey} from "../../../constants/keys";
 import {initElement, valueUnit} from "../../../utils/elementUtil";
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 
 defineExpose({computedWidth})
@@ -52,7 +52,7 @@ const mitt = inject(mittKey)!
 // console.log(selectElement)
 mitt.on('sortColumn', handleSortColumn)
 
-const bodyStyle = (column: Element) => {
+const bodyStyle = (column: CpElement) => {
   // console.log(column)
   const style = {
     maxWidth: valueUnit(column.width),
@@ -93,7 +93,7 @@ onMounted(() => {
   }
   
   if (props.element.columnList.length == 0 || props.element.columnList[0].label !== '序号') {
-    let indexView = {} as Element;
+    let indexView = {} as CpElement;
     indexView.type = 'Text'
     indexView.option = <ElementOption>{
       disableSort: true,

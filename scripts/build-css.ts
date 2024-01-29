@@ -94,11 +94,11 @@ export const build = parallel(
 
 await build()
 
-// setTimeout(()=>{
-//     const pkgDistPath = resolvePackagePath(pkgDirName, 'dist');
-//     if (fs.existsSync(pkgDistPath) && fs.statSync(pkgDistPath).isDirectory()) {
-//         fs.rmSync(pkgDistPath, {recursive: true});
-//     }
-// }, 1000)
+setTimeout(()=>{
+    const pkgDistPath = resolvePackagePath(pkgDirName, 'dist');
+    if (fs.existsSync(pkgDistPath) && fs.statSync(pkgDistPath).isDirectory()) {
+        fs.rmSync(pkgDistPath, {recursive: true});
+    }
+}, 1000)
 
 

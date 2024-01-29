@@ -1,11 +1,11 @@
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import {px2unit} from "./devicePixelRatio";
 import {canMoveStatusList} from "@cp-print/design/constants/common";
 
 const alignThreshold = 2
 const alignRange = 10
 
-export function computedAlign(element: Element, alignLineDataList: any, elementList: any) {
+export function computedAlign(element: CpElement, alignLineDataList: any, elementList: any) {
     let x = element.x! + element.translateX!
     let y = element.y! + element.translateY!
     alignLineDataList.value = []

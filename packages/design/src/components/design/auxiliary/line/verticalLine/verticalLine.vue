@@ -8,14 +8,14 @@
 <script setup lang="ts">
 
 import {computed} from "vue";
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
 import {computedStyle} from "../computeStyle";
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 const labelStyle = computed(() => {
   return computedStyle(props.element, 'vertical', 'solid')

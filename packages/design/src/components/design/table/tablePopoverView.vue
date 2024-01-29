@@ -34,15 +34,15 @@
 import {
   ref
 } from "vue";
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import {CirclePlus} from "@element-plus/icons-vue";
 import MyPopover from "../../cp/cp-popover/cp-popover.vue";
 import TableView from "./tableView.vue";
 
 withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 
 const lock = ref(false)

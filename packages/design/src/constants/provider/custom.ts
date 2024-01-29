@@ -1,6 +1,6 @@
-import {Element, ElementOption} from "@cp-print/design/types/entity";
+import {CpElement, ElementOption} from "@cp-print/design/types/entity";
 
-export const customProvider: Array<Element> = [
+export const customProvider: Array<CpElement> = [
     {
         "type": "Text",
         iconClass: 'iconfont icon-text',

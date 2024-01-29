@@ -1,6 +1,6 @@
 import {
     Container, DisplayModel,
-    Element,
+    CpElement,
     ElementOption,
     elementType, FormatterVariable,
     Panel,
@@ -50,7 +50,7 @@ export function getCurrentPanel(): Panel {
     return appStore().currentPanel as Panel
 }
 
-export function setCurrentElement(element: Element) {
+export function setCurrentElement(element: CpElement) {
     appStore().currentElement = element
 }
 
@@ -58,36 +58,36 @@ export function valueUnit(value: number | undefined) {
     return value + getCurrentPanel().pageUnit
 }
 
-export function widthValueUnit(element: Element) {
+export function widthValueUnit(element: CpElement) {
     return element.runtimeOption.workEnvironment == 'Table' ? '100%' : (element.width + getCurrentPanel().pageUnit)
 }
 
-export function heightValueUnit(element: Element) {
+export function heightValueUnit(element: CpElement) {
     return element.runtimeOption.workEnvironment == 'Table' ? '100%' : (element.height + getCurrentPanel().pageUnit)
 }
 
-export function width(element: Element) {
+export function width(element: CpElement) {
     if (['DottedVerticalLine', 'VerticalLine'].includes(element.type)) {
         return element.option.borderWidth + 0.6
     }
     return element.width
 }
 
-export function height(element: Element) {
+export function height(element: CpElement) {
     if (['DottedHorizontalLine', 'HorizontalLine'].includes(element.type)) {
         return element.option.borderWidth + 2
     }
     return element.height
 }
 
-export function aspectRatioHeight(element: Element) {
+export function aspectRatioHeight(element: CpElement) {
     if (element.option.aspectRatio!) {
         return element.width / element.option.aspectRatio
     }
     return element.height
 }
 
-export function handleAspectRatioHeight(element: Element) {
+export function handleAspectRatioHeight(element: CpElement) {
     if (element.option.aspectRatio!) {
         element.height = element.width / element.option.aspectRatio
     }
@@ -99,7 +99,7 @@ export function clearPanel(panel?: Panel) {
     panel!.elementList = []
 }
 
-export function getTranslate(element: Element) {
+export function getTranslate(element: CpElement) {
     let translate = ''
     if (element.translateX || element.translateY) {
         translate = `translate(${valueUnit(element.translateX)}, ${valueUnit(element.translateY)})`
@@ -113,7 +113,7 @@ export function getTranslate(element: Element) {
     return 'none'
 }
 
-export function none(element?: Element) {
+export function none(element?: CpElement) {
     if (element == null) {
         return
     }
@@ -173,7 +173,7 @@ export function computeDrag(element: Container): boolean {
     return true
 }
 
-export function computeTranslate(element: Element) {
+export function computeTranslate(element: CpElement) {
     // complete 更改位置
     if (element.translateX != null) {
         element.x = numberUtil.sum(element.x, element.translateX)
@@ -186,7 +186,7 @@ export function computeTranslate(element: Element) {
     }
 }
 
-export function disableHandleList(element: Element) {
+export function disableHandleList(element: CpElement) {
     switch (element.type) {
         case 'Text':
             // console.log(element.contentType)
@@ -209,7 +209,7 @@ export function disableHandleList(element: Element) {
     return null
 }
 
-export function parentInitElement(parent: Container, element?: Element) {
+export function parentInitElement(parent: Container, element?: CpElement) {
     initElement(element)
     installParentElement(parent, element)
     if (element?.elementList?.length! > 0) {
@@ -219,7 +219,7 @@ export function parentInitElement(parent: Container, element?: Element) {
     }
 }
 
-export function initElement(element?: Element) {
+export function initElement(element?: CpElement) {
     if (element == null) {
         return
     }
@@ -242,7 +242,7 @@ export function initElement(element?: Element) {
             initWidth = 200
             initHeight = 30
             element.runtimeOption.rowList = []
-            const rowList: Array<Element> = []
+            const rowList: Array<CpElement> = []
             for (let i = 0; i < element.columnList!.length; i++) {
                 initElement(element.columnList![i])
                 rowList.push(copyElementRefValueId(element.columnList![i]))
@@ -321,15 +321,16 @@ export function initElement(element?: Element) {
     if (!element.option.rotate) {
         element.option.rotate = 0
     }
-    rotatedPoint(element)
+    // rotatedPoint(element)
     if (element.option.padding == null) {
         element.option.padding = {} as Position
     }
-    console.log(appStore().lastPageUnit)
+    // console.log(appStore().lastPageUnit)
     element.runtimeOption.width = unit2px(element.width)
     element.runtimeOption.height = unit2px(element.height)
     element.runtimeOption.x = unit2px(element.x)
     element.runtimeOption.y = unit2px(element.y)
+    element.runtimeOption.rotate = element.option.rotate
     if (element.option.margin == null) {
         element.option.margin = {} as Position
     }
@@ -342,14 +343,14 @@ export function clearPanelParent(panel: Panel) {
     clearListParent(panel.elementList)
 }
 
-export function copyElementRefValueId(element: Element) {
-    element = to(element, reactive({}) as Element)
+export function copyElementRefValueId(element: CpElement) {
+    element = to(element, reactive({}) as CpElement)
     element.id = crypto.randomUUID()
     return element
 }
 
 
-export function clearListParent(elementList?: Array<Element>) {
+export function clearListParent(elementList?: Array<CpElement>) {
     for (let element of elementList!) {
         clearParent(element)
         if (element.elementList != null) {
@@ -364,7 +365,7 @@ export function installPanelParentElement(panel: Panel) {
     installListParentElement(panel, panel.elementList)
 }
 
-export function installListParentElement(parent: Container, elementList?: Array<Element>) {
+export function installListParentElement(parent: Container, elementList?: Array<CpElement>) {
     for (let element of elementList!) {
         installParentElement(parent, element)
         if (element.elementList != null) {
@@ -374,21 +375,21 @@ export function installListParentElement(parent: Container, elementList?: Array<
 
 }
 
-export function installParentElement(parent?: Container, element?: Element) {
+export function installParentElement(parent?: Container, element?: CpElement) {
     if (!element) {
         return
     }
     element.runtimeOption.parent = parent
 }
 
-export function clearParent(element: Element) {
+export function clearParent(element: CpElement) {
     if (element.runtimeOption == null || element.runtimeOption.parent == undefined) {
         return
     }
     element.runtimeOption.parent = undefined
 }
 
-export function addElement(parent: Container, element: Element) {
+export function addElement(parent: Container, element: CpElement) {
     if (parent.elementList == null) {
         parent.elementList = []
     }
@@ -397,7 +398,7 @@ export function addElement(parent: Container, element: Element) {
     installParentElement(parent, element)
 }
 
-export function removeElement(element: Element) {
+export function removeElement(element: CpElement) {
     if (element.runtimeOption.parent == null) {
         return
     }
@@ -412,7 +413,7 @@ export function removeElement(element: Element) {
             (element.runtimeOption.parent as Panel).pageFooter = undefined
         )
         .handle('PrivateDragRectElement', () => {
-                const elementList: Array<Element> = []
+                const elementList: Array<CpElement> = []
 
                 for (let valueElement of getCurrentPanel().elementList!) {
                     if ('SELECT' == valueElement.status) {
@@ -466,7 +467,7 @@ export function handleElementType(element: Container) {
     return handlers;
 }
 
-export function elementCommonPositionStyle(element: Element): CSSProperties {
+export function elementCommonPositionStyle(element: CpElement): CSSProperties {
     return {
         // width: element.runtimeOption.width + 'px',
         // left: element.runtimeOption.x + 'px',
@@ -479,7 +480,7 @@ export function elementCommonPositionStyle(element: Element): CSSProperties {
     } as CSSProperties
 }
 
-export function elementCommonStyle(element: Element, cssStyle?: CSSProperties): CSSProperties {
+export function elementCommonStyle(element: CpElement, cssStyle?: CSSProperties): CSSProperties {
     if (cssStyle == null) {
         cssStyle = elementCommonPositionStyle(element)
     }
@@ -530,7 +531,7 @@ export function isPanel(element: Container) {
     return element.type == 'Panel'
 }
 
-export function getMouseOffsetTop(panel: Panel, element: Element) {
+export function getMouseOffsetTop(panel: Panel, element: CpElement) {
 
     const pageHeaderFooter = isPageHeaderFooter(element)
 
@@ -554,7 +555,7 @@ export function getMouseOffsetTop(panel: Panel, element: Element) {
     return top
 }
 
-export function getMouseOffsetBottom(panel: Panel, element: Element) {
+export function getMouseOffsetBottom(panel: Panel, element: CpElement) {
 
     const pageHeaderFooter = isPageHeaderFooter(element)
 
@@ -576,7 +577,7 @@ export function getMouseOffsetBottom(panel: Panel, element: Element) {
     return bottom
 }
 
-export function clearOption(element: Element) {
+export function clearOption(element: CpElement) {
     if (element == null) {
         return
     }
@@ -584,7 +585,7 @@ export function clearOption(element: Element) {
 }
 
 // 返回相对于参考点旋转后的坐标
-export function rotatedPoint(element: Element) {
+export function rotatedPoint(element: CpElement) {
     const {x, y, width, height} = element
     const centerX = x! + width / 2;
     const centerY = y! + height / 2;
@@ -641,7 +642,7 @@ export function initPanelDiv(panel: Panel, el: HTMLElement) {
     panelDivPosition.bottom = rect.bottom
 }
 
-export function dragLimit(element: Element) {
+export function dragLimit(element: CpElement) {
     const {bounds, parent} = element.runtimeOption
 
     let top = -bounds.top
@@ -660,7 +661,7 @@ export function dragLimit(element: Element) {
     } as Position
 }
 
-export function formatter(element: Element, variable: FormatterVariable = {}): string {
+export function formatter(element: CpElement, variable: FormatterVariable = {}): string {
     if (element.option!.formatter) {
         let contentData = ''
         if (element.type == 'TextTime') {
@@ -727,7 +728,7 @@ export function replaceVariables(str: string, params: { [key: string]: any }): s
     return result;
 }
 
-export function selectedElementBatchOperation(callback: (element: Element) => void) {
+export function selectedElementBatchOperation(callback: (element: CpElement) => void) {
     for (let valueElement of getCurrentPanel().elementList!) {
         if (canMoveStatusList.includes(valueElement.status)) {
             callback(valueElement)

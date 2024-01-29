@@ -67,7 +67,7 @@ import {toPdf} from "@cp-print/design/utils/pdfUtil";
 import {download, printCssStyle} from "@cp-print/design/utils/utils";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import Preview from "./preview.vue";
-import {Element, Panel} from "@cp-print/design/types/entity";
+import {CpElement, Panel} from "@cp-print/design/types/entity";
 import {
   messageFun, mittKey, panelKey, previewDataKey
 } from "@cp-print/design/constants/keys";
@@ -134,7 +134,7 @@ onMounted(() => {
 
 })
 
-function setItemRef(el: any, item: Element) {
+function setItemRef(el: any, item: CpElement) {
   // console.log('setItemRef', item.label)
   // console.log('setItemRef')
   itemRefs[item.id] = el

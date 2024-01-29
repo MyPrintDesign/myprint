@@ -24,7 +24,7 @@
 <script setup lang="ts">
 
 import {computed, onMounted, watch, CSSProperties} from "vue";
-import {Element} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import CpBarcode from "@cp-print/design/components/design/barcode";
 import CpQrcode from "@cp-print/design/components/design/qrcode";
 
@@ -34,9 +34,9 @@ import {
 } from "@cp-print/design/utils/elementUtil";
 
 const props = withDefaults(defineProps<{
-  element?: Element
+  element?: CpElement
 }>(), {
-  element: () => ({} as Element)
+  element: () => ({} as CpElement)
 })
 
 onMounted(() => {

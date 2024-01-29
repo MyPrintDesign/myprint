@@ -1,4 +1,4 @@
-import {Container, Element, ElementOption, elementType, RuntimeElementOption} from "@cp-print/design/types/entity";
+import {Container, CpElement, ElementOption, elementType, RuntimeElementOption} from "@cp-print/design/types/entity";
 import {PropType, reactive} from "vue";
 import {i18n} from "@cp-print/design/locales";
 
@@ -7,7 +7,7 @@ export const defaultElement = {
         padding: {},
         margin: {}
     } as ElementOption
-} as Element
+} as CpElement
 
 export const defaultDragRectElement = reactive({
     type: 'PrivateDragRectElement',
@@ -17,7 +17,7 @@ export const defaultDragRectElement = reactive({
         margin: {}
     } as ElementOption,
     runtimeOption: {} as RuntimeElementOption
-} as Element)
+} as CpElement)
 
 
 export const canMoveStatusList = ['SELECT', 'HANDLE']
