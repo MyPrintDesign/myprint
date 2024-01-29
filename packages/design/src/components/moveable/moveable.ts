@@ -21,25 +21,34 @@ import {
     BoundType, MoveableRefType, ElementGuidelineValueOption
 } from './types'
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
-import {nextTick, Ref, ref} from "vue";
-import {GroupManager} from "@moveable/helper";
+import {nextTick, reactive, Ref, ref} from "vue";
+import {GroupManager, TargetGroupsType} from "@moveable/helper";
 import {deepFlat, throttle} from "@daybrush/utils";
-import {removeElement, setCurrentElement} from "@cp-print/design/utils/elementUtil";
+import {
+    forElement,
+    getCurrentPanel,
+    removeElement,
+    setCurrentElement
+} from "@cp-print/design/utils/elementUtil";
 import {defaultElement} from "@cp-print/design/constants/common";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
 import Selecto, {OnDragStart as OnSelectDragStart, OnSelectEnd, OnSelect} from "selecto";
 import Moveable from "moveable";
-import {CpHtmlElement} from "@cp-print/design/types/entity";
+import {CpHtmlElement, elementType} from "@cp-print/design/types/entity";
 // import {MoveableOptions} from "react-moveable";
 let moveable: Moveable & MoveableOptions
 let selecto: Selecto
+let firstElement: CpHtmlElement | undefined;
 
 export const snapElementList: Ref<Array<ElementGuidelineValueOption | MoveableRefType<CpHtmlElement>>> = ref([".design-content"])
-export const elementList: Ref<Array<CpHtmlElement>> = ref([])
+export const elementList: Array<CpHtmlElement> = reactive([])
+export const selectElementList: Array<CpHtmlElement> = reactive([])
 const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"} as BoundType;
+const boundsTop = {"top": 0, "position": "css"} as BoundType;
 export const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
 export const targets = ref([]) as Ref<Array<CpHtmlElement>>
 const groupManager = new GroupManager([]);
+const noSelectList: Array<elementType> = ['PageFooter', 'PageHeader', 'Container']
 
 export const DimensionViewable = {
     name: "dimensionViewable",
@@ -142,10 +151,21 @@ export const Editable = {
 
 export function updatePanel() {
     nextTick(() => {
-        elementList.value = selecto.getSelectableElements() as Array<CpHtmlElement>;
+        elementList.length = 0
+        selectElementList.length = 0
+        forElement(getCurrentPanel(), v => {
+            // console.log(v.runtimeOption.target)
+            elementList.push(v.runtimeOption.target)
+            if (!noSelectList.includes(v.type)) {
+                selectElementList.push(v.runtimeOption.target)
+            }
+        })
+        // elementList.value = selecto.getSelectableElements() as Array<CpHtmlElement>;
         // console.log(elements)
+        // console.log(elementList)
         // console.log(snapElementList)
-        groupManager.set([], elementList.value);
+        selecto.selectableTargets = selectElementList
+        groupManager.set([], elementList);
     })
 }
 
@@ -226,7 +246,7 @@ function onDrag(e: OnDrag) {
 }
 
 function onDragGroup(e: OnDragGroup) {
-    console.log('onDragGroup', e)
+    // console.log('onDragGroup', e)
     for (let event of e.events) {
         updateLocation(event)
     }
@@ -266,7 +286,7 @@ function rotateGroup(e: OnRotateGroup) {
 }
 
 function resize(e: OnResize) {
-    console.log('resize', e)
+    // console.log('resize', e)
     // e.target.element.runtimeOption.width = e.width
     // e.target.element.runtimeOption.height =e.height
     // e.target.style.cssText += "width: "+ e.width+"px; height:"+ e.height+"px";
@@ -306,14 +326,26 @@ function roundGroup(_e: OnRoundGroup) {
     // e.target.style.transform = e.transform;
 }
 
-function bound(e: OnBound) {
-    console.log('round', e)
+function bound(_e: OnBound) {
+    // console.log('bound', e)
     // e.target.style.transform = e.transform;
 }
 
 export const setSelectedTargets = (nextTargetes: any) => {
-    console.log(nextTargetes)
+    if (targets.value.length > 0) {
+        if (nextTargetes.length == targets.value.length) {
+            if (targets.value.length == 1 && targets.value[0] == nextTargetes[0]) {
+                return;
+            }
+            if (targets.value.length > 1) {
+                return
+            }
+        }
+        // console.log('setSelectedTargets - return')
+    }
+    // console.log('sss')
     selecto.setSelectedTargets(deepFlat(nextTargetes));
+
     targets.value = nextTargetes;
     moveable.target = nextTargetes
     setCurrentElement(defaultElement)
@@ -328,7 +360,7 @@ export const setSelectedTargets = (nextTargetes: any) => {
             moveable.renderDirections = ["n"]
             moveable.draggable = false
             moveable.rotatable = false
-            moveable.bounds = null
+            moveable.bounds = boundsTop
         } else {
             moveable.bounds = bounds
             moveable.rotatable = true
@@ -344,11 +376,12 @@ export const setSelectedTargets = (nextTargetes: any) => {
     }
 
     snapElementList.value.length = 1
-    for (let element of elementList.value) {
+    for (let element of elementList) {
         if (element.classList.contains("snap")) {
             snapElementList.value.push({element: element})
         }
     }
+    console.log(123)
     // moveable.elementGuidelines = snapElementList.value
 }
 
@@ -362,19 +395,19 @@ const onSelectDragStart = (e: OnSelectDragStart) => {
     if (target.tagName === "BUTTON" || moveable.isMoveableElement(target)
         || flatted.some(t => t === target || t.contains(target))
     ) {
-        console.log(123)
+        // console.log(123)
         e.stop();
     }
 
     if (e.currentTarget.getSelectedTargets().length == 1) {
-        console.log(333)
+        // console.log(333)
         const currentSelect = e.currentTarget.getSelectedTargets()[0] as CpHtmlElement
         if (currentSelect.element.type != 'PageFooter') {
             stop()
         }
     }
 
-    console.log(e)
+    // console.log(e)
     // console.log(targets.value)
     // e.data.startTargets = targets.value;
     e.data.startTargets = targets.value;
@@ -385,13 +418,27 @@ const onSelect = (e: OnSelect) => {
     if (isDragStartEnd) {
         return;
     }
-    console.log(e.data.startTargets, startAdded, startRemoved)
+    // console.log(e.data.startTargets, startAdded, startRemoved)
     const nextChilds = groupManager.selectSameDepthChilds(
         e.data.startTargets,
         startAdded,
         startRemoved
     );
-    const targetList = nextChilds.targets().filter((v: CpHtmlElement) => v.element.type != 'PageFooter')
+    // console.log(startAdded)
+    let targetList: Array<HTMLElement | TargetGroupsType | SVGElement> = []
+    const allTargets = nextChilds.targets()
+    if (allTargets.length == 1) {
+        // console.log(allTargets)
+        console.log('选择一个')
+        firstElement = allTargets[0] as CpHtmlElement;
+    }
+
+    targetList = allTargets.filter((v: CpHtmlElement) => {
+        const s = (!firstElement || (firstElement && v.element.runtimeOption.parent == firstElement.element.runtimeOption.parent))
+        // console.log('选择 ', s)
+        return s
+    })
+
     // console.log(nextChilds.targets())
     setSelectedTargets(targetList);
 };
@@ -404,6 +451,7 @@ const onSelectEnd = (e: OnSelectEnd) => {
         inputEvent,
     } = e;
     console.log('select-end')
+    // selecto.selectableTargets = selectElementList
     // console.log(e)
     for (let snapElement of removed) {
         snapElement.classList.add('snap')
@@ -434,9 +482,11 @@ const onSelectEnd = (e: OnSelectEnd) => {
             removed
         );
     }
-    const targetList = nextChilds.targets().filter((v: CpHtmlElement) => v.element.type != 'PageFooter')
+    const targetList = nextChilds.targets().filter((v: CpHtmlElement) =>
+        (!firstElement || (firstElement && v.element.runtimeOption.parent == firstElement.element.runtimeOption.parent)))
 
     e.currentTarget.setSelectedTargets(targetList);
+    firstElement = undefined
     // console.log(nextChilds.targets())
     setSelectedTargets(targetList);
 };
@@ -454,7 +504,7 @@ export function initMoveable() {
         // The area to drag selection element (default: container)
         // dragContainer: Element,
         // Targets to select. You can register a queryselector or an Element.
-        selectableTargets: [".design-select"],
+        // selectableTargets: [".design-select"],
         // Whether to select by click (default: true)
         selectByClick: true,
         // Whether to select from the target inside (default: true)

@@ -71,7 +71,7 @@
 import Rule from "../rule.vue";
 // import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
-import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
+import {inject, nextTick, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {ContentScaleVo, DragWrapper, CpElement} from "@cp-print/design/types/entity";
 import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 // import {clearEventBubble} from "@cp-print/design/utils/event";
@@ -101,6 +101,7 @@ import {
   initMoveable,
 } from "@cp-print/design/components/moveable/moveable";
 import Design from "@cp-print/design/components/design/design.vue";
+import {onUpdated} from "vue-demi";
 
 const panel = inject(panelKey)!
 const mitt = inject(mittKey)!
@@ -160,10 +161,23 @@ const contentScale = reactive({
   scrollHeight: undefined,
   openIs: false
 } as ContentScaleVo)
+let sss = 1;
+console.log(sss)
+console.log(data)
+
 onMounted(() => {
   // 挂载键盘事件
   mountedKeyboardEvent()
   initMoveable()
+  updatePanel()
+  console.log(sss++)
+})
+
+onBeforeUpdate(() => {
+  console.log('onBeforeUpdate')
+})
+onUpdated(() => {
+  console.log('onUpdated')
 })
 
 onUnmounted(() => {

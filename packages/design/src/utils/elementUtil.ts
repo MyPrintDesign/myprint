@@ -186,6 +186,23 @@ export function computeTranslate(element: CpElement) {
     }
 }
 
+export function forElement(container: Panel, callback: (element: CpElement) => void) {
+    recursionElement(container, callback)
+    recursionElement(container.pageFooter!, callback)
+    recursionElement(container.pageHeader!, callback)
+}
+
+export function recursionElement(container: Container, callback: (element: CpElement) => void) {
+    if (container?.elementList?.length! > 0) {
+        // console.log(container)
+        for (let elementTmp of container!.elementList!) {
+            callback(elementTmp)
+            recursionElement(elementTmp, callback);
+        }
+    }
+}
+
+
 export function disableHandleList(element: CpElement) {
     switch (element.type) {
         case 'Text':

@@ -1,6 +1,5 @@
 <template>
   <div class="cp-element-wrapper design-border snap" :style="style"
-       :class="{'design-select': !noSelectList.includes(element.type)}"
        ref="designRef">
     <element-view :element="element"/>
     
@@ -18,14 +17,13 @@
 
 import ElementView from "@cp-print/design/components/design/element.vue";
 
-import {CpElement, elementType} from "@cp-print/design/types/entity";
+import {CpElement} from "@cp-print/design/types/entity";
 import {computed, CSSProperties, onMounted, ref} from "vue";
 import {CpContainer} from "./container";
 import ElementList from "./elementList.vue";
 // import TablePopoverView from "./table/tablePopoverView.vue";
 const designRef = ref()
 
-const noSelectList: Array<elementType> = ['PageFooter', 'PageHeader', 'Container']
 const props = withDefaults(defineProps<{
   element?: CpElement
 }>(), {
