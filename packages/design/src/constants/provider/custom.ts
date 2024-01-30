@@ -70,13 +70,13 @@ export const customProvider: Array<CpElement> = [
         } as ElementOption,
         "height": 30,
     } as any,
-    // {
-    //     type: "Container",
-    //     iconClass: 'iconfont-color icon-color-container',
-    //     "data": "容器",
-    //     "width": 100,
-    //     "height": 100,
-    // } as Element,
+    {
+        type: "Container",
+        iconClass: 'iconfont-color icon-color-container',
+        "data": "容器",
+        "width": 70,
+        "height": 70,
+    } as any,
     {
         type: "PageHeader",
         iconClass: 'iconfont-color icon-color-page_header',

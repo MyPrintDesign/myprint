@@ -34,20 +34,23 @@ import {defaultElement} from "@cp-print/design/constants/common";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
 import Selecto, {OnDragStart as OnSelectDragStart, OnSelectEnd, OnSelect} from "selecto";
 import Moveable from "moveable";
-import {CpHtmlElement, elementType} from "@cp-print/design/types/entity";
+import {CpElement, CpHtmlElement, elementType} from "@cp-print/design/types/entity";
 // import {MoveableOptions} from "react-moveable";
 let moveable: Moveable & MoveableOptions
 let selecto: Selecto
 let firstElement: CpHtmlElement | undefined;
+const groupManager = new GroupManager([]);
 
 export const snapElementList: Ref<Array<ElementGuidelineValueOption | MoveableRefType<CpHtmlElement>>> = ref([".design-content"])
 export const elementList: Array<CpHtmlElement> = reactive([])
 export const selectElementList: Array<CpHtmlElement> = reactive([])
 const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"} as BoundType;
 const boundsTop = {"top": 0, "position": "css"} as BoundType;
-export const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
+const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
+
+const props = {dimensionViewable: true, editable: true}
+
 export const targets = ref([]) as Ref<Array<CpHtmlElement>>
-const groupManager = new GroupManager([]);
 const noSelectList: Array<elementType> = ['PageFooter', 'PageHeader', 'Container']
 
 export const DimensionViewable = {
@@ -151,21 +154,22 @@ export const Editable = {
 
 export function updatePanel() {
     nextTick(() => {
-        elementList.length = 0
-        selectElementList.length = 0
-        forElement(getCurrentPanel(), v => {
-            // console.log(v.runtimeOption.target)
-            elementList.push(v.runtimeOption.target)
-            if (!noSelectList.includes(v.type)) {
-                selectElementList.push(v.runtimeOption.target)
-            }
-        })
-        // elementList.value = selecto.getSelectableElements() as Array<CpHtmlElement>;
-        // console.log(elements)
-        // console.log(elementList)
-        // console.log(snapElementList)
-        selecto.selectableTargets = selectElementList
-        groupManager.set([], elementList);
+        setTimeout(() => {
+            elementList.length = 0
+            selectElementList.length = 0
+            forElement(getCurrentPanel(), v => {
+                // console.log(v.runtimeOption.target)
+                elementList.push(v.runtimeOption.target)
+                if (!noSelectList.includes(v.type)) {
+                    selectElementList.push(v.runtimeOption.target)
+                }
+            })
+            // console.log(selecto.getSelectableElements() as Array<CpHtmlElement>)
+            console.log(elementList)
+            // console.log(snapElementList)
+            selecto.selectableTargets = selectElementList
+            groupManager.set([], selectElementList);
+        }, 100)
     })
 }
 
@@ -332,18 +336,21 @@ function bound(_e: OnBound) {
 }
 
 export const setSelectedTargets = (nextTargetes: any) => {
+    console.log(nextTargetes)
     if (targets.value.length > 0) {
         if (nextTargetes.length == targets.value.length) {
             if (targets.value.length == 1 && targets.value[0] == nextTargetes[0]) {
+                console.log('setSelectedTargets return1')
                 return;
             }
             if (targets.value.length > 1) {
+                console.log('setSelectedTargets return2')
                 return
             }
         }
         // console.log('setSelectedTargets - return')
     }
-    // console.log('sss')
+    console.log('sss')
     selecto.setSelectedTargets(deepFlat(nextTargetes));
 
     targets.value = nextTargetes;
@@ -368,8 +375,10 @@ export const setSelectedTargets = (nextTargetes: any) => {
             moveable.renderDirections = ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
         }
 
-        if (targets.value[0].element.runtimeOption.parent!.type == 'PageFooter') {
-            moveable.snapContainer = '.container'
+        const parent = targets.value[0].element.runtimeOption.parent! as CpElement;
+        if (parent.type == 'PageFooter' || parent.type == 'Container'
+        ) {
+            moveable.snapContainer = parent.runtimeOption.target
         } else {
             moveable.snapContainer = null
         }
@@ -434,10 +443,16 @@ const onSelect = (e: OnSelect) => {
     }
 
     targetList = allTargets.filter((v: CpHtmlElement) => {
-        const s = (!firstElement || (firstElement && v.element.runtimeOption.parent == firstElement.element.runtimeOption.parent))
-        // console.log('选择 ', s)
-        return s
+        return (!firstElement || (firstElement && v.element.runtimeOption.parent == firstElement.element.runtimeOption.parent))
     })
+    // @ts-ignore
+    const controlBoxElement = moveable.getControlBoxElement() as HTMLElement
+    setTimeout(() => {
+        // console.log(controlBoxElement.childNodes)
+        if (controlBoxElement.childNodes.length == 0) {
+            controlBoxElement.remove()
+        }
+    }, 10)
 
     // console.log(nextChilds.targets())
     setSelectedTargets(targetList);
@@ -491,44 +506,16 @@ const onSelectEnd = (e: OnSelectEnd) => {
     setSelectedTargets(targetList);
 };
 
-export function initMoveable() {
-
+export function initMoveable(_selecto) {
+    console.log(selecto)
     document.documentElement.style.setProperty('--direction-width', '20');
     document.documentElement.style.setProperty('--direction-height', '20');
 
-    selecto = new Selecto({
-        // The container to add a selection element
-        container: document.querySelector('.affix-container') as HTMLElement,
-        // Selecto's root container (No transformed container. (default: null)
-        rootContainer: null,
-        // The area to drag selection element (default: container)
-        // dragContainer: Element,
-        // Targets to select. You can register a queryselector or an Element.
-        // selectableTargets: [".design-select"],
-        // Whether to select by click (default: true)
-        selectByClick: true,
-        // Whether to select from the target inside (default: true)
-        selectFromInside: false,
-        // After the select, whether to select the next target with the selected target (deselected if the target is selected again).
-        // continueSelect: false,
-        // Determines which key to continue selecting the next target via keydown and keyup.
-        // toggleContinueSelect: "shift",
-        // The container for keydown and keyup events
-        // keyContainer: window,
-        // The rate at which the target overlaps the drag area to be selected. (default: 100)
-        hitRate: 0,
-        ratio: 0,
-    });
-
-    selecto.on("dragStart", onSelectDragStart);
-    selecto.on("select", onSelect);
-    selecto.on("selectEnd", onSelectEnd);
-
+    selecto = _selecto
     moveable = new Moveable(document.querySelector(".design-content") as HTMLElement, {
-        target: targets.value,
         // If the container is null, the position is fixed. (default: parentElement(document.body))
         // container: document.querySelector(".design-content") as HTMLElement,
-        elementGuidelines: snapElementList.value,
+        target: targets.value,
         bounds: bounds,
         draggable: true,
         resizable: true,
@@ -542,10 +529,11 @@ export function initMoveable() {
         // },
         snapGap: true,
         snapRotationDegrees: [0, 45, 90, 135, 180, 225, 270, 315],
-        ables: [DimensionViewable, Editable],
-        props: ({dimensionViewable: tipsStatus != null, editable: true}),
         snapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
         elementSnapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
+        elementGuidelines: snapElementList.value,
+        ables: [DimensionViewable, Editable],
+        props: (props),
         // warpable: false,
         // Enabling pinchable lets you use events that
         // can be used in draggable, resizable, scalable, and rotateable.
@@ -560,6 +548,11 @@ export function initMoveable() {
         // throttleScale: 0,
         // throttleRotate: 0,
     });
+    // moveable.updateSelectors()
+
+    selecto.on("dragStart", onSelectDragStart);
+    selecto.on("select", onSelect);
+    selecto.on("selectEnd", onSelectEnd);
 
     moveable.on('drag', onDrag)
     moveable.on('dragStart', onDragStart)

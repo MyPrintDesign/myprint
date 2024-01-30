@@ -98,10 +98,11 @@ import ElementList from "../../design/elementList.vue";
 import {mountedKeyboardEvent, unMountedKeyboardEvent} from "@cp-print/design/utils/keyboardUtil";
 import {
   updatePanel,
-  initMoveable,
+  initMoveable
 } from "@cp-print/design/components/moveable/moveable";
 import Design from "@cp-print/design/components/design/design.vue";
 import {onUpdated} from "vue-demi";
+import {initSelecto, selecto} from "@cp-print/design/components/moveable/selecto";
 
 const panel = inject(panelKey)!
 const mitt = inject(mittKey)!
@@ -150,7 +151,7 @@ const designContentRef = ref<InstanceType<any>>()
 //   clientY: null
 // } as any
 const data = reactive({
-  dropOver: false
+  dropOver: false,
 })
 // const visible = reactive({
 //   selectRect: false,
@@ -161,16 +162,13 @@ const contentScale = reactive({
   scrollHeight: undefined,
   openIs: false
 } as ContentScaleVo)
-let sss = 1;
-console.log(sss)
-console.log(data)
 
 onMounted(() => {
   // 挂载键盘事件
   mountedKeyboardEvent()
-  initMoveable()
+  initSelecto()
   updatePanel()
-  console.log(sss++)
+  initMoveable(selecto.value)
 })
 
 onBeforeUpdate(() => {
