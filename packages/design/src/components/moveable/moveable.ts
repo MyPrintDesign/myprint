@@ -21,7 +21,7 @@ import {
     MoveableOptions,
     BoundType, MoveableRefType, ElementGuidelineValueOption
 } from './types'
-import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
+import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {nextTick, reactive, Ref, ref} from "vue";
 import {
     GroupManager
@@ -34,11 +34,14 @@ import {
     // removeElement,
     setCurrentElement
 } from "@cp-print/design/utils/elementUtil";
-import {defaultElement} from "@cp-print/design/constants/common";
+import {defaultElement, elementTypeLineList} from "@cp-print/design/constants/common";
 // import {arrayRemove} from "@cp-print/design/utils/arrays";
 import Selecto, {OnDragStart as OnSelectDragStart, OnSelectEnd, OnSelect} from "selecto";
-import Moveable from "moveable";
+import Moveable
+    // , {makeAble}
+    from "moveable";
 import {Container, CpElement, CpHtmlElement, elementType} from "@cp-print/design/types/entity";
+import numberUtil from "@cp-print/design/utils/numberUtil";
 // import {MoveableOptions} from "react-moveable";
 let moveable: Moveable & MoveableOptions
 let selecto: Selecto
@@ -55,7 +58,7 @@ const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"}
 const boundsTop = {"top": 0, "position": "css"} as BoundType;
 const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
 
-const props = {dimensionViewable: true, editable: true}
+const props = {dimensionViewable: true, editable: true, enterLeave: true}
 
 export const targets = ref([]) as Ref<Array<CpHtmlElement>>
 const noSelectList: Array<elementType> = ['PageFooter', 'PageHeader', 'Container']
@@ -170,11 +173,12 @@ export function moveableMove(x: number, y: number) {
     if (!isChangeTargetLoadFinished) {
         return
     }
-    console.log(moveable.getTargets())
+    // console.log(moveable.getTargets())
     // console.log(targets.value)
     moveable.request("draggable", {
         x: x,
-        y: y
+        y: y,
+        // useSnap: true
     }, true);
 }
 
@@ -194,26 +198,32 @@ function updateLocation(e: OnDrag) {
 }
 
 function updateRect(e: OnResize) {
-    const target = (e.target as any)
-    if (e.width < 70) {
-        requestAnimationFrame(() => {
-            document.documentElement.style.setProperty('--direction-width', (e.width / 3.5) + '');
-            // directionStyle.value["--width"] = e.width / 3.5
-        });
+    const target = (e.target as CpHtmlElement)
+    let width = e.width
+    let height = e.height
+    if (elementTypeLineList.includes(target.element.type)) {
+        width = numberUtil.limitMin(width, 30)
+        height = numberUtil.limitMin(height, 30)
     }
-    if (e.height < 70) {
-        requestAnimationFrame(() => {
-            document.documentElement.style.setProperty('--direction-height', (e.height / 3.5) + '');
-
-            // directionStyle.value["--height"] =
-        });
-    }
+    computeDirectionRect('--direction-width', width)
+    computeDirectionRect('--direction-height', height)
 
     target.element.x = px2unit(target.element.runtimeOption.x! + e.drag.translate[0])
     target.element.y = px2unit(target.element.runtimeOption.y! + e.drag.translate[1])
 
     target.element.width = px2unit(e.width)
     target.element.height = px2unit(e.height)
+}
+
+function computeDirectionRect(attr: string, length: number) {
+    requestAnimationFrame(() => {
+        if (length < 70) {
+            document.documentElement.style.setProperty(attr, (length / 3.5) + '');
+        } else {
+            document.documentElement.style.setProperty(attr, "20");
+        }
+    });
+
 }
 
 function updateRotate(e: OnRotate) {
@@ -385,13 +395,32 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
 
     if (targets.value.length > 0) {
         const firstElementTarget = targets.value[0];
-        let customOptions = false
+        defaultMoveable()
+
         if (targets.value.length == 1) {
             setCurrentElement(firstElementTarget.element)
+            let width = unit2px(firstElementTarget.element.width)
+            let height = unit2px(firstElementTarget.element.height)
             if (firstElementTarget.element.option.aspectRatio) {
                 moveable.keepRatio = true
+            }
+            // "n" 可以解释为 "上"，表示向上移动或相对于参考点的较高位置。
+            // "nw" 可以解释为 "左上"，表示向左上方移动或相对于参考点的较左上位置。
+            // "ne" 可以解释为 "右上"，表示向右上方移动或相对于参考点的较右上位置。
+            // "s" 可以解释为 "下"，表示向下移动或相对于参考点的较低位置。
+            // "se" 可以解释为 "右下"，表示向右下方移动或相对于参考点的较右下位置。
+            // "sw" 可以解释为 "左下"，表示向左下方移动或相对于参考点的较左下位置。
+            // "e" 可以解释为 "右"，表示向右移动或相对于参考点的较右位置。
+            // "w" 可以解释为 "左"，表示向左移动或相对于参考点的较左位置。
 
-                customOptions = true
+            if (firstElementTarget.element.type == 'HorizontalLine' || firstElementTarget.element.type == 'DottedHorizontalLine') {
+                moveable.renderDirections = ["w", "e"]
+                height = 30
+            }
+
+            if (firstElementTarget.element.type == 'VerticalLine' || firstElementTarget.element.type == 'DottedVerticalLine') {
+                moveable.renderDirections = ["n", "s"]
+                width = 30
             }
 
             if (firstElementTarget.element.type == 'PageFooter') {
@@ -401,17 +430,17 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
                 moveable.rotatable = false
                 moveable.bounds = boundsTop
 
-                customOptions = true
             } else if (firstElementTarget.element.type == 'Container') {
                 moveable.rotatable = false
-                customOptions = true
             }
+
+            computeDirectionRect('--direction-width', width)
+            computeDirectionRect('--direction-height', height)
+        } else {
+            computeDirectionRect('--direction-width', 70)
+            computeDirectionRect('--direction-height', 70)
         }
 
-        if (!customOptions) {
-            defaultMoveable()
-
-        }
         const parent = firstElementTarget.element.runtimeOption.parent! as CpElement;
         if (parent.type == 'PageFooter' || parent.type == 'Container') {
             moveable.snapContainer = parent.runtimeOption.target
@@ -536,7 +565,7 @@ const onSelectEnd = (e: OnSelectEnd) => {
     }
     const targetList = nextChilds.targets().filter((v: CpHtmlElement) =>
         (!firstElement || (firstElement && v.element.runtimeOption.parent == firstElement.element.runtimeOption.parent)))
-    console.log(targetList)
+    // console.log(targetList)
     e.currentTarget.setSelectedTargets(targetList)
     firstElement = undefined
     // console.log(nextChilds.targets())
@@ -640,3 +669,24 @@ function defaultMoveable() {
     moveable.draggable = true
     moveable.renderDirections = ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
 }
+
+// const MouseEnterLeaveAble = makeAble("enterLeave", {
+//     mouseEnter(moveable) {
+//         if (moveable.moveables) {
+//             moveable.moveables.forEach(child => {
+//                 child.state.target.style.backgroundColor = "#e55";
+//             });
+//         } else {
+//             moveable.state.target.style.backgroundColor = "#e55";
+//         }
+//     },
+//     mouseLeave(moveable) {
+//         if (moveable.moveables) {
+//             moveable.moveables.forEach(child => {
+//                 child.state.target.style.backgroundColor = "";
+//             });
+//         } else {
+//             moveable.state.target.style.backgroundColor = "";
+//         }
+//     }
+// });

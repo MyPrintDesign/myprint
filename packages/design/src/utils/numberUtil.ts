@@ -130,6 +130,10 @@ const MathCalc = {
         const r2 = Number(arg2.toString().replace('.', ''))
         return (r1 / r2) * Math.pow(10, t2 - t1)
     },
+
+    limitMin(val: number, min: number) {
+        return val < min ? min : val
+    }
 }
 export default MathCalc
 

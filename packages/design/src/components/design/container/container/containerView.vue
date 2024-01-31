@@ -13,7 +13,7 @@
     <div class="container-move-icon"
          v-if="element.type == 'Container'"
          @mousedown="mousedown($event)">
-      <i class="icon-design-move iconfont"/>
+      <i class="icon-design-move iconfont "/>
     </div>
     <slot/>
   </cp-drop>
@@ -138,21 +138,28 @@ function dragleave(msg: string) {
 
 .container-edit-icon {
   position: absolute;
+  text-align: center;
+  display: inline-block;
+  line-height: 1;
+  
   right: 0;
   color: white;
   width: 16px;
   height: 16px;
-  background-color: black !important;
   transform: translate(calc(100% + 5px), 0px);
 }
 
 .container-move-icon {
   position: absolute;
+  text-align: center;
+  
+  display: inline-block;
+  line-height: 1;
+  
   right: 0;
   color: white;
   width: 16px;
   height: 16px;
-  background-color: black !important;
   transform: translate(calc(100% + 5px), 18px);
 }
 

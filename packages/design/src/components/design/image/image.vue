@@ -137,7 +137,7 @@ const option = {
   enlarge: 1, //图片根据截图框输出比例倍数
   mode: '600px 600px' //图片默认渲染方式
 }
-console.log(option)
+// console.log(option)
 const data = reactive({
   cropVisible: false,
   dragFlag: false

@@ -229,6 +229,9 @@ export const cursorStyleArray = [
     "nesw-resize",
     "ew-resize"
 ];
+
+export const elementTypeLineList = ['HorizontalLine', 'DottedHorizontalLine', 'VerticalLine', 'DottedVerticalLine']
+
 export const pageUnitList = [
     'px', 'mm', 'cm'
 ]

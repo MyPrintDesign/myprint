@@ -9,7 +9,7 @@ import {
 } from "@cp-print/design/types/entity";
 import {
     canMoveStatusList,
-    defaultDragRectElement,
+    defaultDragRectElement, elementTypeLineList,
     handleConstantsType
 } from "@cp-print/design/constants/common";
 import {to} from "./utils";
@@ -308,7 +308,7 @@ export function initElement(element?: CpElement) {
     }
 
 
-    if (['HorizontalLine', 'DottedHorizontalLine', 'VerticalLine', 'DottedVerticalLine'].includes(element.type)) {
+    if (elementTypeLineList.includes(element.type)) {
         if (!element.option.lineHeight) {
             element.option.lineHeight = 0.9
         }
