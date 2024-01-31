@@ -1,7 +1,7 @@
 <template>
   <rule direction="horizontal"
         :length="panel.width"
-        :highlight="[highlightRule.horizontalLeft, highlightRule.horizontalRight]"/>
+        :highlight="highlightRule.horizontal"/>
   <div class="display-flex" :style="{
             minWidth: valueUnit(scaleUtil.scale(panel.width)),
             width: valueUnit(scaleUtil.scale(panel.width)),
@@ -9,7 +9,7 @@
           }">
     <rule direction="vertical"
           :length="panel.height"
-          :highlight="[highlightRule.verticalLeft, highlightRule.verticalRight]"/>
+          :highlight="highlightRule.vertical"/>
     <!--    <el-watermark :content="panel.watermark?panel.watermarkContent:''">-->
     <cp-drop
         ref="designContentRef"
@@ -72,7 +72,7 @@ import Rule from "../rule.vue";
 // import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {inject, nextTick, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, watch} from "vue";
-import {ContentScaleVo, DragWrapper, CpElement} from "@cp-print/design/types/entity";
+import {ContentScaleVo, DragWrapper, CpElement, Container} from "@cp-print/design/types/entity";
 import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 // import {clearEventBubble} from "@cp-print/design/utils/event";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
@@ -129,10 +129,8 @@ mitt.on("panelSnapshot", panelSnapshot)
 mitt.on('updatePanel', updatePanel)
 
 const highlightRule = reactive({
-  horizontalLeft: null,
-  horizontalRight: null,
-  verticalLeft: null,
-  verticalRight: null,
+  horizontal: {x: undefined, width: 0} as Container,
+  vertical: {x: undefined, width: 0} as Container,
 })
 // 辅助线
 const alignLineDataList = reactive<CpElement[]>([])
@@ -168,7 +166,7 @@ onMounted(() => {
   mountedKeyboardEvent()
   initSelecto()
   updatePanel()
-  initMoveable(selecto.value)
+  initMoveable(selecto.value, highlightRule)
 })
 
 onBeforeUpdate(() => {
@@ -442,11 +440,6 @@ function elementUp() {
   // console.log(history)
   
   alignLineDataList.length = 0
-  highlightRule.horizontalLeft = null
-  highlightRule.horizontalRight = null
-  highlightRule.verticalLeft = null
-  highlightRule.verticalRight = null
-  
 }
 
 function dropPreventDefault(dragData: DragWrapper) {

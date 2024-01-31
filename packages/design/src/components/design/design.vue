@@ -1,5 +1,6 @@
 <template>
-  <div class="cp-element-wrapper design-border snap" :style="style"
+  <div class="cp-element-wrapper design-border snap"
+       :style="style"
        ref="designRef">
     <element-view :element="element"/>
     

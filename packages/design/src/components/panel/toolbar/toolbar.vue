@@ -6,6 +6,7 @@
       
       <div class="display-flex-column toolbar-tool">
         <div class="display-flex">
+          <el-button @click="refresh">r</el-button>
           <el-button size="small">
             <el-icon>
               <Printer/>
@@ -40,6 +41,10 @@ const mitt = inject(mittKey)!
 
 function preview() {
   mitt.emit('previewPanel', {} as any)
+}
+
+function refresh() {
+  window.location.reload()
 }
 
 function save() {

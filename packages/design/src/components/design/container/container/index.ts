@@ -1,3 +1,3 @@
-import CpContainer from './container.vue'
+import CpContainer from './containerView.vue'
 
 export default CpContainer

@@ -1,4 +1,18 @@
-import {IObject} from "@daybrush/utils";
+
+export interface OnChangeTargets {
+    /**
+     * The Moveable instance
+     */
+    moveable: MoveableManagerInterface<any, any>;
+    /**
+     * The Moveable's targets
+     */
+    targets: Array<HTMLElement | SVGElement>;
+}
+
+export interface IObject<T> {
+    [name: string]: T;
+}
 
 /**
  * @typedef

@@ -5,6 +5,9 @@
        :class="{ruleRotate: direction == 'vertical', 'sticky-top': direction != 'vertical',
   'sticky-left': direction == 'vertical',
   }">
+    <div v-if="highlight.x != undefined"
+         class="ruleHighlight"
+         :style="highlightStyle"></div>
     <svg id="canvas" ref="canvas"
          class="rule"
          :style="style"
@@ -13,23 +16,49 @@
 </template>
 
 <script setup lang="ts">
-import {computed, nextTick, ref, watch, watchEffect} from "vue";
+import {computed, CSSProperties, nextTick, ref, watchEffect} from "vue";
 import {unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
 import {getRatio} from "@cp-print/design/utils/utils";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 import Snap from 'snapsvg-cjs'
+import {Container} from "@cp-print/design/types/entity";
+import {Paper} from "snapsvg";
 
 const props = withDefaults(defineProps<{
-  direction?: string,
-  highlight?: Array<any>,
+  direction?: 'vertical' | string,
+  highlight?: Container,
   length?: number
 }>(), {
   direction: 'horizontal',
-  highlight: () => [],
+  highlight: () => {
+    return {x: undefined, width: 1} as Container
+  },
   length: 0
 })
+const highlightStyle = computed(() => {
+  if (props.direction == 'horizontal') {
+    return {
+      position: 'absolute',
+      left: props.highlight.x + 'px',
+      bottom: 0,
+      width: props.highlight.width + 'px',
+      height: '5px',
+      border: '1px solid #8c939d'
+    } as CSSProperties
+  } else {
+    return {
+      position: 'absolute',
+      top: props.highlight.x + 'px',
+      right: 0,
+      width: '5px',
+      height: props.highlight.width + 'px',
+      border: '1px solid #8c939d'
+    } as CSSProperties
+  }
+})
+
 const canvas = ref<SVGElement>()
 
 let height = 20;
@@ -39,31 +68,31 @@ const ruleWidth = ref(0);
 const ruleHeight = ref(0);
 
 // 可以直接侦听一个 ref
-watch(() => props.highlight, (_newQuestion, _oldQuestion) => {
-  drawRuler()
-  // console.log(newQuestion[0])
-  
-  
-  // if (newQuestion[0] == null) {
-  //   highlightLine.attr({
-  //     strokeWidth: 0,
-  //   });
-  // } else {
-  //   highlightLine.attr({
-  //     strokeWidth: 1,
-  //   });
-  // }
-  // if (highlightLine != null) {
-  //   var matrix = new Snap.Matrix()
-  //   if (props.direction == 'horizontal') {
-  //     matrix.translate(newQuestion[0], 0);
-  //   } else {
-  //     matrix.translate(0, newQuestion[0]);
-  //   }
-  //   highlightLine.transform(matrix);
-  // }
-  
-})
+// watch(() => props.highlight, (_newQuestion, _oldQuestion) => {
+//   drawRuler()
+//   // console.log(newQuestion[0])
+//
+//
+//   // if (newQuestion[0] == null) {
+//   //   highlightLine.attr({
+//   //     strokeWidth: 0,
+//   //   });
+//   // } else {
+//   //   highlightLine.attr({
+//   //     strokeWidth: 1,
+//   //   });
+//   // }
+//   // if (highlightLine != null) {
+//   //   var matrix = new Snap.Matrix()
+//   //   if (props.direction == 'horizontal') {
+//   //     matrix.translate(newQuestion[0], 0);
+//   //   } else {
+//   //     matrix.translate(0, newQuestion[0]);
+//   //   }
+//   //   highlightLine.transform(matrix);
+//   // }
+//
+// })
 
 const styleWrapper = computed(() => {
   const styleTmp = {} as any
@@ -112,8 +141,8 @@ watchEffect(() => {
   
 })
 
-const lineList = []
-const textList = []
+const lineList: Array<Snap.Element> = []
+const textList: Array<Snap.Element> = []
 let highlightLine;
 
 const appStore = useAppStoreHook()
@@ -123,7 +152,7 @@ const appStore = useAppStoreHook()
 function drawRuler() {
   // console.log(123)
   // console.log(canvas.value)
-  const svg = Snap(canvas.value as SVGElement);
+  const svg = Snap(canvas.value as SVGElement) as Paper;
   svg.clear()
   
   const space = getRatio()
@@ -211,3 +240,6 @@ function drawRuler() {
 
 
 </script>
+<style>
+
+</style>

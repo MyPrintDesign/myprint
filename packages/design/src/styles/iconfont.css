@@ -11,6 +11,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-design-remove:before {
+  content: "\e630";
+}
+
+.icon-design-move:before {
+  content: "\e62c";
+}
+
+.icon-design-edit:before {
+  content: "\e65e";
+}
+
 .icon-element-list:before {
   content: "\e867";
 }

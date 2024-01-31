@@ -4,7 +4,7 @@ import {Ref, ref} from "vue";
 export const selecto = ref() as Ref<Selecto>;
 
 export function initSelecto() {
-    console.log(selecto.value)
+    // console.log(selecto.value)
     if (!selecto.value) {
         // console.log('销毁selecto')
         // selecto.value.destroy()

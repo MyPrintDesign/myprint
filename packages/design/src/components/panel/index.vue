@@ -83,7 +83,7 @@ watch(() => props.template.id, (n, _o) => {
     // console.log(panel)
     
     provider.value = JSON.parse(data.template.module.provider!)
-    console.log(provider.value.elementList)
+    // console.log(provider.value.elementList)
     if (provider.value.elementList) {
       for (let elementListElement of provider.value.elementList) {
         if (elementListElement.type == 'Table') {

@@ -140,6 +140,7 @@
 .moveable-w {
   border-radius: 0 !important;
   width: 3px !important;
+  transform-origin: 1px 50%;
   height: calc(var(--direction-height) * 1px) !important;
   margin-left: -1px !important;
   margin-top: calc(var(--direction-height) / -2 * 1px) !important;
@@ -155,6 +156,7 @@
   border-radius: 0 !important;
   width: calc(var(--direction-width) * 1px) !important;
   height: 3px !important;
+  transform-origin: 50% 1px;
   margin-left: calc(var(--direction-width) / -2 * 1px) !important;
   margin-top: -1px !important;
   background: transparent !important;
@@ -168,6 +170,7 @@
 .moveable-e {
   border-radius: 0 !important;
   width: 3px !important;
+  transform-origin: 2px 50%;
   height: calc(var(--direction-height) * 1px) !important;
   margin-left: -2px !important;
   margin-top: calc(var(--direction-height) / -2 * 1px) !important;
@@ -179,6 +182,7 @@
 .moveable-s {
   border-radius: 0 !important;
   width: calc(var(--direction-width) * 1px) !important;
+  transform-origin: 50% 2px;
   height: 3px !important;
   margin-left: calc(var(--direction-width) / -2 * 1px) !important;
   margin-top: -2px !important;
@@ -230,7 +234,8 @@
     background: transparent !important;
     border-bottom: none !important;
   }
-  .moveable-line.moveable-guideline.moveable-bounds{
+
+  .moveable-line.moveable-guideline.moveable-bounds {
     background: var(--bounds-color) !important;
   }
 
@@ -263,8 +268,6 @@
 .moveable-guideline {
   //background: var(--bounds-color) !important;
 }
-
-
 
 
 .selectClass {

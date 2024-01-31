@@ -1,5 +1,5 @@
 <template>
-  <div class="design-container">
+  <div class="design-panel-container">
     <Toolbar/>
     <div class="design-panel drag user-select-none">
       
