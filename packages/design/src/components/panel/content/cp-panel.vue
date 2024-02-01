@@ -1,69 +1,72 @@
 <template>
-  <rule direction="horizontal"
-        :length="panel.width"
-        :highlight="highlightRule.horizontal"/>
-  <div class="display-flex" :style="{
+  <div class="design-panel drag user-select-none">
+    <rule direction="horizontal"
+          :length="panel.width"
+          :highlight="highlightRule.horizontal"/>
+    <div class="display-flex" :style="{
             minWidth: valueUnit(scaleUtil.scale(panel.width)),
             width: valueUnit(scaleUtil.scale(panel.width)),
             height: valueUnit(scaleUtil.scale(panel.height)),
           }">
-    <rule direction="vertical"
-          :length="panel.height"
-          :highlight="highlightRule.vertical"/>
-    <!--    <el-watermark :content="panel.watermark?panel.watermarkContent:''">-->
-    <cp-drop
-        ref="designContentRef"
-        class="design-content design-content-bg"
-        :class="{'design-content_over': data.dropOver}"
-        :style="{transformOrigin: 'left top',
+      <rule direction="vertical"
+            :length="panel.height"
+            :highlight="highlightRule.vertical"/>
+      <!--    <el-watermark :content="panel.watermark?panel.watermarkContent:''">-->
+      <cp-drop
+          ref="designContentRef"
+          class="design-content design-content-bg"
+          :class="{'design-content_over': data.dropOver}"
+          :style="{transformOrigin: 'left top',
                           transform: 'scale('+scaleUtil.miniMap.scale+')',
                             minWidth: valueUnit(panel.width),
                             width: valueUnit(panel.width),
                             height: valueUnit(panel.height),
                            }"
-        @drop="drop"
-        @dragover="dragover"
-        @dragleave="dragleave"
-        @preventDefault="dropPreventDefault"
-    >
-      <!--         @mousedown="mousedown($event)"-->
-      <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
-      <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
-      
-      <element-list :elementList="panel.elementList"/>
-      <!--      <span-->
-      <!--          class="ref-line v-line"-->
-      <!--          v-for="(item, index) in vLine"-->
-      <!--          :key="'v_' + index"-->
-      <!--          v-show="item.display"-->
-      <!--          :style="{-->
-      <!--          left: item.position,-->
-      <!--          top: item.origin,-->
-      <!--          height: item.lineLength-->
-      <!--        }"-->
-      <!--      />-->
-      <!--      <span-->
-      <!--          class="ref-line h-line"-->
-      <!--          v-for="(item, index) in hLine"-->
-      <!--          :key="'h_' + index"-->
-      <!--          :style="{-->
-      <!--          top: item.position,-->
-      <!--          left: item.origin,-->
-      <!--          width: item.lineLength-->
-      <!--        }"-->
-      <!--      />-->
-      <!--    选择框    -->
-      <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
-      <!--    拖拽矩形    -->
-      <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
-      <!--          <DragRect :element="defaultDragRectElement"/>-->
-      <!--        </vue-drag>-->
-      <!--    对齐辅助线    -->
-      <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
-    </cp-drop>
-    <!--    </el-watermark>-->
-  
+          @drop="drop"
+          @dragover="dragover"
+          @dragleave="dragleave"
+          @preventDefault="dropPreventDefault"
+      >
+        <!--         @mousedown="mousedown($event)"-->
+        <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
+        <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
+        
+        <element-list :elementList="panel.elementList"/>
+        <!--      <span-->
+        <!--          class="ref-line v-line"-->
+        <!--          v-for="(item, index) in vLine"-->
+        <!--          :key="'v_' + index"-->
+        <!--          v-show="item.display"-->
+        <!--          :style="{-->
+        <!--          left: item.position,-->
+        <!--          top: item.origin,-->
+        <!--          height: item.lineLength-->
+        <!--        }"-->
+        <!--      />-->
+        <!--      <span-->
+        <!--          class="ref-line h-line"-->
+        <!--          v-for="(item, index) in hLine"-->
+        <!--          :key="'h_' + index"-->
+        <!--          :style="{-->
+        <!--          top: item.position,-->
+        <!--          left: item.origin,-->
+        <!--          width: item.lineLength-->
+        <!--        }"-->
+        <!--      />-->
+        <!--    选择框    -->
+        <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
+        <!--    拖拽矩形    -->
+        <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
+        <!--          <DragRect :element="defaultDragRectElement"/>-->
+        <!--        </vue-drag>-->
+        <!--    对齐辅助线    -->
+        <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
+      </cp-drop>
+      <!--    </el-watermark>-->
+    
+    </div>
   </div>
+
 </template>
 
 <script setup lang="ts">
@@ -249,8 +252,13 @@ function drop(dragData: any) {
             }
             panel.pageHeader = element
             element.width = panel.width
+            element.runtimeOption.width = unit2px(panel.width)
+            element.runtimeOption.x = 0
+            element.runtimeOption.y = 0
             element.x = 0
             element.y = 0
+            // element.y = panel.height - element.height
+            // element.runtimeOption.y = unit2px(panel.height - element.height)
             installParentElement(panel, element)
           }
       )

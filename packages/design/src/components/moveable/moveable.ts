@@ -31,18 +31,18 @@ import {deepFlat, throttle} from "@daybrush/utils";
 import {
     forElement,
     getCurrentPanel,
-    // removeElement,
+    removeElement,
     setCurrentElement
 } from "@cp-print/design/utils/elementUtil";
 import {defaultElement, elementTypeLineList} from "@cp-print/design/constants/common";
-// import {arrayRemove} from "@cp-print/design/utils/arrays";
+import {arrayRemove} from "@cp-print/design/utils/arrays";
 import Selecto, {OnDragStart as OnSelectDragStart, OnSelectEnd, OnSelect} from "selecto";
 import Moveable
     // , {makeAble}
     from "moveable";
 import {Container, CpElement, CpHtmlElement, elementType} from "@cp-print/design/types/entity";
 import numberUtil from "@cp-print/design/utils/numberUtil";
-// import {MoveableOptions} from "react-moveable";
+// import {OnBeforeDragStart} from "react-moveable";
 let moveable: Moveable & MoveableOptions
 let selecto: Selecto
 let firstElement: CpHtmlElement | undefined;
@@ -53,9 +53,10 @@ let isChangeTargetLoadFinished = true
 
 export const snapElementList: Ref<Array<ElementGuidelineValueOption | MoveableRefType<CpHtmlElement>>> = ref([".design-content"])
 export const elementList: Array<CpHtmlElement> = reactive([])
-export const selectElementList: Array<CpHtmlElement> = reactive([])
+export const canSelectElementList: Array<CpHtmlElement> = reactive([])
 const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"} as BoundType;
 const boundsTop = {"top": 0, "position": "css"} as BoundType;
+const boundsBottom = {"bottom": 0, "position": "css"} as BoundType;
 const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
 
 const props = {dimensionViewable: true, editable: true, enterLeave: true}
@@ -68,8 +69,9 @@ export const DimensionViewable = {
     props: [],
     events: [],
     render(moveableInner: MoveableManagerInterface, React: Renderer) {
-        // console.log(React)
         const rect = moveableInner.getRect();
+        const {offsetX, offsetY} = offsetContainer()
+
         let value
         switch (tipsStatus.value) {
             case "resize":
@@ -79,7 +81,7 @@ export const DimensionViewable = {
                 value = `${Math.round(rect.rotation)}°`
                 break
             case "drag":
-                value = `(${Math.round(rect.left)}, ${Math.round(rect.top)})`
+                value = `(${Math.round(rect.left - offsetX)}, ${Math.round(rect.top - offsetY)})`
                 break
         }
 
@@ -137,11 +139,18 @@ export const Editable = {
                 className: "cp-ss icon-design-remove iconfont desgin-remove",
                 onClick: () => {
                     // alert("+");
-                    console.log("删除")
-                    // removeElement(moveableInner._dragTarget.element)
-                    // arrayRemove(targets.value, moveableInner._dragTarget)
-                    // for (let valueElement of targets.value) {
-                    // }
+                    // console.log("删除")
+                    // console.log(targets.value, moveableInner._dragTarget)
+                    // console.log(targets.value[0] == moveableInner._dragTarget)
+                    for (let moveableOne of moveableInner.getMoveables()) {
+                        const cpElement = moveableOne.getDragElement() as CpHtmlElement
+                        removeElement(cpElement.element)
+                        arrayRemove(targets.value, cpElement)
+                    }
+
+                    // console.log(targets.value)
+                    targets.value = [...targets.value]
+                    setSelectedTargets(targets.value)
                 }
             })
         ]);
@@ -152,19 +161,19 @@ export function updatePanel() {
     nextTick(() => {
         setTimeout(() => {
             elementList.length = 0
-            selectElementList.length = 0
+            canSelectElementList.length = 0
             forElement(getCurrentPanel(), v => {
                 // console.log(v.runtimeOption.target)
                 elementList.push(v.runtimeOption.target)
                 if (!noSelectList.includes(v.type)) {
-                    selectElementList.push(v.runtimeOption.target)
+                    canSelectElementList.push(v.runtimeOption.target)
                 }
             })
             // console.log(selecto.getSelectableElements() as Array<CpHtmlElement>)
             // console.log(elementList)
             // console.log(snapElementList)
-            selecto.selectableTargets = selectElementList
-            groupManager.set([], selectElementList);
+            selecto.selectableTargets = canSelectElementList
+            groupManager.set([], canSelectElementList);
         }, 100)
     })
 }
@@ -175,26 +184,70 @@ export function moveableMove(x: number, y: number) {
     }
     // console.log(moveable.getTargets())
     // console.log(targets.value)
+    // moveable.dragTarget
     moveable.request("draggable", {
         x: x,
         y: y,
-        // useSnap: true
+        useSnap: true
     }, true);
 }
 
-function updateLocation(e: OnDrag) {
-    // console.log('location,x: ', e.translate[0], ' y: ', e.translate[1])
-    const target = (e.target as CpHtmlElement)
-    // const rect = e.moveable.getRect();
-    // console.log(rect)
-    // target.element.x = px2unit(rect.left)
-    // target.element.y = px2unit(rect.top)
-    // console.log(e.translate[0], target.element.runtimeOption.x!, e.translate[1], target.element.runtimeOption.y!)
-    target.element.x = px2unit(target.element.runtimeOption.x! + e.translate[0])
-    target.element.y = px2unit(target.element.runtimeOption.y! + e.translate[1])
+export function moveableDragTarget(drag: HTMLElement | null, event?) {
+    moveable.dragTarget = drag
+    if (event) {
+        moveable.dragStart(event)
+    }
+}
 
-    // target.element.x = px2unit(e.left + target.element.runtimeOption.x!)
-    // target.element.y = px2unit(e.top+ target.element.runtimeOption.y!)
+// 就是每次截单 和 导入一样 有个记录号 记录号下挂发货单/越库单 只要没有包裹码（已创建） 都可以取消两张单子 并把对应供拣越库记录的发货单号 和 越库单号清空
+// 找到一个新方法 在供拣按单越库 和供拣门店直送 两个菜单的列表页和详情页 增加 手动回滚； 只要这张越库单 和对应的发货单 实发包裹数均为0
+// 就可以手动回滚 手动回滚的定义是 把这张越库单对应的供拣越库记录的发货单号 越库单号 清掉 再把越库单和发货单的状态变成已取消
+export function moveableClearDragTarget() {
+    moveable.dragTarget = null
+}
+
+function updateLocation(e: OnDrag) {
+    requestAnimationFrame(() => {
+        // const {offsetX, offsetY} = offsetContainer()
+        const target = e.target as CpHtmlElement
+        // console.log(e)
+        // console.log(target.element.runtimeOption.x! + e.translate[0], target.element.runtimeOption.y! + e.translate[1])
+        target.element.x = px2unit(target.element.runtimeOption.x! + e.translate[0])
+        target.element.y = px2unit(target.element.runtimeOption.y! + e.translate[1])
+
+        // 特殊处理，兼容 bounds自动贴边时，无法达到边界值0
+        if (Math.abs(target.element.x) < 2 || Math.abs(target.element.y) < 2) {
+            const rect = moveable.getRect();
+            if (rect.left == 0) {
+                target.element.x = 0
+            }
+            if (rect.top == 0) {
+                target.element.y = 0
+            }
+        }
+
+        // const cpElement = moveableOne.getTargets()[0] as CpHtmlElement
+        // console.log(rect)
+        // console.log(rect.left - offsetX, rect.top - offsetY)
+        // // console.log(cpElement.element)
+        // cpElement.element.x = px2unit(rect.left - offsetX)
+        // cpElement.element.y = px2unit(rect.top - offsetY)
+    });
+}
+
+function offsetContainer() {
+    let offsetX = 0, offsetY = 0
+
+    if (targets.value.length > 0) {
+        const targetElement = targets.value[0] as CpHtmlElement
+        const parentElement = targetElement.element.runtimeOption.parent!
+        if (noSelectList.includes(parentElement.type)) {
+            // console.log('容器')
+            offsetX = unit2px(parentElement.x)
+            offsetY = unit2px(parentElement.y)
+        }
+    }
+    return {offsetX, offsetY}
 }
 
 function updateRect(e: OnResize) {
@@ -205,12 +258,19 @@ function updateRect(e: OnResize) {
         width = numberUtil.limitMin(width, 30)
         height = numberUtil.limitMin(height, 30)
     }
+    // console.log(e)
     computeDirectionRect('--direction-width', width)
     computeDirectionRect('--direction-height', height)
 
-    target.element.x = px2unit(target.element.runtimeOption.x! + e.drag.translate[0])
-    target.element.y = px2unit(target.element.runtimeOption.y! + e.drag.translate[1])
+    requestAnimationFrame(() => {
 
+        for (let moveableOne of moveable.getMoveables()) {
+            const rect = moveableOne.getRect()
+            const cpElement = moveableOne.getDragElement() as CpHtmlElement
+            cpElement.element.x = px2unit(rect.left)
+            cpElement.element.y = px2unit(rect.top)
+        }
+    });
     target.element.width = px2unit(e.width)
     target.element.height = px2unit(e.height)
 }
@@ -230,6 +290,7 @@ function updateRotate(e: OnRotate) {
     // console.log('rotate,r: ', e.rotation)
     const target = (e.target as CpHtmlElement)
     // console.log(e.rotation)
+    // updateLocation()
     target.element.option.rotate = e.rotation % 360
 
 }
@@ -237,7 +298,7 @@ function updateRotate(e: OnRotate) {
 const onRender = (e: any) => {
     // console.log(e)
     e.target.style.cssText += e.cssText;
-
+    // console.log(e.cssText)
     updateRuleRect()
 };
 
@@ -259,6 +320,7 @@ function changeTargets(_e: OnChangeTargets) {
 }
 
 const onDragStart = (_e: OnDragStart) => {
+
     tipsStatus.value = 'drag'
 }
 
@@ -269,16 +331,16 @@ function onDragEnd(_e: OnDragEnd) {
     // e.target.style.transform = e.transform;
 }
 
-function onDrag(e: OnDrag) {
-    // console.log('onDrag', e)
-    updateLocation(e)
+function onDrag(_e: OnDrag) {
+    // console.log('onDrag', _e)
+    updateLocation(_e)
     // e.target.style.transform = e.transform;
 }
 
 function onDragGroup(e: OnDragGroup) {
     // console.log('onDragGroup', e)
-    for (let event of e.events) {
-        updateLocation(event)
+    for (let _event of e.events) {
+        updateLocation(e)
     }
     // e.target.style.transform = e.transform;
 }
@@ -357,7 +419,7 @@ function roundGroup(_e: OnRoundGroup) {
 }
 
 function bound(_e: OnBound) {
-    // console.log('bound', e)
+    // console.log('bound', _e)
     // e.target.style.transform = e.transform;
 }
 
@@ -377,10 +439,9 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
     }
 
     isChangeTargetLoadFinished = false
-    moveable.target = nextTargetes
-    selecto.setSelectedTargets(deepFlat(nextTargetes));
-
     targets.value = nextTargetes;
+    moveable.target = targets.value
+    selecto.setSelectedTargets(deepFlat(nextTargetes));
 
     if (nextTargetes.length == 0) {
         highlightRule.horizontal.x = undefined
@@ -430,6 +491,13 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
                 moveable.rotatable = false
                 moveable.bounds = boundsTop
 
+            } else if (firstElementTarget.element.type == 'PageHeader') {
+                // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
+                moveable.renderDirections = ["w"]
+                moveable.draggable = false
+                moveable.rotatable = false
+                moveable.bounds = boundsBottom
+
             } else if (firstElementTarget.element.type == 'Container') {
                 moveable.rotatable = false
             }
@@ -442,7 +510,7 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
         }
 
         const parent = firstElementTarget.element.runtimeOption.parent! as CpElement;
-        if (parent.type == 'PageFooter' || parent.type == 'Container') {
+        if (noSelectList.includes(parent.type)) {
             moveable.snapContainer = parent.runtimeOption.target
         } else {
             moveable.snapContainer = null
@@ -607,18 +675,24 @@ export function initMoveable(_selecto, _highlightRule) {
         draggable: true,
         resizable: true,
         scalable: true,
+
+        // className: 'cp-design',
         rotatable: true,
         snappable: true,
-        throttleDrag: 1,
+        // throttleDrag: 1,
         // individualGroupable: true,
         // individualGroupableProps(element, index) {
         //     console.log(element, index)
         //     return {aa:123}
         // },
-        snapGap: true,
+        // snapGap: true,
         snapRotationDegrees: [0, 45, 90, 135, 180, 225, 270, 315],
+        // , center: true, middle: true
         snapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
         elementSnapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
+
+        // snapDirections: ({bottom: true}),
+        // elementSnapDirections: ({bottom: true}),
         elementGuidelines: snapElementList.value,
         ables: [DimensionViewable, Editable],
         props: (props),
@@ -636,6 +710,7 @@ export function initMoveable(_selecto, _highlightRule) {
         // throttleScale: 0,
         // throttleRotate: 0,
     });
+    // moveable.dragTarget
 
     selecto.on("dragStart", onSelectDragStart);
     selecto.on("select", onSelect);
@@ -666,6 +741,7 @@ export function initMoveable(_selecto, _highlightRule) {
 function defaultMoveable() {
     moveable.bounds = bounds
     moveable.rotatable = true
+    moveable.keepRatio = false
     moveable.draggable = true
     moveable.renderDirections = ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
 }

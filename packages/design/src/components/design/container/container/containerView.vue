@@ -11,6 +11,7 @@
       <i class="icon-design-edit iconfont"/>
     </div>
     <div class="container-move-icon"
+         ref="containerMoveIconRef"
          v-if="element.type == 'Container'"
          @mousedown="mousedown($event)">
       <i class="icon-design-move iconfont "/>
@@ -25,21 +26,28 @@ import {onMounted, reactive} from "vue";
 import CpDrop from "@cp-print/design/components/cp/drop";
 import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {addElement} from "@cp-print/design/utils/elementUtil";
-import {moveableMove, setSelectedTargets} from "@cp-print/design/components/moveable/moveable";
+import {
+  moveableClearDragTarget,
+  moveableDragTarget,
+  moveableMove,
+  setSelectedTargets
+} from "@cp-print/design/components/moveable/moveable";
 import {clearEventBubble} from "@cp-print/design/utils/event";
+import {ref} from "vue-demi";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
 }>(), {
   element: () => ({} as CpElement)
 })
-
+const containerMoveIconRef = ref()
 // const mitt = inject(mittKey)
 const data = reactive({
   dropOver: false
 })
 
 onMounted(() => {
+
 })
 
 function test() {
@@ -48,47 +56,53 @@ function test() {
 
 function mousedown(event: MouseEvent) {
   console.log(event)
-  let initX = unit2px(props.element.x!), initY = unit2px(props.element.y!);
-  let lastX, lastY;
+  // let initX = unit2px(props.element.x!), initY = unit2px(props.element.y!);
+  // let lastX, lastY;
   let isHandle = true
+  
   if (props.element.status != 'HANDLE') {
     isHandle = false
     setSelectedTargets([props.element.runtimeOption.target])
   }
+  moveableDragTarget(containerMoveIconRef.value, event)
   
-  lastX = event.clientX;
-  lastY = event.clientY;
+  // lastX = event.clientX;
+  // lastY = event.clientY;
+  setTimeout(()=>{
+  
+  }, 1)
   
   // let offsetX = 0, offsetY = 0;
-  function mousemove(ev: MouseEvent) {
-    // 鼠标移动时计算每次移动的距离，并改变拖拽元素的定位
-    // console.log(ev)
-    const currentX = ev.clientX;
-    const currentY = ev.clientY;
-    let offsetX = currentX - lastX;
-    let offsetY = currentY - lastY;
-    // lastX = currentX;
-    // lastY = currentY;
-    
-    moveableMove(offsetX + initX, offsetY + initY)
-    clearEventBubble(ev)
-    // 阻止事件的默认行为，可以解决选中文本的时候拖不动
-    return false;
-  }
+  // function mousemove(ev: MouseEvent) {
+  //   // 鼠标移动时计算每次移动的距离，并改变拖拽元素的定位
+  //   // console.log(ev)
+  //   const currentX = ev.clientX;
+  //   const currentY = ev.clientY;
+  //   let offsetX = currentX - lastX;
+  //   let offsetY = currentY - lastY;
+  //   // lastX = currentX;
+  //   // lastY = currentY;
+  //
+  //   moveableMove(offsetX + initX, offsetY + initY)
+  //   clearEventBubble(ev)
+  //   // 阻止事件的默认行为，可以解决选中文本的时候拖不动
+  //   return false;
+  // }
   
-  function mouseup(ev: MouseEvent) {
+  function mouseup(_ev: MouseEvent) {
     if (!isHandle) {
       props.element.status = 'NONE'
       setSelectedTargets([])
     }
-    document.removeEventListener('mousemove', mousemove);
+    moveableClearDragTarget()
+    // document.removeEventListener('mousemove', mousemove);
     document.removeEventListener('mouseup', mouseup);
-    ev.stopPropagation()
+    // ev.stopPropagation()
   }
   
-  document.addEventListener('mousemove', mousemove)
+  // document.addEventListener('mousemove', mousemove)
   document.addEventListener('mouseup', mouseup);
-  clearEventBubble(event)
+  // clearEventBubble(event)
 }
 
 function drop(dragData: DragWrapper) {

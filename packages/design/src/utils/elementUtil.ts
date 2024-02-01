@@ -474,7 +474,7 @@ export function handleElementType(element: Container) {
             return handlers;
         },
         end(callback: () => void) {
-            console.log(handleList)
+            // console.log(handleList)
             if (!handleList.includes(element.type)) {
                 callback();
             }
