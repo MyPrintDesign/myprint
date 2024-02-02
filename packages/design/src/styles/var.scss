@@ -19,5 +19,7 @@
   --140px: 140px;
   --240px: 240px;
   --header-height: 50px;
+  --header-heigh1t: calc(100% - var(--header-height));
+  --panel-width: calc(100% - 20px);
 
 }

@@ -126,6 +126,7 @@ export const Editable = {
             top: 0px;
             will-change: transform;
             transform-origin: 0px 0px;
+            z-index: 10000;
         }
             `);
         return React.createElement(EditableViewer, {

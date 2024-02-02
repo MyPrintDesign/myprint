@@ -60,6 +60,10 @@
   height: 100%;
 }
 
+.el-scrollbar {
+  overflow: visible !important;
+}
+
 .width-20 {
   width: var(--20px) !important;
 }

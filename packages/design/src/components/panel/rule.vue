@@ -1,10 +1,12 @@
 <template>
   <!-- 刻度尺容 -->
   <div class="verticalRule"
-       :style="styleWrapper"
-       :class="{ruleRotate: direction == 'vertical', 'sticky-top': direction != 'vertical',
-  'sticky-left': direction == 'vertical',
-  }">
+       ref="ruleRef"
+       :style="styleWrapper">
+    <!--
+     :class="{ruleRotate: direction == 'vertical', 'sticky-top': direction != 'vertical',
+      'sticky-left': direction == 'vertical',
+      }"-->
     <div v-if="highlight.x != undefined"
          class="ruleHighlight"
          :style="highlightStyle"></div>
@@ -16,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import {computed, CSSProperties, nextTick, ref, watchEffect} from "vue";
+import {computed, CSSProperties, nextTick, onMounted, ref, watch, watchEffect} from "vue";
 import {unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
@@ -30,12 +32,14 @@ const props = withDefaults(defineProps<{
   direction?: 'vertical' | string,
   highlight?: Container,
   length?: number
+  scroll?: number,
 }>(), {
   direction: 'horizontal',
   highlight: () => {
     return {x: undefined, width: 1} as Container
   },
-  length: 0
+  length: 0,
+  scroll: 0
 })
 const highlightStyle = computed(() => {
   if (props.direction == 'horizontal') {
@@ -60,6 +64,7 @@ const highlightStyle = computed(() => {
 })
 
 const canvas = ref<SVGElement>()
+const ruleRef = ref<HTMLDivElement>()
 
 let height = 20;
 const length = ref(0);
@@ -94,16 +99,23 @@ const ruleHeight = ref(0);
 //
 // })
 
+watch(() => props.scroll, (_newQuestion, _oldQuestion) => {
+  if (props.direction == 'horizontal') {
+    ruleRef.value!.scrollTo(props.scroll, 0)
+  } else {
+    ruleRef.value!.scrollTo(0, props.scroll)
+  }
+  
+})
+
 const styleWrapper = computed(() => {
   const styleTmp = {} as any
   if (props.direction == 'horizontal') {
-    styleTmp['width'] = valueUnit(scaleUtil.scale(props.length))
     styleTmp['height'] = scaleUtil.scale(height) + 'px'
     styleTmp['margin-left'] = scaleUtil.scale(height) + 'px'
   } else {
     styleTmp['width'] = scaleUtil.scale(height) + 'px'
     styleTmp['minWidth'] = scaleUtil.scale(height) + 'px'
-    styleTmp['height'] = valueUnit(scaleUtil.scale(props.length))
   }
   return styleTmp
 })
@@ -228,7 +240,8 @@ function drawRuler() {
   });
 }
 
-// onMounted(() => {
+onMounted(() => {
+
 //   // console.log(canvas)
 //   console.log(window.devicePixelRatio)
 //   if (window.devicePixelRatio) {
@@ -236,7 +249,7 @@ function drawRuler() {
 //     // canvas.value.style.transformOrigin = "left top";
 //   }
 //   drawRuler();
-// })
+})
 
 
 </script>

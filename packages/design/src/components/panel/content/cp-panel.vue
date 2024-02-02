@@ -1,67 +1,76 @@
 <template>
   <div class="design-panel drag user-select-none">
-    <rule direction="horizontal"
+    <rule :direction="highlightRule.horizontal.direction"
           :length="panel.width"
-          :highlight="highlightRule.horizontal"/>
-    <div class="display-flex" :style="{
+          :highlight="highlightRule.horizontal.highlight"
+          :scroll="highlightRule.horizontal.scroll"/>
+    <div class="display-flex" style="height: calc(100% - 20px)">
+      <rule :direction="highlightRule.vertical.direction"
+            :length="panel.height"
+            :highlight="highlightRule.vertical.highlight"
+            :scroll="highlightRule.vertical.scroll"/>
+      <!--    <el-watermark :content="panel.w :style="{
             minWidth: valueUnit(scaleUtil.scale(panel.width)),
             width: valueUnit(scaleUtil.scale(panel.width)),
             height: valueUnit(scaleUtil.scale(panel.height)),
-          }">
-      <rule direction="vertical"
-            :length="panel.height"
-            :highlight="highlightRule.vertical"/>
-      <!--    <el-watermark :content="panel.watermark?panel.watermarkContent:''">-->
-      <cp-drop
-          ref="designContentRef"
-          class="design-content design-content-bg"
-          :class="{'design-content_over': data.dropOver}"
-          :style="{transformOrigin: 'left top',
+          }"watermark?panel.watermarkContent:''">-->
+      
+      <el-scrollbar
+          ref="scrollbarRef"
+          style="padding-bottom: 20px; height: calc(100% - 20px); padding-right: 10px; width: calc(100% - 30px);"
+          always class="affix-container design-panel-container-width " @scroll="scroll">
+        <cp-drop
+            ref="designContentRef"
+            class="design-content design-content-bg"
+            :class="{'design-content_over': data.dropOver}"
+            :style="{transformOrigin: 'left top',
                           transform: 'scale('+scaleUtil.miniMap.scale+')',
                             minWidth: valueUnit(panel.width),
                             width: valueUnit(panel.width),
                             height: valueUnit(panel.height),
                            }"
-          @drop="drop"
-          @dragover="dragover"
-          @dragleave="dragleave"
-          @preventDefault="dropPreventDefault"
-      >
-        <!--         @mousedown="mousedown($event)"-->
-        <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
-        <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
-        
-        <element-list :elementList="panel.elementList"/>
-        <!--      <span-->
-        <!--          class="ref-line v-line"-->
-        <!--          v-for="(item, index) in vLine"-->
-        <!--          :key="'v_' + index"-->
-        <!--          v-show="item.display"-->
-        <!--          :style="{-->
-        <!--          left: item.position,-->
-        <!--          top: item.origin,-->
-        <!--          height: item.lineLength-->
-        <!--        }"-->
-        <!--      />-->
-        <!--      <span-->
-        <!--          class="ref-line h-line"-->
-        <!--          v-for="(item, index) in hLine"-->
-        <!--          :key="'h_' + index"-->
-        <!--          :style="{-->
-        <!--          top: item.position,-->
-        <!--          left: item.origin,-->
-        <!--          width: item.lineLength-->
-        <!--        }"-->
-        <!--      />-->
-        <!--    选择框    -->
-        <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
-        <!--    拖拽矩形    -->
-        <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
-        <!--          <DragRect :element="defaultDragRectElement"/>-->
-        <!--        </vue-drag>-->
-        <!--    对齐辅助线    -->
-        <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
-      </cp-drop>
+            @drop="drop"
+            @dragover="dragover"
+            @dragleave="dragleave"
+            @preventDefault="dropPreventDefault"
+        >
+          <!--         @mousedown="mousedown($event)"-->
+          <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
+          <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
+          
+          <element-list :elementList="panel.elementList"/>
+          <!--      <span-->
+          <!--          class="ref-line v-line"-->
+          <!--          v-for="(item, index) in vLine"-->
+          <!--          :key="'v_' + index"-->
+          <!--          v-show="item.display"-->
+          <!--          :style="{-->
+          <!--          left: item.position,-->
+          <!--          top: item.origin,-->
+          <!--          height: item.lineLength-->
+          <!--        }"-->
+          <!--      />-->
+          <!--      <span-->
+          <!--          class="ref-line h-line"-->
+          <!--          v-for="(item, index) in hLine"-->
+          <!--          :key="'h_' + index"-->
+          <!--          :style="{-->
+          <!--          top: item.position,-->
+          <!--          left: item.origin,-->
+          <!--          width: item.lineLength-->
+          <!--        }"-->
+          <!--      />-->
+          <!--    选择框    -->
+          <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
+          <!--    拖拽矩形    -->
+          <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
+          <!--          <DragRect :element="defaultDragRectElement"/>-->
+          <!--        </vue-drag>-->
+          <!--    对齐辅助线    -->
+          <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
+        </cp-drop>
+      
+      </el-scrollbar>
       <!--    </el-watermark>-->
     
     </div>
@@ -74,7 +83,7 @@
 import Rule from "../rule.vue";
 // import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
-import {inject, nextTick, onBeforeUpdate, onMounted, onUnmounted, reactive, ref, watch} from "vue";
+import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {ContentScaleVo, DragWrapper, CpElement, Container} from "@cp-print/design/types/entity";
 import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 // import {clearEventBubble} from "@cp-print/design/utils/event";
@@ -104,7 +113,7 @@ import {
   initMoveable
 } from "@cp-print/design/components/moveable/moveable";
 import Design from "@cp-print/design/components/design/design.vue";
-import {onUpdated} from "vue-demi";
+// import {onUpdated} from "vue-demi";
 import {initSelecto, selecto} from "@cp-print/design/components/moveable/selecto";
 
 const panel = inject(panelKey)!
@@ -131,9 +140,30 @@ mitt.on("scaleEvent", scaleEvent)
 mitt.on("panelSnapshot", panelSnapshot)
 mitt.on('updatePanel', updatePanel)
 
+
+/**
+ * 滑动事件
+ * @param data
+ */
+function scroll(data: any) {
+  // console.log(_data)
+  highlightRule.vertical.scroll = data.scrollTop
+  highlightRule.horizontal.scroll = data.scrollLeft
+  // contentScaleRef.value.scaleLoopMove({x: data.scrollLeft, y: data.scrollTop})
+}
+
 const highlightRule = reactive({
-  horizontal: {x: undefined, width: 0} as Container,
-  vertical: {x: undefined, width: 0} as Container,
+  horizontal: {
+    length: 'horizontal',
+    direction: 'horizontal',
+    highlight: {x: undefined, width: 0} as Container,
+    scroll: 0,
+  },
+  vertical: {
+    direction: 'vertical',
+    highlight: {x: undefined, width: 0} as Container,
+    scroll: 0,
+  },
 })
 // 辅助线
 const alignLineDataList = reactive<CpElement[]>([])
@@ -172,12 +202,12 @@ onMounted(() => {
   initMoveable(selecto.value, highlightRule)
 })
 
-onBeforeUpdate(() => {
-  console.log('onBeforeUpdate')
-})
-onUpdated(() => {
-  console.log('onUpdated')
-})
+// onBeforeUpdate(() => {
+//   console.log('onBeforeUpdate')
+// })
+// onUpdated(() => {
+//   console.log('onUpdated')
+// })
 
 onUnmounted(() => {
   unMountedKeyboardEvent()

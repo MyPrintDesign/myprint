@@ -1,28 +1,24 @@
 <template>
   <div class="design-panel-container">
     <Toolbar/>
-    <div class="design-panel drag user-select-none">
-      
-      <div class="display-flex width-100-p">
+    <div class="display-flex design-panel-container-height">
+      <cp-panel/>
+      <div style="background: white;" class="display-flex-column width-20">
+        <div v-for="(value, key) in handlePanelElementList"
+             @click="clickHandlePanelIcon(key)"
+             :class="['cp-icon handle-panel-icon iconfont',{'handle-panel-icon-active': configStore.settingPanel[key].visible}, value.icon]"
+             :key="key"/>
         
-        <el-scrollbar
-            ref="scrollbarRef"
-            always class="affix-container width-100-p" @scroll="scroll">
-          <cp-panel/>
-        </el-scrollbar>
-        
-        <div style="background: white;" class="display-flex-column width-20">
-          <div v-for="(value, key) in handlePanelElementList"
-               @click="clickHandlePanelIcon(key)"
-               :class="['cp-icon handle-panel-icon iconfont',{'handle-panel-icon-active': configStore.settingPanel[key].visible}, value.icon]"
-               :key="key"/>
-          
-          <history-panel/>
-          <operation-panel/>
-          <setting-panel/>
-        </div>
+        <history-panel/>
+        <operation-panel/>
+        <setting-panel/>
       </div>
     </div>
+    <!--      <div class="display-flex width-100-p">-->
+    <!--        -->
+    <!--        -->
+    
+    <!--      </div>-->
   </div>
   <preview-panel/>
 </template>
@@ -31,7 +27,8 @@
 // import { ElScrollbar } from 'element-plus'
 import {
   // inject,
-  onMounted, ref} from "vue";
+  onMounted, ref
+} from "vue";
 
 import Toolbar from '../toolbar/toolbar.vue'
 import PreviewPanel from "../../preview/previewPanel.vue";
@@ -55,14 +52,6 @@ const scrollbarRef = ref<HTMLElement>()!
 // mitt.on("preview", preview)
 // mitt.on('scaleMove', scaleMove)
 
-/**
- * 滑动事件
- * @param data
- */
-function scroll(_data:any) {
-  // console.log(data)
-  // contentScaleRef.value.scaleLoopMove({x: data.scrollLeft, y: data.scrollTop})
-}
 
 /**
  * minimap 的 移动事件
@@ -87,21 +76,21 @@ onMounted(() => {
 })
 
 // const scrollResize = _.debounce((_ele) => {
-  // console.log(ele.offsetWidth, ele.offsetHeight)
-  // contentScale.scrollWidth = ele.offsetWidth
-  // contentScale.scrollHeight = ele.offsetHeight
+// console.log(ele.offsetWidth, ele.offsetHeight)
+// contentScale.scrollWidth = ele.offsetWidth
+// contentScale.scrollHeight = ele.offsetHeight
 // }, 100)
 
 // function generalTemplateData() {
-  // props.panel!.elementList = elementList.value
-  // config.value.unit = 'px'
-  // props.panel.elementList = elementList.value
-  // console.log(toRaw(unref(props.panel)))
+// props.panel!.elementList = elementList.value
+// config.value.unit = 'px'
+// props.panel.elementList = elementList.value
+// console.log(toRaw(unref(props.panel)))
 // }
 
 // function preview() {
-  // mitt.emit('previewPanel', props.panel)
-  // console.log({width: mm2px(props.panel.width), height: mm2px(props.panel.height)})
+// mitt.emit('previewPanel', props.panel)
+// console.log({width: mm2px(props.panel.width), height: mm2px(props.panel.height)})
 // }
 
 
