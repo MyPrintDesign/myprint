@@ -230,7 +230,8 @@ export const cursorStyleArray = [
     "ew-resize"
 ];
 
-export const elementTypeLineList = ['HorizontalLine', 'DottedHorizontalLine', 'VerticalLine', 'DottedVerticalLine']
+export const elementTypeLineList: Array<elementType> = ['HorizontalLine', 'DottedHorizontalLine', 'VerticalLine', 'DottedVerticalLine']
+export const elementTypeContainerList: Array<elementType> = ['PageHeader', 'PageFooter', 'Container']
 
 export const pageUnitList = [
     'px', 'mm', 'cm'

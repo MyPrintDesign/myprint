@@ -84,7 +84,7 @@ import {ElScrollbar} from 'element-plus'
 import Rule from "../rule.vue";
 // import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
-import {inject, nextTick, onMounted, onUnmounted, reactive, Ref, ref, watch} from "vue";
+import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {ContentScaleVo, DragWrapper, CpElement, Container} from "@cp-print/design/types/entity";
 import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 // import {clearEventBubble} from "@cp-print/design/utils/event";
@@ -173,7 +173,7 @@ const highlightRule = reactive({
 // 辅助线
 const alignLineDataList = reactive<CpElement[]>([])
 const designContentRef = ref<InstanceType<any>>()
-const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
+// const elScrollbar = ref<InstanceType<typeof ElScrollbar>>()
 
 // console.log($t('menus.home'))
 // const selectRectElement = reactive(<Element>{
@@ -210,20 +210,12 @@ onMounted(() => {
   mountedKeyboardEvent()
   initSelecto()
   updatePanel()
-  initMoveable(selecto.value, highlightRule, {
-    onTriggerScroll: onTriggerScroll
-  })
+  initMoveable(selecto.value, highlightRule
+      //     , {
+      //   onTriggerScroll: onTriggerScroll
+      // }
+  )
 })
-
-function onTriggerScroll(direction) {
-  console.log(direction)
-  if (direction[1] == 1) {
-    scrollbarRef.value!.setScrollTop(data.scroll.top + 3)
-  }
-  if (direction[1] == -1) {
-    scrollbarRef.value!.setScrollTop(data.scroll.top - 3)
-  }
-}
 
 // onBeforeUpdate(() => {
 //   console.log('onBeforeUpdate')

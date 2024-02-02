@@ -1,5 +1,5 @@
 <template>
-  <div class="cp-element-wrapper design-border snap"
+  <div class="cp-element-wrapper design-wrapper design-inactive"
        :style="style"
        ref="designRef">
     <element-view :element="element"/>
@@ -13,6 +13,7 @@
     <cp-container v-else-if="element.type === 'Container'" :element="element">
       <element-list :element-list="element.elementList"/>
     </cp-container>
+    
   </div>
 
 </template>

@@ -235,6 +235,11 @@
     border-bottom: none !important;
   }
 
+  .moveable-line.moveable-direction {
+    background: transparent !important;
+    border-bottom: none !important;
+  }
+
   .moveable-line.moveable-guideline.moveable-bounds {
     background: var(--bounds-color) !important;
   }

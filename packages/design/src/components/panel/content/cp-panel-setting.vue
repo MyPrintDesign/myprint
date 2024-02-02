@@ -46,6 +46,7 @@
     <el-form-item label="尺寸(宽/高)">
       <group-input>
         <cp-history-input-number class="width-60" v-model="panel.width"
+                                 @change="changePanelWidth"
                                  historyLabel="纸张宽"/>
         <cp-history-input-number class="width-60" v-model="panel.height"
                                  historyLabel="纸张高"/>
@@ -90,7 +91,7 @@ import {changePageSize, changePageUnit} from "@cp-print/design/utils/elementUtil
 
 const panel = inject(panelKey)!
 
-function selectPageSize(val:any) {
+function selectPageSize(val: any) {
   // console.log(123)
   for (let valueElement of pageSizeList) {
     if (valueElement.value == val) {
@@ -98,6 +99,11 @@ function selectPageSize(val:any) {
       break
     }
   }
+}
+
+function changePanelWidth(_val: number) {
+  changePageSize()
+  // console.log(val)
 }
 
 function selectPageUnit() {

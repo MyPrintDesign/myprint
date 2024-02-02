@@ -6,7 +6,8 @@
           'cp-print-container_over': data.dropOver
         }"
       @dragover="dragover"
-      @dragleave="dragleave">
+      @dragleave="dragleave"
+      @preventDefault="dropPreventDefault">
     <div class="container-edit-icon" @click="test">
       <i class="icon-design-edit iconfont"/>
     </div>
@@ -34,6 +35,7 @@ import {
 } from "@cp-print/design/components/moveable/moveable";
 import {clearEventBubble} from "@cp-print/design/utils/event";
 import {ref} from "vue-demi";
+import {elementTypeContainerList} from "@cp-print/design/constants/common";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -68,7 +70,7 @@ function mousedown(event: MouseEvent) {
   
   // lastX = event.clientX;
   // lastY = event.clientY;
-  setTimeout(()=>{
+  setTimeout(() => {
   
   }, 1)
   
@@ -129,14 +131,13 @@ function dragleave(msg: string) {
   data.dropOver = false
 }
 
-
-// function dropPreventDefault(dragData: DragWrapper) {
-//   const element = dragData.element
-//   if (['PageHeader', 'PageFooter'].includes(element.type)) {
-//     return false
-//   }
-//   return true
-// }
+function dropPreventDefault(dragData: DragWrapper) {
+  const element = dragData.element
+  if (elementTypeContainerList.includes(element.type)) {
+    return false
+  }
+  return true
+}
 
 // watch(() => element.height, (n, o) => {
 //   console.log(element.height)

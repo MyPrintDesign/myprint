@@ -1,15 +1,21 @@
-.design-border {
-  box-sizing: border-box;
-  border: dashed 1px var(--dnb-highlight-color);
-}
-
 .ruleHighlight {
   background: var(--drag-h-color);
   opacity: 0.2;
 }
 
+.cp-element-wrapper {
+  will-change: transform;
+  position: absolute;
+  box-sizing: border-box;
+}
+
 .design-activate {
   z-index: 1;
+  border: dashed 1px var(--drag-h-color);
+}
+
+.design-inactive {
+  border: dashed 1px var(--dnb-highlight-color);
 }
 
 .desgin-remove {

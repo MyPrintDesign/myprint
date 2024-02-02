@@ -42,7 +42,6 @@ import Moveable
     from "moveable";
 import {Container, CpElement, CpHtmlElement, elementType} from "@cp-print/design/types/entity";
 import numberUtil from "@cp-print/design/utils/numberUtil";
-import {ElScrollbar} from "element-plus";
 // import {OnBeforeDragStart} from "react-moveable";
 let moveable: Moveable & MoveableOptions
 let selecto: Selecto
@@ -299,7 +298,7 @@ function updateRotate(e: OnRotate) {
 }
 
 const onRender = (e: any) => {
-    console.log(e.cssText)
+    // console.log(e.cssText)
     // console.log(e)
     e.target.style.cssText += e.cssText;
     // console.log(e.cssText)
@@ -428,10 +427,15 @@ function bound(_e: OnBound) {
 }
 
 function onScroll({scrollContainer, direction}) {
-    let elemtnt = scrollContainer as HTMLElement
+    let elemtnt = scrollContainer.childNodes[0] as HTMLElement
     // console.log(elemtnt.childNodes[0])
-    elemtnt.childNodes[0].scrollBy(direction[0] * 10, direction[1] * 10);
+    elemtnt.scrollBy(direction[0] * 10, direction[1] * 10);
     // console.log(direction[1] * 10)
+    // moveable.request("draggable", {
+    //     x: direction[0] * 10,
+    //     y: direction[1] * 10,
+    //
+    // }, true);
 
     // console.log(scrollContainer, direction)
     // if(direction[1] == 1){
@@ -621,13 +625,13 @@ const onSelectEnd = (e: OnSelectEnd) => {
     // console.log(e)
     for (let snapElement of removed) {
         const element = snapElement as CpHtmlElement;
-        // snapElement.classList.add('snap')
+        snapElement.classList.add('design-inactive')
         snapElement.classList.remove('design-activate')
         element.element.status = 'NONE'
     }
     for (let snapElement of added) {
         const element = snapElement as CpHtmlElement;
-        // snapElement.classList.remove('snap')
+        snapElement.classList.remove('design-inactive')
         snapElement.classList.add('design-activate')
         element.element.status = 'HANDLE'
     }
@@ -677,15 +681,15 @@ function updateRuleRect() {
     }, 0)
 }
 
-let options
+// let options
 
-export function initMoveable(_selecto, _highlightRule, _options) {
+export function initMoveable(_selecto, _highlightRule) {
     // console.log(selecto)
     document.documentElement.style.setProperty('--direction-width', '20');
     document.documentElement.style.setProperty('--direction-height', '20');
     selecto = _selecto
     highlightRule = _highlightRule
-    options = _options
+    // options = _options
     // elScrollbar = _elScrollbar
 
 
@@ -693,56 +697,56 @@ export function initMoveable(_selecto, _highlightRule, _options) {
         document.querySelector(".design-content") as HTMLElement
         // document.querySelector("#app > section > main > div > div.display-flex.design-panel-container-height > div.design-panel.drag.user-select-none > div.display-flex > div.el-scrollbar.affix-container.design-panel-container-width > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default") as HTMLElement
         , {
-        // If the container is null, the position is fixed. (default: parentElement(document.body))
-        // container: document.querySelector(".design-content") as HTMLElement,
-        target: targets.value,
-        bounds: bounds,
-        draggable: true,
-        resizable: true,
-        scalable: true,
+            // If the container is null, the position is fixed. (default: parentElement(document.body))
+            // container: document.querySelector(".design-content") as HTMLElement,
+            target: targets.value,
+            bounds: bounds,
+            draggable: true,
+            resizable: true,
+            scalable: true,
 
-        // className: 'cp-design',
-        rotatable: true,
-        snappable: true,
-        // throttleDrag: 1,
-        // individualGroupable: true,
-        // individualGroupableProps(element, index) {
-        //     console.log(element, index)
-        //     return {aa:123}
-        // },
-        // snapGap: true,
-        snapRotationDegrees: [0, 45, 90, 135, 180, 225, 270, 315],
-        // , center: true, middle: true
-        snapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
-        elementSnapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
+            // className: 'cp-design',
+            rotatable: true,
+            snappable: true,
+            // throttleDrag: 1,
+            // individualGroupable: true,
+            // individualGroupableProps(element, index) {
+            //     console.log(element, index)
+            //     return {aa:123}
+            // },
+            // snapGap: true,
+            snapRotationDegrees: [0, 45, 90, 135, 180, 225, 270, 315],
+            // , center: true, middle: true
+            snapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
+            elementSnapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
 
-        // snapDirections: ({bottom: true}),
-        // elementSnapDirections: ({bottom: true}),
-        elementGuidelines: snapElementList.value,
-        ables: [DimensionViewable, Editable],
-        props: (props),
-        // warpable: false,
-        // Enabling pinchable lets you use events that
-        // can be used in draggable, resizable, scalable, and rotateable.
-        // pinchable: true, // ["resizable", "scalable", "rotatable"]
-        // origin: true,
-        // individualGroupable: false,
-        keepRatio: false,
-        // Resize, Scale Events at edges.
-        edge: false,
+            // snapDirections: ({bottom: true}),
+            // elementSnapDirections: ({bottom: true}),
+            elementGuidelines: snapElementList.value,
+            ables: [DimensionViewable, Editable],
+            props: (props),
+            // warpable: false,
+            // Enabling pinchable lets you use events that
+            // can be used in draggable, resizable, scalable, and rotateable.
+            // pinchable: true, // ["resizable", "scalable", "rotatable"]
+            // origin: true,
+            // individualGroupable: false,
+            keepRatio: false,
+            // Resize, Scale Events at edges.
+            edge: false,
 
-        scrollable: false,
-        scrollOptions: ({
-            container: '.design-panel-container-width',
-            threshold: 30,
-            checkScrollEvent: true,
-            throttleTime: 0
-        })
-        // throttleDrag: 0,
-        // throttleResize: 0,
-        // throttleScale: 0,
-        // throttleRotate: 0,
-    });
+            scrollable: true,
+            scrollOptions: ({
+                container: '.design-panel-container-width',
+                threshold: 30,
+                checkScrollEvent: true,
+                throttleTime: 0
+            })
+            // throttleDrag: 0,
+            // throttleResize: 0,
+            // throttleScale: 0,
+            // throttleRotate: 0,
+        });
     // moveable.dragTarget
 
     selecto.on("dragStart", onSelectDragStart);

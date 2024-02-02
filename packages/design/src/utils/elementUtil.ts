@@ -757,17 +757,21 @@ export function selectedElementBatchOperation(callback: (element: CpElement) => 
 
 }
 
-export function changePageSize(val: any) {
+export function changePageSize(val?: any) {
     const panel = getCurrentPanel()
-    panel.width = unit2unit('mm', panel.pageUnit, val.width)
-    panel.height = unit2unit('mm', panel.pageUnit, val.height)
+    if (val) {
+        panel.width = unit2unit('mm', panel.pageUnit, val.width)
+        panel.height = unit2unit('mm', panel.pageUnit, val.height)
+    }
     // panel.pageSize = unit2unit('mm', panel.pageUnit,  val.value
     if (panel.pageHeader != null) {
         panel.pageHeader.width = unit2unit('mm', panel.pageUnit, panel.width)
+        panel.pageHeader.runtimeOption.width = unit2px(panel.width)
     }
     if (panel.pageFooter != null) {
         panel.pageFooter.width = unit2unit('mm', panel.pageUnit, panel.width)
         panel.pageFooter.y = unit2unit('mm', panel.pageUnit, panel.height - panel.pageFooter.height)
+        panel.pageFooter.runtimeOption.width = unit2px(panel.width)
     }
 }
 

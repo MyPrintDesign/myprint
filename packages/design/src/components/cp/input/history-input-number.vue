@@ -4,7 +4,7 @@
                    class="custom-input-number"
                    :controls="false" :precision="2"
                    @update:model-value="(val:any)=>emit('update:modelValue', val)"
-                   @change="(val:any)=>changeWrapper(val, historyLabel)">
+                   @change="change">
   </el-input-number>
 </template>
 
@@ -15,7 +15,7 @@
 import {changeWrapper} from "@cp-print/design/utils/historyUtil";
 import {onMounted, ref} from "vue";
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'change'])
 const numRef = ref(<InstanceType<any>>{})
 // const props = defineProps({
 //   modelValue: {
@@ -23,13 +23,18 @@ const numRef = ref(<InstanceType<any>>{})
 //   },
 //   historyLabel: String
 // })
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   modelValue?: number | object,
   historyLabel: string,
 }>(), {
   modelValue: undefined,
   historyLabel: undefined,
 })
+
+function change(val: any) {
+  changeWrapper(val, props.historyLabel)
+  emit("change", val)
+}
 
 onMounted(() => {
   const inputNumber = numRef.value.$el.querySelector('.el-input__inner');
