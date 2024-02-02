@@ -18,4 +18,5 @@ export type EventTypes = {
     panelSnapshot: Snapshot;
     sortColumn: any;
     updatePanel: any;
+    triggerScroll: any;
 }

@@ -80,10 +80,11 @@
 
 <script setup lang="ts">
 // import { ElWatermark } from 'element-plus'
+import {ElScrollbar} from 'element-plus'
 import Rule from "../rule.vue";
 // import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
-import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
+import {inject, nextTick, onMounted, onUnmounted, reactive, Ref, ref, watch} from "vue";
 import {ContentScaleVo, DragWrapper, CpElement, Container} from "@cp-print/design/types/entity";
 import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 // import {clearEventBubble} from "@cp-print/design/utils/event";
@@ -139,16 +140,20 @@ mitt.on('elementRemove', elementRemove)
 mitt.on("scaleEvent", scaleEvent)
 mitt.on("panelSnapshot", panelSnapshot)
 mitt.on('updatePanel', updatePanel)
+mitt.on('triggerScroll', updatePanel)
 
 
 /**
  * 滑动事件
  * @param data
  */
-function scroll(data: any) {
+function scroll(scrollData: any) {
   // console.log(_data)
-  highlightRule.vertical.scroll = data.scrollTop
-  highlightRule.horizontal.scroll = data.scrollLeft
+  console.log(scrollData)
+  highlightRule.horizontal.scroll = scrollData.scrollLeft
+  highlightRule.vertical.scroll = scrollData.scrollTop
+  data.scroll.left = scrollData.scrollLeft
+  data.scroll.top = scrollData.scrollTop
   // contentScaleRef.value.scaleLoopMove({x: data.scrollLeft, y: data.scrollTop})
 }
 
@@ -168,6 +173,8 @@ const highlightRule = reactive({
 // 辅助线
 const alignLineDataList = reactive<CpElement[]>([])
 const designContentRef = ref<InstanceType<any>>()
+const scrollbarRef = ref<InstanceType<typeof ElScrollbar>>()
+
 // console.log($t('menus.home'))
 // const selectRectElement = reactive(<Element>{
 //   width: 0,
@@ -183,6 +190,10 @@ const designContentRef = ref<InstanceType<any>>()
 // } as any
 const data = reactive({
   dropOver: false,
+  scroll: {
+    left: 0,
+    top: 0
+  }
 })
 // const visible = reactive({
 //   selectRect: false,
@@ -199,8 +210,20 @@ onMounted(() => {
   mountedKeyboardEvent()
   initSelecto()
   updatePanel()
-  initMoveable(selecto.value, highlightRule)
+  initMoveable(selecto.value, highlightRule, {
+    onTriggerScroll: onTriggerScroll
+  })
 })
+
+function onTriggerScroll(direction) {
+  console.log(direction)
+  if (direction[1] == 1) {
+    scrollbarRef.value!.setScrollTop(data.scroll.top + 3)
+  }
+  if (direction[1] == -1) {
+    scrollbarRef.value!.setScrollTop(data.scroll.top - 3)
+  }
+}
 
 // onBeforeUpdate(() => {
 //   console.log('onBeforeUpdate')

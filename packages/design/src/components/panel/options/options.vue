@@ -67,7 +67,8 @@ withDefaults(defineProps<{
 }>(), {
   moduleName: '默认名称'
 })
-const openPanel = ref(['1', '2', '3'])
+// const openPanel = ref(['1', '2', '3'])
+const openPanel = ref([])
 // const contentScaleRef = ref(<InstanceType<typeof ContentScale>>{})
 //
 // const contentScale = reactive(<ContentScaleVo>{openIs: false})

@@ -42,6 +42,7 @@ import Moveable
     from "moveable";
 import {Container, CpElement, CpHtmlElement, elementType} from "@cp-print/design/types/entity";
 import numberUtil from "@cp-print/design/utils/numberUtil";
+import {ElScrollbar} from "element-plus";
 // import {OnBeforeDragStart} from "react-moveable";
 let moveable: Moveable & MoveableOptions
 let selecto: Selecto
@@ -50,6 +51,7 @@ const groupManager = new GroupManager([]);
 let highlightRule: Record<'horizontal' | 'vertical', Container>
 // 是否加载完成
 let isChangeTargetLoadFinished = true
+// let elScrollbar: InstanceType<typeof ElScrollbar>
 
 export const snapElementList: Ref<Array<ElementGuidelineValueOption | MoveableRefType<CpHtmlElement>>> = ref([".design-content"])
 export const elementList: Array<CpHtmlElement> = reactive([])
@@ -297,6 +299,7 @@ function updateRotate(e: OnRotate) {
 }
 
 const onRender = (e: any) => {
+    console.log(e.cssText)
     // console.log(e)
     e.target.style.cssText += e.cssText;
     // console.log(e.cssText)
@@ -422,6 +425,19 @@ function roundGroup(_e: OnRoundGroup) {
 function bound(_e: OnBound) {
     // console.log('bound', _e)
     // e.target.style.transform = e.transform;
+}
+
+function onScroll({scrollContainer, direction}) {
+    let elemtnt = scrollContainer as HTMLElement
+    // console.log(elemtnt.childNodes[0])
+    elemtnt.childNodes[0].scrollBy(direction[0] * 10, direction[1] * 10);
+    // console.log(direction[1] * 10)
+
+    // console.log(scrollContainer, direction)
+    // if(direction[1] == 1){
+    //     elScrollbar.setScrollTop(elScrollbar.scrollbarRef)
+    // }
+    // options.onTriggerScroll(direction)
 }
 
 export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
@@ -661,14 +677,22 @@ function updateRuleRect() {
     }, 0)
 }
 
-export function initMoveable(_selecto, _highlightRule) {
+let options
+
+export function initMoveable(_selecto, _highlightRule, _options) {
     // console.log(selecto)
     document.documentElement.style.setProperty('--direction-width', '20');
     document.documentElement.style.setProperty('--direction-height', '20');
-
     selecto = _selecto
     highlightRule = _highlightRule
-    moveable = new Moveable(document.querySelector(".design-content") as HTMLElement, {
+    options = _options
+    // elScrollbar = _elScrollbar
+
+
+    moveable = new Moveable(
+        document.querySelector(".design-content") as HTMLElement
+        // document.querySelector("#app > section > main > div > div.display-flex.design-panel-container-height > div.design-panel.drag.user-select-none > div.display-flex > div.el-scrollbar.affix-container.design-panel-container-width > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default") as HTMLElement
+        , {
         // If the container is null, the position is fixed. (default: parentElement(document.body))
         // container: document.querySelector(".design-content") as HTMLElement,
         target: targets.value,
@@ -706,6 +730,14 @@ export function initMoveable(_selecto, _highlightRule) {
         keepRatio: false,
         // Resize, Scale Events at edges.
         edge: false,
+
+        scrollable: false,
+        scrollOptions: ({
+            container: '.design-panel-container-width',
+            threshold: 30,
+            checkScrollEvent: true,
+            throttleTime: 0
+        })
         // throttleDrag: 0,
         // throttleResize: 0,
         // throttleScale: 0,
@@ -737,6 +769,7 @@ export function initMoveable(_selecto, _highlightRule) {
     moveable.on('render', onRender)
     moveable.on('renderGroup', onRenderGroup)
     moveable.on('changeTargets', changeTargets)
+    moveable.on('scroll', onScroll)
 }
 
 function defaultMoveable() {

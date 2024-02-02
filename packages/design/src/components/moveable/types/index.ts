@@ -1,4 +1,25 @@
 
+/**
+ * @typedef
+ * @memberof Moveable.Scrollable
+ * @extends Moveable.OnEvent
+ * @property - The container corresponding to scrolling area (scrollContainer >= rootContainer >= container)
+ * @property - The direction of scrolling [left, top]
+ */
+export interface OnScroll extends OnEvent {
+    scrollContainer: HTMLElement;
+    direction: number[];
+}
+/**
+ * @typedef
+ * @memberof Moveable.Scrollable
+ * @extends Moveable.OnScroll
+ * @property - targets set to group.
+ */
+export interface OnScrollGroup extends OnScroll {
+    targets: Array<HTMLElement | SVGElement>;
+}
+
 export interface OnChangeTargets {
     /**
      * The Moveable instance
