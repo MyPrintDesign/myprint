@@ -1,9 +1,12 @@
 <template>
   <div class="design-panel drag user-select-none">
-    <rule :direction="highlightRule.horizontal.direction"
-          :length="panel.width"
-          :highlight="highlightRule.horizontal.highlight"
-          :scroll="highlightRule.horizontal.scroll"/>
+    <div class="display-flex">
+      <div style="min-width: 20px; height: 20px"/>
+      <rule :direction="highlightRule.horizontal.direction"
+            :length="panel.width"
+            :highlight="highlightRule.horizontal.highlight"
+            :scroll="highlightRule.horizontal.scroll"/>
+    </div>
     <div class="display-flex" style="height: calc(100% - 20px)">
       <rule :direction="highlightRule.vertical.direction"
             :length="panel.height"
@@ -16,8 +19,7 @@
           }"watermark?panel.watermarkContent:''">-->
       
       <el-scrollbar
-          ref="scrollbarRef"
-          style="padding-bottom: 20px; height: calc(100% - 20px); padding-right: 10px; width: calc(100% - 30px);"
+          style="padding-right: 10px; width: calc(100% - 30px);"
           always class="affix-container design-panel-container-width " @scroll="scroll">
         <cp-drop
             ref="designContentRef"
@@ -80,7 +82,7 @@
 
 <script setup lang="ts">
 // import { ElWatermark } from 'element-plus'
-import {ElScrollbar} from 'element-plus'
+// import {ElScrollbar} from 'element-plus'
 import Rule from "../rule.vue";
 // import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
@@ -145,7 +147,6 @@ mitt.on('triggerScroll', updatePanel)
 
 /**
  * 滑动事件
- * @param data
  */
 function scroll(scrollData: any) {
   // console.log(_data)

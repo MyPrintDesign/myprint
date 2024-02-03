@@ -4,13 +4,13 @@ import {reactive} from "vue";
 export const handlePanelElementList = reactive({
     'setting': {
         icon: 'icon-setting',
-        right: 20, y: 50, width: 800, height: 500,
+        right: 20, y: 70, width: 800, height: 500,
         label: '设置',
         visible: false,
     } as HandlePanel,
     'operation': {
         icon: 'icon-operation',
-        right: 20, y: 50, width: 260, height: 600,
+        right: 20, y: 70, width: 260, height: 600,
         label: '属性',
         visible: false,
     } as HandlePanel,

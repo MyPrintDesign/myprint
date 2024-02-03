@@ -1,14 +1,13 @@
 <template>
   <div class="design-panel-container">
     <Toolbar/>
-    <div class="display-flex design-panel-container-height">
+    <div class="display-flex design-panel-container-height design-panel-wrapper">
       <cp-panel/>
       <div style="background: white;" class="display-flex-column width-20">
         <div v-for="(value, key) in handlePanelElementList"
              @click="clickHandlePanelIcon(key)"
              :class="['cp-icon handle-panel-icon iconfont',{'handle-panel-icon-active': configStore.settingPanel[key].visible}, value.icon]"
              :key="key"/>
-        
         <history-panel/>
         <operation-panel/>
         <setting-panel/>
@@ -27,7 +26,7 @@
 // import { ElScrollbar } from 'element-plus'
 import {
   // inject,
-  onMounted, ref
+  onMounted
 } from "vue";
 
 import Toolbar from '../toolbar/toolbar.vue'
@@ -45,7 +44,7 @@ import {useConfigStore} from "@cp-print/design/stores/config";
 
 const configStore = useConfigStore()
 
-const scrollbarRef = ref<HTMLElement>()!
+// const scrollbarRef = ref<HTMLElement>()!
 
 // const mitt = inject(mittKey)!
 // 事件绑定

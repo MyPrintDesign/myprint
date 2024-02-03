@@ -1,7 +1,9 @@
 .verticalRule {
-  background: #fcfcfd;
   display: block;
   overflow: hidden;
+  position: relative;
+  background: white;
+  width: 100%;
 }
 
 .sticky-left {

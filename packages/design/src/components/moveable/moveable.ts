@@ -47,7 +47,7 @@ let moveable: Moveable & MoveableOptions
 let selecto: Selecto
 let firstElement: CpHtmlElement | undefined;
 const groupManager = new GroupManager([]);
-let highlightRule: Record<'horizontal' | 'vertical', Container>
+let highlightRule: Record<'horizontal' | 'vertical', Record<'highlight', Container>>
 // 是否加载完成
 let isChangeTargetLoadFinished = true
 // let elScrollbar: InstanceType<typeof ElScrollbar>
@@ -187,6 +187,7 @@ export function moveableMove(x: number, y: number) {
     // console.log(moveable.getTargets())
     // console.log(targets.value)
     // moveable.dragTarget
+    // @ts-ignore
     moveable.request("draggable", {
         x: x,
         y: y,
@@ -219,6 +220,7 @@ function updateLocation(e: OnDrag) {
 
         // 特殊处理，兼容 bounds自动贴边时，无法达到边界值0
         if (Math.abs(target.element.x) < 2 || Math.abs(target.element.y) < 2) {
+            // @ts-ignore
             const rect = moveable.getRect();
             if (rect.left == 0) {
                 target.element.x = 0
@@ -266,6 +268,7 @@ function updateRect(e: OnResize) {
 
     requestAnimationFrame(() => {
 
+        // @ts-ignore
         for (let moveableOne of moveable.getMoveables()) {
             const rect = moveableOne.getRect()
             const cpElement = moveableOne.getDragElement() as CpHtmlElement
@@ -465,8 +468,8 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
     selecto.setSelectedTargets(deepFlat(nextTargetes));
 
     if (nextTargetes.length == 0) {
-        highlightRule.horizontal.x = undefined
-        highlightRule.vertical.x = undefined
+        highlightRule.horizontal.highlight.x = undefined
+        highlightRule.vertical.highlight.x = undefined
     }
 
     for (let nextTargete of nextTargetes) {
@@ -514,7 +517,7 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
 
             } else if (firstElementTarget.element.type == 'PageHeader') {
                 // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
-                moveable.renderDirections = ["w"]
+                moveable.renderDirections = ["s"]
                 moveable.draggable = false
                 moveable.rotatable = false
                 moveable.bounds = boundsBottom
@@ -546,6 +549,7 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
     }
     // console.log(snapElementList.value.length)
     if (nextTargetes.length > 0) {
+        // @ts-ignore
         moveable.waitToChangeTarget().then(() => {
             updateRuleRect()
         });
@@ -672,12 +676,13 @@ const onSelectEnd = (e: OnSelectEnd) => {
 
 function updateRuleRect() {
     setTimeout(() => {
+        // @ts-ignore
         const rectInfo = moveable.getRect()
         // console.log('rectInfo', rectInfo)
-        highlightRule.horizontal.x = rectInfo.left
-        highlightRule.horizontal.width = rectInfo.width
-        highlightRule.vertical.x = rectInfo.top
-        highlightRule.vertical.width = rectInfo.height
+        highlightRule.horizontal.highlight.x = rectInfo.left
+        highlightRule.horizontal.highlight.width = rectInfo.width
+        highlightRule.vertical.highlight.x = rectInfo.top
+        highlightRule.vertical.highlight.width = rectInfo.height
     }, 0)
 }
 
@@ -735,7 +740,7 @@ export function initMoveable(_selecto, _highlightRule) {
             // Resize, Scale Events at edges.
             edge: false,
 
-            scrollable: true,
+            scrollable: false,
             scrollOptions: ({
                 container: '.design-panel-container-width',
                 threshold: 30,

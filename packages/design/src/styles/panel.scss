@@ -4,8 +4,7 @@
 }
 
 .design-content {
-  margin-left: 1px;
-  margin-top: 1px;
+  margin: 30px;
   position: relative;
   background: white;
   box-shadow: 5px 10px 15px 5px rgba(0, 21, 41, 0.08);
@@ -44,6 +43,9 @@
 
 .design-panel-container-width {
   width: var(--panel-width);
+}
+
+.design-panel-wrapper {
 }
 
 //content

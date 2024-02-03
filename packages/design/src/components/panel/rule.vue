@@ -45,7 +45,7 @@ const highlightStyle = computed(() => {
   if (props.direction == 'horizontal') {
     return {
       position: 'absolute',
-      left: props.highlight.x + 'px',
+      left: (props.highlight.x! + 30) + 'px',
       bottom: 0,
       width: props.highlight.width + 'px',
       height: '5px',
@@ -54,7 +54,7 @@ const highlightStyle = computed(() => {
   } else {
     return {
       position: 'absolute',
-      top: props.highlight.x + 'px',
+      top: (props.highlight.x! + 30) + 'px',
       right: 0,
       width: '5px',
       height: props.highlight.width + 'px',
@@ -111,11 +111,17 @@ watch(() => props.scroll, (_newQuestion, _oldQuestion) => {
 const styleWrapper = computed(() => {
   const styleTmp = {} as any
   if (props.direction == 'horizontal') {
+    styleTmp['box-sizing'] = 'border-box'
+    styleTmp['borderTop'] = '1px solid rgb(233, 233, 233)'
+    styleTmp['paddingLeft'] = '30px'
+    styleTmp['paddingRight'] = '30px'
     styleTmp['height'] = scaleUtil.scale(height) + 'px'
-    styleTmp['margin-left'] = scaleUtil.scale(height) + 'px'
+    // styleTmp['marginLeft'] = '20px'
   } else {
+    styleTmp['paddingTop'] = '30px'
+    styleTmp['paddingBottom'] = '30px'
     styleTmp['width'] = scaleUtil.scale(height) + 'px'
-    styleTmp['minWidth'] = scaleUtil.scale(height) + 'px'
+    // styleTmp['minWidth'] = scaleUtil.scale(height) + 'px'
   }
   return styleTmp
 })

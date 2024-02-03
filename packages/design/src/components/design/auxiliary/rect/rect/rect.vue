@@ -1,9 +1,8 @@
 <template>
   <div class="cp-rect__wrapper"
-       :style="{maxWidth: valueUnit(element.width), width: valueUnit(trend1(element.width - 2 * element.option.borderWidth)),
-       height: valueUnit(trend1(element.height - 2 * element.option.borderWidth)),
-       margin: valueUnit(element.option.borderWidth),
-       outlineWidth: valueUnit(element.option.borderWidth),
+       :style="{maxWidth: valueUnit(element.width),
+       width: valueUnit(trend1(element.width)),
+       height: valueUnit(trend1(element.height)),
        }"
        @drop="drop($event)"/>
 </template>

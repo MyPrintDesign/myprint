@@ -5,7 +5,7 @@ import {
     elementType, FormatterVariable,
     Panel,
     Position,
-    RuntimeElementOption
+    RuntimeElementOption, PageUnit
 } from "@cp-print/design/types/entity";
 import {
     canMoveStatusList,
@@ -781,16 +781,37 @@ export function changePageUnit() {
     // console.log(panel.pageUnit)
     panel.width = unit2unit(appStore().lastPageUnit, panel.pageUnit, panel.width)
     panel.height = unit2unit(appStore().lastPageUnit, panel.pageUnit, panel.height)
+    const {pageHeader, pageFooter, pageUnit} = panel
+
     for (let element of panel.elementList!) {
-        element.x = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.x)
-        element.y = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.y)
-        element.width = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.width)
-        element.height = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.height)
-        if (element.option.lineHeight != null) {
-            element.option.lineHeight = unit2unit(appStore().lastPageUnit, panel.pageUnit, element.option.lineHeight)
+        computedChangePageUnit(pageUnit, element)
+    }
+
+    if (pageHeader) {
+        computedChangePageUnit(pageUnit, pageHeader)
+    }
+
+    if (pageFooter) {
+        computedChangePageUnit(pageUnit, pageFooter)
+    }
+
+    appStore().lastPageUnit = panel.pageUnit
+}
+
+function computedChangePageUnit(pageUnit: PageUnit, element: CpElement) {
+    element.x = unit2unit(appStore().lastPageUnit, pageUnit, element.x)
+    element.y = unit2unit(appStore().lastPageUnit, pageUnit, element.y)
+    element.width = unit2unit(appStore().lastPageUnit, pageUnit, element.width)
+    element.height = unit2unit(appStore().lastPageUnit, pageUnit, element.height)
+    if (element.option.lineHeight != null) {
+        element.option.lineHeight = unit2unit(appStore().lastPageUnit, pageUnit, element.option.lineHeight)
+    }
+
+    if (element.elementList) {
+        for (let cpElement of element.elementList) {
+            computedChangePageUnit(pageUnit, cpElement)
         }
     }
-    appStore().lastPageUnit = panel.pageUnit
 }
 
 export function newPanel(): Panel {

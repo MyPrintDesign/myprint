@@ -13,7 +13,7 @@ export const useConfigStore = defineStore('config', {
             autoConnect: true,
             settingPanel: {
                 setting: {visible: false},
-                operation: {visible: false},
+                operation: {visible: true},
                 history: {visible: false},
                 elementList: {visible: false},
             } as any,

@@ -223,21 +223,60 @@
 
   .moveable-line {
     background: transparent !important;
-    border-bottom: 1px dashed var(--drag-h-color);
+    //border-bottom: 1px dashed var(--drag-h-color);
   }
 
   .moveable-bounds {
     background: var(--bounds-color) !important;
   }
 
+  // -- 水平 --
+  // 辅助线 加粗 -
+  //moveable-line moveable-guideline moveable-horizontal moveable-bold
+  .moveable-line.moveable-guideline.moveable-horizontal.moveable-bold {
+    background: #204b20 !important;
+  }
+
+  // 辅助线 - 虚线组
+  // moveable-guideline-group moveable-horizontal
+
+  // 辅助线 -虚线
+  .moveable-line.moveable-guideline.moveable-horizontal.moveable-dashed {
+    border-top: 1px dashed var(--drag-h-color);
+    border-top-color: var(--drag-h-color);
+  }
+
+  // 辅助线 -文本
+  //moveable-size-value moveable-gap
+
+  // 边界
+  .moveable-line.moveable-guideline.moveable-horizontal.moveable-target.moveable-bold.moveable-bounds {
+    background: var(--bounds-color) !important;
+  }
+
+  // -- 垂直 --
+  .moveable-line.moveable-guideline.moveable-vertical.moveable-bold {
+    background: #33CC33 !important;
+  }
+
+  .moveable-line.moveable-guideline.moveable-vertical.moveable-dashed {
+    border-left: 1px dashed red;
+    border-left-color: red;
+  }
+
+  // 边界
+  .moveable-line.moveable-guideline.moveable-vertical.moveable-target.moveable-bold.moveable-bounds {
+    background: var(--bounds-color) !important;
+  }
+
   .moveable-line.moveable-guideline.moveable-horizontal {
-    background: transparent !important;
-    border-bottom: none !important;
+    //background: transparent !important;
+    //border-bottom: none !important;
   }
 
   .moveable-line.moveable-direction {
-    background: transparent !important;
-    border-bottom: none !important;
+    //background: transparent !important;
+    //border-bottom: none !important;
   }
 
   .moveable-line.moveable-guideline.moveable-bounds {
@@ -254,8 +293,8 @@
     height: calc(20px * var(--zoom)) !important;
 
     .moveable-rotation-line {
-      //margin-left: -1px;
-      //border-right: 1px dashed var(--drag-h-color);
+      margin-left: -1px;
+      border-right: 1px dashed var(--drag-h-color);
     }
 
     .moveable-rotation-control {

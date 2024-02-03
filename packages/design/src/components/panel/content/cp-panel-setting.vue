@@ -49,6 +49,7 @@
                                  @change="changePanelWidth"
                                  historyLabel="纸张宽"/>
         <cp-history-input-number class="width-60" v-model="panel.height"
+                                 @change="changePanelHeight"
                                  historyLabel="纸张高"/>
         <cp-unit/>
       </group-input>
@@ -102,6 +103,11 @@ function selectPageSize(val: any) {
 }
 
 function changePanelWidth(_val: number) {
+  changePageSize()
+  // console.log(val)
+}
+
+function changePanelHeight(_val: number) {
   changePageSize()
   // console.log(val)
 }

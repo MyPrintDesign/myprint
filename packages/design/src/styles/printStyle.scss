@@ -46,8 +46,11 @@
 // 矩形
 .cp-rect__wrapper {
   word-break: break-all;
-  outline: #000 solid;
+  border: 1px #000 solid;
+  box-sizing: border-box;
   position: absolute;
+  left: -1px;
+  top: -1px;
   cursor: text;
 }
 

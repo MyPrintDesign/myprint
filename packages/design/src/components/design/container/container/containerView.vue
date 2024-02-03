@@ -25,15 +25,17 @@
 import {DragWrapper, CpElement} from "@cp-print/design/types/entity";
 import {onMounted, reactive} from "vue";
 import CpDrop from "@cp-print/design/components/cp/drop";
-import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
+import {px2unit
+  // , unit2px
+} from "@cp-print/design/utils/devicePixelRatio";
 import {addElement} from "@cp-print/design/utils/elementUtil";
 import {
   moveableClearDragTarget,
   moveableDragTarget,
-  moveableMove,
+  // moveableMove,
   setSelectedTargets
 } from "@cp-print/design/components/moveable/moveable";
-import {clearEventBubble} from "@cp-print/design/utils/event";
+// import {clearEventBubble} from "@cp-print/design/utils/event";
 import {ref} from "vue-demi";
 import {elementTypeContainerList} from "@cp-print/design/constants/common";
 
@@ -158,7 +160,6 @@ function dropPreventDefault(dragData: DragWrapper) {
   line-height: 1;
   
   right: 0;
-  color: white;
   width: 16px;
   height: 16px;
   transform: translate(calc(100% + 5px), 0px);
@@ -172,7 +173,6 @@ function dropPreventDefault(dragData: DragWrapper) {
   line-height: 1;
   
   right: 0;
-  color: white;
   width: 16px;
   height: 16px;
   transform: translate(calc(100% + 5px), 18px);
