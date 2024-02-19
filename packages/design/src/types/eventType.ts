@@ -1,4 +1,4 @@
-import {CpElement, Panel} from "./entity";
+import {Container, CpElement, Panel} from "./entity";
 import {Snapshot} from "../utils/historyUtil";
 
 export type EventTypes = {
@@ -19,4 +19,7 @@ export type EventTypes = {
     sortColumn: any;
     updatePanel: any;
     triggerScroll: any;
+
+    minimapViewportSize: Container;
+    minimapViewportScroll: Container;
 }

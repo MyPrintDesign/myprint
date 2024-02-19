@@ -12,6 +12,7 @@
         <operation-panel/>
         <setting-panel/>
       </div>
+      <minimap-panel/>
     </div>
     <!--      <div class="display-flex width-100-p">-->
     <!--        -->
@@ -41,6 +42,7 @@ import HistoryPanel from "../handle-panel/history-panel.vue";
 import OperationPanel from "../handle-panel/operation-panel.vue";
 import SettingPanel from "../handle-panel/setting/setting-panel.vue";
 import {useConfigStore} from "@cp-print/design/stores/config";
+import MinimapPanel from "@cp-print/design/components/panel/handle-panel/minimap-panel.vue";
 
 const configStore = useConfigStore()
 

@@ -63,6 +63,9 @@ watch(() => props.template.id, (n, _o) => {
     if (!panel.watermarkContent) {
       panel.watermarkContent = 'cp-print'
     }
+    if (!panel.groupList) {
+      panel.groupList = []
+    }
     for (let i = 0; i < panel.elementList!.length; i++) {
       const element = panel.elementList![i]
       // const element = toElement(elementObj)

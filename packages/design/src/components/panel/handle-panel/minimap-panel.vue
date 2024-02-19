@@ -5,22 +5,20 @@
     <div class="scale-preview" ref="scalePreviewRef">
       <div class="scale-design-content"
            ref="designContentRef"
-           :style="{transformOrigin: 'left top',
+           :style="{transformOrigin: '50% 0%',
                             minWidth: valueUnit(scaleUtil.scale(panel.width)),
                             width: valueUnit(scaleUtil.scale(panel.width)),
                             height: valueUnit(scaleUtil.scale(panel.height)),
-                            scale: calc,
-                            left: translate.x + 'px',
-                            top: translate.y + 'px',
-                           transform: `translate(${translate.translateX}px, ${translate.translateY}px) rotate(0deg)`
+                            scale: calc
+                           // transform: `translate(${translate.translateX}px, ${translate.translateY}px) rotate(0deg)`
                            }"
            @mousedown="mousedown($event)">
         
         <div v-for="(element, index) in panel.elementList"
              :key="index">
-          <div style="position: absolute; pointer-events: none;"
-               class="pointer-events "
-               :style="{left : valueUnit(element.x), top : valueUnit(element.y), width: valueUnit(element.width) , height: valueUnit(element.height)}">
+          <div style="position: absolute;"
+               class="pointer-events"
+               :style="{left : valueUnit(element.x), top: valueUnit(element.y), width: valueUnit(element.width), height: valueUnit(element.height)}">
             <TextView v-if="element.type == 'Text'" :element="element"/>
             <ImageView v-if="element.type === 'Image'" :element="element"/>
             <TablePopoverView v-if="element.type === 'Table'" :element="element"/>
@@ -31,9 +29,9 @@
             <dotted-vertical-line v-if="element.type === 'DottedVerticalLine'" :element="element"/>
           </div>
         </div>
+        
+        <div class="viewport" :style="lookStyle"/>
       </div>
-      
-      <div class="loop" :style="lookStyle"/>
     </div>
     <el-row>
       <el-col :span="4">
@@ -56,31 +54,53 @@
 // import { ElRow, ElCol } from 'element-plus'
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
 import {computed, inject, onMounted, reactive} from "vue";
-import HorizontalLine from "../../design/auxiliary/line//horizontalLine/horizontalLine.vue";
-import RectView from "../../design/auxiliary/rect/rect/rect.vue";
-import DottedHorizontalLine from "../../design/auxiliary/line/dottedHorizontalLine/dottedHorizontalLine.vue";
-import VerticalLine from "../../design/auxiliary/line/verticalLine/verticalLine.vue";
-import TextView from "../../design/text/text.vue";
-import DottedVerticalLine from "../../design/auxiliary/line/dottedVerticalLine/dottedVerticalLine.vue";
-import ImageView from "../../design/image/image.vue";
+import HorizontalLine from "../../design/auxiliary/line/horizontalLine";
+import RectView from "../../design/auxiliary/rect/rect";
+import DottedHorizontalLine from "../../design/auxiliary/line/dottedHorizontalLine";
+import VerticalLine from "../../design/auxiliary/line/verticalLine";
+import TextView from "../../design/text";
+import DottedVerticalLine from "../../design/auxiliary/line/dottedVerticalLine";
+import ImageView from "../../design/image";
 import TablePopoverView from "../../design/table/tablePopoverView.vue";
-import {mm2pxNoScale} from "@cp-print/design/utils/utils";
-import {ContentScaleVo} from "@cp-print/design/types/entity";
+import {Container, ContentScaleVo} from "@cp-print/design/types/entity";
 import {clearEventBubble} from "@cp-print/design/utils/event";
 import MathCalc from "@cp-print/design/utils/numberUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
+import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 
 const appStore = useAppStoreHook()
 const emit = defineEmits(['scale'])
 const panel = inject(panelKey)!
 const mitt = inject(mittKey)!
-const props = withDefaults(defineProps<{
-  data?: ContentScaleVo
-}>(), {
-  data: () => ({} as ContentScaleVo)
-})
+// const props = withDefaults(defineProps<{
+//   data?: ContentScaleVo
+// }>(), {
+//   data: () => ()
+// })
+const data = reactive({
+  viewport: {
+    x: 0,
+    y: 0
+  },
+  openIs: true
+} as ContentScaleVo)
+// console.log(data)
+mitt.on('minimapViewportSize', minimapViewportSize)
+mitt.on('minimapViewportScroll', minimapViewportScroll)
+
+function minimapViewportSize(size: Container) {
+  data.viewport.width = size.width
+  data.viewport.height = size.height
+}
+
+function minimapViewportScroll(size: Container) {
+  // console.log(size)
+  data.viewport.x = size.x
+  data.viewport.y = size.y
+}
+
 // const scalePreviewRef = ref<HTMLDivElement>()!
 const translate = reactive({
   onScroll: true,
@@ -98,18 +118,17 @@ const scaleContainerWidth = 260
 const scaleContainerHeight = 160
 
 const calc = computed(() => {
-  const width = mm2pxNoScale(panel.width)
-  const height = mm2pxNoScale(panel.height)
+  const width = unit2px(panel.width)
+  const height = unit2px(panel.height)
   
-  console.log(((scaleUtil.miniMap.scale)))
   let widthCalc = (scaleContainerWidth) / width
   let heightCalc = (scaleContainerHeight) / height
-  if (widthCalc < 0.3) {
-    widthCalc = 0.3
-  }
-  if (heightCalc < 0.3) {
-    heightCalc = 0.3
-  }
+  // if (widthCalc < 0.3) {
+  //   widthCalc = 0.3
+  // }
+  // if (heightCalc < 0.3) {
+  //   heightCalc = 0.3
+  // }
   // console.log(widthCalc, heightCalc)
   let min = Math.min(widthCalc, heightCalc);
   min = min * scaleUtil.miniMap.scale
@@ -119,22 +138,24 @@ const calc = computed(() => {
 const lookStyle = computed(() => {
   
   const style = {} as any
-  const screenWidth = props.data.scrollWidth!;
-  const screenHeight = props.data.scrollHeight!;
+  const viewport = data.viewport;
+  // console.log(viewport)
   
-  let w = screenWidth * calc.value
-  let h = screenHeight * calc.value
+  let w = viewport.width
+  let h = viewport.height
+  let x = viewport.x
+  let y = viewport.y
   // console.log(translate.x, scaleContainerWidth, w)
-  let tmpw = Math.max(translate.x, scaleContainerWidth - w)
-  let tmph = Math.max(translate.y, scaleContainerHeight - h)
-  style['left'] = Math.min(tmpw, 0) + 'px'
-  style['top'] = Math.min(tmph, 0) + 'px'
+  // let tmpw = Math.max(translate.x, scaleContainerWidth - w)
+  // let tmph = Math.max(translate.y, scaleContainerHeight - h)
+  style['left'] = x + 'px'
+  style['top'] = y + 'px'
   style['width'] = w + 'px'
   style['height'] = h + 'px'
   return style;
 })
 
-function mousedown(ev:MouseEvent) {
+function mousedown(ev: MouseEvent) {
   const tmpX = ev.clientX;
   const tmpY = ev.clientY;
   // // 鼠标按下，计算当前元素距离可视区的距离
@@ -142,7 +163,7 @@ function mousedown(ev:MouseEvent) {
   document.addEventListener('mouseup', mouseup);
   translate.onScroll = false
   
-  function mousemove(ev:MouseEvent) {
+  function mousemove(ev: MouseEvent) {
     // console.log(ev)
     // 移动当前元素
     let offsetX = (ev.clientX - tmpX) / calc.value
@@ -161,7 +182,7 @@ function mousedown(ev:MouseEvent) {
     return true
   }
   
-  function mouseup(ev:MouseEvent) {
+  function mouseup(ev: MouseEvent) {
     // console.log(ev)
     
     clearEventBubble(ev)
@@ -189,7 +210,7 @@ function fresh() {
   // }
 }
 
-function scaleLoopMove(data:any) {
+function scaleLoopMove(data: any) {
   if (!translate.onScroll) {
     return
   }
@@ -208,37 +229,40 @@ function startScale(scale: number) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+//transition: all 0.3s ease-in-out;
 .content-scale {
-  width: 200px;
-  height: 144px;
+  width: 260px;
+  height: 164px;
   background: #79bbff;
-  transition: all 0.3s ease-in-out;
-}
-
-.run {
-  transform: translateX(300px);
-}
-
-.scale-preview {
-  width: 200px;
-  height: 120px;
-  background: gray;
-  overflow: hidden;
-  position: relative;
+  border: 1px white solid;
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
   
-  .scale-design-content {
+  .scale-preview {
+    width: 100%;
+    height: calc(100% - 4px);
     background: gray;
-    position: absolute;
-  }
-  
-  .loop {
-    pointer-events: none;
-    border: 2px solid #ee3846;
-    box-sizing: border-box;
-    border-radius: 5px;
-    position: absolute;
-    opacity: 0.8;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    
+    .scale-design-content {
+      border: 1px solid white;
+      background: gray;
+      scale: 0;
+      
+      .viewport {
+        pointer-events: none;
+        border: 5px solid #ee3846;
+        box-sizing: border-box;
+        border-radius: 5px;
+        position: absolute;
+        opacity: 0.8;
+      }
+    }
   }
 }
 

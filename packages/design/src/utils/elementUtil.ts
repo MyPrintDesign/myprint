@@ -5,7 +5,7 @@ import {
     elementType, FormatterVariable,
     Panel,
     Position,
-    RuntimeElementOption, PageUnit, PointLabel
+    RuntimeElementOption, PageUnit, PointLabel, CpHtmlElement
 } from "@cp-print/design/types/entity";
 import {
     canMoveStatusList,
@@ -248,7 +248,9 @@ export function initElement(element?: CpElement) {
         element.runtimeOption = {} as RuntimeElementOption
     }
 
-    element.id = crypto.randomUUID()
+    if (!element.id) {
+        element.id = crypto.randomUUID()
+    }
     let initWidth = 0, initHeight = 0, initBorderWidth = 0
     switch (element.type) {
         case 'Text':
@@ -354,6 +356,66 @@ export function initElement(element?: CpElement) {
     }
 }
 
+export function elementGroup(htmlElementList: Array<CpHtmlElement | CpHtmlElement[]>) {
+    const panel = getCurrentPanel()
+    const idList = flatIdList(htmlElementList)
+    const index = findGroup(idList)
+    if (index >= 0) {
+        panel.groupList[index] = idList
+    } else {
+        panel.groupList.push(idList)
+    }
+}
+
+export function groupListToMap(groupList: string[][]) {
+    const map = {} as Record<string, number>
+    for (let i = 0; i < groupList.length; i++) {
+        for (let groupListElement of groupList[i]) {
+            map[groupListElement] = i
+        }
+    }
+    return map
+}
+
+export function elementUngroup(htmlElementList: Array<CpHtmlElement | CpHtmlElement[]>) {
+    // console.log(htmlElementList)
+    const panel = getCurrentPanel()
+    const idList = flatIdList(htmlElementList)
+    // console.log(idList)
+    // console.log(panel.groupList)
+    const index = findGroup(idList)
+    if (index >= 0) {
+        // console.log(index)
+        panel.groupList.splice(index, 1)
+    }
+}
+
+function flatIdList(htmlElementList: Array<CpHtmlElement | CpHtmlElement[]>) {
+    const idList: string[] = []
+    for (let htmlElementListElement of htmlElementList) {
+        if (Array.isArray(htmlElementListElement)) {
+            for (let htmlElementListElementElement of htmlElementListElement) {
+                idList.push(htmlElementListElementElement.element.id)
+            }
+        } else {
+            idList.push(htmlElementListElement.element.id)
+        }
+    }
+    return idList
+}
+
+function findGroup(idList: string[]) {
+    const panel = getCurrentPanel()
+    for (let i = 0; i < panel.groupList.length; i++) {
+        const groupListKey = panel.groupList[i]
+        if (groupListKey.some(item => {
+            return idList.includes(item)
+        })) {
+            return i;
+        }
+    }
+    return -1;
+}
 
 export function clearPanelParent(panel: Panel) {
     clearParent(panel.pageHeader!)
@@ -526,7 +588,7 @@ export function elementCommonStyle(element: CpElement, cssStyle?: CSSProperties)
     }
 
     if (option.borderAll) {
-        cssStyle.border = '1px solid #771082'
+        cssStyle.border = '1px solid white'
         cssStyle.boxSizing = 'border-box'
     }
 

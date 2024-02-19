@@ -30,7 +30,7 @@
         <div class="affix-container design-panel-container-width " @scroll="scroll" @wheel="wheel"
              ref="designScrollRef">
           <div class="design-content design-content-bg"
-              :style="{transformOrigin: 'left top',
+               :style="{transformOrigin: 'left top',
                           transform: 'scale('+scaleUtil.miniMap.scale+')',
                             minWidth: valueUnit(panel.width),
                             width: valueUnit(panel.width),
@@ -154,9 +154,12 @@ function scroll(scrollData: any) {
   // console.log(scrollData)
   highlightRule.horizontal.scroll = designScrollRef.value!.scrollLeft
   highlightRule.vertical.scroll = designScrollRef.value!.scrollTop
+  mitt.emit('minimapViewportScroll', {
+    x: designScrollRef.value!.scrollLeft,
+    y: designScrollRef.value!.scrollTop
+  } as Container)
   // data.scroll.left = scrollData.scrollLeft
   // data.scroll.top = scrollData.scrollTop
-  // contentScaleRef.value.scaleLoopMove({x: data.scrollLeft, y: data.scrollTop})
 }
 
 function wheel(event: any) {
@@ -166,12 +169,17 @@ function wheel(event: any) {
   // 更新滚动位置
   designScrollRef.value!.scrollTop += event.deltaY;
   designScrollRef.value!.scrollLeft += event.deltaX;
+  
+  mitt.emit('minimapViewportScroll', {
+    x: designScrollRef.value!.scrollLeft,
+    y: designScrollRef.value!.scrollTop
+  } as Container)
+  
   // console.log(scrollData)
   // highlightRule.horizontal.scroll = scrollData.scrollLeft
   // highlightRule.vertical.scroll = scrollData.scrollTop
   // data.scroll.left = scrollData.scrollLeft
   // data.scroll.top = scrollData.scrollTop
-  // contentScaleRef.value.scaleLoopMove({x: data.scrollLeft, y: data.scrollTop})
 }
 
 const highlightRule = reactive({
@@ -217,8 +225,6 @@ const data = reactive({
 //   dragRect: false,
 // })
 const contentScale = reactive({
-  scrollWidth: undefined,
-  scrollHeight: undefined,
   openIs: false
 } as ContentScaleVo)
 
@@ -226,12 +232,16 @@ onMounted(() => {
   // 挂载键盘事件
   mountedKeyboardEvent()
   initSelecto()
-  updatePanel()
+  // updatePanel()
   initMoveable(selecto.value, highlightRule
       //     , {
       //   onTriggerScroll: onTriggerScroll
       // }
   )
+  mitt.emit('minimapViewportSize', {
+    width: designScrollRef.value!.clientWidth,
+    height: designScrollRef.value!.clientHeight
+  } as Container)
 })
 
 // onBeforeUpdate(() => {

@@ -13,7 +13,7 @@ declare module 'vue' {
     ColumnView: typeof import('./src/components/design/table/columnView.vue')['default']
     Container: typeof import('./src/components/design/container/container/container.vue')['default']
     Content: typeof import('./src/components/panel/content/index.vue')['default']
-    ContentScale: typeof import('./src/components/panel/content/contentScale.vue')['default']
+    ContentScale: typeof import('./src/components/panel/handle-panel/contentScale.vue')['default']
     CpCollapse: typeof import('./src/components/cp/cp-collapse/cp-collapse.vue')['default']
     CpColorPicker: typeof import('./src/components/cp/cp-colorPicker/cp-colorPicker.vue')['default']
     CpElementSetting: typeof import('./src/components/panel/content/cp-element-setting.vue')['default']

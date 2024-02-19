@@ -30,8 +30,9 @@ import {
 } from "@moveable/helper";
 import {deepFlat, throttle} from "@daybrush/utils";
 import {
+    elementGroup, elementUngroup,
     forElement,
-    getCurrentPanel,
+    getCurrentPanel, groupListToMap,
     removeElement,
     setCurrentElement
 } from "@cp-print/design/utils/elementUtil";
@@ -64,7 +65,7 @@ const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
 
 const props = {dimensionViewable: true, editable: true, enterLeave: true}
 
-export const targets = ref([]) as Ref<Array<CpHtmlElement>>
+export const targets = ref([]) as Ref<Array<CpHtmlElement | Array<CpHtmlElement>>>
 const noSelectList: Array<elementType> = ['PageFooter', 'PageHeader', 'Container']
 
 export const DimensionViewable = {
@@ -142,8 +143,6 @@ export const Editable = {
             React.createElement("button", {
                 className: "cp-ss icon-design-remove iconfont desgin-remove",
                 onClick: () => {
-                    // alert("+");
-                    // console.log("删除")
                     // console.log(targets.value, moveableInner._dragTarget)
                     // console.log(targets.value[0] == moveableInner._dragTarget)
                     for (let moveableOne of moveableInner.getMoveables()) {
@@ -166,18 +165,38 @@ export function updatePanel() {
         setTimeout(() => {
             elementList.length = 0
             canSelectElementList.length = 0
-            forElement(getCurrentPanel(), v => {
+
+            const groupElementList: Array<Array<CpHtmlElement>> = []
+            const panel = getCurrentPanel()
+            const groupElementMap = groupListToMap(panel.groupList)
+
+            forElement(panel, v => {
                 // console.log(v.runtimeOption.target)
                 elementList.push(v.runtimeOption.target)
                 if (!noSelectList.includes(v.type)) {
                     canSelectElementList.push(v.runtimeOption.target)
                 }
+                const groupIndex = groupElementMap[v.id]
+                if (groupIndex >= 0) {
+                    if (!groupElementList[groupIndex]) {
+                        groupElementList[groupIndex] = []
+                    }
+                    groupElementList[groupIndex].push(v.runtimeOption.target)
+                }
             })
+
             // console.log(selecto.getSelectableElements() as Array<CpHtmlElement>)
             // console.log(elementList)
             // console.log(snapElementList)
             selecto.selectableTargets = canSelectElementList
             groupManager.set([], canSelectElementList);
+            // console.log(123123)
+            // console.log(groupMap)
+            for (let groupMapKey of groupElementList) {
+                // console.log(groupMap[groupMapKey])
+                groupManager.group(groupMapKey, true)
+            }
+
         }, 100)
     })
 }
@@ -194,7 +213,24 @@ export function moveableMove(x: number, y: number) {
         x: x,
         y: y,
         useSnap: true
-    }, true);
+    }, true)
+}
+
+export function group() {
+    const nextGroup = groupManager.group(targets.value, true) as CpHtmlElement[]
+    elementGroup(targets.value)
+    // console.log(nextGroup)
+    if (nextGroup) {
+        targets.value = nextGroup
+    }
+}
+
+export function ungroup() {
+    const nextGroup = groupManager.ungroup(targets.value) as CpHtmlElement[];
+    elementUngroup(targets.value)
+    if (nextGroup) {
+        targets.value = nextGroup
+    }
 }
 
 export function moveableResize(width: number, height: number) {
@@ -244,11 +280,13 @@ function offsetContainer() {
 
     if (targets.value.length > 0) {
         const targetElement = targets.value[0] as CpHtmlElement
-        const parentElement = targetElement.element.runtimeOption.parent!
-        if (noSelectList.includes(parentElement.type)) {
-            // console.log('容器')
-            offsetX = unit2px(parentElement.x)
-            offsetY = unit2px(parentElement.y)
+        if (!Array.isArray(targetElement)) {
+            const parentElement = targetElement.element.runtimeOption.parent!
+            if (noSelectList.includes(parentElement.type)) {
+                // console.log('容器')
+                offsetX = unit2px(parentElement.x)
+                offsetY = unit2px(parentElement.y)
+            }
         }
     }
     return {offsetX, offsetY}
@@ -394,7 +432,7 @@ function onDrag(_e: OnDrag) {
 function onDragGroup(e: OnDragGroup) {
     // console.log('onDragGroup', e)
     for (let _event of e.events) {
-        updateLocation(e)
+        updateLocation(_event)
     }
     // e.target.style.transform = e.transform;
 }
@@ -504,7 +542,7 @@ function onScroll({scrollContainer, direction}) {
     // options.onTriggerScroll(direction)
 }
 
-export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
+export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlElement[]>) => {
     // console.log(nextTargetes)
     if (targets.value.length > 0) {
         if (nextTargetes.length == targets.value.length) {
@@ -518,11 +556,10 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
             }
         }
     }
-
     isChangeTargetLoadFinished = false
-    targets.value = nextTargetes;
+    targets.value = nextTargetes
     moveable.target = targets.value
-    selecto.setSelectedTargets(deepFlat(nextTargetes));
+    selecto.setSelectedTargets(deepFlat(nextTargetes))
 
     if (nextTargetes.length == 0) {
         highlightRule.horizontal.highlight.x = undefined!
@@ -530,7 +567,14 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
     }
 
     for (let nextTargete of nextTargetes) {
-        nextTargete.element.status = 'HANDLE'
+        // console.log(nextTargete.element)
+        if (Array.isArray(nextTargete)) {
+            for (let nextTargeteElement of nextTargete) {
+                nextTargeteElement.element.status = 'HANDLE'
+            }
+        } else {
+            nextTargete.element.status = 'HANDLE'
+        }
     }
 
     setCurrentElement(defaultElement)
@@ -539,7 +583,7 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
         const firstElementTarget = targets.value[0];
         defaultMoveable()
 
-        if (targets.value.length == 1) {
+        if (targets.value.length == 1 && !Array.isArray(firstElementTarget)) {
             // console.log(firstElementTarget.element)
             setCurrentElement(firstElementTarget.element)
             let width = unit2px(firstElementTarget.element.width)
@@ -582,7 +626,7 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
                 // moveable.scalable = true
                 // moveable.keepRatio = true
 
-            }else if (firstElementTarget.element.type == 'SvgEllipse') {
+            } else if (firstElementTarget.element.type == 'SvgEllipse') {
                 // moveable.renderDirections = ['se']
                 // moveable.rotatable = false
                 // moveable.scalable = true
@@ -616,8 +660,13 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
             computeDirectionRect('--direction-width', 70)
             computeDirectionRect('--direction-height', 70)
         }
+        let parent
+        if (Array.isArray(firstElementTarget)) {
+            parent = firstElementTarget[0].element.runtimeOption.parent! as CpElement;
+        } else {
+            parent = firstElementTarget.element.runtimeOption.parent! as CpElement;
+        }
 
-        const parent = firstElementTarget.element.runtimeOption.parent! as CpElement;
         if (noSelectList.includes(parent.type)) {
             moveable.snapContainer = parent.runtimeOption.target
         } else {
@@ -642,9 +691,9 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
 
 const onSelectDragStart = (e: OnSelectDragStart) => {
     // const moveable = moveableRef.value;
-    const target = e.inputEvent.target;
+    const target = e.inputEvent.target
     // console.log(targets.value)
-    const flatted = deepFlat(targets.value!);
+    const flatted = deepFlat(targets.value!)
     // console.log(target)
     // console.log(moveable!.isMoveableElement(target))
     // @ts-ignore
@@ -662,10 +711,6 @@ const onSelectDragStart = (e: OnSelectDragStart) => {
             stop()
         }
     }
-
-    // console.log(e)
-    // console.log(targets.value)
-    // e.data.startTargets = targets.value;
     e.data.startTargets = targets.value;
 }
 
@@ -674,8 +719,7 @@ const onSelect = (e: OnSelect) => {
     if (isDragStartEnd) {
         return;
     }
-    // console.log(e.data.startTargets, startAdded, startRemoved)
-    const nextChilds = groupManager.selectSameDepthChilds(
+    const nextChilds = groupManager.selectCompletedChilds(
         e.data.startTargets,
         startAdded,
         startRemoved
@@ -685,9 +729,17 @@ const onSelect = (e: OnSelect) => {
     const allTargets = nextChilds.targets() as Array<CpHtmlElement>
     if (allTargets.length == 1 || firstElement == undefined) {
         firstElement = allTargets[0] as CpHtmlElement;
+        if (Array.isArray(firstElement)) {
+            firstElement = firstElement[0]
+        }
     }
+    // console.log(startRemoved)
+    // console.log(allTargets)
 
-    targetList = allTargets.filter((v: CpHtmlElement) => {
+    targetList = allTargets.filter((v: CpHtmlElement | CpHtmlElement[]) => {
+        if (Array.isArray(v)) {
+            v = v[0]
+        }
         return (!firstElement || (firstElement && v.element.runtimeOption.parent == firstElement.element.runtimeOption.parent))
     })
     // @ts-ignore
@@ -700,7 +752,8 @@ const onSelect = (e: OnSelect) => {
 
     // console.log(nextChilds.targets())
     setSelectedTargets(targetList);
-};
+}
+
 const onSelectEnd = (e: OnSelectEnd) => {
     const {
         isDragStartEnd,
@@ -709,14 +762,20 @@ const onSelectEnd = (e: OnSelectEnd) => {
         removed,
         inputEvent,
     } = e
-    // console.log('select-end')
-    // selecto.selectableTargets = selectElementList
-    // console.log(e)
     for (let snapElement of removed) {
         const element = snapElement as CpHtmlElement;
-        snapElement.classList.add('design-inactive')
-        snapElement.classList.remove('design-activate')
-        element.element.status = 'NONE'
+        // console.log(element)
+        if (Array.isArray(element)) {
+            for (let elementElement of element) {
+                elementElement.classList.add('design-inactive')
+                elementElement.classList.remove('design-activate')
+                elementElement.element.status = 'NONE'
+            }
+        } else {
+            element.classList.add('design-inactive')
+            element.classList.remove('design-activate')
+            element.element.status = 'NONE'
+        }
     }
     for (let snapElement of added) {
         const element = snapElement as CpHtmlElement;
@@ -725,8 +784,6 @@ const onSelectEnd = (e: OnSelectEnd) => {
         element.element.status = 'HANDLE'
     }
 
-    // console.log(removed)
-
     let nextChilds;
     if (isDragStartEnd || isClick) {
         nextChilds = groupManager.selectCompletedChilds(
@@ -734,17 +791,24 @@ const onSelectEnd = (e: OnSelectEnd) => {
             added,
             removed
         )
+        // console.log(3)
     } else {
         nextChilds = groupManager.selectSameDepthChilds(
             e.data.startTargets,
             added,
             removed
         )
+        // console.log(4)
     }
-    const targetList = nextChilds.targets().filter((v: CpHtmlElement) =>
-        (!firstElement || (firstElement && v.element.runtimeOption.parent == firstElement.element.runtimeOption.parent)))
-    // console.log(targetList)
-    e.currentTarget.setSelectedTargets(targetList)
+
+    const targetList = nextChilds.targets().filter((v: CpHtmlElement) => {
+        if (Array.isArray(v)) {
+            v = v[0]
+        }
+        return (!firstElement || (firstElement && v.element.runtimeOption.parent == firstElement.element.runtimeOption.parent))
+    })
+
+    e.currentTarget.setSelectedTargets(nextChilds.flatten())
     firstElement = undefined
     // console.log(nextChilds.targets())
     setSelectedTargets(targetList)
@@ -757,7 +821,7 @@ const onSelectEnd = (e: OnSelectEnd) => {
             moveable.dragStart(inputEvent)
         })
     }
-};
+}
 
 function updateRuleRect() {
     setTimeout(() => {
@@ -771,17 +835,12 @@ function updateRuleRect() {
     }, 0)
 }
 
-// let options
-
 export function initMoveable(_selecto, _highlightRule) {
     // console.log(selecto)
     document.documentElement.style.setProperty('--direction-width', '20');
     document.documentElement.style.setProperty('--direction-height', '20');
     selecto = _selecto
     highlightRule = _highlightRule
-    // options = _options
-    // elScrollbar = _elScrollbar
-
 
     moveable = new Moveable(
         document.querySelector(".design-content") as HTMLElement

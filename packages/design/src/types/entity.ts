@@ -53,6 +53,7 @@ export interface Panel extends Container {
     orientation?: "p" | "portrait" | "l" | "landscape"
     pageHeader?: CpElement
     pageFooter?: CpElement
+    groupList: string[][]
 }
 
 
@@ -227,8 +228,7 @@ export interface Position extends Point {
 }
 
 export interface ContentScaleVo {
-    scrollWidth?: number,
-    scrollHeight?: number,
+    viewport: Container
     openIs: boolean
 }
 
