@@ -16,6 +16,7 @@ import {
     OnRotate,
     OnBound,
     OnChangeTargets,
+    OnRender,
     // MoveableInterface,
     MoveableManagerInterface, Renderer,
     MoveableOptions,
@@ -42,6 +43,7 @@ import Moveable
     from "moveable";
 import {Container, CpElement, CpHtmlElement, elementType} from "@cp-print/design/types/entity";
 import numberUtil from "@cp-print/design/utils/numberUtil";
+// import {rad2Ang} from "@cp-print/design/utils/svgUtil";
 // import {OnBeforeDragStart} from "react-moveable";
 let moveable: Moveable & MoveableOptions
 let selecto: Selecto
@@ -51,7 +53,7 @@ let highlightRule: Record<'horizontal' | 'vertical', Record<'highlight', Contain
 // 是否加载完成
 let isChangeTargetLoadFinished = true
 // let elScrollbar: InstanceType<typeof ElScrollbar>
-
+const scrollSpeed = 3
 export const snapElementList: Ref<Array<ElementGuidelineValueOption | MoveableRefType<CpHtmlElement>>> = ref([".design-content"])
 export const elementList: Array<CpHtmlElement> = reactive([])
 export const canSelectElementList: Array<CpHtmlElement> = reactive([])
@@ -195,6 +197,36 @@ export function moveableMove(x: number, y: number) {
     }, true);
 }
 
+export function moveableResize(width: number, height: number) {
+    if (!isChangeTargetLoadFinished) {
+        return
+    }
+    // console.log(moveable.getTargets())
+    // console.log(targets.value)
+    // moveable.dragTarget
+    // @ts-ignore
+    moveable.request("resizable", {
+        offsetWidth: width,
+        offsetHeight: height,
+        useSnap: true
+    }, true);
+}
+
+export function moveableScalable(width: number, height: number) {
+    if (!isChangeTargetLoadFinished) {
+        return
+    }
+    // console.log(moveable.getTargets())
+    // console.log(targets.value)
+    // moveable.dragTarget
+    // @ts-ignore
+    moveable.request("resizable", {
+        offsetWidth: width,
+        offsetHeight: height,
+        useSnap: true
+    }, true);
+}
+
 export function moveableDragTarget(drag: HTMLElement | null, event?) {
     moveable.dragTarget = drag
     if (event) {
@@ -202,21 +234,36 @@ export function moveableDragTarget(drag: HTMLElement | null, event?) {
     }
 }
 
-// 就是每次截单 和 导入一样 有个记录号 记录号下挂发货单/越库单 只要没有包裹码（已创建） 都可以取消两张单子 并把对应供拣越库记录的发货单号 和 越库单号清空
-// 找到一个新方法 在供拣按单越库 和供拣门店直送 两个菜单的列表页和详情页 增加 手动回滚； 只要这张越库单 和对应的发货单 实发包裹数均为0
-// 就可以手动回滚 手动回滚的定义是 把这张越库单对应的供拣越库记录的发货单号 越库单号 清掉 再把越库单和发货单的状态变成已取消
 export function moveableClearDragTarget() {
     moveable.dragTarget = null
 }
 
+
+function offsetContainer() {
+    let offsetX = 0, offsetY = 0
+
+    if (targets.value.length > 0) {
+        const targetElement = targets.value[0] as CpHtmlElement
+        const parentElement = targetElement.element.runtimeOption.parent!
+        if (noSelectList.includes(parentElement.type)) {
+            // console.log('容器')
+            offsetX = unit2px(parentElement.x)
+            offsetY = unit2px(parentElement.y)
+        }
+    }
+    return {offsetX, offsetY}
+}
+
 function updateLocation(e: OnDrag) {
+    const target = e.target as CpHtmlElement
+
     requestAnimationFrame(() => {
         // const {offsetX, offsetY} = offsetContainer()
-        const target = e.target as CpHtmlElement
         // console.log(e)
         // console.log(target.element.runtimeOption.x! + e.translate[0], target.element.runtimeOption.y! + e.translate[1])
         target.element.x = px2unit(target.element.runtimeOption.x! + e.translate[0])
         target.element.y = px2unit(target.element.runtimeOption.y! + e.translate[1])
+
 
         // 特殊处理，兼容 bounds自动贴边时，无法达到边界值0
         if (Math.abs(target.element.x) < 2 || Math.abs(target.element.y) < 2) {
@@ -239,22 +286,8 @@ function updateLocation(e: OnDrag) {
     });
 }
 
-function offsetContainer() {
-    let offsetX = 0, offsetY = 0
-
-    if (targets.value.length > 0) {
-        const targetElement = targets.value[0] as CpHtmlElement
-        const parentElement = targetElement.element.runtimeOption.parent!
-        if (noSelectList.includes(parentElement.type)) {
-            // console.log('容器')
-            offsetX = unit2px(parentElement.x)
-            offsetY = unit2px(parentElement.y)
-        }
-    }
-    return {offsetX, offsetY}
-}
-
 function updateRect(e: OnResize) {
+    // console.log(e)
     const target = (e.target as CpHtmlElement)
     let width = e.width
     let height = e.height
@@ -276,8 +309,19 @@ function updateRect(e: OnResize) {
             cpElement.element.y = px2unit(rect.top)
         }
     });
+    // console.log(e.width)
     target.element.width = px2unit(e.width)
     target.element.height = px2unit(e.height)
+    // target.element.runtimeOption.width = e.width
+    // target.element.runtimeOption.height = e.height
+}
+
+function updateRotate(e: OnRotate) {
+    // console.log('rotate,r: ', e.rotation)
+    const target = (e.target as CpHtmlElement)
+    // console.log(e.rotation)
+    // updateLocation()
+    target.element.option.rotate = e.rotation % 360
 }
 
 function computeDirectionRect(attr: string, length: number) {
@@ -291,20 +335,24 @@ function computeDirectionRect(attr: string, length: number) {
 
 }
 
-function updateRotate(e: OnRotate) {
-    // console.log('rotate,r: ', e.rotation)
-    const target = (e.target as CpHtmlElement)
-    // console.log(e.rotation)
-    // updateLocation()
-    target.element.option.rotate = e.rotation % 360
-
-}
-
-const onRender = (e: any) => {
+const onRender = (e: OnRender) => {
     // console.log(e.cssText)
+    if (e.cssText == '') {
+        return
+    }
     // console.log(e)
     e.target.style.cssText += e.cssText;
-    // console.log(e.cssText)
+    // console.log(e)
+    // const target = e.target as CpHtmlElement
+    // target.element.runtimeOption.translate.x = e.transformObject.translate[0]
+    // target.element.runtimeOption.translate.y = e.transformObject.translate[1]
+    // target.element.runtimeOption.rotate = rad2Ang(e.transformObject.rotate) % 360
+    //
+    // if (e.style.width) {
+    //     target.element.runtimeOption.width = e.style.width.replace("px", "")
+    //     target.element.runtimeOption.height = e.style.height.replace("px", "")
+    // }
+
     updateRuleRect()
 };
 
@@ -387,7 +435,7 @@ function resize(e: OnResize) {
     // console.log('resize', e)
     // e.target.element.runtimeOption.width = e.width
     // e.target.element.runtimeOption.height =e.height
-    // e.target.style.cssText += "width: "+ e.width+"px; height:"+ e.height+"px";
+    // e.target.style.cssText += "width: " + e.width + "px; height:" + e.height + "px";
     updateRect(e)
     // e.target.style.transform = e.transform;
 }
@@ -403,6 +451,7 @@ function onResizeStart(_e: OnResizeStart) {
 }
 
 function onBeforeResize(_e: OnBeforeResize) {
+    // e.setFixedDirection([0, 0]);
     // console.log('onBeforeResize', _e)
 }
 
@@ -429,11 +478,19 @@ function bound(_e: OnBound) {
     // e.target.style.transform = e.transform;
 }
 
+const onScaleStart = _e => {
+    // e.setFixedDirection([0, 0]);
+};
+const onBeforeScale = _e => {
+    // e.setFixedDirection([-1, -1]);
+};
+
 function onScroll({scrollContainer, direction}) {
-    let elemtnt = scrollContainer.childNodes[0] as HTMLElement
+    let elemtnt = scrollContainer as HTMLElement
     // console.log(elemtnt.childNodes[0])
-    elemtnt.scrollBy(direction[0] * 10, direction[1] * 10);
-    // console.log(direction[1] * 10)
+    // console.log(elemtnt)
+    elemtnt.scrollBy(direction[0] * scrollSpeed, direction[1] * scrollSpeed);
+    // console.log(direction)
     // moveable.request("draggable", {
     //     x: direction[0] * 10,
     //     y: direction[1] * 10,
@@ -468,8 +525,8 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
     selecto.setSelectedTargets(deepFlat(nextTargetes));
 
     if (nextTargetes.length == 0) {
-        highlightRule.horizontal.highlight.x = undefined
-        highlightRule.vertical.highlight.x = undefined
+        highlightRule.horizontal.highlight.x = undefined!
+        highlightRule.vertical.highlight.x = undefined!
     }
 
     for (let nextTargete of nextTargetes) {
@@ -483,6 +540,7 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
         defaultMoveable()
 
         if (targets.value.length == 1) {
+            // console.log(firstElementTarget.element)
             setCurrentElement(firstElementTarget.element)
             let width = unit2px(firstElementTarget.element.width)
             let height = unit2px(firstElementTarget.element.height)
@@ -508,13 +566,39 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement>) => {
                 width = 30
             }
 
-            if (firstElementTarget.element.type == 'PageFooter') {
+            if (firstElementTarget.element.type == 'SvgPolygonLine'
+                || firstElementTarget.element.type == 'SvgLine'
+                || firstElementTarget.element.type == 'SvgBezierCurve'
+                || firstElementTarget.element.type == 'SvgBezierCurveThree'
+            ) {
+                // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
+                moveable.renderDirections = []
+                // moveable.draggable = false
+                moveable.rotatable = false
+                // moveable.bounds = boundsTop
+            } else if (firstElementTarget.element.type == 'SvgCircle') {
+                moveable.renderDirections = []
+                moveable.rotatable = false
+                // moveable.scalable = true
+                // moveable.keepRatio = true
+
+            }else if (firstElementTarget.element.type == 'SvgEllipse') {
+                // moveable.renderDirections = ['se']
+                // moveable.rotatable = false
+                // moveable.scalable = true
+                // moveable.keepRatio = true
+
+            } else if (firstElementTarget.element.type == 'DrawPanel') {
+                // moveable.renderDirections = []
+                // moveable.clippable = true
+                // moveable.keepRatio = true
+
+            } else if (firstElementTarget.element.type == 'PageFooter') {
                 // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
                 moveable.renderDirections = ["n"]
                 moveable.draggable = false
                 moveable.rotatable = false
                 moveable.bounds = boundsTop
-
             } else if (firstElementTarget.element.type == 'PageHeader') {
                 // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
                 moveable.renderDirections = ["s"]
@@ -561,6 +645,7 @@ const onSelectDragStart = (e: OnSelectDragStart) => {
     const target = e.inputEvent.target;
     // console.log(targets.value)
     const flatted = deepFlat(targets.value!);
+    // console.log(target)
     // console.log(moveable!.isMoveableElement(target))
     // @ts-ignore
     if (target.tagName === "BUTTON" || moveable.isMoveableElement(target)
@@ -740,7 +825,7 @@ export function initMoveable(_selecto, _highlightRule) {
             // Resize, Scale Events at edges.
             edge: false,
 
-            scrollable: false,
+            scrollable: true,
             scrollOptions: ({
                 container: '.design-panel-container-width',
                 threshold: 30,
@@ -779,6 +864,8 @@ export function initMoveable(_selecto, _highlightRule) {
     moveable.on('renderGroup', onRenderGroup)
     moveable.on('changeTargets', changeTargets)
     moveable.on('scroll', onScroll)
+    moveable.on('scale', onScaleStart)
+    moveable.on('beforeScale', onBeforeScale)
 }
 
 function defaultMoveable() {

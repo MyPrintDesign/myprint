@@ -20,8 +20,7 @@
              :key="index">
           <div style="position: absolute; pointer-events: none;"
                class="pointer-events "
-               :style="{left : valueUnit(element.x), top : valueUnit(element.y), width: valueUnit(element.width) , height: valueUnit(element.height),
-               transform: getTranslate(element)}">
+               :style="{left : valueUnit(element.x), top : valueUnit(element.y), width: valueUnit(element.width) , height: valueUnit(element.height)}">
             <TextView v-if="element.type == 'Text'" :element="element"/>
             <ImageView v-if="element.type === 'Image'" :element="element"/>
             <TablePopoverView v-if="element.type === 'Table'" :element="element"/>
@@ -71,6 +70,7 @@ import {clearEventBubble} from "@cp-print/design/utils/event";
 import MathCalc from "@cp-print/design/utils/numberUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
+import {valueUnit} from "@cp-print/design/utils/elementUtil";
 
 const appStore = useAppStoreHook()
 const emit = defineEmits(['scale'])

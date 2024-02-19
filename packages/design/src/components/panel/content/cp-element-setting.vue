@@ -54,6 +54,7 @@
     <el-form-item label="尺寸(宽/高)" v-if="elementSetting[appStore.currentElement.type].includes('width')">
       <group-input>
         <cp-history-input-number class="width-60" v-model="appStore.currentElement.width"
+                                 @change="changeElementWidth"
                                  historyLabel="尺寸"/>
         <cp-history-input-number class="width-60" v-model="appStore.currentElement.height"
                                  historyLabel="尺寸"/>
@@ -63,7 +64,8 @@
     
     <el-form-item label="宽高比例" v-if="elementSetting[appStore.currentElement.type].includes('contentType')">
       <group-input>
-        <cp-history-input-number placeholder="例:1.25" class="width-60" v-model="appStore.currentElement.option.aspectRatio"
+        <cp-history-input-number placeholder="例:1.25" class="width-60"
+                                 v-model="appStore.currentElement.option.aspectRatio"
                                  historyLabel="宽高比例"/>
       </group-input>
     </el-form-item>
@@ -88,7 +90,8 @@
       属性
     </el-divider>
     
-    <el-form-item label="打印类型" prop="region" v-if="elementSetting[appStore.currentElement.type].includes('contentType')">
+    <el-form-item label="打印类型" prop="region"
+                  v-if="elementSetting[appStore.currentElement.type].includes('contentType')">
       <cp-history-select v-model="appStore.currentElement.contentType" placeholder="Activity zone"
                          historyLabel="打印类型">
         <el-option v-for="(item, index) in textContentTypes" :key="index" :label="item.label" :value="item.value"/>
@@ -113,7 +116,7 @@
         </el-icon>
       </el-tooltip>
     </el-form-item>
-<!--    errorCorrectionLevel-->
+    <!--    errorCorrectionLevel-->
     <!--      <el-form-item label="换行策略" prop="region">-->
     <!--      <cp-history-select v-model="form.region" placeholder="Activity zone">-->
     <!--        <el-option label="Zone one" value="shanghai"/>-->
@@ -130,7 +133,8 @@
       </group-input>
     </el-form-item>
     
-    <el-form-item label="虚线样式" prop="region" v-if="elementSetting[appStore.currentElement.type].includes('dottedStyle')">
+    <el-form-item label="虚线样式" prop="region"
+                  v-if="elementSetting[appStore.currentElement.type].includes('dottedStyle')">
       <cp-history-select v-model="appStore.currentElement.option.dottedStyle" placeholder="Activity zone"
                          historyLabel="虚线样式">
         <el-option v-for="(item, index) in dottedStyleList" :key="index" :label="item.label" :value="item.value"/>
@@ -185,6 +189,8 @@ import {QuestionFilled} from "@element-plus/icons-vue";
 import GroupInput from "../../cp/cp-group/groupInput.vue";
 import {CpUnit, CpHistoryInput, CpHistorySelect, CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
+import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+import {moveableResize} from "@cp-print/design/components/moveable/moveable";
 
 const mitt = inject(mittKey)!
 // const data = reactive({
@@ -198,13 +204,18 @@ const currentBarCodeEg = computed(() => {
   }
 })
 
-function change(_val:any) {
+function change(_val: any) {
   // record()
   mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: appStore.currentElement} as Snapshot)
   // console.log('change', val)
 }
 
-function changeBarCodeType(val:any) {
+function changeElementWidth(val) {
+  // console.log(val)
+  moveableResize(unit2px(appStore.currentElement.width), unit2px(appStore.currentElement.height))
+}
+
+function changeBarCodeType(val: any) {
   // record()
   // console.log('change', val)
   return barcodeTypes.find(v => v.value == val)!.eg

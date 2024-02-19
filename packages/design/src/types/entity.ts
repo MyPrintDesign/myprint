@@ -18,8 +18,17 @@ export interface ElementRelation {
 }
 
 export interface Point {
-    x?: number;
-    y?: number;
+    x: number;
+    y: number;
+}
+
+export interface PointLabel extends Point {
+    label?: string;
+}
+
+export interface Line {
+    start: Point
+    end: Point
 }
 
 export interface Container extends Point, ElementRelation {
@@ -77,6 +86,16 @@ export const elementTypeFormat = {
     PageFooter: '页脚',
     PageNum: '页数',
 
+    SvgPolygonLine: '多边形',
+    SvgLine: '线',
+    SvgBezierCurve: '曲线',
+    SvgBezierCurveThree: '曲线3',
+    SvgCircle: '圆',
+    SvgEllipse: '椭圆',
+
+    DrawPanel: '画板',
+
+
     // 私有类型
     PrivateDragRectElement: '内置框选',
 }
@@ -119,6 +138,7 @@ export interface CpElement extends Container {
     columnList?: CpElement[]
     status: elementStatus
     option: ElementOption
+    svgOption: ElementSvgOption
 
     /**
      * 运行时配置
@@ -143,6 +163,7 @@ export interface RuntimeElementOption extends Position {
     centerY: number
     width: number
     height: number
+    translate: Point,
     TL: Position
     TR: Position
     BL: Position
@@ -193,7 +214,9 @@ export interface ElementOption {
     padding: Position
     margin: Position
     formatter?: string
+}
 
+export interface ElementSvgOption {
 }
 
 export interface Position extends Point {

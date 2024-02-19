@@ -102,5 +102,75 @@ export const customProvider: Array<CpElement> = [
 
         width: 30,
         height: 6,
-    } as any
+    } as any,
+    {
+        field: "",
+        type: "SvgPolygonLine",
+        iconClass: 'iconfont-color icon-color-svg-rect',
+        width: 30,
+        "option": {
+            borderWidth: 0.3
+        } as ElementOption,
+        height: 30,
+    } as any,
+    {
+        field: "",
+        type: "SvgCircle",
+        iconClass: 'iconfont-color icon-color-svg-circle',
+        width: 30,
+        "option": {
+            borderWidth: 0.3
+        } as ElementOption,
+        height: 30,
+    } as any,
+    {
+        field: "",
+        type: "SvgEllipse",
+        iconClass: 'iconfont-color icon-color-svg-ellipse',
+        width: 30,
+        "option": {
+            borderWidth: 0.3
+        } as ElementOption,
+        height: 30,
+    } as any,
+    {
+        field: "",
+        type: "DrawPanel",
+        iconClass: 'iconfont-color icon-color-svg-line',
+        width: 30,
+        "option": {
+            borderWidth: 0.3
+        } as ElementOption,
+        height: 30,
+    } as any,
+    {
+        field: "",
+        type: "SvgLine",
+        iconClass: 'iconfont-color icon-color-svg-line',
+        width: 30,
+        "option": {
+            borderWidth: 0.3
+        } as ElementOption,
+        height: 30,
+    } as any,
+    {
+        field: "",
+        type: "SvgBezierCurve",
+        iconClass: 'iconfont-color icon-color-svg-bezier2',
+        width: 30,
+        "option": {
+            borderWidth: 0.3
+        } as ElementOption,
+        height: 30,
+    } as any,
+    {
+        field: "",
+        type: "SvgBezierCurveThree",
+        iconClass: 'iconfont-color icon-color-svg-bezier3',
+        width: 30,
+        "option": {
+            borderWidth: 0.3
+        } as ElementOption,
+        height: 30,
+    } as any,
 ]

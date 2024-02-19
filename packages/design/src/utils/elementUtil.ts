@@ -5,7 +5,7 @@ import {
     elementType, FormatterVariable,
     Panel,
     Position,
-    RuntimeElementOption, PageUnit
+    RuntimeElementOption, PageUnit, PointLabel
 } from "@cp-print/design/types/entity";
 import {
     canMoveStatusList,
@@ -348,6 +348,7 @@ export function initElement(element?: CpElement) {
     element.runtimeOption.x = unit2px(element.x)
     element.runtimeOption.y = unit2px(element.y)
     element.runtimeOption.rotate = element.option.rotate
+    element.runtimeOption.translate = {x: 0, y: 0}
     if (element.option.margin == null) {
         element.option.margin = {} as Position
     }
@@ -441,7 +442,7 @@ export function removeElement(element: CpElement) {
                 for (let valueElement of elementList) {
                     arrayRemove(valueElement.runtimeOption.parent!.elementList, valueElement)
                 }
-                element.x = undefined
+                element.x = undefined!
             }
         )
         .end(() => {
@@ -812,6 +813,28 @@ function computedChangePageUnit(pageUnit: PageUnit, element: CpElement) {
             computedChangePageUnit(pageUnit, cpElement)
         }
     }
+}
+
+export function computedShapeBound(points: Array<PointLabel>): Container {
+    let minX = points[0].x;
+    let minY = points[0].y;
+    let maxX = points[0].x;
+    let maxY = points[0].y;
+
+    for (let i = 1; i < points.length; i++) {
+        let point = points[i];
+        minX = Math.min(minX, point.x);
+        minY = Math.min(minY, point.y);
+        maxX = Math.max(maxX, point.x);
+        maxY = Math.max(maxY, point.y);
+    }
+
+    return {
+        x: minX,
+        y: minY,
+        width: maxX - minX,
+        height: maxY - minY
+    } as Container
 }
 
 export function newPanel(): Panel {

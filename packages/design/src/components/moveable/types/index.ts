@@ -1,4 +1,21 @@
 
+
+export interface OnRender extends OnEvent, CSSObject {
+    /**
+     * a target's next transform string value.
+     */
+    transform: string;
+    /**
+     * Whether or not it is being pinched.
+     */
+    isPinch: boolean;
+    /**
+     * Return transform as a transform object.
+     * `rotate` is a number and everything else is an array of numbers.
+     */
+    transformObject: Record<string, any>;
+}
+
 /**
  * @typedef
  * @memberof Moveable.Scrollable

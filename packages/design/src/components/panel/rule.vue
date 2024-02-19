@@ -119,7 +119,7 @@ const styleWrapper = computed(() => {
     // styleTmp['marginLeft'] = '20px'
   } else {
     styleTmp['paddingTop'] = '30px'
-    styleTmp['paddingBottom'] = '30px'
+    styleTmp['paddingBottom'] = '50px'
     styleTmp['width'] = scaleUtil.scale(height) + 'px'
     // styleTmp['minWidth'] = scaleUtil.scale(height) + 'px'
   }

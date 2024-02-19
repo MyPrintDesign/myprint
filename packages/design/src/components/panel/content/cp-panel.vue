@@ -18,61 +18,62 @@
             height: valueUnit(scaleUtil.scale(panel.height)),
           }"watermark?panel.watermarkContent:''">-->
       
-      <el-scrollbar
-          style="padding-right: 10px; width: calc(100% - 30px);"
-          always class="affix-container design-panel-container-width " @scroll="scroll">
-        <cp-drop
-            ref="designContentRef"
-            class="design-content design-content-bg"
-            :class="{'design-content_over': data.dropOver}"
-            :style="{transformOrigin: 'left top',
+      <cp-drop
+          ref="designContentRef"
+          class="design-content-drop"
+          :class="{'design-content_over': data.dropOver}"
+          @drop="drop"
+          @dragover="dragover"
+          @dragleave="dragleave"
+          @preventDefault="dropPreventDefault"
+      >
+        <div class="affix-container design-panel-container-width " @scroll="scroll" @wheel="wheel"
+             ref="designScrollRef">
+          <div class="design-content design-content-bg"
+              :style="{transformOrigin: 'left top',
                           transform: 'scale('+scaleUtil.miniMap.scale+')',
                             minWidth: valueUnit(panel.width),
                             width: valueUnit(panel.width),
                             height: valueUnit(panel.height),
-                           }"
-            @drop="drop"
-            @dragover="dragover"
-            @dragleave="dragleave"
-            @preventDefault="dropPreventDefault"
-        >
-          <!--         @mousedown="mousedown($event)"-->
-          <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
-          <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
-          
-          <element-list :elementList="panel.elementList"/>
-          <!--      <span-->
-          <!--          class="ref-line v-line"-->
-          <!--          v-for="(item, index) in vLine"-->
-          <!--          :key="'v_' + index"-->
-          <!--          v-show="item.display"-->
-          <!--          :style="{-->
-          <!--          left: item.position,-->
-          <!--          top: item.origin,-->
-          <!--          height: item.lineLength-->
-          <!--        }"-->
-          <!--      />-->
-          <!--      <span-->
-          <!--          class="ref-line h-line"-->
-          <!--          v-for="(item, index) in hLine"-->
-          <!--          :key="'h_' + index"-->
-          <!--          :style="{-->
-          <!--          top: item.position,-->
-          <!--          left: item.origin,-->
-          <!--          width: item.lineLength-->
-          <!--        }"-->
-          <!--      />-->
-          <!--    选择框    -->
-          <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
-          <!--    拖拽矩形    -->
-          <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
-          <!--          <DragRect :element="defaultDragRectElement"/>-->
-          <!--        </vue-drag>-->
-          <!--    对齐辅助线    -->
-          <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
-        </cp-drop>
+                           }">
+            <!--         @mousedown="mousedown($event)"-->
+            <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
+            <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
+            
+            <element-list :elementList="panel.elementList"/>
+            <!--      <span-->
+            <!--          class="ref-line v-line"-->
+            <!--          v-for="(item, index) in vLine"-->
+            <!--          :key="'v_' + index"-->
+            <!--          v-show="item.display"-->
+            <!--          :style="{-->
+            <!--          left: item.position,-->
+            <!--          top: item.origin,-->
+            <!--          height: item.lineLength-->
+            <!--        }"-->
+            <!--      />-->
+            <!--      <span-->
+            <!--          class="ref-line h-line"-->
+            <!--          v-for="(item, index) in hLine"-->
+            <!--          :key="'h_' + index"-->
+            <!--          :style="{-->
+            <!--          top: item.position,-->
+            <!--          left: item.origin,-->
+            <!--          width: item.lineLength-->
+            <!--        }"-->
+            <!--      />-->
+            <!--    选择框    -->
+            <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
+            <!--    拖拽矩形    -->
+            <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
+            <!--          <DragRect :element="defaultDragRectElement"/>-->
+            <!--        </vue-drag>-->
+            <!--    对齐辅助线    -->
+            <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
+          </div>
+        </div>
+      </cp-drop>
       
-      </el-scrollbar>
       <!--    </el-watermark>-->
     
     </div>
@@ -125,7 +126,7 @@ const mitt = inject(mittKey)!
 // const hLine = ref([])
 
 
-// const panelRef = ref({})
+const designScrollRef = ref<HTMLElement>()!
 
 // function getRefLineParams(params:any) {
 //   const {vLine: vLine1, hLine: hLine1} = params;
@@ -149,12 +150,27 @@ mitt.on('triggerScroll', updatePanel)
  * 滑动事件
  */
 function scroll(scrollData: any) {
-  // console.log(_data)
-  console.log(scrollData)
-  highlightRule.horizontal.scroll = scrollData.scrollLeft
-  highlightRule.vertical.scroll = scrollData.scrollTop
-  data.scroll.left = scrollData.scrollLeft
-  data.scroll.top = scrollData.scrollTop
+  // console.log(scrollData)
+  // console.log(scrollData)
+  highlightRule.horizontal.scroll = designScrollRef.value!.scrollLeft
+  highlightRule.vertical.scroll = designScrollRef.value!.scrollTop
+  // data.scroll.left = scrollData.scrollLeft
+  // data.scroll.top = scrollData.scrollTop
+  // contentScaleRef.value.scaleLoopMove({x: data.scrollLeft, y: data.scrollTop})
+}
+
+function wheel(event: any) {
+  // console.log(event)
+  event.preventDefault(); // 阻止默认滚动行为
+  
+  // 更新滚动位置
+  designScrollRef.value!.scrollTop += event.deltaY;
+  designScrollRef.value!.scrollLeft += event.deltaX;
+  // console.log(scrollData)
+  // highlightRule.horizontal.scroll = scrollData.scrollLeft
+  // highlightRule.vertical.scroll = scrollData.scrollTop
+  // data.scroll.left = scrollData.scrollLeft
+  // data.scroll.top = scrollData.scrollTop
   // contentScaleRef.value.scaleLoopMove({x: data.scrollLeft, y: data.scrollTop})
 }
 

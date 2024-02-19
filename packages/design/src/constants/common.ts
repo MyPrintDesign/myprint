@@ -90,6 +90,13 @@ export const elementSetting: Record<elementType, Array<elementSettingType>> =
         PageFooter: [...commonElementSetting],
         PageNum: [...commonElementSetting, ...styleElementSetting, "formatter"],
         PrivateDragRectElement: [],
+        SvgPolygonLine: [],
+        SvgCircle: [],
+        SvgEllipse: [],
+        SvgLine: [],
+        SvgBezierCurve: [],
+        SvgBezierCurveThree: [],
+        DrawPanel: [],
     }
 
 export function hasStyle(type: elementType, style: elementSettingType) {
