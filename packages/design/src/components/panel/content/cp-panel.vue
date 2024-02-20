@@ -239,8 +239,8 @@ onMounted(() => {
       // }
   )
   mitt.emit('minimapViewportSize', {
-    width: designScrollRef.value!.clientWidth,
-    height: designScrollRef.value!.clientHeight
+    width: designScrollRef.value!.clientWidth - 60,
+    height: designScrollRef.value!.clientHeight - 80
   } as Container)
 })
 

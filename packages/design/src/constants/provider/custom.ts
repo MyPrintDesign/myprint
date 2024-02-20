@@ -136,7 +136,7 @@ export const customProvider: Array<CpElement> = [
     {
         field: "",
         type: "DrawPanel",
-        iconClass: 'iconfont-color icon-color-svg-line',
+        iconClass: 'iconfont-color icon-color-shouxieqianming-icon',
         width: 30,
         "option": {
             borderWidth: 0.3

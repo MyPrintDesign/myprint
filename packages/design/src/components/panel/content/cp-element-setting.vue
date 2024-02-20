@@ -40,6 +40,17 @@
       样式
     </el-divider>
     
+    <el-form-item label="锁定">
+      <el-switch
+          v-model="appStore.currentElement.lock"
+          @change="changeLock"
+          class="ml-2"
+          inline-prompt
+          style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
+          active-text="显示"
+          inactive-text="隐藏"/>
+    </el-form-item>
+    
     <el-form-item label="位置(x/y)" v-if="elementSetting[appStore.currentElement.type].includes('x')">
       <group-input>
         <cp-history-input-number class="width-60" v-model="appStore.currentElement.x" @change="change"
@@ -190,7 +201,7 @@ import GroupInput from "../../cp/cp-group/groupInput.vue";
 import {CpUnit, CpHistoryInput, CpHistorySelect, CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
-import {moveableResize} from "@cp-print/design/components/moveable/moveable";
+import {freshMoveableOption, moveableResize} from "@cp-print/design/components/moveable/moveable";
 
 const mitt = inject(mittKey)!
 // const data = reactive({
@@ -203,6 +214,10 @@ const currentBarCodeEg = computed(() => {
     return changeBarCodeType(appStore.currentElement.option.barCodeType)
   }
 })
+
+function changeLock() {
+  freshMoveableOption(appStore.currentElement)
+}
 
 function change(_val: any) {
   // record()

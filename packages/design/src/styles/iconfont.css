@@ -11,6 +11,26 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-suoxiao:before {
+  content: "\e6b7";
+}
+
+.icon-fangda:before {
+  content: "\e6b8";
+}
+
+.icon-map:before {
+  content: "\e64b";
+}
+
+.icon-map1:before {
+  content: "\e85d";
+}
+
+.icon-map2:before {
+  content: "\e6c8";
+}
+
 .icon-design-remove:before {
   content: "\e630";
 }

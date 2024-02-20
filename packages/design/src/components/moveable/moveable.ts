@@ -580,82 +580,11 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlEle
     setCurrentElement(defaultElement)
 
     if (targets.value.length > 0) {
-        const firstElementTarget = targets.value[0];
-        defaultMoveable()
-
+        const firstElementTarget = targets.value[0]
         if (targets.value.length == 1 && !Array.isArray(firstElementTarget)) {
             // console.log(firstElementTarget.element)
             setCurrentElement(firstElementTarget.element)
-            let width = unit2px(firstElementTarget.element.width)
-            let height = unit2px(firstElementTarget.element.height)
-            if (firstElementTarget.element.option.aspectRatio) {
-                moveable.keepRatio = true
-            }
-            // "n" 可以解释为 "上"，表示向上移动或相对于参考点的较高位置。
-            // "nw" 可以解释为 "左上"，表示向左上方移动或相对于参考点的较左上位置。
-            // "ne" 可以解释为 "右上"，表示向右上方移动或相对于参考点的较右上位置。
-            // "s" 可以解释为 "下"，表示向下移动或相对于参考点的较低位置。
-            // "se" 可以解释为 "右下"，表示向右下方移动或相对于参考点的较右下位置。
-            // "sw" 可以解释为 "左下"，表示向左下方移动或相对于参考点的较左下位置。
-            // "e" 可以解释为 "右"，表示向右移动或相对于参考点的较右位置。
-            // "w" 可以解释为 "左"，表示向左移动或相对于参考点的较左位置。
-
-            if (firstElementTarget.element.type == 'HorizontalLine' || firstElementTarget.element.type == 'DottedHorizontalLine') {
-                moveable.renderDirections = ["w", "e"]
-                height = 30
-            }
-
-            if (firstElementTarget.element.type == 'VerticalLine' || firstElementTarget.element.type == 'DottedVerticalLine') {
-                moveable.renderDirections = ["n", "s"]
-                width = 30
-            }
-
-            if (firstElementTarget.element.type == 'SvgPolygonLine'
-                || firstElementTarget.element.type == 'SvgLine'
-                || firstElementTarget.element.type == 'SvgBezierCurve'
-                || firstElementTarget.element.type == 'SvgBezierCurveThree'
-            ) {
-                // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
-                moveable.renderDirections = []
-                // moveable.draggable = false
-                moveable.rotatable = false
-                // moveable.bounds = boundsTop
-            } else if (firstElementTarget.element.type == 'SvgCircle') {
-                moveable.renderDirections = []
-                moveable.rotatable = false
-                // moveable.scalable = true
-                // moveable.keepRatio = true
-
-            } else if (firstElementTarget.element.type == 'SvgEllipse') {
-                // moveable.renderDirections = ['se']
-                // moveable.rotatable = false
-                // moveable.scalable = true
-                // moveable.keepRatio = true
-
-            } else if (firstElementTarget.element.type == 'DrawPanel') {
-                // moveable.renderDirections = []
-                // moveable.clippable = true
-                // moveable.keepRatio = true
-
-            } else if (firstElementTarget.element.type == 'PageFooter') {
-                // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
-                moveable.renderDirections = ["n"]
-                moveable.draggable = false
-                moveable.rotatable = false
-                moveable.bounds = boundsTop
-            } else if (firstElementTarget.element.type == 'PageHeader') {
-                // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
-                moveable.renderDirections = ["s"]
-                moveable.draggable = false
-                moveable.rotatable = false
-                moveable.bounds = boundsBottom
-
-            } else if (firstElementTarget.element.type == 'Container') {
-                moveable.rotatable = false
-            }
-
-            computeDirectionRect('--direction-width', width)
-            computeDirectionRect('--direction-height', height)
+            freshMoveableOption(firstElementTarget.element)
         } else {
             computeDirectionRect('--direction-width', 70)
             computeDirectionRect('--direction-height', 70)
@@ -687,6 +616,87 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlEle
             updateRuleRect()
         });
     }
+}
+
+export function freshMoveableOption(element: CpElement) {
+    defaultMoveable()
+    let width = unit2px(element.width)
+    let height = unit2px(element.height)
+    if (element.option.aspectRatio) {
+        moveable.keepRatio = true
+    }
+    // "n" 可以解释为 "上"，表示向上移动或相对于参考点的较高位置。
+    // "nw" 可以解释为 "左上"，表示向左上方移动或相对于参考点的较左上位置。
+    // "ne" 可以解释为 "右上"，表示向右上方移动或相对于参考点的较右上位置。
+    // "s" 可以解释为 "下"，表示向下移动或相对于参考点的较低位置。
+    // "se" 可以解释为 "右下"，表示向右下方移动或相对于参考点的较右下位置。
+    // "sw" 可以解释为 "左下"，表示向左下方移动或相对于参考点的较左下位置。
+    // "e" 可以解释为 "右"，表示向右移动或相对于参考点的较右位置。
+    // "w" 可以解释为 "左"，表示向左移动或相对于参考点的较左位置。
+
+    if (element.type == 'HorizontalLine' || element.type == 'DottedHorizontalLine') {
+        moveable.renderDirections = ["w", "e"]
+        height = 30
+    }
+
+    if (element.type == 'VerticalLine' || element.type == 'DottedVerticalLine') {
+        moveable.renderDirections = ["n", "s"]
+        width = 30
+    }
+
+    if (element.type == 'SvgPolygonLine'
+        || element.type == 'SvgLine'
+        || element.type == 'SvgBezierCurve'
+        || element.type == 'SvgBezierCurveThree'
+    ) {
+        // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
+        moveable.renderDirections = []
+        // moveable.draggable = false
+        moveable.rotatable = false
+        // moveable.bounds = boundsTop
+    } else if (element.type == 'SvgCircle') {
+        moveable.renderDirections = []
+        moveable.rotatable = false
+        // moveable.scalable = true
+        // moveable.keepRatio = true
+
+    } else if (element.type == 'SvgEllipse') {
+        // moveable.renderDirections = ['se']
+        // moveable.rotatable = false
+        // moveable.scalable = true
+        // moveable.keepRatio = true
+
+    } else if (element.type == 'DrawPanel') {
+        // moveable.renderDirections = []
+        // moveable.clippable = true
+        // moveable.keepRatio = true
+
+    } else if (element.type == 'PageFooter') {
+        // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
+        moveable.renderDirections = ["n"]
+        moveable.draggable = false
+        moveable.rotatable = false
+        moveable.bounds = boundsTop
+    } else if (element.type == 'PageHeader') {
+        // ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
+        moveable.renderDirections = ["s"]
+        moveable.draggable = false
+        moveable.rotatable = false
+        moveable.bounds = boundsBottom
+
+    } else if (element.type == 'Container') {
+        moveable.rotatable = false
+    }
+
+    if (element.lock) {
+        moveable.rotatable = false
+        moveable.draggable = false
+        moveable.scalable = false
+        moveable.resizable = false
+    }
+
+    computeDirectionRect('--direction-width', width)
+    computeDirectionRect('--direction-height', height)
 }
 
 const onSelectDragStart = (e: OnSelectDragStart) => {

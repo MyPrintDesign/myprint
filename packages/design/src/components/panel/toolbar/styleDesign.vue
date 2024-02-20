@@ -99,6 +99,43 @@
                     :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
           <i class="icon-youduiqi iconfont"/>
         </style-icon>
+        
+        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
+                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
+                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+          <i class="icon-color-zh iconfont-color"/>
+        </style-icon>
+        
+        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
+                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
+                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+          <i class="icon-color-qxzh iconfont-color"/>
+        </style-icon>
+        
+        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
+                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
+                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+          <i class="icon-color-zydc iconfont-color"/>
+        </style-icon>
+        
+        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
+                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
+                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+          <i class="icon-color-syyc iconfont-color"/>
+        </style-icon>
+        
+        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
+                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
+                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+          <i class="icon-color-xyyc iconfont-color"/>
+        </style-icon>
+        
+        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
+                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
+                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+          <i class="icon-color-zydic iconfont-color"/>
+        </style-icon>
+        
         <!--        <style-icon tips="两端对齐" :modelValue="appStore.currentElement.option.textAlign == 'justify'"-->
         <!--                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'justify'}"-->
         <!--                    :enable="['Text', 'Table'].includes(appStore.currentElement.type)">-->
@@ -122,9 +159,11 @@
                     :enable="hasStyle(appStore.currentElement.type, 'verticalAlign')">
           <i class="icon-xiaduiqi iconfont"/>
         </style-icon>
-        <!--        <style-icon tips="换行" marginTop="-3px" :modelValue="appStore.currentElement.option.verticalAlign == 'bottom'" @update:model-value="flag => {if(flag) appStore.currentElement.option.verticalAlign = 'bottom'}" :enable="['Text', 'Table'].includes(appStore.currentElement.type)">-->
-        <!--          <i class="icon-wenbenhuanhang iconfont" style="font-size: 20px"/>-->
-        <!--        </style-icon>-->
+        <style-icon tips="换行" marginTop="-3px" :modelValue="appStore.currentElement.option.lineBreak == true"
+                    @update:model-value="flag => {appStore.currentElement.option.lineBreak = flag}"
+                    :enable="['Text', 'Table'].includes(appStore.currentElement.type)">
+          <i class="icon-wenbenhuanhang iconfont" style="font-size: 20px"/>
+        </style-icon>
         <style-icon tips="边框" v-model="appStore.currentElement.option.borderAll"
                     :enable="hasStyle(appStore.currentElement.type, 'borderAll')">
           <i class="icon-jurassic_border-all iconfont" style="font-size: 18px"/>

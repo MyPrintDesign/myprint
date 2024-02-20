@@ -38,13 +38,25 @@
         手势
       </el-col>
       <el-col :span="4" @click="startScale(-0.1)">
-        -
+        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
+                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}">
+          <i class="icon-suoxiao iconfont"/>
+        </style-icon>
       </el-col>
       <el-col :span="4">
         {{ MathCalc.mul(scaleUtil.miniMap.scale, 100) }}%
       </el-col>
       <el-col :span="4" @click="startScale(0.1)">
-        +
+        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
+                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}">
+          <i class="icon-fangda iconfont"/>
+        </style-icon>
+      </el-col>
+      <el-col :span="4" @click="startScale(0.1)">
+        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
+                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}">
+          <i class="icon-map iconfont"/>
+        </style-icon>
       </el-col>
     </el-row>
   </div>
@@ -69,6 +81,8 @@ import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+// import {hasStyle} from "@cp-print/design/constants/common";
+import StyleIcon from "@cp-print/design/components/cp/icon";
 
 const appStore = useAppStoreHook()
 const emit = defineEmits(['scale'])
@@ -233,16 +247,16 @@ function startScale(scale: number) {
 //transition: all 0.3s ease-in-out;
 .content-scale {
   width: 260px;
-  height: 164px;
+  height: 160px;
   background: #79bbff;
   border: 1px white solid;
   position: absolute;
   right: 20px;
-  bottom: 20px;
+  bottom: 40px;
   
   .scale-preview {
     width: 100%;
-    height: calc(100% - 4px);
+    height: calc(100%);
     background: gray;
     overflow: hidden;
     position: relative;

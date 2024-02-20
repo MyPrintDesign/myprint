@@ -96,7 +96,7 @@ export function updateSvg(chart, svgOptions, draw) {
             // .attr("stroke-width", 1.9)
             .attr("d", path)
     }
-    ;
+
 
     // .attr("transform", "rotate(45,100,100)")
     // .call(drag)

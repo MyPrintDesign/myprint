@@ -35,7 +35,7 @@ const props = withDefaults(defineProps<{
     }>(),
     {
       tips: "",
-      enable: false,
+      enable: true,
       modelValue: false,
       marginTop: ""
     })

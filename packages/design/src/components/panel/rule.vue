@@ -12,8 +12,9 @@
          :style="highlightStyle"></div>
     <svg id="canvas" ref="canvas"
          class="rule"
-         :style="style"
-    />
+         :style="style">
+      <path class="u-path" d=""/>
+    </svg>
   </div>
 </template>
 
@@ -24,9 +25,12 @@ import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
 import {getRatio} from "@cp-print/design/utils/utils";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
-import Snap from 'snapsvg-cjs'
+// import Snap from 'snapsvg-cjs'
 import {Container} from "@cp-print/design/types/entity";
-import {Paper} from "snapsvg";
+// import {Paper} from "snapsvg";
+import {Path} from "d3-path";
+import * as d3Selection from "d3-selection";
+import * as d3Path from "d3-path";
 
 const props = withDefaults(defineProps<{
   direction?: 'vertical' | string,
@@ -115,12 +119,12 @@ const styleWrapper = computed(() => {
     styleTmp['borderTop'] = '1px solid rgb(233, 233, 233)'
     styleTmp['paddingLeft'] = '30px'
     styleTmp['paddingRight'] = '30px'
-    styleTmp['height'] = scaleUtil.scale(height) + 'px'
+    styleTmp['height'] = height + 'px'
     // styleTmp['marginLeft'] = '20px'
   } else {
     styleTmp['paddingTop'] = '30px'
     styleTmp['paddingBottom'] = '50px'
-    styleTmp['width'] = scaleUtil.scale(height) + 'px'
+    styleTmp['width'] = height + 'px'
     // styleTmp['minWidth'] = scaleUtil.scale(height) + 'px'
   }
   return styleTmp
@@ -159,9 +163,9 @@ watchEffect(() => {
   
 })
 
-const lineList: Array<Snap.Element> = []
-const textList: Array<Snap.Element> = []
-let highlightLine;
+// const lineList: Array<Snap.Element> = []
+// const textList: Array<Snap.Element> = []
+// let highlightLine;
 
 const appStore = useAppStoreHook()
 
@@ -170,83 +174,108 @@ const appStore = useAppStoreHook()
 function drawRuler() {
   // console.log(123)
   // console.log(canvas.value)
-  const svg = Snap(canvas.value as SVGElement) as Paper;
-  svg.clear()
+  // const svg = Snap(canvas.value as SVGElement) as Paper;
+  // svg.clear()
+  const path = d3Path.path() as Path;
   
   const space = getRatio()
   const pxLength = unit2unit(appStore.lastPageUnit, 'mm', props.length)
   
   if (props.direction == 'horizontal') {
-    svg.line(0, 0, 0, 20).attr({
-      stroke: "#8f9292",
-      strokeWidth: 1,
-    });
+    // svg.line(0, 0, 0, 20).attr({
+    //   stroke: "#8f9292",
+    //   strokeWidth: 1,
+    // });
     
     for (let i = 1; i < pxLength; i++) {
       // 绘制横标尺
-      let line;
+      // let line;
       if (i % 5 == 0) {
-        line = svg.line(space * i, 10, space * i, 20);
+        path.moveTo(space * i, 10);
+        // path.lineTo(space * i, 20);
+        // line = svg.line(space * i, 10, space * i, 20);
       } else if (i % 2 == 0) {
-        line = svg.line(space * i, 13, space * i, 20);
+        path.moveTo(space * i, 13);
+        // path.lineTo(space * i, 20);
+        // line = svg.line(space * i, 13, space * i, 20);
       } else {
-        line = svg.line(space * i, 14, space * i, 20);
+        path.moveTo(space * i, 14);
+        // line = svg.line(space * i, 14, space * i, 20);
       }
+      path.lineTo(space * i, 20);
       
-      line.attr({
-        stroke: "#8f9292",
-        strokeWidth: 1,
-      })
+      // line.attr({
+      //   stroke: "#8f9292",
+      //   strokeWidth: 1,
+      // })
       
-      lineList.push(line)
+      // lineList.push(line)
       if (i % 10 == 0) {
-        let text = svg.text(space * i - 7, 10, i)
-        text.attr({
-          fill: "#b1b4b4",
-          'font-size': 12
-        });
-        textList.push(text)
+        // let text = svg.text(space * i - 7, 10, i)
+        // text.attr({
+        //   fill: "#b1b4b4",
+        //   'font-size': 12
+        // });
+        // textList.push(text)
       }
     }
-    highlightLine = svg.line(0, 0, 0, 25);
+    // highlightLine = svg.line(0, 0, 0, 25);
+    
+    // path.moveTo(10, 0);
+    // path.lineTo(10, 10);
+    //
+    // path.moveTo(20, 0);
+    // path.lineTo(20, 10);
+    
+    // const path = draw(chartSvg)
+    console.log(chartSvg)
+    console.log(path)
+    chartSvg.select(".u-path")
+        // #8f9292
+        .style("stroke", "white")
+        .style("fill", "white")
+        // .attr("stroke-width", 1.9)
+        .attr("d", path.toString())
   } else {
     for (var i = 1; i < pxLength; i++) {
-      let line;
+      // let line;
       if (i % 5 == 0) {
-        line = svg.line(10, space * i, 20, space * i);
+        // line = svg.line(10, space * i, 20, space * i);
       } else if (i % 2 == 0) {
-        line = svg.line(13, space * i, 20, space * i);
+        // line = svg.line(13, space * i, 20, space * i);
       } else {
-        line = svg.line(14, space * i, 20, space * i);
+        // line = svg.line(14, space * i, 20, space * i);
       }
-      line.attr({
-        stroke: "#8f9292",
-        strokeWidth: 1,
-      })
+      // line.attr({
+      //   stroke: "#8f9292",
+      //   strokeWidth: 1,
+      // })
       if (i % 10 == 0) {
-        let texth = i;
-        let ruletext = svg.text(3, space * i, texth).attr({
-          fill: "#b1b4b4",
-          'font-size': 12
-        });
+        // let texth = i;
+        // let ruletext = svg.text(3, space * i, texth).attr({
+        //   fill: "#b1b4b4",
+        //   'font-size': 12
+        // });
         
-        const matrixRotate = new Snap.Matrix();
-        matrixRotate.rotate(270, 10, space * i);
-        ruletext.transform(matrixRotate);
-        textList.push(ruletext)
+        // const matrixRotate = new Snap.Matrix();
+        // matrixRotate.rotate(270, 10, space * i);
+        // ruletext.transform(matrixRotate);
+        // textList.push(ruletext)
       }
     }
     
-    highlightLine = svg.line(0, 0, 25, 0);
+    // highlightLine = svg.line(0, 0, 25, 0);
   }
   
-  highlightLine.attr({
-    stroke: "red",
-    strokeWidth: 0,
-  });
+  // highlightLine.attr({
+  //   stroke: "red",
+  //   strokeWidth: 0,
+  // });
 }
 
+let chartSvg
 onMounted(() => {
+  chartSvg = d3Selection.select(canvas.value)
 
 //   // console.log(canvas)
 //   console.log(window.devicePixelRatio)

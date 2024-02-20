@@ -1,99 +1,174 @@
 @font-face {
-  font-family: "iconfont-color"; /* Project id 4272312 */
-  /* Color fonts */
-  src:
-          url('../assets/fonts/iconfont-color.woff2?t=1696341118895') format('woff2');
+    font-family: "iconfont-color"; /* Project id 4272312 */
+    /* Color fonts */
+    src: url('../assets/fonts/iconfont-color.woff2?t=1696341118895') format('woff2');
 }
 
 .iconfont-color {
-  font-family: "iconfont-color" !important;
-  font-size: 16px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: "iconfont-color" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-color-fyzsp:before {
+    content: "\e61f";
+}
+
+.icon-color-fyscz:before {
+    content: "\e620";
+}
+
+.icon-color-syyc:before {
+    content: "\e61d";
+}
+
+.icon-color-xyyc:before {
+    content: "\e61e";
+}
+
+.icon-color-spz:before {
+    content: "\e62d";
+}
+
+.icon-color-czjz:before {
+    content: "\e62e";
+}
+
+.icon-color-spjz:before {
+    content: "\e631";
+}
+
+.icon-color-czd:before {
+    content: "\e632";
+}
+
+.icon-color-spy:before {
+    content: "\e633";
+}
+
+.icon-color-spdjfb:before {
+    content: "\e634";
+}
+
+.icon-color-chuizhidingduiqi:before {
+    content: "\e635";
+}
+
+.icon-color-czdjfb:before {
+    content: "\e636";
+}
+
+.icon-color-zydc:before {
+    content: "\e637";
+}
+
+.icon-color-zydic:before {
+    content: "\e638";
+}
+
+.icon-color-qxzh:before {
+    content: "\e639";
+}
+
+.icon-color-spfz:before {
+    content: "\e63a";
+}
+
+.icon-color-zh:before {
+    content: "\e63b";
+}
+
+.icon-color-czfz:before {
+    content: "\e63c";
+}
+
+.icon-color-shouxieqianming-icon:before {
+    content: "\e681";
 }
 
 .icon-color-svg-rect:before {
-  content: "\e61c";
+    content: "\e61c";
 }
 
 .icon-color-svg-circle:before {
-  content: "\e61a";
+    content: "\e61a";
 }
 
 .icon-color-svg-ellipse:before {
-  content: "\e6a5";
+    content: "\e6a5";
 }
 
 .icon-color-svg-bezier2:before {
-  content: "\e691";
+    content: "\e691";
 }
 
 .icon-color-zhexian:before {
-  content: "\e6d4";
+    content: "\e6d4";
 }
 
 .icon-color-svg-bezier3:before {
-  content: "\e6d5";
+    content: "\e6d5";
 }
 
 .icon-color-svg-line:before {
-  content: "\e61b";
+    content: "\e61b";
 }
 
 .icon-color-watermark:before {
-  content: "\e6c5";
+    content: "\e6c5";
 }
 
 .icon-color-container:before {
-  content: "\e619";
+    content: "\e619";
 }
 
 .icon-color-page_num:before {
-  content: "\e618";
+    content: "\e618";
 }
 
 .icon-color-textedit:before {
-  content: "\e60d";
+    content: "\e60d";
 }
 
 .icon-color-crossrange_solidline:before {
-  content: "\e60e";
+    content: "\e60e";
 }
 
 .icon-color-page:before {
-  content: "\e60f";
+    content: "\e60f";
 }
 
 .icon-color-page_header:before {
-  content: "\e610";
+    content: "\e610";
 }
 
 .icon-color-page_footer:before {
-  content: "\e611";
+    content: "\e611";
 }
 
 .icon-color-vertical_solidline:before {
-  content: "\e612";
+    content: "\e612";
 }
 
 .icon-color-crossrange_dottedline:before {
-  content: "\e613";
+    content: "\e613";
 }
 
 .icon-color-vertical_dottedline:before {
-  content: "\e614";
+    content: "\e614";
 }
 
 .icon-color-img:before {
-  content: "\e615";
+    content: "\e615";
 }
 
 .icon-color-text-time:before {
-  content: "\e616";
+    content: "\e616";
 }
 
 .icon-color-paging:before {
-  content: "\e617";
+    content: "\e617";
 }
 
