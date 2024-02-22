@@ -110,6 +110,7 @@ watch(() => props.template.id, (n, _o) => {
 //       })
     
     mitt.emit('updatePanel')
+    mitt.emit('changePageSize')
     
   }
 }, {immediate: true})

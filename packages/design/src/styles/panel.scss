@@ -46,7 +46,6 @@
   position: absolute;
 }
 
-
 .design-panel-container-height {
   height: var(--header-heigh1t);
 }
@@ -54,9 +53,9 @@
 .design-panel-container-width {
   position: relative;
   height: calc(100% - 50px);
-  width: 100%;
+  width:  calc(100% - 230px);
   overflow: auto;
-  padding: 30px 30px 50px;
+  padding: 30px 260px 50px 30px;
 
   /* 定义滚动条的宽度 */
   &::-webkit-scrollbar {

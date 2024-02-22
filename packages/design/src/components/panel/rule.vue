@@ -3,13 +3,9 @@
   <div class="verticalRule"
        ref="ruleRef"
        :style="styleWrapper">
-    <!--
-     :class="{ruleRotate: direction == 'vertical', 'sticky-top': direction != 'vertical',
-      'sticky-left': direction == 'vertical',
-      }"-->
     <div v-if="highlight.x != undefined"
          class="ruleHighlight"
-         :style="highlightStyle"></div>
+         :style="highlightStyle"/>
     <svg id="canvas" ref="canvas"
          class="rule"
          :style="style">
@@ -25,9 +21,7 @@ import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {valueUnit} from "@cp-print/design/utils/elementUtil";
 import {getRatio} from "@cp-print/design/utils/utils";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
-// import Snap from 'snapsvg-cjs'
 import {Container} from "@cp-print/design/types/entity";
-// import {Paper} from "snapsvg";
 import {Path} from "d3-path";
 import * as d3Selection from "d3-selection";
 import * as d3Path from "d3-path";
@@ -109,7 +103,6 @@ watch(() => props.scroll, (_newQuestion, _oldQuestion) => {
   } else {
     ruleRef.value!.scrollTo(0, props.scroll)
   }
-  
 })
 
 const styleWrapper = computed(() => {
@@ -149,7 +142,7 @@ watchEffect(() => {
   length.value = unit2px(Number.parseInt(props.length.toString()) * 2) + 20
   if (length.value != 0) {
     nextTick(() => {
-      drawRuler()
+      // drawRuler()
     })
   }
   
@@ -162,24 +155,15 @@ watchEffect(() => {
   }
   
 })
-
-// const lineList: Array<Snap.Element> = []
-// const textList: Array<Snap.Element> = []
-// let highlightLine;
-
 const appStore = useAppStoreHook()
 
-// 旋转文字
-
 function drawRuler() {
-  // console.log(123)
-  // console.log(canvas.value)
-  // const svg = Snap(canvas.value as SVGElement) as Paper;
-  // svg.clear()
   const path = d3Path.path() as Path;
   
   const space = getRatio()
   const pxLength = unit2unit(appStore.lastPageUnit, 'mm', props.length)
+  
+  chartSvg.selectAll("text").remove();
   
   if (props.direction == 'horizontal') {
     // svg.line(0, 0, 0, 20).attr({
@@ -192,102 +176,54 @@ function drawRuler() {
       // let line;
       if (i % 5 == 0) {
         path.moveTo(space * i, 10);
-        // path.lineTo(space * i, 20);
-        // line = svg.line(space * i, 10, space * i, 20);
       } else if (i % 2 == 0) {
         path.moveTo(space * i, 13);
-        // path.lineTo(space * i, 20);
-        // line = svg.line(space * i, 13, space * i, 20);
       } else {
         path.moveTo(space * i, 14);
-        // line = svg.line(space * i, 14, space * i, 20);
       }
       path.lineTo(space * i, 20);
       
-      // line.attr({
-      //   stroke: "#8f9292",
-      //   strokeWidth: 1,
-      // })
-      
-      // lineList.push(line)
       if (i % 10 == 0) {
-        // let text = svg.text(space * i - 7, 10, i)
-        // text.attr({
-        //   fill: "#b1b4b4",
-        //   'font-size': 12
-        // });
-        // textList.push(text)
+        chartSvg.append("text")  // 添加一个 text 元素
+            .attr("x", space * i - 7)  // 设置 text 元素的 x 坐标
+            .attr("y", 10)  // 设置 text 元素的 y 坐标
+            .text(i + "")  // 设置 text 元素的文本内容
+            .style("fill", "white")  // b1b4b4 设置 text 元素的颜色
+            .style("font-size", "12px");  // 设置 text 元素的字体大小
       }
     }
-    // highlightLine = svg.line(0, 0, 0, 25);
-    
-    // path.moveTo(10, 0);
-    // path.lineTo(10, 10);
-    //
-    // path.moveTo(20, 0);
-    // path.lineTo(20, 10);
-    
-    // const path = draw(chartSvg)
-    console.log(chartSvg)
-    console.log(path)
-    chartSvg.select(".u-path")
-        // #8f9292
-        .style("stroke", "white")
-        .style("fill", "white")
-        // .attr("stroke-width", 1.9)
-        .attr("d", path.toString())
   } else {
     for (var i = 1; i < pxLength; i++) {
-      // let line;
       if (i % 5 == 0) {
-        // line = svg.line(10, space * i, 20, space * i);
+        path.moveTo(10, space * i);
       } else if (i % 2 == 0) {
-        // line = svg.line(13, space * i, 20, space * i);
+        path.moveTo(13, space * i);
       } else {
-        // line = svg.line(14, space * i, 20, space * i);
+        path.moveTo(14, space * i);
       }
-      // line.attr({
-      //   stroke: "#8f9292",
-      //   strokeWidth: 1,
-      // })
+      path.lineTo(20, space * i);
       if (i % 10 == 0) {
-        // let texth = i;
-        // let ruletext = svg.text(3, space * i, texth).attr({
-        //   fill: "#b1b4b4",
-        //   'font-size': 12
-        // });
-        
-        // const matrixRotate = new Snap.Matrix();
-        // matrixRotate.rotate(270, 10, space * i);
-        // ruletext.transform(matrixRotate);
-        // textList.push(ruletext)
+        chartSvg.append("text")  // 添加一个 text 元素
+            .attr("x", 3)  // 设置 text 元素的 x 坐标
+            .attr("y", space * i)  // 设置 text 元素的 y 坐标
+            .text(i + "")  // 设置 text 元素的文本内容
+            .style("fill", "white")  // 设置 text 元素的颜色
+            .attr("transform", `rotate(-90, 10, ${space * i})`)
+            .style("font-size", "12px");  // 设置 text 元素的字体大小
       }
     }
     
-    // highlightLine = svg.line(0, 0, 25, 0);
   }
-  
-  // highlightLine.attr({
-  //   stroke: "red",
-  //   strokeWidth: 0,
-  // });
+  chartSvg.select(".u-path")
+      // #8f9292
+      .style("stroke", "white")
+      .style("fill", "white")
+      // .attr("stroke-width", 1.9)
+      .attr("d", path.toString())
 }
 
 let chartSvg
 onMounted(() => {
-  chartSvg = d3Selection.select(canvas.value)
-
-//   // console.log(canvas)
-//   console.log(window.devicePixelRatio)
-//   if (window.devicePixelRatio) {
-//     // canvas.value.style.transform = "scale(" + 1 / window.devicePixelRatio + ")";
-//     // canvas.value.style.transformOrigin = "left top";
-//   }
-//   drawRuler();
+  chartSvg = d3Selection.select(canvas.value!)
 })
-
-
 </script>
-<style>
-
-</style>

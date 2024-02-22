@@ -2,7 +2,7 @@ import {Container, CpElement, ElementOption, elementType, RuntimeElementOption} 
 import {PropType, reactive} from "vue";
 import {i18n} from "@cp-print/design/locales";
 
-export const defaultElement = {
+export const defaultElement: CpElement = {
     option: {
         padding: {},
         margin: {}

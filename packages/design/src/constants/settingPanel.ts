@@ -28,3 +28,10 @@ export const handlePanelElementList = reactive({
     // } as HandlePanel
 
 })
+
+export const miniMap = {
+    // icon: 'icon-history',
+    right: 20, y: 660, width: 200, height: 200,
+    label: '历史操作',
+    visible: false,
+} as HandlePanel

@@ -108,6 +108,7 @@ import {
   setCurrentElement,
   valueUnit
 } from "@cp-print/design/utils/elementUtil";
+import {useAppStoreHook as useAppStore} from "@cp-print/design/stores/app";
 
 import CpDrop from "@cp-print/design/components/cp/drop";
 import ElementList from "../../design/elementList.vue";
@@ -144,7 +145,6 @@ mitt.on("scaleEvent", scaleEvent)
 mitt.on("panelSnapshot", panelSnapshot)
 mitt.on('updatePanel', updatePanel)
 mitt.on('triggerScroll', updatePanel)
-
 
 /**
  * 滑动事件
@@ -199,7 +199,7 @@ const highlightRule = reactive({
 const alignLineDataList = reactive<CpElement[]>([])
 const designContentRef = ref<InstanceType<any>>()
 // const elScrollbar = ref<InstanceType<typeof ElScrollbar>>()
-
+const appStore = useAppStore()
 // console.log($t('menus.home'))
 // const selectRectElement = reactive(<Element>{
 //   width: 0,
@@ -239,9 +239,13 @@ onMounted(() => {
       // }
   )
   mitt.emit('minimapViewportSize', {
-    width: designScrollRef.value!.clientWidth - 60,
+    width: designScrollRef.value!.clientWidth - 290,
     height: designScrollRef.value!.clientHeight - 80
   } as Container)
+  
+  const rect = designScrollRef.value!.getBoundingClientRect()
+  appStore.panelPosition = {x: rect.x, y: rect.y}
+  
 })
 
 // onBeforeUpdate(() => {
@@ -314,8 +318,6 @@ function drop(dragData: any) {
   element.x = px2unit(dragData.end.x - dragData.start.x)
   element.y = px2unit(dragData.end.y - dragData.start.y)
   initElement(element)
-  // console.log(stringify(element))
-  // console.log(element)
   
   handleElementType(element)
       .handle('PageHeader', () => {

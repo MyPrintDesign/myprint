@@ -23,7 +23,7 @@ import {
     BoundType, MoveableRefType, ElementGuidelineValueOption
 } from './types'
 import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
-import {nextTick, reactive, Ref, ref} from "vue";
+import {reactive, Ref, ref} from "vue";
 import {
     GroupManager
     // , TargetGroupsType
@@ -66,6 +66,7 @@ const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
 const props = {dimensionViewable: true, editable: true, enterLeave: true}
 
 export const targets = ref([]) as Ref<Array<CpHtmlElement | Array<CpHtmlElement>>>
+export const bkTargets = ref([]) as Ref<Array<CpHtmlElement | Array<CpHtmlElement>>>
 const noSelectList: Array<elementType> = ['PageFooter', 'PageHeader', 'Container']
 
 export const DimensionViewable = {
@@ -160,45 +161,69 @@ export const Editable = {
     }
 }
 
-export function updatePanel() {
-    nextTick(() => {
-        setTimeout(() => {
-            elementList.length = 0
-            canSelectElementList.length = 0
+export function dragNewElement(newElement: CpHtmlElement, inputEvent) {
+    canSelectElementList.push(newElement)
 
-            const groupElementList: Array<Array<CpHtmlElement>> = []
-            const panel = getCurrentPanel()
-            const groupElementMap = groupListToMap(panel.groupList)
+    selecto.selectableTargets = canSelectElementList
+    groupManager.set([], canSelectElementList)
 
-            forElement(panel, v => {
-                // console.log(v.runtimeOption.target)
-                elementList.push(v.runtimeOption.target)
-                if (!noSelectList.includes(v.type)) {
-                    canSelectElementList.push(v.runtimeOption.target)
-                }
-                const groupIndex = groupElementMap[v.id]
-                if (groupIndex >= 0) {
-                    if (!groupElementList[groupIndex]) {
-                        groupElementList[groupIndex] = []
-                    }
-                    groupElementList[groupIndex].push(v.runtimeOption.target)
-                }
-            })
+    // 记录旧的选中节点，用于取消恢复
+    // 选中
+    bkTargets.value = targets.value
+    setSelectedTargets([newElement])
+    moveable.bounds = {}
 
-            // console.log(selecto.getSelectableElements() as Array<CpHtmlElement>)
-            // console.log(elementList)
-            // console.log(snapElementList)
-            selecto.selectableTargets = canSelectElementList
-            groupManager.set([], canSelectElementList);
-            // console.log(123123)
-            // console.log(groupMap)
-            for (let groupMapKey of groupElementList) {
-                // console.log(groupMap[groupMapKey])
-                groupManager.group(groupMapKey, true)
+    moveable.dragStart(inputEvent)
+
+}
+
+export function dragNewElementCancel(newElement: CpHtmlElement) {
+    if (canSelectElementList.length > 0 && canSelectElementList[canSelectElementList.length - 1] === newElement) {
+        canSelectElementList.pop()
+
+        selecto.selectableTargets = canSelectElementList
+        groupManager.set([], canSelectElementList)
+        setSelectedTargets(bkTargets.value)
+    }
+}
+
+export function updatePanel(list: CpHtmlElement[] = []) {
+    setTimeout(() => {
+        elementList.length = 0
+        canSelectElementList.length = 0
+
+        const groupElementList: Array<Array<CpHtmlElement>> = []
+        const panel = getCurrentPanel()
+        const groupElementMap = groupListToMap(panel.groupList)
+
+        forElement(panel, v => {
+            // console.log(v.runtimeOption.target)
+            elementList.push(v.runtimeOption.target)
+            if (!noSelectList.includes(v.type)) {
+                canSelectElementList.push(v.runtimeOption.target)
             }
+            const groupIndex = groupElementMap[v.id]
+            if (groupIndex >= 0) {
+                if (!groupElementList[groupIndex]) {
+                    groupElementList[groupIndex] = []
+                }
+                groupElementList[groupIndex].push(v.runtimeOption.target)
+            }
+        })
 
-        }, 100)
-    })
+        // console.log(selecto.getSelectableElements() as Array<CpHtmlElement>)
+        // console.log(elementList)
+        // console.log(snapElementList)
+        selecto.selectableTargets = canSelectElementList
+        groupManager.set(list, canSelectElementList);
+        // setSelectedTargets()
+        // console.log(123123)
+        // console.log(groupMap)
+        for (let groupMapKey of groupElementList) {
+            // console.log(groupMap[groupMapKey])
+            groupManager.group(groupMapKey, true)
+        }
+    }, 1)
 }
 
 export function moveableMove(x: number, y: number) {

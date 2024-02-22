@@ -6,8 +6,6 @@
       
       <div class="display-flex-column toolbar-tool">
         <div class="display-flex">
-          <el-button @click="ggroup">g</el-button>
-          <el-button @click="unggroup">ug</el-button>
           <el-button @click="refresh">r</el-button>
           <el-button size="small">
             <el-icon>
@@ -37,18 +35,9 @@ import {i18n} from "@cp-print/design/locales";
 import {clearPanel} from "@cp-print/design/utils/elementUtil";
 import {ActionEnum, record, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {Printer} from "@element-plus/icons-vue";
-import {group, ungroup} from "@cp-print/design/components/moveable/moveable";
 
 const panel = inject(panelKey)
 const mitt = inject(mittKey)!
-
-function ggroup(){
-  group()
-}
-
-function unggroup(){
-  ungroup()
-}
 
 function preview() {
   mitt.emit('previewPanel', {} as any)

@@ -149,6 +149,11 @@ export interface CpElement extends Container {
      * 是否锁定
      */
     lock?: number
+
+    /**
+     * 是否组合
+     */
+    groupIs?: boolean
 }
 
 export interface TextElement extends CpElement {
@@ -229,6 +234,7 @@ export interface Position extends Point {
 
 export interface ContentScaleVo {
     viewport: Container
+    scale: number
     openIs: boolean
 }
 

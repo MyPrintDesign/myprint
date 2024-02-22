@@ -12,7 +12,7 @@ import {
     defaultDragRectElement, elementTypeLineList,
     handleConstantsType
 } from "@cp-print/design/constants/common";
-import {to} from "./utils";
+import {mitt, to} from "./utils";
 import {_defaultNum} from "@cp-print/design/utils/numberUtil";
 import {reactive, CSSProperties} from "vue";
 import {formatDate} from "./timeUtil";
@@ -836,6 +836,7 @@ export function changePageSize(val?: any) {
         panel.pageFooter.y = unit2unit('mm', panel.pageUnit, panel.height - panel.pageFooter.height)
         panel.pageFooter.runtimeOption.width = unit2px(panel.width)
     }
+    mitt.emit('pageSize')
 }
 
 export function changePageUnit() {
@@ -897,6 +898,32 @@ export function computedShapeBound(points: Array<PointLabel>): Container {
         width: maxX - minX,
         height: maxY - minY
     } as Container
+}
+
+export function multipleElementGetValue(props: string) {
+    if (Array.isArray(appStore().currentElement)) {
+        const elementList = appStore().currentElement as any
+        const firstValue = elementList[0][props]
+        for (let currentElementElement of elementList) {
+            if (currentElementElement[props] != firstValue) {
+                return undefined
+            }
+        }
+        return firstValue
+    } else {
+        return appStore().currentElement[props]
+    }
+}
+
+export function multipleElementSetValue(props: string, val: any) {
+
+    if (Array.isArray(appStore().currentElement)) {
+        for (let currentElementElement of appStore().currentElement as any) {
+            currentElementElement[props] = val
+        }
+    } else {
+        appStore().currentElement[props] = val
+    }
 }
 
 export function newPanel(): Panel {

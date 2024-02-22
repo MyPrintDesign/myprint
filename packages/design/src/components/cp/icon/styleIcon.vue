@@ -1,57 +1,103 @@
 <template>
-  <el-tooltip :content="tips"
-              :disabled="tips == ''"
-              :show-after="200"
-              :enterable="false"
-              :hide-after="0"
-              trigger="hover"
-              placement="bottom">
-    <div class="style-icon"
-         :class="{focus: enable && (hoverFlag || modelValue), 'cp-icon-disabled': !enable}"
-         :style="{marginTop: marginTop}"
-         @click="click"
-         @mouseover="hover(true)"
-         @mouseleave="hover(false)">
-      <slot/>
-    </div>
-  </el-tooltip>
+  <tip-icon
+      :modelValue="value"
+      @update:model-value="change"
+      :enable="enable">
+    <slot/>
+  </tip-icon>
 </template>
 
 <script setup lang="ts">
-// import {ElTooltip} from 'element-plus'
-import {inject, ref} from "vue";
-import {mittKey} from "@cp-print/design/constants/keys";
-import {ActionEnum, Snapshot} from "@cp-print/design/utils/historyUtil";
+import {computed, inject} from "vue";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
-const appStore = useAppStoreHook()
-const emit = defineEmits(['update:modelValue'])
+import TipIcon from "@cp-print/design/components/cp/icon/tip-icon.vue";
+import {hasStyle} from "@cp-print/design/constants/common";
+import {ActionEnum, Snapshot} from "@cp-print/design/utils/historyUtil";
+import {mittKey} from "@cp-print/design/constants/keys";
+import {multipleElementGetValue, multipleElementSetValue} from "@cp-print/design/utils/elementUtil";
+
 const mitt = inject(mittKey)!
 
+const appStore = useAppStoreHook()
+const emit = defineEmits(['update:modelValue'])
+
 const props = withDefaults(defineProps<{
+      props?: string,
+      propsValue?: string,
+      enableProps?: string,
       tips?: string,
-      enable?: boolean,
-      modelValue?: boolean,
+      enable?: boolean | undefined,
       marginTop?: string,
     }>(),
     {
+      props: "",
+      propsValue: undefined,
+      enableProps: "",
       tips: "",
-      enable: true,
-      modelValue: false,
+      enable: undefined,
       marginTop: ""
     })
+// console.log(props.enable)
 
-const hoverFlag = ref(false)
-
-function click() {
-  if (!props.enable) {
-    return
+const value = computed(() => {
+  
+  const result = multipleElementGetValue(props.props)
+  
+  if (props.propsValue == undefined) {
+    return result
+  } else {
+    return result === props.propsValue
   }
-  emit('update:modelValue', !props.modelValue)
-  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: appStore.currentElement} as Snapshot)
-}
+  //
+  // if (Array.isArray(appStore.currentElement)) {
+  //   for (let currentElementElement of appStore.currentElement) {
+  //      else {
+  //       if (currentElementElement[props.props] !== props.propsValue) {
+  //         return false
+  //       }
+  //     }
+  //   }
+  //   return true
+  // } else {
+  //   if (props.propsValue == undefined) {
+  //     return appStore.currentElement[props.props]
+  //   } else {
+  //     return appStore.currentElement[props.props] === props.propsValue
+  //   }
+  // }
+})
 
-function hover(flag: boolean) {
-  hoverFlag.value = flag
-}
+const enable = computed(() => {
+  if (props.enable !== undefined) {
+    return props.enable
+  }
+  if (Array.isArray(appStore.currentElement)) {
+    for (let currentElementElement of appStore.currentElement) {
+      if (!hasStyle(currentElementElement.type, 'bold')) {
+        return false
+      }
+    }
+    return true
+  } else {
+    return hasStyle(appStore.currentElement.type, 'bold')
+  }
+})
 
+function change(val: boolean) {
+  let tmpVal: any = val
+  if (props.propsValue != undefined) {
+    if (val) {
+      tmpVal = props.propsValue
+    }
+  }
+  multipleElementSetValue(props.props, tmpVal)
+  
+  if (Array.isArray(appStore.currentElement)) {
+    for (let currentElementElement of appStore.currentElement) {
+      mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: currentElementElement} as Snapshot)
+    }
+  } else {
+    mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: appStore.currentElement} as Snapshot)
+  }
+}
 </script>

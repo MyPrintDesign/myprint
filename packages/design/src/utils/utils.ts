@@ -2,8 +2,12 @@ import {clearEventBubble} from "./event"
 import {CpElement, Panel} from "@cp-print/design/types/entity";
 import {displayRatio, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {arrayIndexOf, arrayRemove} from "@cp-print/design/utils/arrays";
+// @ts-ignore
+import * as mittInit from 'mitt'
 
 let collapsePanelZIndex = 1000
+
+export const mitt = mittInit.default()
 
 export function sortColumn(arr: any, dragData: any, b: any, flag: any) {
     arrayRemove(arr, dragData)

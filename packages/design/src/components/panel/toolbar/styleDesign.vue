@@ -18,7 +18,8 @@
               </span>
             </el-option>
           </el-select>
-          <el-select v-model="appStore.currentElement.option.fontSize"
+          <el-select :modelValue="multipleElementGetValue('option.fontSize')"
+                     @update:model-value="changeFontSize"
                      :placeholder="i18n('font.size')" size="small" class="width-60"
                      :disabled="!hasStyle(appStore.currentElement.type, 'fontSize')">
             <div class="width-100-p">
@@ -49,20 +50,18 @@
       
       <div class="display-flex space-between" style="margin-top: 1px">
         <div class="display-flex" style="gap: 2px">
-          <style-icon tips="加粗" v-model="appStore.currentElement.option.bold"
-                      :enable="hasStyle(appStore.currentElement.type, 'bold')">
+          <style-icon tips="加粗"
+                      props="option.bold"
+                      enableProps="bold">
             <i class="icon-zitijiacu iconfont"/>
           </style-icon>
-          <style-icon tips="倾斜" v-model="appStore.currentElement.option.italic"
-                      :enable="hasStyle(appStore.currentElement.type, 'italic')">
+          <style-icon tips="倾斜" props="option.italic" enableProps="italic">
             <i class="icon-zitixieti iconfont"/>
           </style-icon>
-          <style-icon tips="下划线" v-model="appStore.currentElement.option.underline"
-                      :enable="hasStyle(appStore.currentElement.type, 'underline')">
+          <style-icon tips="下划线" props="option.underline" enableProps="underline">
             <i class="icon-zitixiahuaxian iconfont"/>
           </style-icon>
-          <style-icon tips="删除线" v-model="appStore.currentElement.option.lineThrough"
-                      :enable="hasStyle(appStore.currentElement.type, 'lineThrough')">
+          <style-icon tips="删除线" props="option.lineThrough" enableProps="lineThrough">
             <i class="icon-wenben-shanchuxian iconfont"/>
           </style-icon>
         </div>
@@ -84,55 +83,50 @@
     <div class="display-block group-font">
       
       <div class="display-flex " style="gap: 2px">
-        <style-icon tips="左对齐" :modelValue="appStore.currentElement.option.textAlign == 'start'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'start'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+        <style-icon tips="左对齐"
+                    props="option.textAlign"
+                    propsValue="start"
+                    enableProps="textAlign">
           <i class="icon-zuoduiqi iconfont"/>
         </style-icon>
-        <style-icon tips="水平居中" :modelValue="appStore.currentElement.option.textAlign == 'center'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'center'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+        <style-icon tips="水平居中"
+                    props="option.textAlign"
+                    propsValue="center"
+                    enableProps="textAlign">
           <i class="icon-chuizhijuzhong iconfont"/>
         </style-icon>
-        <style-icon tips="右对齐" :modelValue="appStore.currentElement.option.textAlign == 'end'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+        <style-icon tips="右对齐"
+                    props="option.textAlign"
+                    propsValue="end"
+                    enableProps="textAlign">
           <i class="icon-youduiqi iconfont"/>
         </style-icon>
         
-        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+        <style-icon tips="组合"
+                    @click="group()"
+                    :enable="!appStore.currentElement.groupIs">
           <i class="icon-color-zh iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+        <style-icon tips="取消组合"
+                    @click="ungroup()"
+                    :enable="appStore.currentElement.groupIs">
           <i class="icon-color-qxzh iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+        <style-icon tips="置于顶层">
           <i class="icon-color-zydc iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+        <style-icon tips="上移一层">
           <i class="icon-color-syyc iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+        <style-icon tips="下移一层">
           <i class="icon-color-xyyc iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="组合" :modelValue="appStore.currentElement.option.textAlign == 'end'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.textAlign = 'end'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'textAlign')">
+        <style-icon tips="置于底层">
           <i class="icon-color-zydic iconfont-color"/>
         </style-icon>
         
@@ -144,28 +138,32 @@
       </div>
       
       <div class="display-flex" style="gap: 2px; margin-top: 2px">
-        <style-icon tips="顶对齐" :modelValue="appStore.currentElement.option.verticalAlign == 'start'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.verticalAlign = 'start'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'verticalAlign')">
+        <style-icon tips="顶对齐"
+                    props="option.verticalAlign"
+                    propsValue="start"
+                    enableProps="verticalAlign">
           <i class="icon-shangduiqi iconfont"/>
         </style-icon>
-        <style-icon tips="垂直居中" :modelValue="appStore.currentElement.option.verticalAlign == 'center'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.verticalAlign = 'center'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'verticalAlign')">
+        <style-icon tips="垂直居中"
+                    props="option.verticalAlign"
+                    propsValue="center"
+                    enableProps="verticalAlign">
           <i class="icon-shuipingjuzhong iconfont"/>
         </style-icon>
-        <style-icon tips="底对齐" :modelValue="appStore.currentElement.option.verticalAlign == 'end'"
-                    @update:model-value="flag => {if(flag) appStore.currentElement.option.verticalAlign = 'end'}"
-                    :enable="hasStyle(appStore.currentElement.type, 'verticalAlign')">
+        <style-icon tips="底对齐"
+                    props="option.verticalAlign"
+                    propsValue="end"
+                    enableProps="verticalAlign">
           <i class="icon-xiaduiqi iconfont"/>
         </style-icon>
-        <style-icon tips="换行" marginTop="-3px" :modelValue="appStore.currentElement.option.lineBreak == true"
-                    @update:model-value="flag => {appStore.currentElement.option.lineBreak = flag}"
-                    :enable="['Text', 'Table'].includes(appStore.currentElement.type)">
+        <style-icon tips="换行" marginTop="-3px"
+                    props="option.lineBreak"
+                    enableProps="lineBreak">
           <i class="icon-wenbenhuanhang iconfont" style="font-size: 20px"/>
         </style-icon>
-        <style-icon tips="边框" v-model="appStore.currentElement.option.borderAll"
-                    :enable="hasStyle(appStore.currentElement.type, 'borderAll')">
+        <style-icon tips="边框"
+                    props="option.borderAll"
+                    enableProps="borderAll">
           <i class="icon-jurassic_border-all iconfont" style="font-size: 18px"/>
         </style-icon>
       </div>
@@ -180,16 +178,20 @@ import GroupInput from "../../cp/cp-group/groupInput.vue";
 import cpColorPicker from "../../cp/cp-colorPicker/cp-colorPicker.vue";
 import StyleIcon from "@cp-print/design/components/cp/icon";
 import {i18n} from "@cp-print/design/locales";
-import {
-  // elementSetting,
-  fontList, fontSizeList, hasStyle
-} from "@cp-print/design/constants/common";
+import {fontList, fontSizeList, hasStyle} from "@cp-print/design/constants/common";
 import {CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
+import {group, ungroup} from "@cp-print/design/components/moveable/moveable";
+import {multipleElementGetValue, multipleElementSetValue} from "@cp-print/design/utils/elementUtil";
 
 // import {ElementOption} from "@/types/entity";
 
 const appStore = useAppStoreHook()
+
+function changeFontSize(val: string) {
+  console.log(val)
+  multipleElementSetValue('option.fontSize', val)
+}
 
 // watch(() => appStore.currentElement, (n, o) => {
 //   if (n.value != null) {

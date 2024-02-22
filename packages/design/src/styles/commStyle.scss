@@ -168,12 +168,13 @@
   line-height: 1;
   overflow: hidden;
   border-radius: 3px;
+
+  &:hover {
+    background: white;
+    color: var(--drag-h-color);
+  }
 }
 
-.cp-handle-panel-icon:hover {
-  background: white;
-  color: var(--drag-h-color);
-}
 
 .sort-tips-line {
   width: 1px;

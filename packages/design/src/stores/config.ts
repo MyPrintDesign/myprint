@@ -16,6 +16,7 @@ export const useConfigStore = defineStore('config', {
                 operation: {visible: false},
                 history: {visible: false},
                 elementList: {visible: false},
+                miniMap: {visible: false}
             } as any,
             settingDesign: {
                 autoAlign: false

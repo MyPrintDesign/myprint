@@ -4,8 +4,7 @@ import "vue3-colorpicker/style.css";
 
 import {messageFun, mittKey} from "./constants/keys";
 
-// @ts-ignore
-import mitt from 'mitt'
+
 import {createPinia} from "pinia";
 // @ts-ignore
 // import piniaPersist from 'pinia-plugin-persist';
@@ -14,6 +13,7 @@ import Vue3ColorPicker from "vue3-colorpicker";
 // import 'vue-cropper/dist/index.css'
 // import i18n from "./locales";
 import {useSocket} from "./stores/socket";
+import {mitt} from "@cp-print/design/utils/utils";
 // import 'element-plus/es/components/button/style/index'
 // import 'element-plus/es/components/scrollbar/style/index'
 // import 'element-plus/es/components/switch/style/index'
@@ -65,7 +65,7 @@ const install = {
             // .use(VueCropper)
             .use(Vue3ColorPicker)
         app.provide(messageFun, onSocketMessage)
-        app.provide(mittKey, mitt())
+        app.provide(mittKey, mitt)
 
         useSocket().INIT_SOCKET(onSocketMessage)
     }
