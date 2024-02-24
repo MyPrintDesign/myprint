@@ -3,7 +3,7 @@
     <template #head>
       | {{ title }}
     </template>
-    <CpElementSetting v-if="appStore.currentElement.id" class="advanced-config"/>
+    <CpElementSetting v-if="appStore.currentElement.length > 0" class="advanced-config"/>
     <CpPanelSetting v-else class="advanced-config"/>
   </cp-collapse>
 </template>
@@ -19,20 +19,21 @@ import {elementTypeFormat} from "@cp-print/design/types/entity";
 import {computed} from "vue";
 import {useConfigStore} from "@cp-print/design/stores/config";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
+
 const appStore = useAppStoreHook()
 const configStore = useConfigStore()
 
 const title = computed(() => {
-  const current = appStore.currentElement;
-  if (current.id == null) {
-    return '面板'
-  }
   
-  let type = elementTypeFormat[current.type]
-  if (current.label) {
-    type = type + ':' + current.label
+  if (appStore.currentElement.length > 0) {
+    const current = appStore.currentElement[0];
+    let type = elementTypeFormat[current.type]
+    if (current.label) {
+      type = type + ':' + current.label
+    }
+    return type
   }
-  return type
+  return '面板'
 })
 
 </script>

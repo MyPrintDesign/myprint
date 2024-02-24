@@ -1,6 +1,9 @@
 <template>
   <div class="cp-element-wrapper design-wrapper design-inactive"
        :style="style"
+       :class="{
+         'dropInIs': element.runtimeOption.dragInIs
+       }"
        ref="designRef">
     <element-view :element="element"/>
     
@@ -13,7 +16,7 @@
     <cp-container v-else-if="element.type === 'Container'" :element="element">
       <element-list :element-list="element.elementList"/>
     </cp-container>
-    
+  
   </div>
 
 </template>
@@ -23,7 +26,9 @@
 import ElementView from "@cp-print/design/components/design/element.vue";
 
 import {CpElement} from "@cp-print/design/types/entity";
-import {computed, CSSProperties, onMounted, ref} from "vue";
+import {
+  // computed,
+  CSSProperties, onMounted, ref} from "vue";
 import {CpContainer} from "./container";
 import ElementList from "./elementList.vue";
 // import TablePopoverView from "./table/tablePopoverView.vue";
@@ -40,18 +45,22 @@ onMounted(() => {
   props.element.runtimeOption.target = designRef.value
 })
 
-const style = computed(() => {
-  return {
-    left: props.element.runtimeOption.x + 'px',
-    top: props.element.runtimeOption.y + 'px',
-    transform: `translate(0px, 0px) rotate(${props.element.runtimeOption.rotate}deg)`,
-    width: props.element.runtimeOption.width + 'px',
-    height: props.element.runtimeOption.height + 'px',
-    // maxWidth: widthValueUnit(element),
-    // maxHeight: heightValueUnit(element),
-  } as CSSProperties
-})
+const style = {
+  left: props.element.runtimeOption.x + 'px',
+  top: props.element.runtimeOption.y + 'px',
+  transform: `translate(0px, 0px) rotate(${props.element.runtimeOption.rotate}deg)`,
+  width: props.element.runtimeOption.width + 'px',
+  height: props.element.runtimeOption.height + 'px',
+  // maxWidth: widthValueUnit(element),
+  // maxHeight: heightValueUnit(element),
+} as CSSProperties
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.dropInIs {
+  z-index: 1;
+  opacity: 0.6;
+  background: var(--page-header-drop-color);
+  outline: 4px solid var(--drag-h-color);
+}
 </style>

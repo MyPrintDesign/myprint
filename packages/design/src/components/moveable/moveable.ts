@@ -17,7 +17,7 @@ import {
     OnBound,
     OnChangeTargets,
     OnRender,
-    // MoveableInterface,
+    MoveableInterface,
     MoveableManagerInterface, Renderer,
     MoveableOptions,
     BoundType, MoveableRefType, ElementGuidelineValueOption
@@ -31,12 +31,15 @@ import {
 import {deepFlat, throttle} from "@daybrush/utils";
 import {
     elementGroup, elementUngroup,
-    forElement,
+    recursionForElement,
     getCurrentPanel, groupListToMap,
     removeElement,
     setCurrentElement
 } from "@cp-print/design/utils/elementUtil";
-import {defaultElement, elementTypeLineList} from "@cp-print/design/constants/common";
+import {
+    // defaultElement,
+    elementTypeLineList
+} from "@cp-print/design/constants/common";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
 import Selecto, {OnDragStart as OnSelectDragStart, OnSelectEnd, OnSelect} from "selecto";
 import Moveable
@@ -44,9 +47,12 @@ import Moveable
     from "moveable";
 import {Container, CpElement, CpHtmlElement, elementType} from "@cp-print/design/types/entity";
 import numberUtil from "@cp-print/design/utils/numberUtil";
+// import MoveableManager from "moveable/declaration/MoveableManager";
+// import {MoveableInterface} from "react-moveable/src/types";
+// import {RectInfo} from "react-moveable/src/types";
 // import {rad2Ang} from "@cp-print/design/utils/svgUtil";
 // import {OnBeforeDragStart} from "react-moveable";
-let moveable: Moveable & MoveableOptions
+let moveable: Moveable & MoveableOptions & MoveableInterface
 let selecto: Selecto
 let firstElement: CpHtmlElement | undefined;
 const groupManager = new GroupManager([]);
@@ -69,7 +75,7 @@ export const targets = ref([]) as Ref<Array<CpHtmlElement | Array<CpHtmlElement>
 export const bkTargets = ref([]) as Ref<Array<CpHtmlElement | Array<CpHtmlElement>>>
 const noSelectList: Array<elementType> = ['PageFooter', 'PageHeader', 'Container']
 
-export const DimensionViewable = {
+const DimensionViewable = {
     name: "dimensionViewable",
     props: [],
     events: [],
@@ -114,7 +120,7 @@ export const DimensionViewable = {
     }
 }
 
-export const Editable = {
+const removeable = {
     name: "editable",
     props: [],
     events: [],
@@ -168,8 +174,8 @@ export function dragNewElement(newElement: CpHtmlElement, inputEvent) {
     groupManager.set([], canSelectElementList)
 
     // 记录旧的选中节点，用于取消恢复
-    // 选中
     bkTargets.value = targets.value
+    // 选中
     setSelectedTargets([newElement])
     moveable.bounds = {}
 
@@ -196,7 +202,7 @@ export function updatePanel(list: CpHtmlElement[] = []) {
         const panel = getCurrentPanel()
         const groupElementMap = groupListToMap(panel.groupList)
 
-        forElement(panel, v => {
+        recursionForElement(panel, v => {
             // console.log(v.runtimeOption.target)
             elementList.push(v.runtimeOption.target)
             if (!noSelectList.includes(v.type)) {
@@ -242,18 +248,20 @@ export function moveableMove(x: number, y: number) {
 }
 
 export function group() {
+    ungroup()
     const nextGroup = groupManager.group(targets.value, true) as CpHtmlElement[]
-    elementGroup(targets.value)
     // console.log(nextGroup)
+    // console.log(targets.value)
     if (nextGroup) {
+        elementGroup(nextGroup)
         targets.value = nextGroup
     }
 }
 
 export function ungroup() {
     const nextGroup = groupManager.ungroup(targets.value) as CpHtmlElement[];
-    elementUngroup(targets.value)
     if (nextGroup) {
+        elementUngroup(nextGroup)
         targets.value = nextGroup
     }
 }
@@ -324,9 +332,12 @@ function updateLocation(e: OnDrag) {
         // const {offsetX, offsetY} = offsetContainer()
         // console.log(e)
         // console.log(target.element.runtimeOption.x! + e.translate[0], target.element.runtimeOption.y! + e.translate[1])
-        target.element.x = px2unit(target.element.runtimeOption.x! + e.translate[0])
-        target.element.y = px2unit(target.element.runtimeOption.y! + e.translate[1])
 
+        target.element.runtimeOption.x = target.element.runtimeOption.init.x + e.translate[0]
+        target.element.runtimeOption.y = target.element.runtimeOption.init.y + e.translate[1]
+
+        target.element.x = px2unit(target.element.runtimeOption.x)
+        target.element.y = px2unit(target.element.runtimeOption.y)
 
         // 特殊处理，兼容 bounds自动贴边时，无法达到边界值0
         if (Math.abs(target.element.x) < 2 || Math.abs(target.element.y) < 2) {
@@ -368,6 +379,10 @@ function updateRect(e: OnResize) {
         for (let moveableOne of moveable.getMoveables()) {
             const rect = moveableOne.getRect()
             const cpElement = moveableOne.getDragElement() as CpHtmlElement
+
+            cpElement.element.runtimeOption.x = rect.left
+            cpElement.element.runtimeOption.y = rect.top
+
             cpElement.element.x = px2unit(rect.left)
             cpElement.element.y = px2unit(rect.top)
         }
@@ -375,6 +390,9 @@ function updateRect(e: OnResize) {
     // console.log(e.width)
     target.element.width = px2unit(e.width)
     target.element.height = px2unit(e.height)
+
+    target.element.runtimeOption.width = e.width
+    target.element.runtimeOption.height = e.height
     // target.element.runtimeOption.width = e.width
     // target.element.runtimeOption.height = e.height
 }
@@ -543,10 +561,116 @@ function bound(_e: OnBound) {
 
 const onScaleStart = _e => {
     // e.setFixedDirection([0, 0]);
-};
+}
 const onBeforeScale = _e => {
     // e.setFixedDirection([-1, -1]);
-};
+}
+
+export function alignTop() {
+    align((rect, child, _i) => {
+        child.request("draggable", {y: rect.top}, true);
+    })
+}
+
+export function alignBottom() {
+    align((rect, child, _i) => {
+        child.request("draggable", {y: rect.top + rect.height}, true);
+    })
+}
+
+export function alignLeft() {
+    align((rect, child, _i) => {
+        child.request("draggable", {x: rect.left}, true);
+    })
+}
+
+export function alignRight() {
+    align((rect, child, _i) => {
+        child.request("draggable", {x: rect.left + rect.width}, true);
+    })
+}
+
+export function alignVerticalCenter() {
+    align((rect, child, i) => {
+        child.request("draggable", {y: rect.top + rect.height / 2 - rect.children[i].height / 2}, true);
+    })
+}
+
+export function alignHorizontalCenter() {
+    align((rect, child, i) => {
+        child.request("draggable", {x: rect.left + rect.width / 2 - rect.children[i].width / 2}, true);
+    })
+}
+
+/**
+ * 排列垂直间距
+ */
+export function arrangeVerticalSpacing() {
+    // align((rect, child) => {
+    //     child.request("draggable", {x: rect.left + rect.width / 2 - rect.children[i].width / 2}, true);
+    // })
+    const groupRect = moveable.getRect();
+    const moveables = moveable.getMoveables();
+    let top = groupRect.top;
+    if (moveables.length <= 1) {
+        return;
+    }
+    const gap = (groupRect.height - groupRect.children.reduce(
+        (prev, cur) => {
+            return prev + cur.height;
+        },
+        0
+    )) / (moveables.length - 1);
+    moveables.sort((a, b) => {
+        return a.state.top - b.state.top;
+    });
+    moveables.forEach(child => {
+        const rect = child.getRect();
+        child.request("draggable", {y: top}, true);
+        top += rect.height + gap;
+    });
+    moveable.updateRect();
+}
+
+/**
+ * 排列水平间距
+ */
+export function arrangeHorizontalSpacing() {
+    const groupRect = moveable.getRect();
+    const moveables = moveable.getMoveables();
+    let left = groupRect.left;
+    if (moveables.length <= 1) {
+        return;
+    }
+    const gap = (groupRect.width - groupRect.children.reduce(
+        (prev, cur) => {
+            return prev + cur.width;
+        },
+        0
+    )) / (moveables.length - 1);
+    moveables.sort((a, b) => {
+        return a.state.left - b.state.left;
+    });
+    moveables.forEach(child => {
+        const rect = child.getRect();
+        child.request("draggable", {x: left}, true);
+        left += rect.width + gap;
+    });
+    moveable.updateRect();
+}
+
+
+function align(callback: (RectInfo, MoveableManagerInterface, number) => void) {
+    const rect = moveable.getRect();
+    const moveables = moveable.getMoveables();
+    if (moveables.length <= 1) {
+        return;
+    }
+    moveables.forEach((child, i) => {
+        callback(rect, child, i)
+    });
+    moveable.updateRect();
+}
 
 function onScroll({scrollContainer, direction}) {
     let elemtnt = scrollContainer as HTMLElement
@@ -584,6 +708,8 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlEle
     isChangeTargetLoadFinished = false
     targets.value = nextTargetes
     moveable.target = targets.value
+
+    const flatList = deepFlat(nextTargetes)
     selecto.setSelectedTargets(deepFlat(nextTargetes))
 
     if (nextTargetes.length == 0) {
@@ -591,24 +717,27 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlEle
         highlightRule.vertical.highlight.x = undefined!
     }
 
-    for (let nextTargete of nextTargetes) {
-        // console.log(nextTargete.element)
-        if (Array.isArray(nextTargete)) {
-            for (let nextTargeteElement of nextTargete) {
-                nextTargeteElement.element.status = 'HANDLE'
-            }
-        } else {
-            nextTargete.element.status = 'HANDLE'
-        }
+    const cpList: CpElement[] = []
+
+    for (let nextTargete of flatList) {
+        // // console.log(nextTargete.element)
+        // if (Array.isArray(nextTargete)) {
+        //     for (let nextTargeteElement of nextTargete) {
+        //         nextTargeteElement.element.status = 'HANDLE'
+        //     }
+        // } else {
+        // }
+        nextTargete.element.status = 'HANDLE'
+        cpList.push(nextTargete.element)
     }
 
-    setCurrentElement(defaultElement)
+    setCurrentElement(cpList)
 
     if (targets.value.length > 0) {
         const firstElementTarget = targets.value[0]
         if (targets.value.length == 1 && !Array.isArray(firstElementTarget)) {
             // console.log(firstElementTarget.element)
-            setCurrentElement(firstElementTarget.element)
+            // setCurrentElement(firstElementTarget.element)
             freshMoveableOption(firstElementTarget.element)
         } else {
             computeDirectionRect('--direction-width', 70)
@@ -616,6 +745,8 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlEle
         }
         let parent
         if (Array.isArray(firstElementTarget)) {
+            console.log(firstElementTarget)
+            console.log(firstElementTarget[0].element)
             parent = firstElementTarget[0].element.runtimeOption.parent! as CpElement;
         } else {
             parent = firstElementTarget.element.runtimeOption.parent! as CpElement;
@@ -877,6 +1008,8 @@ export function initMoveable(_selecto, _highlightRule) {
     selecto = _selecto
     highlightRule = _highlightRule
 
+
+    // @ts-ignore
     moveable = new Moveable(
         document.querySelector(".design-content") as HTMLElement
         // document.querySelector("#app > section > main > div > div.display-flex.design-panel-container-height > div.design-panel.drag.user-select-none > div.display-flex > div.el-scrollbar.affix-container.design-panel-container-width > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default") as HTMLElement
@@ -907,7 +1040,7 @@ export function initMoveable(_selecto, _highlightRule) {
             // snapDirections: ({bottom: true}),
             // elementSnapDirections: ({bottom: true}),
             elementGuidelines: snapElementList.value,
-            ables: [DimensionViewable, Editable],
+            ables: [DimensionViewable, removeable],
             props: (props),
             // warpable: false,
             // Enabling pinchable lets you use events that

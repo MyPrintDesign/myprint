@@ -2,12 +2,7 @@ import {Container, CpElement, ElementOption, elementType, RuntimeElementOption} 
 import {PropType, reactive} from "vue";
 import {i18n} from "@cp-print/design/locales";
 
-export const defaultElement: CpElement = {
-    option: {
-        padding: {},
-        margin: {}
-    } as ElementOption
-} as CpElement
+export const defaultElement: CpElement[] = []
 
 export const defaultDragRectElement = reactive({
     type: 'PrivateDragRectElement',
@@ -73,7 +68,7 @@ type elementSettingType = keyof ElementOption | (keyof Container) | 'contentType
 // "x", 'y', "width", 'height', "font", 'fontSize', "color", 'hiddenLabel', 'opacity', "aspectRatio", "rotate"
 const commonElementSetting: Array<elementSettingType> = ["x", 'y', "width", 'height', 'opacity', "aspectRatio", "rotate"]
 const styleElementSetting: Array<elementSettingType> = ['textAlign', "verticalAlign", 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'font', 'fontSize']
-export const elementSetting: Record<elementType, Array<elementSettingType>> =
+const elementSetting: Record<elementType, Array<elementSettingType>> =
     {
         Image: [...commonElementSetting],
         Text: [...commonElementSetting, ...styleElementSetting, "font", 'fontSize', "color", 'hiddenLabel', 'contentType', 'padding', "margin", 'data', 'label'],
@@ -98,6 +93,14 @@ export const elementSetting: Record<elementType, Array<elementSettingType>> =
         SvgBezierCurveThree: [],
         DrawPanel: [],
     }
+
+export function getElementSetting(type: elementType) {
+    const settingList = elementSetting[type]
+    if (settingList) {
+        return settingList
+    }
+    return []
+}
 
 export function hasStyle(type: elementType, style: elementSettingType) {
     const ele = elementSetting[type]

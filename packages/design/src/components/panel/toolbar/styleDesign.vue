@@ -3,11 +3,12 @@
     <div class="display-block group-font">
       <div class="display-flex space-between">
         <group-input>
-          <el-select v-model="appStore.currentElement.option.font"
-                     :placeholder="i18n('font')"
-                     size="small"
-                     :disabled="!hasStyle(appStore.currentElement.type, 'font')"
-                     class="width-100">
+          <el-select
+              :modelValue="multipleElementGetValue('option.font')"
+              :placeholder="i18n('font')"
+              size="small"
+              :disabled="!hasStyle(multipleElementGetValue('type'), 'font')"
+              class="width-100">
             <el-option
                 v-for="item in fontList"
                 :key="item.value"
@@ -21,13 +22,15 @@
           <el-select :modelValue="multipleElementGetValue('option.fontSize')"
                      @update:model-value="changeFontSize"
                      :placeholder="i18n('font.size')" size="small" class="width-60"
-                     :disabled="!hasStyle(appStore.currentElement.type, 'fontSize')">
+                     :disabled="!hasStyle(multipleElementGetValue('type'), 'fontSize')">
             <div class="width-100-p">
               <div class="display-flex width-100-p" style="justify-content: center">
-                <cp-history-input-number class="width-60" v-model="appStore.currentElement.option.fontSize"
-                                         size="small"
-                                         placeholder="输入字号"
-                                         historyLabel="位置"/>
+                <cp-history-input-number
+                    :modelValue="multipleElementGetValue('option.fontSize')"
+                    class="width-60"
+                    size="small"
+                    placeholder="输入字号"
+                    historyLabel="位置"/>
               </div>
               
               <div class="width-100-p" style="height: 1px; background: grey; margin-top: 2px; margin-bottom: 2px"></div>
@@ -67,12 +70,14 @@
         </div>
         
         <div class="display-flex" style="gap: 2px;">
-          <cp-color-picker v-model="appStore.currentElement.option.color"
-                           :enable="hasStyle(appStore.currentElement.type, 'color')">
+          <cp-color-picker
+              :modelValue="multipleElementGetValue('option.color')"
+              :enable="hasStyle(multipleElementGetValue('type'), 'color')">
             <i class="icon-zitiyanse iconfont" style="height: 20px"/>
           </cp-color-picker>
-          <cp-color-picker v-model="appStore.currentElement.option.background"
-                           :enable="hasStyle(appStore.currentElement.type, 'background')">
+          <cp-color-picker
+              :modelValue="multipleElementGetValue('option.background')"
+              :enable="hasStyle(multipleElementGetValue('type'), 'background')">
             <i class="icon-bucket iconfont" style="height: 20px"/>
           </cp-color-picker>
         </div>
@@ -104,17 +109,17 @@
         
         <style-icon tips="组合"
                     @click="group()"
-                    :enable="!appStore.currentElement.groupIs">
+                    :enable="groupEnableIs">
           <i class="icon-color-zh iconfont-color"/>
         </style-icon>
         
         <style-icon tips="取消组合"
                     @click="ungroup()"
-                    :enable="appStore.currentElement.groupIs">
+                    :enable="ungroupEnableIs">
           <i class="icon-color-qxzh iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="置于顶层">
+        <style-icon tips="置于顶层" @click="alignTop()">
           <i class="icon-color-zydc iconfont-color"/>
         </style-icon>
         
@@ -181,8 +186,9 @@ import {i18n} from "@cp-print/design/locales";
 import {fontList, fontSizeList, hasStyle} from "@cp-print/design/constants/common";
 import {CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
-import {group, ungroup} from "@cp-print/design/components/moveable/moveable";
+import {alignTop, group, ungroup} from "@cp-print/design/components/moveable/moveable";
 import {multipleElementGetValue, multipleElementSetValue} from "@cp-print/design/utils/elementUtil";
+import {computed} from "vue";
 
 // import {ElementOption} from "@/types/entity";
 
@@ -193,6 +199,29 @@ function changeFontSize(val: string) {
   multipleElementSetValue('option.fontSize', val)
 }
 
+const groupEnableIs = computed(() => {
+  if (appStore.currentElement.length > 1) {
+    return !multipleElementGetValue('groupIs')
+  } else {
+    return false
+  }
+})
+
+const ungroupEnableIs = computed(() => {
+  if (appStore.currentElement.length > 1) {
+    for (let currentElementElement of appStore.currentElement) {
+      if (currentElementElement.groupIs) {
+        // console.log('false')
+        return true
+      }
+    }
+    // console.log('true')
+    return false
+  } else {
+    // console.log('true')
+    return false
+  }
+})
 // watch(() => appStore.currentElement, (n, o) => {
 //   if (n.value != null) {
 //     if (n.value.option == null) {

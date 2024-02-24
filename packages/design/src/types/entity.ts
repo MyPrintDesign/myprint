@@ -170,14 +170,15 @@ export interface RuntimeElementOption extends Position {
     width: number
     height: number
     translate: Point,
-    TL: Position
-    TR: Position
-    BL: Position
-    BR: Position
+    // TL: Position
+    // TR: Position
+    // BL: Position
+    // BR: Position
     bounds: Position
     parent?: Container
     target?: any
     rotate: number
+    init: Container
 
     /**
      * 工作环境，如果是在表格中，填充满整个cell
@@ -186,8 +187,10 @@ export interface RuntimeElementOption extends Position {
 
     rowList?: Array<CpElement[]>
 
-    onDragStart: () => void
-    onDragEnd: () => void
+    dragInIs: boolean
+
+    // onDragStart: () => void
+    // onDragEnd: () => void
 }
 
 export interface ElementOption {

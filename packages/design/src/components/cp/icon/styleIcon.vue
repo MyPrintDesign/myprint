@@ -71,16 +71,18 @@ const enable = computed(() => {
   if (props.enable !== undefined) {
     return props.enable
   }
-  if (Array.isArray(appStore.currentElement)) {
-    for (let currentElementElement of appStore.currentElement) {
-      if (!hasStyle(currentElementElement.type, 'bold')) {
-        return false
-      }
+  // console.log(appStore.currentElement)
+  // if (Array.isArray(appStore.currentElement)) {
+  //
+  // } else {
+  //   return hasStyle(appStore.currentElement.type, 'bold')
+  // }
+  for (let currentElementElement of appStore.currentElement) {
+    if (!hasStyle(currentElementElement.type, 'bold')) {
+      return false
     }
-    return true
-  } else {
-    return hasStyle(appStore.currentElement.type, 'bold')
   }
+  return true
 })
 
 function change(val: boolean) {
@@ -92,12 +94,7 @@ function change(val: boolean) {
   }
   multipleElementSetValue(props.props, tmpVal)
   
-  if (Array.isArray(appStore.currentElement)) {
-    for (let currentElementElement of appStore.currentElement) {
-      mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: currentElementElement} as Snapshot)
-    }
-  } else {
-    mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: appStore.currentElement} as Snapshot)
-  }
+  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement} as Snapshot)
+
 }
 </script>

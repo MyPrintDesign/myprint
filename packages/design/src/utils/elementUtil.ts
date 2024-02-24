@@ -5,7 +5,7 @@ import {
     elementType, FormatterVariable,
     Panel,
     Position,
-    RuntimeElementOption, PageUnit, PointLabel, CpHtmlElement
+    RuntimeElementOption, PageUnit, PointLabel, CpHtmlElement, Point
 } from "@cp-print/design/types/entity";
 import {
     canMoveStatusList,
@@ -50,7 +50,7 @@ export function getCurrentPanel(): Panel {
     return appStore().currentPanel as Panel
 }
 
-export function setCurrentElement(element: CpElement) {
+export function setCurrentElement(element: CpElement[]) {
     appStore().currentElement = element
 }
 
@@ -186,7 +186,7 @@ export function computeTranslate(element: CpElement) {
     }
 }
 
-export function forElement(container: Panel, callback: (element: CpElement) => void) {
+export function recursionForElement(container: Panel, callback: (element: CpElement) => void) {
     recursionElement(container, callback)
     recursionElement(container.pageFooter!, callback)
     recursionElement(container.pageHeader!, callback)
@@ -202,6 +202,10 @@ export function recursionElement(container: Container, callback: (element: CpEle
     }
 }
 
+export function innerElementIs(point: Point, element: CpElement) {
+    return point.x >= element.runtimeOption.x && point.x <= element.runtimeOption.x + element.runtimeOption.width
+        && point.y >= element.runtimeOption.y && point.y <= element.runtimeOption.y + element.runtimeOption.height
+}
 
 export function disableHandleList(element: CpElement) {
     switch (element.type) {
@@ -290,9 +294,9 @@ export function initElement(element?: CpElement) {
             initWidth = px2unit(initBorderWidth + 3)
             break
     }
-    if (!element.status) {
-        element.status = 'NONE'
-    }
+    // if (!element.status) {
+    //     element.status = 'NONE'
+    // }
 
     if (element.type == 'Text') {
         if (!element.contentType) {
@@ -308,7 +312,6 @@ export function initElement(element?: CpElement) {
             element.option.fontSize = 13
         }
     }
-
 
     if (elementTypeLineList.includes(element.type)) {
         if (!element.option.lineHeight) {
@@ -344,11 +347,14 @@ export function initElement(element?: CpElement) {
     if (element.option.padding == null) {
         element.option.padding = {} as Position
     }
+    element.runtimeOption.init = {} as Container
     // console.log(appStore().lastPageUnit)
     element.runtimeOption.width = unit2px(element.width)
     element.runtimeOption.height = unit2px(element.height)
     element.runtimeOption.x = unit2px(element.x)
     element.runtimeOption.y = unit2px(element.y)
+    element.runtimeOption.init.x = element.runtimeOption.x
+    element.runtimeOption.init.y = element.runtimeOption.y
     element.runtimeOption.rotate = element.option.rotate
     element.runtimeOption.translate = {x: 0, y: 0}
     if (element.option.margin == null) {
@@ -356,10 +362,15 @@ export function initElement(element?: CpElement) {
     }
 }
 
-export function elementGroup(htmlElementList: Array<CpHtmlElement | CpHtmlElement[]>) {
+export function elementGroup(htmlElementList: Array<CpHtmlElement>) {
     const panel = getCurrentPanel()
     const idList = flatIdList(htmlElementList)
     const index = findGroup(idList)
+
+    for (let htmlElementListElement of htmlElementList) {
+        htmlElementListElement.element.groupIs = true
+    }
+
     if (index >= 0) {
         panel.groupList[index] = idList
     } else {
@@ -377,13 +388,18 @@ export function groupListToMap(groupList: string[][]) {
     return map
 }
 
-export function elementUngroup(htmlElementList: Array<CpHtmlElement | CpHtmlElement[]>) {
+export function elementUngroup(htmlElementList: Array<CpHtmlElement>) {
     // console.log(htmlElementList)
     const panel = getCurrentPanel()
     const idList = flatIdList(htmlElementList)
     // console.log(idList)
     // console.log(panel.groupList)
     const index = findGroup(idList)
+
+    for (let htmlElementListElement of htmlElementList) {
+        htmlElementListElement.element.groupIs = false
+    }
+
     if (index >= 0) {
         // console.log(index)
         panel.groupList.splice(index, 1)
@@ -665,36 +681,36 @@ export function clearOption(element: CpElement) {
 }
 
 // 返回相对于参考点旋转后的坐标
-export function rotatedPoint(element: CpElement) {
-    const {x, y, width, height} = element
-    const centerX = x! + width / 2;
-    const centerY = y! + height / 2;
-    const rotate = element.option!.rotate ? element.option!.rotate : 0
-    const runtimeOption = element.runtimeOption!
-    runtimeOption.TL = _rotatedPoint(centerX, centerY, x!, y!, rotate);
-    runtimeOption.TR = _rotatedPoint(centerX, centerY, x! + width, y!, rotate);
-    runtimeOption.BL = _rotatedPoint(centerX, centerY, x!, y! + height, rotate);
-    runtimeOption.BR = _rotatedPoint(centerX, centerY, x! + width, y! + height, rotate);
+// export function rotatedPoint(element: CpElement) {
+//     const {x, y, width, height} = element
+//     const centerX = x! + width / 2;
+//     const centerY = y! + height / 2;
+//     const rotate = element.option!.rotate ? element.option!.rotate : 0
+//     const runtimeOption = element.runtimeOption!
+//     // runtimeOption.TL = _rotatedPoint(centerX, centerY, x!, y!, rotate);
+//     // runtimeOption.TR = _rotatedPoint(centerX, centerY, x! + width, y!, rotate);
+//     // runtimeOption.BL = _rotatedPoint(centerX, centerY, x!, y! + height, rotate);
+//     // runtimeOption.BR = _rotatedPoint(centerX, centerY, x! + width, y! + height, rotate);
+//
+//     runtimeOption.bounds = {
+//         top: Math.min(runtimeOption.TL.y!, runtimeOption.TR.y!, runtimeOption.BL.y!, runtimeOption.BR.y!),
+//         bottom: Math.max(runtimeOption.TL.y!, runtimeOption.TR.y!, runtimeOption.BL.y!, runtimeOption.BR.y!),
+//         left: Math.min(runtimeOption.TL.x!, runtimeOption.TR.x!, runtimeOption.BL.x!, runtimeOption.BR.x!),
+//         right: Math.max(runtimeOption.TL.x!, runtimeOption.TR.x!, runtimeOption.BL.x!, runtimeOption.BR.x!)
+//     } as Position
+// }
 
-    runtimeOption.bounds = {
-        top: Math.min(runtimeOption.TL.y!, runtimeOption.TR.y!, runtimeOption.BL.y!, runtimeOption.BR.y!),
-        bottom: Math.max(runtimeOption.TL.y!, runtimeOption.TR.y!, runtimeOption.BL.y!, runtimeOption.BR.y!),
-        left: Math.min(runtimeOption.TL.x!, runtimeOption.TR.x!, runtimeOption.BL.x!, runtimeOption.BR.x!),
-        right: Math.max(runtimeOption.TL.x!, runtimeOption.TR.x!, runtimeOption.BL.x!, runtimeOption.BR.x!)
-    } as Position
-}
-
-function _rotatedPoint(originX: number, originY: number, offsetX: number, offsetY: number, rotate = 0): Position {
-    const rad = (Math.PI / 180) * rotate;
-    const cos = Math.cos(rad);
-    const sin = Math.sin(rad);
-    let x = offsetX - originX;
-    let y = offsetY - originY;
-    return {
-        x: x * cos - y * sin + originX,
-        y: x * sin + y * cos + originY
-    } as any
-}
+// function _rotatedPoint(originX: number, originY: number, offsetX: number, offsetY: number, rotate = 0): Position {
+//     const rad = (Math.PI / 180) * rotate;
+//     const cos = Math.cos(rad);
+//     const sin = Math.sin(rad);
+//     let x = offsetX - originX;
+//     let y = offsetY - originY;
+//     return {
+//         x: x * cos - y * sin + originX,
+//         y: x * sin + y * cos + originY
+//     } as any
+// }
 
 
 // 根据相对坐标返回角度，正方形为顺时针
@@ -901,18 +917,18 @@ export function computedShapeBound(points: Array<PointLabel>): Container {
 }
 
 export function multipleElementGetValue(props: string) {
-    if (Array.isArray(appStore().currentElement)) {
-        const elementList = appStore().currentElement as any
-        const firstValue = elementList[0][props]
-        for (let currentElementElement of elementList) {
-            if (currentElementElement[props] != firstValue) {
-                return undefined
-            }
-        }
-        return firstValue
-    } else {
-        return appStore().currentElement[props]
+    const elementList = appStore().currentElement
+    if (elementList.length == 0) {
+        return undefined
     }
+
+    const firstValue = elementList[0][props]
+    for (let currentElementElement of elementList) {
+        if (currentElementElement[props] != firstValue) {
+            return undefined
+        }
+    }
+    return firstValue
 }
 
 export function multipleElementSetValue(props: string, val: any) {

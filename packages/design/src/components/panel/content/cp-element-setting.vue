@@ -5,9 +5,10 @@
       基础
     </el-divider>
     
-    <el-form-item label="标题显示" v-if="elementSetting[appStore.currentElement.type].includes('label')">
+    <el-form-item label="标题显示" v-if="getElementSetting(multipleElementGetValue('ype')).includes('label')">
       <el-switch
-          v-model="appStore.currentElement.option.hiddenLabel"
+          :model-value="multipleElementGetValue('option.hiddenLabel')"
+          @update:model-value="(val:any)=>multipleElementSetValue('option.hiddenLabel', val)"
           class="ml-2"
           inline-prompt
           style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
@@ -22,18 +23,23 @@
       <!--                 inactive-text="合并"/>-->
     </el-form-item>
     
-    <el-form-item label="标题" v-if="elementSetting[appStore.currentElement.type].includes('label')">
-      <cp-history-input style="margin-right: 20px" v-model="appStore.currentElement.label" historyLabel="标题"/>
+    <el-form-item label="标题" v-if="getElementSetting(multipleElementGetValue('type')).includes('label')">
+      <cp-history-input style="margin-right: 20px"
+                        :model-value="multipleElementGetValue('label')"
+                        @update:model-value="(val:any)=>multipleElementSetValue('label', val)"
+                        historyLabel="标题"/>
     </el-form-item>
-    <el-form-item label="内容" v-if="elementSetting[appStore.currentElement.type].includes('data')">
+    <el-form-item label="内容" v-if="getElementSetting(multipleElementGetValue('type')).includes('data')">
       <cp-history-input style="margin-right: 20px"
                         historyLabel="内容"
-                        v-model="appStore.currentElement.data"
+                        :model-value="multipleElementGetValue('data')"
+                        @update:model-value="(val:any)=>multipleElementSetValue('data', val)"
                         type="textarea"/>
     </el-form-item>
-    <el-form-item label="格式化器" v-if="elementSetting[appStore.currentElement.type].includes('formatter')">
-      <cp-history-input v-model="appStore.currentElement.option.formatter"
-                        historyLabel="格式化器"/>
+    <el-form-item label="格式化器" v-if="getElementSetting(multipleElementGetValue('type')).includes('formatter')">
+      :model-value="multipleElementGetValue('option.formatter')"
+      @update:model-value="(val:any)=>multipleElementSetValue('option.formatter', val)"
+      historyLabel="格式化器"/>
     </el-form-item>
     
     <el-divider>
@@ -42,7 +48,8 @@
     
     <el-form-item label="锁定">
       <el-switch
-          v-model="appStore.currentElement.lock"
+          :model-value="multipleElementGetValue('lock')"
+          @update:model-value="(val:any)=>multipleElementSetValue('lock', val)"
           @change="changeLock"
           class="ml-2"
           inline-prompt
@@ -51,50 +58,64 @@
           inactive-text="隐藏"/>
     </el-form-item>
     
-    <el-form-item label="位置(x/y)" v-if="elementSetting[appStore.currentElement.type].includes('x')">
+    <el-form-item label="位置(x/y)" v-if="getElementSetting(multipleElementGetValue('type')).includes('x')">
       <group-input>
-        <cp-history-input-number class="width-60" v-model="appStore.currentElement.x" @change="change"
+        <cp-history-input-number class="width-60"
+                                 :model-value="multipleElementGetValue('x')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('x', val)"
+                                 @change="change"
                                  historyLabel="位置"/>
-        <cp-history-input-number class="width-60" v-model="appStore.currentElement.y"
+        <cp-history-input-number class="width-60"
+                                 :model-value="multipleElementGetValue('y')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('y', val)"
                                  historyLabel="位置"/>
         <cp-unit/>
       
       </group-input>
     </el-form-item>
     
-    <el-form-item label="尺寸(宽/高)" v-if="elementSetting[appStore.currentElement.type].includes('width')">
+    <el-form-item label="尺寸(宽/高)" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
       <group-input>
-        <cp-history-input-number class="width-60" v-model="appStore.currentElement.width"
+        <cp-history-input-number class="width-60"
+                                 :model-value="multipleElementGetValue('width')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('width', val)"
                                  @change="changeElementWidth"
                                  historyLabel="尺寸"/>
-        <cp-history-input-number class="width-60" v-model="appStore.currentElement.height"
+        <cp-history-input-number class="width-60"
+                                 :model-value="multipleElementGetValue('height')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('height', val)"
                                  historyLabel="尺寸"/>
         <cp-unit/>
       </group-input>
     </el-form-item>
     
-    <el-form-item label="宽高比例" v-if="elementSetting[appStore.currentElement.type].includes('contentType')">
+    <el-form-item label="宽高比例" v-if="getElementSetting(multipleElementGetValue('type')).includes('contentType')">
       <group-input>
         <cp-history-input-number placeholder="例:1.25" class="width-60"
-                                 v-model="appStore.currentElement.option.aspectRatio"
+                                 :model-value="multipleElementGetValue('option.aspectRatio')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('option.aspectRatio', val)"
                                  historyLabel="宽高比例"/>
       </group-input>
     </el-form-item>
     
-    <el-form-item label="不透明度" v-if="elementSetting[appStore.currentElement.type].includes('opacity')">
-      <el-slider class="width-120" v-model="appStore.currentElement.option.opacity"
+    <el-form-item label="不透明度" v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
+      <el-slider class="width-120"
+                 :model-value="multipleElementGetValue('option.opacity')"
+                 @update:model-value="(val:any)=>multipleElementSetValue('option.opacity', val)"
                  :max="1" :min="0" :step="0.01"
                  :show-tooltip="false" size="small"
                  historyLabel="不透明度"/>
-      <div style="margin-left: 20px">{{ appStore.currentElement.option.opacity }}</div>
+      <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
     </el-form-item>
-    <el-form-item label="旋转角度" v-if="elementSetting[appStore.currentElement.type].includes('rotate')">
+    <el-form-item label="旋转角度" v-if="getElementSetting(multipleElementGetValue('type')).includes('rotate')">
       <!--      <el-slider v-model="value1"/>-->
-      <el-slider class="width-120" v-model="appStore.currentElement.option.rotate"
+      <el-slider class="width-120"
+                 :model-value="multipleElementGetValue('option.rotate')"
+                 @update:model-value="(val:any)=>multipleElementSetValue('option.rotate', val)"
                  :max="359" :min="0" :step="1"
                  @change="rotatedPoint(appStore.currentElement)"
                  :show-tooltip="false" size="small"/>
-      <div style="margin-left: 20px">{{ appStore.currentElement.option.rotate }}</div>
+      <div style="margin-left: 20px">{{ multipleElementGetValue('option.rotate') }}</div>
     </el-form-item>
     
     <el-divider>
@@ -102,14 +123,18 @@
     </el-divider>
     
     <el-form-item label="打印类型" prop="region"
-                  v-if="elementSetting[appStore.currentElement.type].includes('contentType')">
-      <cp-history-select v-model="appStore.currentElement.contentType" placeholder="Activity zone"
+                  v-if="getElementSetting(multipleElementGetValue('type')).includes('contentType')">
+      <cp-history-select :model-value="multipleElementGetValue('contentType')"
+                         @update:model-value="(val:any)=>multipleElementSetValue('contentType', val)"
+                         placeholder="Activity zone"
                          historyLabel="打印类型">
         <el-option v-for="(item, index) in textContentTypes" :key="index" :label="item.label" :value="item.value"/>
       </cp-history-select>
     </el-form-item>
-    <el-form-item label="条码编码" prop="region" v-if="appStore.currentElement.contentType == 'Barcode'">
-      <cp-history-select class="width-140" v-model="appStore.currentElement.option.barCodeType"
+    <el-form-item label="条码编码" prop="region" v-if="multipleElementGetValue('option.contentType') == 'Barcode'">
+      <cp-history-select class="width-140"
+                         :model-value="multipleElementGetValue('option.barCodeType')"
+                         @update:model-value="(val:any)=>multipleElementSetValue('option.barCodeType', val)"
                          placeholder="条码类型"
                          historyLabel="条码类型">
         <el-option v-for="(item, index) in barcodeTypes" :key="index" :label="item.label" :value="item.value"
@@ -134,24 +159,27 @@
     <!--      </cp-history-select>-->
     <!--      </el-form-item>-->
     
-    <el-form-item label="行高" v-if="elementSetting[appStore.currentElement.type].includes('lineHeight')">
+    <el-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
       <group-input>
         <cp-history-input-number class="num-2"
                                  :min="0.01"
-                                 v-model="appStore.currentElement.option.lineHeight"
+                                 :model-value="multipleElementGetValue('option.lineHeight')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('option.lineHeight', val)"
                                  historyLabel="行高"/>
         <cp-unit/>
       </group-input>
     </el-form-item>
     
     <el-form-item label="虚线样式" prop="region"
-                  v-if="elementSetting[appStore.currentElement.type].includes('dottedStyle')">
-      <cp-history-select v-model="appStore.currentElement.option.dottedStyle" placeholder="Activity zone"
+                  v-if="getElementSetting(multipleElementGetValue('type')).includes('dottedStyle')">
+      <cp-history-select :model-value="multipleElementGetValue('option.dottedStyle')"
+                         @update:model-value="(val:any)=>multipleElementSetValue('option.dottedStyle', val)"
+                         placeholder="Activity zone"
                          historyLabel="虚线样式">
         <el-option v-for="(item, index) in dottedStyleList" :key="index" :label="item.label" :value="item.value"/>
       </cp-history-select>
     </el-form-item>
-    <!--      <el-form-item label="内边距" prop="region" v-if="elementSetting[appStore.currentElement.type].includes('padding')">-->
+    <!--      <el-form-item label="内边距" prop="region" v-if="getElementSetting(multipleElementGetValue('type')].includes(')adding')">-->
     <!--        <group-input>-->
     <!--          <cp-history-input-number class="num-4" v-model="appStore.currentElement.option.padding.top">-->
     <!--            <template #append>mm</template>-->
@@ -168,7 +196,7 @@
     <!--        </group-input>-->
     <!--      </el-form-item>-->
     <!--      -->
-    <!--      <el-form-item label="外边距" prop="region" v-if="elementSetting[appStore.currentElement.type].includes('margin')">-->
+    <!--      <el-form-item label="外边距" prop="region" v-if="getElementSetting(multipleElementGetValue('type')].includes(')argin')">-->
     <!--        <group-input>-->
     <!--          <cp-history-input-number class="num-4" v-model="appStore.currentElement.option.margin.top">-->
     <!--            <template #append>mm</template>-->
@@ -192,16 +220,22 @@
 // import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
 import {computed, inject} from "vue";
 
-import {barcodeTypes, dottedStyleList, elementSetting, textContentTypes} from "@cp-print/design/constants/common";
+import {
+  barcodeTypes,
+  dottedStyleList,
+  getElementSetting,
+  textContentTypes
+} from "@cp-print/design/constants/common";
 import {mittKey} from "@cp-print/design/constants/keys";
 import {ActionEnum, Snapshot} from "@cp-print/design/utils/historyUtil";
-import {rotatedPoint} from "@cp-print/design/utils/elementUtil";
 import {QuestionFilled} from "@element-plus/icons-vue";
 import GroupInput from "../../cp/cp-group/groupInput.vue";
 import {CpUnit, CpHistoryInput, CpHistorySelect, CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {freshMoveableOption, moveableResize} from "@cp-print/design/components/moveable/moveable";
+import {CpElement} from "@cp-print/design/types/entity";
+import {multipleElementGetValue, multipleElementSetValue} from "@cp-print/design/utils/elementUtil";
 
 const mitt = inject(mittKey)!
 // const data = reactive({
@@ -210,24 +244,37 @@ const mitt = inject(mittKey)!
 const appStore = useAppStoreHook()
 
 const currentBarCodeEg = computed(() => {
-  if (appStore.currentElement.option && appStore.currentElement.option.barCodeType) {
-    return changeBarCodeType(appStore.currentElement.option.barCodeType)
+  if (element.value.option && element.value.option.barCodeType) {
+    return changeBarCodeType(element.value.option.barCodeType)
+  }
+})
+
+const element = computed(() => {
+  if (appStore.currentElement.length > 0) {
+    return appStore.currentElement[0] as CpElement
+  } else {
+    return {} as CpElement
   }
 })
 
 function changeLock() {
-  freshMoveableOption(appStore.currentElement)
+  freshMoveableOption(element.value)
+}
+
+function rotatedPoint(rotate) {
+  console.log(rotate)
+  // freshMoveableOption(appStore.currentElement)
 }
 
 function change(_val: any) {
   // record()
-  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, element: appStore.currentElement} as Snapshot)
+  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement} as Snapshot)
   // console.log('change', val)
 }
 
 function changeElementWidth(val) {
   // console.log(val)
-  moveableResize(unit2px(appStore.currentElement.width), unit2px(appStore.currentElement.height))
+  moveableResize(unit2px(element.value.width), unit2px(element.value.height))
 }
 
 function changeBarCodeType(val: any) {

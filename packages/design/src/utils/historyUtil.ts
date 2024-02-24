@@ -6,6 +6,7 @@ import {
     installPanelParentElement
 } from "./elementUtil";
 import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
+
 export enum ActionEnum {
     INIT = '加载',
     ADD = '添加<{element}>',
@@ -22,7 +23,7 @@ let max = 50
 
 export interface Snapshot {
     panel?: Panel
-    element?: CpElement
+    elementList?: CpElement[]
     content?: string
     action: ActionEnum,
     type?: 'Element' | 'PANEL'
@@ -48,7 +49,7 @@ function init() {
     record(<Snapshot>{
         type: "PANEL",
         action: ActionEnum.INIT,
-        element: appStore().currentElement
+        elementList: appStore().currentElement
     })
     clear()
     // console.log(panel.elementList)
@@ -56,29 +57,30 @@ function init() {
 
 function record(snapshot: Snapshot) {
     let action = snapshot.action as any
-    let label: any
-    if (snapshot.element) {
-        label = snapshot.element.label
-        if (!label) {
-            label = elementTypeFormat[snapshot.element.type]
+    let label = ""
+    if (snapshot.elementList) {
+        for (let cpElement of snapshot.elementList) {
+            label = label + (cpElement.label ? cpElement.label : elementTypeFormat[cpElement.type]) + ","
         }
+    }else {
+        label = "面板"
     }
 
     snapshot.panel = getCurrentPanel()
     if (action == ActionEnum.UPDATE_STYLE) {
 
         // console.log('修改', title)
-        if (snapshot.element!.id != null) {
+        if (snapshot.elementList != null) {
             action = action.replace('{element}', label).replace("{content}", snapshot.content)
         } else {
-            action = action.replace('{element}', '面板').replace("{content}", snapshot.content)
+            action = action.replace('{element}', label).replace("{content}", snapshot.content)
         }
     } else if ([ActionEnum.REMOVE, ActionEnum.ADD, ActionEnum.RESIZE, ActionEnum.ROTATE, ActionEnum.MOVE].includes(action)) {
         // console.log('删除', label)
         action = action.replace('{element}', label)
     }
 
-    delete snapshot.element
+    delete snapshot.elementList
     delete snapshot.content
 
     snapshot.action = action
@@ -142,7 +144,7 @@ function redoPanel() {
 
 export function changeWrapper(val: string | number, title?: string, callback?: (arg: typeof val) => void) {
     record({
-        element: appStore().currentElement,
+        elementList: appStore().currentElement,
         content: title,
         action: ActionEnum.UPDATE_STYLE
     } as Snapshot)
@@ -152,11 +154,11 @@ export function changeWrapper(val: string | number, title?: string, callback?: (
 }
 
 export function changeLog(action: ActionEnum, element: CpElement) {
-    record(<Snapshot>{
-        element: element,
-        action: action,
-        panel: getCurrentPanel()
-    })
+    // record(<Snapshot>{
+    //     elementList: element,
+    //     action: action,
+    //     panel: getCurrentPanel()
+    // })
 }
 
 // function reset(snapshot: Snapshot, panel: Panel) {

@@ -18,61 +18,63 @@
             height: valueUnit(scaleUtil.scale(panel.height)),
           }"watermark?panel.watermarkContent:''">-->
       
-      <cp-drop
-          ref="designContentRef"
-          class="design-content-drop"
-          :class="{'design-content_over': data.dropOver}"
-          @drop="drop"
-          @dragover="dragover"
-          @dragleave="dragleave"
-          @preventDefault="dropPreventDefault"
-      >
-        <div class="affix-container design-panel-container-width " @scroll="scroll" @wheel="wheel"
-             ref="designScrollRef">
-          <div class="design-content design-content-bg"
-               :style="{transformOrigin: 'left top',
+      <div class="affix-container design-panel-container-width " @scroll="scroll" @wheel="wheel"
+           ref="designScrollRef">
+        <div class="design-content design-content-bg"
+             :style="{transformOrigin: 'left top',
                           transform: 'scale('+scaleUtil.miniMap.scale+')',
                             minWidth: valueUnit(panel.width),
                             width: valueUnit(panel.width),
                             height: valueUnit(panel.height),
                            }">
-            <!--         @mousedown="mousedown($event)"-->
-            <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
-            <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
-            
-            <element-list :elementList="panel.elementList"/>
-            <!--      <span-->
-            <!--          class="ref-line v-line"-->
-            <!--          v-for="(item, index) in vLine"-->
-            <!--          :key="'v_' + index"-->
-            <!--          v-show="item.display"-->
-            <!--          :style="{-->
-            <!--          left: item.position,-->
-            <!--          top: item.origin,-->
-            <!--          height: item.lineLength-->
-            <!--        }"-->
-            <!--      />-->
-            <!--      <span-->
-            <!--          class="ref-line h-line"-->
-            <!--          v-for="(item, index) in hLine"-->
-            <!--          :key="'h_' + index"-->
-            <!--          :style="{-->
-            <!--          top: item.position,-->
-            <!--          left: item.origin,-->
-            <!--          width: item.lineLength-->
-            <!--        }"-->
-            <!--      />-->
-            <!--    选择框    -->
-            <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
-            <!--    拖拽矩形    -->
-            <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
-            <!--          <DragRect :element="defaultDragRectElement"/>-->
-            <!--        </vue-drag>-->
-            <!--    对齐辅助线    -->
-            <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
-          </div>
+          <!--         @mousedown="mousedown($event)"-->
+          <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
+          <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
+          
+          <element-list :elementList="panel.elementList"/>
+          <!--      <span-->
+          <!--          class="ref-line v-line"-->
+          <!--          v-for="(item, index) in vLine"-->
+          <!--          :key="'v_' + index"-->
+          <!--          v-show="item.display"-->
+          <!--          :style="{-->
+          <!--          left: item.position,-->
+          <!--          top: item.origin,-->
+          <!--          height: item.lineLength-->
+          <!--        }"-->
+          <!--      />-->
+          <!--      <span-->
+          <!--          class="ref-line h-line"-->
+          <!--          v-for="(item, index) in hLine"-->
+          <!--          :key="'h_' + index"-->
+          <!--          :style="{-->
+          <!--          top: item.position,-->
+          <!--          left: item.origin,-->
+          <!--          width: item.lineLength-->
+          <!--        }"-->
+          <!--      />-->
+          <!--    选择框    -->
+          <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
+          <!--    拖拽矩形    -->
+          <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
+          <!--          <DragRect :element="defaultDragRectElement"/>-->
+          <!--        </vue-drag>-->
+          <!--    对齐辅助线    -->
+          <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
         </div>
-      </cp-drop>
+      </div>
+      
+<!--      <cp-drop-->
+<!--          ref="designContentRef"-->
+<!--          class="design-content-drop"-->
+<!--          :class="{'design-content_over': data.dropOver}"-->
+<!--          @drop="drop"-->
+<!--          @dragover="dragover"-->
+<!--          @dragleave="dragleave"-->
+<!--          @preventDefault="dropPreventDefault"-->
+<!--      >-->
+<!--        -->
+<!--      </cp-drop>-->
       
       <!--    </el-watermark>-->
     
@@ -89,28 +91,26 @@ import Rule from "../rule.vue";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
 import {ContentScaleVo, DragWrapper, CpElement, Container} from "@cp-print/design/types/entity";
-import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
+import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 // import {clearEventBubble} from "@cp-print/design/utils/event";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
 import {canMoveStatusList, defaultDragRectElement} from "@cp-print/design/constants/common";
-import {ActionEnum, record, Snapshot} from "@cp-print/design/utils/historyUtil";
+import {record, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {
-  addElement,
   computeTranslate,
   handle,
-  handleElementType,
   initElement,
   initPanelDiv,
-  installParentElement,
   none,
-  removeElement, rotatedPoint,
+  removeElement,
+  // rotatedPoint,
   select,
-  setCurrentElement,
+  // setCurrentElement,
   valueUnit
 } from "@cp-print/design/utils/elementUtil";
 import {useAppStoreHook as useAppStore} from "@cp-print/design/stores/app";
 
-import CpDrop from "@cp-print/design/components/cp/drop";
+// import CpDrop from "@cp-print/design/components/cp/drop";
 import ElementList from "../../design/elementList.vue";
 import {mountedKeyboardEvent, unMountedKeyboardEvent} from "@cp-print/design/utils/keyboardUtil";
 import {
@@ -149,7 +149,7 @@ mitt.on('triggerScroll', updatePanel)
 /**
  * 滑动事件
  */
-function scroll(scrollData: any) {
+function scroll(_scrollData: any) {
   // console.log(scrollData)
   // console.log(scrollData)
   highlightRule.horizontal.scroll = designScrollRef.value!.scrollLeft
@@ -319,50 +319,12 @@ function drop(dragData: any) {
   element.y = px2unit(dragData.end.y - dragData.start.y)
   initElement(element)
   
-  handleElementType(element)
-      .handle('PageHeader', () => {
-            if (panel.pageHeader != undefined) {
-              return
-            }
-            panel.pageHeader = element
-            element.width = panel.width
-            element.runtimeOption.width = unit2px(panel.width)
-            element.runtimeOption.x = 0
-            element.runtimeOption.y = 0
-            element.x = 0
-            element.y = 0
-            // element.y = panel.height - element.height
-            // element.runtimeOption.y = unit2px(panel.height - element.height)
-            installParentElement(panel, element)
-          }
-      )
-      .handle('PageFooter', () => {
-            if (panel.pageFooter != undefined) {
-              return
-            }
-            panel.pageFooter = element
-            element.width = panel.width
-            element.runtimeOption.width = unit2px(panel.width)
-            element.runtimeOption.x = 0
-            element.x = 0
-            element.y = panel.height - element.height
-            element.runtimeOption.y = unit2px(panel.height - element.height)
-            installParentElement(panel, element)
-          }
-      ).end(() => {
-    if (element.type == 'Table') {
-      for (let i = 0; i < element.columnList!.length; i++) {
-        // element.columnList[i] = to(element.columnList[i], {} as Element)
-        initElement(element.columnList![i])
-      }
-    }
-    addElement(panel, element)
-  })
-  elementListNone()
+  
+  // elementListNone()
   handle(element)
   updatePanel()
   
-  record(<Snapshot>{element: element, action: ActionEnum.ADD})
+  // record(<Snapshot>{elementList: element, action: ActionEnum.ADD})
 }
 
 function panelSnapshot(snapshot: Snapshot) {
@@ -456,7 +418,7 @@ function elementClick(element: CpElement) {
     return
   }
   contentScale.openIs = true
-  setCurrentElement(element)
+  // setCurrentElement(element)
   none(panel.pageHeader)
   none(panel.pageFooter)
   elementListNone()
@@ -505,7 +467,7 @@ function elementUp() {
   for (let valueElement of elementList) {
     computeTranslate(valueElement)
     
-    rotatedPoint(valueElement)
+    // rotatedPoint(valueElement)
   }
   
   computeTranslate(defaultDragRectElement as CpElement)
@@ -551,7 +513,7 @@ function elementRemove(element: CpElement) {
   // console.log(element)
   removeElement(element)
   
-  record(<Snapshot>{element: element, action: ActionEnum.REMOVE})
+  // record(<Snapshot>{elementList: element, action: ActionEnum.REMOVE})
 }
 
 function elementListNone() {

@@ -77,7 +77,7 @@ import {
   disableHandleList,
   getTranslate,
   valueUnit,
-  rotatedPoint,
+  // rotatedPoint,
   getAngle, panelDivPosition, dragLimit, getMouseOffsetTop, getMouseOffsetBottom
 } from "@cp-print/design/utils/elementUtil";
 import {computedAlign} from "@cp-print/design/utils/alignUtil";
@@ -328,7 +328,7 @@ function elementDown(e: MouseEvent) {
     datatmp.dragging = false;
     return;
   }
-  rotatedPoint(props.element)
+  // rotatedPoint(props.element)
   
   //  按下鼠标表示保存当前状态
   mouseClickPosition.value.mouseX = e.pageX;
@@ -728,11 +728,11 @@ async function handleUp(_e: MouseEvent) {
   }
   
   if (handle == null) {
-    record(<Snapshot>{element: props.element, action: ActionEnum.MOVE})
+    record(<Snapshot>{elementList: props.element, action: ActionEnum.MOVE})
   } else if (handle == 'rot') {
-    record(<Snapshot>{element: props.element, action: ActionEnum.ROTATE})
+    record(<Snapshot>{elementList: props.element, action: ActionEnum.ROTATE})
   } else {
-    record(<Snapshot>{element: props.element, action: ActionEnum.RESIZE})
+    record(<Snapshot>{elementList: props.element, action: ActionEnum.RESIZE})
   }
   
   mitt.emit('elementUp')

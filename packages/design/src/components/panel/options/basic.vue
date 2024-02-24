@@ -21,12 +21,17 @@ import {Container, CpElement, elementTypeFormat} from "@cp-print/design/types/en
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
 import Design from "@cp-print/design/components/design/design.vue";
-import {addElement, initElement} from "@cp-print/design/utils/elementUtil";
+import {
+  addElement,
+  handleElementType,
+  initElement,
+  innerElementIs,
+  installParentElement
+} from "@cp-print/design/utils/elementUtil";
 import {clearEventBubble} from "@cp-print/design/utils/event";
 import {
   dragNewElement,
   dragNewElementCancel,
-  setSelectedTargets,
   updatePanel
 } from "@cp-print/design/components/moveable/moveable";
 import {useAppStoreHook as useAppStore} from "@cp-print/design/stores/app";
@@ -54,30 +59,40 @@ const props = withDefaults(defineProps<{
   data: () => ({} as CpElement)
 })
 
+const padding = 30
+
 function dragStart(ev: MouseEvent) {
   isDrop.value = true
   tmpElement.value = JSON.parse(JSON.stringify(props.data))
   const element = tmpElement.value
+  let parentElement: CpElement
+  
+  let startX = 0, startY = 0
+  // element.runtimeOption = {} as RuntimeElementOption
+  // let halfWidth = element.runtimeOption.width / 2
+  // let halfHeight = element.runtimeOption.height / 2
+  
+  let halfWidth = unit2unit('mm', 'px', tmpElement.value.width) / 2
+  let halfHeight = unit2unit('mm', 'px', tmpElement.value.height) / 2
+  
+  startX = ev.clientX - halfWidth
+  startY = ev.clientY - halfHeight
+  
+  // element.runtimeOption.x = startX - appStore.panelPosition.x - padding
+  // element.runtimeOption.y = startY - appStore.panelPosition.y - padding
+  
+  element.x = px2unit(startX - appStore.panelPosition.x - padding)
+  element.y = px2unit(startY - appStore.panelPosition.y - padding)
+  
   element.width = unit2unit('mm', panel.pageUnit, tmpElement.value.width)
   element.height = unit2unit('mm', panel.pageUnit, tmpElement.value.height)
-  let startX = 0, startY = 0
+  
   initElement(element)
-  
-  let halfWidth = element.runtimeOption.width / 2
-  let halfHeight = element.runtimeOption.height / 2
-  
   element.runtimeOption.parent = {} as Container
-  element.runtimeOption.x = ev.clientX - appStore.panelPosition.x - halfWidth - 30
-  element.runtimeOption.y = ev.clientY - appStore.panelPosition.y - halfHeight - 30
-  
-  element.x = px2unit(element.runtimeOption.x)
-  element.y = px2unit(element.runtimeOption.y)
   
   dragWrapper.visible = true
   dragWrapper.opacity = 1
   
-  startX = ev.clientX - halfWidth
-  startY = ev.clientY - halfHeight
   dragWrapper.x = startX
   dragWrapper.y = startY
   
@@ -113,23 +128,57 @@ function dragStart(ev: MouseEvent) {
       }
     }
     
+    dragWrapper.x = element.runtimeOption.x + appStore.panelPosition.x + padding
+    dragWrapper.y = element.runtimeOption.y + appStore.panelPosition.y + padding
+    
     if (diffXNum == 0 && diffYNum == 0) {
       // dragWrapper.visible = false
-      console.log('进入')
+      // console.log('进入')
+      
+      // 判断有没有进入容器/页眉/页脚
+      
+      const point = {x: element.runtimeOption.x + halfWidth, y: element.runtimeOption.y + halfHeight}
+      // for (let elementOf of panel.elementList!) {
+      //   elementOf.runtimeOption.dragInIs = false
+      // }
+      if (!parentElement || !innerElementIs(point, parentElement)) {
+        if (parentElement) {
+          parentElement.runtimeOption.dragInIs = false
+          parentElement = undefined!
+        }
+        console.log('ff')
+        if (panel.pageHeader && innerElementIs(point, panel.pageHeader)) {
+          panel.pageHeader.runtimeOption.dragInIs = true
+          parentElement = panel.pageHeader
+        } else if (panel.pageFooter && innerElementIs(point, panel.pageFooter)) {
+          panel.pageFooter.runtimeOption.dragInIs = true
+          parentElement = panel.pageFooter
+        } else {
+          for (let elementOf of panel.elementList!) {
+            if (elementOf.type == "Container" && innerElementIs(point, elementOf)) {
+              elementOf.runtimeOption.dragInIs = true
+              parentElement = elementOf
+              break
+            }
+          }
+        }
+        if (parentElement) {
+          console.log('find', parentElement)
+        }
+      }
+      
     } else {
       // dragWrapper.visible = true
-      console.log('离开')
+      // console.log('离开')
     }
     
     // dragWrapper.x = evMove.clientX - halfWidth
     // dragWrapper.y = evMove.clientY - halfHeight
-    dragWrapper.x = unit2px(element.x) + appStore.panelPosition.x + 30
-    dragWrapper.y = unit2px(element.y) + appStore.panelPosition.y + 30
+    // console.log(element.runtimeOption.x)
+    
   }
   
   function mouseup(_ev: MouseEvent) {
-    // removeDragImg()
-    
     if (dragWrapper.opacity > 0) {
       // 放回原处
       dragWrapper.opacity = 1
@@ -137,15 +186,64 @@ function dragStart(ev: MouseEvent) {
       dragWrapper.x = startX;
       dragWrapper.y = startY;
       dragNewElementCancel(element.runtimeOption.target)
+      isDrop.value = false
     } else {
       dragWrapper.visible = false
-      addElement(panel, element)
+      
+      if (parentElement) {
+        element.x = element.x - parentElement.x
+        element.y = element.y - parentElement.y
+        addElement(parentElement, element)
+        parentElement.runtimeOption.dragInIs = false
+        parentElement = undefined!
+      } else {
+        handleElementType(element)
+            .handle('PageHeader', () => {
+                  if (panel.pageHeader != undefined) {
+                    return
+                  }
+                  panel.pageHeader = element
+                  element.width = panel.width
+                  element.runtimeOption.width = unit2px(panel.width)
+                  element.runtimeOption.x = 0
+                  element.runtimeOption.y = 0
+                  element.x = 0
+                  element.y = 0
+                  // element.y = panel.height - element.height
+                  // element.runtimeOption.y = unit2px(panel.height - element.height)
+                  installParentElement(panel, element)
+                }
+            )
+            .handle('PageFooter', () => {
+                  if (panel.pageFooter != undefined) {
+                    return
+                  }
+                  panel.pageFooter = element
+                  element.width = panel.width
+                  element.runtimeOption.width = unit2px(panel.width)
+                  element.runtimeOption.x = 0
+                  element.x = 0
+                  element.y = panel.height - element.height
+                  element.runtimeOption.y = unit2px(panel.height - element.height)
+                  installParentElement(panel, element)
+                }
+            ).end(() => {
+          if (element.type == 'Table') {
+            for (let i = 0; i < element.columnList!.length; i++) {
+              // element.columnList[i] = to(element.columnList[i], {} as Element)
+              initElement(element.columnList![i])
+            }
+          }
+          addElement(panel, element)
+        })
+      }
+      
       nextTick(() => {
         // setSelectedTargets()
         updatePanel([element.runtimeOption.target])
-        setTimeout(()=>{
+        setTimeout(() => {
           isDrop.value = false
-        },1)
+        }, 1)
       })
     }
     

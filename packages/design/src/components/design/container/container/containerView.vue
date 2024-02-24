@@ -1,30 +1,32 @@
 <template>
-  <cp-drop
-      @drop="drop"
-      class="design-container"
-      :class="{
-          'cp-print-container_over': data.dropOver
-        }"
-      @dragover="dragover"
-      @dragleave="dragleave"
-      @preventDefault="dropPreventDefault">
-    <div class="container-edit-icon" @click="test">
-      <i class="icon-design-edit iconfont"/>
-    </div>
-    <div class="container-move-icon"
-         ref="containerMoveIconRef"
-         v-if="element.type == 'Container'"
-         @mousedown="mousedown($event)">
-      <i class="icon-design-move iconfont "/>
-    </div>
-    <slot/>
-  </cp-drop>
+<!--  <cp-drop-->
+<!--      @drop="drop"-->
+<!--      class="design-container"-->
+<!--      :class="{-->
+<!--          'cp-print-container_over': data.dropOver-->
+<!--        }"-->
+<!--      @dragover="dragover"-->
+<!--      @dragleave="dragleave"-->
+<!--      @preventDefault="dropPreventDefault">-->
+<!--    -->
+<!--  </cp-drop>-->
+  
+  <div class="container-edit-icon" @click="test">
+    <i class="icon-design-edit iconfont"/>
+  </div>
+  <div class="container-move-icon"
+       ref="containerMoveIconRef"
+       v-if="element.type == 'Container'"
+       @mousedown="mousedown($event)">
+    <i class="icon-design-move iconfont "/>
+  </div>
+  <slot/>
+  
 </template>
 
 <script setup lang="ts">
 import {DragWrapper, CpElement} from "@cp-print/design/types/entity";
 import {onMounted, reactive} from "vue";
-import CpDrop from "@cp-print/design/components/cp/drop";
 import {px2unit
   // , unit2px
 } from "@cp-print/design/utils/devicePixelRatio";
