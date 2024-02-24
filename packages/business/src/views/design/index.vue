@@ -9,7 +9,7 @@ import {Template} from "@cp-print/design/types/R";
 
 const route = useRoute()
 const text = {} as TextElement
-initElement(text)
+// initElement(text)
 const {templateId} = route.query
 const data = reactive({
   template: {} as Template

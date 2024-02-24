@@ -187,7 +187,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
             }
             const rowList = []
             for (let j = 0; j < element.columnList!.length; j++) {
-                initElement(element.columnList![j])
+                initElement(element.columnList![j], j)
                 element.columnList![j].data = datum[element.columnList![j].field!]
                 rowList.push(copyElementRefValueId(element.columnList![j]))
             }

@@ -189,6 +189,9 @@ export interface RuntimeElementOption extends Position {
 
     dragInIs: boolean
 
+    // 下标
+    index: number
+
     // onDragStart: () => void
     // onDragEnd: () => void
 }

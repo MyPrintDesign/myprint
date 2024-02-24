@@ -1,15 +1,15 @@
 <template>
-<!--  <cp-drop-->
-<!--      @drop="drop"-->
-<!--      class="design-container"-->
-<!--      :class="{-->
-<!--          'cp-print-container_over': data.dropOver-->
-<!--        }"-->
-<!--      @dragover="dragover"-->
-<!--      @dragleave="dragleave"-->
-<!--      @preventDefault="dropPreventDefault">-->
-<!--    -->
-<!--  </cp-drop>-->
+  <!--  <cp-drop-->
+  <!--      @drop="drop"-->
+  <!--      class="design-container"-->
+  <!--      :class="{-->
+  <!--          'cp-print-container_over': data.dropOver-->
+  <!--        }"-->
+  <!--      @dragover="dragover"-->
+  <!--      @dragleave="dragleave"-->
+  <!--      @preventDefault="dropPreventDefault">-->
+  <!--    -->
+  <!--  </cp-drop>-->
   
   <div class="container-edit-icon" @click="test">
     <i class="icon-design-edit iconfont"/>
@@ -20,17 +20,21 @@
        @mousedown="mousedown($event)">
     <i class="icon-design-move iconfont "/>
   </div>
+  <div style="color: white">
+    {{ element.runtimeOption.index }}
+  </div>
   <slot/>
-  
+
 </template>
 
 <script setup lang="ts">
 import {DragWrapper, CpElement} from "@cp-print/design/types/entity";
 import {onMounted, reactive} from "vue";
-import {px2unit
+import {
+  px2unit
   // , unit2px
 } from "@cp-print/design/utils/devicePixelRatio";
-import {addElement} from "@cp-print/design/utils/elementUtil";
+// import {addElement} from "@cp-print/design/utils/elementUtil";
 import {
   moveableClearDragTarget,
   moveableDragTarget,
@@ -119,7 +123,7 @@ function drop(dragData: DragWrapper) {
   
   dragElement.x = px2unit(dragData.end.x! - dragData.start.x!)
   dragElement.y = px2unit(dragData.end.y! - dragData.start.y!)
-  addElement(props.element, dragElement)
+  // addElement(props.element, dragElement)
   
   data.dropOver = false
 }

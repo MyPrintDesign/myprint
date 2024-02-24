@@ -101,7 +101,7 @@ onMounted(() => {
       enable: true,
       formatter: '{{autoIncrement}}',
     }
-    initElement(indexView)
+    initElement(indexView, props.element.columnList.length)
     indexView.field = 'autoIncrement'
     indexView.label = '序号'
     props.element.columnList.unshift(indexView)

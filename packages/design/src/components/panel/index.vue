@@ -56,9 +56,9 @@ watch(() => props.template.id, (n, _o) => {
   if (n != null) {
     data.template = props.template
     to(JSON.parse(props.template.content), panel)
+    console.log(panel)
     previewData.value = JSON.parse(props.template.module.previewData!)
     setCurrentPanel(panel)
-    // console.log(panel.elementList)
     panel.type = 'Panel'
     if (!panel.watermarkContent) {
       panel.watermarkContent = 'cp-print'
@@ -66,24 +66,19 @@ watch(() => props.template.id, (n, _o) => {
     if (!panel.groupList) {
       panel.groupList = []
     }
-    for (let i = 0; i < panel.elementList!.length; i++) {
-      const element = panel.elementList![i]
-      // const element = toElement(elementObj)
-      parentInitElement(panel as Container, element)
+    for (let i = 0; i < panel.elementList.length; i++) {
+      const element = panel.elementList[i]
+      parentInitElement(panel as Container, element, i)
       if (element.type == 'Table') {
-        for (let i = 0; i < element.columnList!.length; i++) {
-          // element.columnList[i] = toElement(element.columnList[i])
-          initElement(element.columnList![i])
+        for (let i = 0; i < element.columnList.length; i++) {
+          initElement(element.columnList[i], i)
         }
       }
-      // panel.elementList[i] = element
     }
-    
-    parentInitElement(panel, panel.pageHeader)
-    parentInitElement(panel, panel.pageFooter)
+    panel.pageHeader && parentInitElement(panel, panel.pageHeader, 0)
+    panel.pageFooter && parentInitElement(panel, panel.pageFooter, 0)
     
     init()
-    // console.log(panel)
     
     provider.value = JSON.parse(data.template.module.provider!)
     // console.log(provider.value.elementList)

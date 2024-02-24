@@ -87,7 +87,7 @@ function dragStart(ev: MouseEvent) {
   element.width = unit2unit('mm', panel.pageUnit, tmpElement.value.width)
   element.height = unit2unit('mm', panel.pageUnit, tmpElement.value.height)
   
-  initElement(element)
+  initElement(element, 0)
   element.runtimeOption.parent = {} as Container
   
   dragWrapper.visible = true
@@ -229,9 +229,9 @@ function dragStart(ev: MouseEvent) {
                 }
             ).end(() => {
           if (element.type == 'Table') {
-            for (let i = 0; i < element.columnList!.length; i++) {
+            for (let i = 0; i < element.columnList.length; i++) {
               // element.columnList[i] = to(element.columnList[i], {} as Element)
-              initElement(element.columnList![i])
+              initElement(element.columnList[i], i)
             }
           }
           addElement(panel, element)

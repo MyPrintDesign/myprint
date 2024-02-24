@@ -99,7 +99,7 @@ import {record, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {
   computeTranslate,
   handle,
-  initElement,
+  // initElement,
   initPanelDiv,
   none,
   removeElement,
@@ -317,7 +317,7 @@ function drop(dragData: any) {
   
   element.x = px2unit(dragData.end.x - dragData.start.x)
   element.y = px2unit(dragData.end.y - dragData.start.y)
-  initElement(element)
+  // initElement(element)
   
   
   // elementListNone()
@@ -525,7 +525,7 @@ function elementListNone() {
 watch([() => panel.width, () => panel.height], (_w, _h) => {
   // console.log(stringify(panel, 'parent', 'runtimeOption'))
   nextTick(() => {
-    initPanelDiv(panel, designContentRef.value.$el)
+    initPanelDiv(panel, designScrollRef.value)
   })
   
 })

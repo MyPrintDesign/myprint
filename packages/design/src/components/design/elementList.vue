@@ -1,7 +1,6 @@
 <template>
-  <template v-for="(element) in elementList">
+  <template v-for="(element, index) in elementList" :key="index">
     <Design :element="element"/>
-
   </template>
 </template>
 

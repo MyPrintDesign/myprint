@@ -123,7 +123,7 @@
           <i class="icon-color-zydc iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="上移一层">
+        <style-icon tips="上移一层" @click="elementUp(appStore.currentElement, 1)">
           <i class="icon-color-syyc iconfont-color"/>
         </style-icon>
         
@@ -187,7 +187,7 @@ import {fontList, fontSizeList, hasStyle} from "@cp-print/design/constants/commo
 import {CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 import {alignTop, group, ungroup} from "@cp-print/design/components/moveable/moveable";
-import {multipleElementGetValue, multipleElementSetValue} from "@cp-print/design/utils/elementUtil";
+import {elementUp, multipleElementGetValue, multipleElementSetValue} from "@cp-print/design/utils/elementUtil";
 import {computed} from "vue";
 
 // import {ElementOption} from "@/types/entity";

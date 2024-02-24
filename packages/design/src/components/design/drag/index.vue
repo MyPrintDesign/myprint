@@ -735,7 +735,7 @@ async function handleUp(_e: MouseEvent) {
     record(<Snapshot>{elementList: props.element, action: ActionEnum.RESIZE})
   }
   
-  mitt.emit('elementUp')
+  // mitt.emit('elementUp')
   
   // computeTranslate(props.element)
   

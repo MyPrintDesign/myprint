@@ -14,12 +14,13 @@ import {
 } from "@cp-print/design/constants/common";
 import {mitt, to} from "./utils";
 import {_defaultNum} from "@cp-print/design/utils/numberUtil";
-import {reactive, CSSProperties} from "vue";
+import {reactive, CSSProperties, nextTick} from "vue";
 import {formatDate} from "./timeUtil";
 import numberUtil from "./numberUtil";
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
 import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
+import {updatePanel} from "@cp-print/design/components/moveable/moveable";
 
 let runtime = {
     displayModel: 'design' as DisplayModel
@@ -230,17 +231,18 @@ export function disableHandleList(element: CpElement) {
     return null
 }
 
-export function parentInitElement(parent: Container, element?: CpElement) {
-    initElement(element)
+export function parentInitElement(parent: Container, element: CpElement, index: number) {
+    initElement(element, index)
     installParentElement(parent, element)
-    if (element?.elementList?.length! > 0) {
-        for (let elementTmp of element!.elementList!) {
-            parentInitElement(element!, elementTmp);
+    if (element.elementList?.length > 0) {
+        for (let i = 0; i < element.elementList.length; i++) {
+            let elementTmp = element.elementList[i]
+            parentInitElement(element, elementTmp, i);
         }
     }
 }
 
-export function initElement(element?: CpElement) {
+export function initElement(element: CpElement, index: number) {
     if (element == null) {
         return
     }
@@ -251,6 +253,7 @@ export function initElement(element?: CpElement) {
     if (element.runtimeOption == null) {
         element.runtimeOption = {} as RuntimeElementOption
     }
+    element.runtimeOption.index = index
 
     if (!element.id) {
         element.id = crypto.randomUUID()
@@ -266,9 +269,9 @@ export function initElement(element?: CpElement) {
             initHeight = 30
             element.runtimeOption.rowList = []
             const rowList: Array<CpElement> = []
-            for (let i = 0; i < element.columnList!.length; i++) {
-                initElement(element.columnList![i])
-                rowList.push(copyElementRefValueId(element.columnList![i]))
+            for (let i = 0; i < element.columnList.length; i++) {
+                initElement(element.columnList[i], i)
+                rowList.push(copyElementRefValueId(element.columnList[i]))
             }
             element.runtimeOption.rowList.push(rowList)
             break
@@ -353,8 +356,11 @@ export function initElement(element?: CpElement) {
     element.runtimeOption.height = unit2px(element.height)
     element.runtimeOption.x = unit2px(element.x)
     element.runtimeOption.y = unit2px(element.y)
+
     element.runtimeOption.init.x = element.runtimeOption.x
     element.runtimeOption.init.y = element.runtimeOption.y
+    element.runtimeOption.init.width = element.runtimeOption.width
+    element.runtimeOption.init.height = element.runtimeOption.height
     element.runtimeOption.rotate = element.option.rotate
     element.runtimeOption.translate = {x: 0, y: 0}
     if (element.option.margin == null) {
@@ -401,9 +407,40 @@ export function elementUngroup(htmlElementList: Array<CpHtmlElement>) {
     }
 
     if (index >= 0) {
-        // console.log(index)
         panel.groupList.splice(index, 1)
     }
+}
+
+export function elementUp(elementList: CpElement[], layer: number) {
+    elementList.sort(function (a, b) {
+        return a.runtimeOption.index - b.runtimeOption.index
+    })
+
+    for (let cpElement of elementList) {
+        let newLayer = cpElement.runtimeOption.index - layer
+        if (newLayer < 0) {
+            newLayer = 0
+        }
+
+        const tmp = cpElement.runtimeOption.parent.elementList[cpElement.runtimeOption.index]
+
+        for (let i = cpElement.runtimeOption.index; i > newLayer; i--) {
+            console.log(i)
+            cpElement.runtimeOption.parent.elementList[i] = cpElement.runtimeOption.parent.elementList[i - 1]
+            cpElement.runtimeOption.parent.elementList[i].runtimeOption.index = i
+        }
+        cpElement.runtimeOption.parent.elementList[newLayer] = tmp
+        tmp.runtimeOption.index = newLayer
+    }
+
+    nextTick()
+        .then(()=>{
+            updatePanel()
+        })
+}
+
+export function elementDown(elementList: CpElement[], layer: number) {
+
 }
 
 function flatIdList(htmlElementList: Array<CpHtmlElement | CpHtmlElement[]>) {
@@ -490,7 +527,7 @@ export function addElement(parent: Container, element: CpElement) {
         parent.elementList = []
     }
     parent.elementList.push(element)
-    initElement(element)
+    initElement(element, parent.elementList.length)
     installParentElement(parent, element)
 }
 

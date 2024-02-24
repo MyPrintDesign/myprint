@@ -14,7 +14,7 @@
       <span
           class="cp-print-text_content"
           :style="contentStyle">
-    {{ element.data }}</span>
+    {{ element.runtimeOption.index }}</span>
     </template>
   
   </div>

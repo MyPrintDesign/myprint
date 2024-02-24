@@ -27,10 +27,13 @@ import ElementView from "@cp-print/design/components/design/element.vue";
 
 import {CpElement} from "@cp-print/design/types/entity";
 import {
+  computed,
   // computed,
-  CSSProperties, onMounted, ref} from "vue";
+  CSSProperties, onMounted, reactive, ref, toRefs, watch
+} from "vue";
 import {CpContainer} from "./container";
 import ElementList from "./elementList.vue";
+import {onUpdated} from "vue-demi";
 // import TablePopoverView from "./table/tablePopoverView.vue";
 const designRef = ref()
 
@@ -39,6 +42,17 @@ const props = withDefaults(defineProps<{
 }>(), {
   element: () => ({} as CpElement)
 })
+watch(() => designRef.value, (n, o) => {
+  // console.log(n, o)
+  console.log(n == o)
+  // props.element.runtimeOption.target = n
+})
+
+onUpdated(()=>{
+  console.log('update')
+  props.element.runtimeOption.target = designRef.value
+  console.log(props.element, props.element.runtimeOption.target)
+})
 
 onMounted(() => {
   designRef.value.element = props.element
@@ -46,11 +60,11 @@ onMounted(() => {
 })
 
 const style = {
-  left: props.element.runtimeOption.x + 'px',
-  top: props.element.runtimeOption.y + 'px',
+  left: props.element.runtimeOption.init.x + 'px',
+  top: props.element.runtimeOption.init.y + 'px',
   transform: `translate(0px, 0px) rotate(${props.element.runtimeOption.rotate}deg)`,
-  width: props.element.runtimeOption.width + 'px',
-  height: props.element.runtimeOption.height + 'px',
+  width: props.element.runtimeOption.init.width + 'px',
+  height: props.element.runtimeOption.init.height + 'px',
   // maxWidth: widthValueUnit(element),
   // maxHeight: heightValueUnit(element),
 } as CSSProperties

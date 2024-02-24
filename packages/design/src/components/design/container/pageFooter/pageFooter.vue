@@ -28,7 +28,6 @@ import CpDrag from "@cp-print/design/components/design/drag";
 import {reactive} from "vue";
 import CpDrop from "@cp-print/design/components/cp/drop";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
-import {addElement} from "@cp-print/design/utils/elementUtil";
 import ElementList from "@cp-print/design/components/design/elementList.vue";
 
 const props = withDefaults(defineProps<{
@@ -52,7 +51,7 @@ function drop(dragData: DragWrapper) {
   
   dragElement.x = px2unit(dragData.end.x! - dragData.start.x!)
   dragElement.y = px2unit(dragData.end.y! - dragData.start.y!)
-  addElement(props.element, dragElement)
+  // addElement(props.element, dragElement)
   
   data.dropOver = false
 }
