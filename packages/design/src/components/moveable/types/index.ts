@@ -1,4 +1,14 @@
-
+/**
+ * @typedef
+ * @memberof Moveable.Resizable
+ * @extends Moveable.OnResizeEnd
+ * @property - The resize finished targets
+ * @property - Each `resizeEnd` event on the targets
+ */
+export interface OnResizeGroupEnd extends OnResizeEnd {
+    targets: Array<HTMLElement | SVGElement>;
+    events: OnResizeEnd[];
+}
 
 export interface OnRender extends OnEvent, CSSObject {
     /**
@@ -923,6 +933,18 @@ export interface OnRotateGroup extends OnRotate {
     setGroupRotation: (rotation: number) => any;
 }
 
+/**
+ * @typedef
+ * @memberof Moveable.Rotatable
+ * @extends Moveable.OnRotateEnd
+ * @property - The rotate finished targets
+ * @property - Each `rotateEnd` event on the targets
+ */
+export interface OnRotateGroupEnd extends OnRotateEnd {
+    targets: Array<HTMLElement | SVGElement>;
+    events: OnRotateEnd[];
+}
+
 export interface OnRoundGroup extends OnRound {
     /**
      * moveable's targets
@@ -974,11 +996,39 @@ export interface OnResizeGroup extends OnResize {
     events: OnResize[];
 }
 
+/**
+ * @typedef
+ * @memberof Moveable.Draggable
+ * @extends Moveable.OnDragStart
+ * @property - targets to drag
+ * @property - Each `dragStart` event on the targets
+ */
+export interface OnDragGroupStart extends OnDragStart {
+    targets: Array<HTMLElement | SVGElement>;
+    events: OnDragStart[];
+}
+/**
+ * @typedef
+ * @memberof Moveable.Draggable
+ * @extends Moveable.OnDrag
+ * @property - The dragging targets
+ * @property - Each `drag` event on the targets
+ */
 export interface OnDragGroup extends OnDrag {
     targets: Array<HTMLElement | SVGElement>;
     events: OnDrag[];
 }
-
+/**
+ * @typedef
+ * @memberof Moveable.Draggable
+ * @extends Moveable.OnDragEnd
+ * @property - The drag finished targets
+ * @property - Each `dragEnd` event on the targets
+ */
+export interface OnDragGroupEnd extends OnDragEnd {
+    targets: Array<HTMLElement | SVGElement>;
+    events: OnDragEnd[];
+}
 export interface TransformObject extends CSSObject {
     /**
      * a target's next transform string value.

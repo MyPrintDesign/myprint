@@ -65,7 +65,7 @@ let path: Path
 
 const chartRef = ref()
 
-watch(() => props.element.status, (n, _o) => {
+watch(() => props.element.runtimeOption.status, (n, _o) => {
   // console.log(o, n)
   props.svgOptions.drawAuxiliary = n == 'HANDLE';
   updateSvg(chartRef.value, props.svgOptions, props.draw);

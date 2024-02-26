@@ -7,7 +7,7 @@
     
     <div class="icon-tip">{{ elementTypeFormat[data.type] }}</div>
     <Teleport v-if="isDrop" to=".design-content">
-      <design :element="tmpElement"/>
+      <design :element="tmpElement" ref="designRef"/>
     </Teleport>
     <Teleport v-if="dragWrapper.visible" to="body">
       <drag-wrapper :data="dragWrapper"/>
@@ -41,6 +41,7 @@ const mitt = inject(mittKey)!
 const panel = inject(panelKey)!
 const appStore = useAppStore()
 
+const designRef = ref()
 const isDrop = ref(false)
 const tmpElement = ref({} as CpElement)
 const dragWrapper = reactive({
@@ -103,7 +104,15 @@ function dragStart(ev: MouseEvent) {
   document.addEventListener('mouseup', mouseup);
   clearEventBubble(ev)
   
+  // nextTick()
+  //     .then(()=>{
+  //     })
+  //
   nextTick(() => {
+    // console.log(designRef.value.$el)
+    const cpHtmlElement = designRef.value.$el
+    element.runtimeOption.target = cpHtmlElement
+    cpHtmlElement.element = element
     dragNewElement(element.runtimeOption.target, ev)
   })
   
@@ -240,7 +249,7 @@ function dragStart(ev: MouseEvent) {
       
       nextTick(() => {
         // setSelectedTargets()
-        updatePanel([element.runtimeOption.target])
+        updatePanel([element])
         setTimeout(() => {
           isDrop.value = false
         }, 1)

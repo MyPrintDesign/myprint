@@ -1,8 +1,10 @@
 <template>
-  <div class="cp-element-wrapper design-wrapper design-inactive"
+  <div class="cp-element-wrapper design-wrapper "
        :style="style"
        :class="{
-         'dropInIs': element.runtimeOption.dragInIs
+         'dropInIs': element.runtimeOption.dragInIs,
+         'design-inactive': element.runtimeOption.status !== 'HANDLE',
+         'design-activate': element.runtimeOption.status == 'HANDLE',
        }"
        ref="designRef">
     <element-view :element="element"/>
@@ -29,11 +31,11 @@ import {CpElement} from "@cp-print/design/types/entity";
 import {
   computed,
   // computed,
-  CSSProperties, onMounted, reactive, ref, toRefs, watch
+  CSSProperties, onMounted, ref
 } from "vue";
 import {CpContainer} from "./container";
 import ElementList from "./elementList.vue";
-import {onUpdated} from "vue-demi";
+// import {onUpdated} from "vue-demi";
 // import TablePopoverView from "./table/tablePopoverView.vue";
 const designRef = ref()
 
@@ -42,32 +44,29 @@ const props = withDefaults(defineProps<{
 }>(), {
   element: () => ({} as CpElement)
 })
-watch(() => designRef.value, (n, o) => {
-  // console.log(n, o)
-  console.log(n == o)
-  // props.element.runtimeOption.target = n
-})
 
-onUpdated(()=>{
-  console.log('update')
-  props.element.runtimeOption.target = designRef.value
-  console.log(props.element, props.element.runtimeOption.target)
-})
 
 onMounted(() => {
-  designRef.value.element = props.element
-  props.element.runtimeOption.target = designRef.value
+  // console.log(designRef)
+  // let ss = designRef
+  // console.log(props.element.runtimeOption)
+  // console.log(props.element.runtimeOption.target)
+  // props.element.runtimeOption.target.value = designRef
+  // console.log(props.element.runtimeOption.target)
+  // designRef.value.element = props.element
 })
 
-const style = {
-  left: props.element.runtimeOption.init.x + 'px',
-  top: props.element.runtimeOption.init.y + 'px',
-  transform: `translate(0px, 0px) rotate(${props.element.runtimeOption.rotate}deg)`,
-  width: props.element.runtimeOption.init.width + 'px',
-  height: props.element.runtimeOption.init.height + 'px',
-  // maxWidth: widthValueUnit(element),
-  // maxHeight: heightValueUnit(element),
-} as CSSProperties
+const style = computed(() => {
+  return {
+    left: props.element.runtimeOption.init.x + 'px',
+    top: props.element.runtimeOption.init.y + 'px',
+    transform: `translate(0px, 0px) rotate(${props.element.runtimeOption.init.runtimeOption.rotate}deg)`,
+    width: props.element.runtimeOption.init.width + 'px',
+    height: props.element.runtimeOption.init.height + 'px',
+    // maxWidth: widthValueUnit(element),
+    // maxHeight: heightValueUnit(element),
+  } as CSSProperties
+})
 </script>
 
 <style scoped lang="scss">

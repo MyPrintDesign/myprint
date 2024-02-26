@@ -8,6 +8,7 @@ import {
     OnResizeEnd,
     OnDragGroup,
     OnResizeGroup,
+    OnResizeGroupEnd,
     OnRound,
     OnRoundGroup,
     OnRotateGroup,
@@ -20,7 +21,7 @@ import {
     MoveableInterface,
     MoveableManagerInterface, Renderer,
     MoveableOptions,
-    BoundType, MoveableRefType, ElementGuidelineValueOption
+    BoundType, MoveableRefType, ElementGuidelineValueOption, OnDragGroupEnd, OnRotateGroupEnd
 } from './types'
 import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {reactive, Ref, ref} from "vue";
@@ -69,7 +70,7 @@ const boundsTop = {"top": 0, "position": "css"} as BoundType;
 const boundsBottom = {"bottom": 0, "position": "css"} as BoundType;
 const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
 
-const props = {dimensionViewable: true, editable: true, enterLeave: true}
+const props = {dimensionViewable: true, editable: false, enterLeave: true}
 
 export const targets = ref([]) as Ref<Array<CpHtmlElement | Array<CpHtmlElement>>>
 export const bkTargets = ref([]) as Ref<Array<CpHtmlElement | Array<CpHtmlElement>>>
@@ -82,7 +83,7 @@ const DimensionViewable = {
     render(moveableInner: MoveableManagerInterface, React: Renderer) {
         const rect = moveableInner.getRect();
         const {offsetX, offsetY} = offsetContainer()
-
+        // console.log(moveableInner)
         let value
         switch (tipsStatus.value) {
             case "resize":
@@ -193,7 +194,7 @@ export function dragNewElementCancel(newElement: CpHtmlElement) {
     }
 }
 
-export function updatePanel(list: CpHtmlElement[] = []) {
+export function updatePanel(list: CpElement[] = []) {
     setTimeout(() => {
         elementList.length = 0
         canSelectElementList.length = 0
@@ -221,7 +222,9 @@ export function updatePanel(list: CpHtmlElement[] = []) {
         // console.log(elementList)
         // console.log(snapElementList)
         selecto.selectableTargets = canSelectElementList
-        groupManager.set(list, canSelectElementList);
+        // console.log(list.map(v=> v.runtimeOption.target))
+
+        groupManager.set(list.map(v=> v.runtimeOption.target), canSelectElementList);
         // setSelectedTargets()
         // console.log(123123)
         // console.log(groupMap)
@@ -330,9 +333,6 @@ function updateLocation(e: OnDrag) {
 
     requestAnimationFrame(() => {
         // const {offsetX, offsetY} = offsetContainer()
-        // console.log(e)
-        // console.log(target.element.runtimeOption.x! + e.translate[0], target.element.runtimeOption.y! + e.translate[1])
-
         target.element.runtimeOption.x = target.element.runtimeOption.init.x + e.translate[0]
         target.element.runtimeOption.y = target.element.runtimeOption.init.y + e.translate[1]
 
@@ -358,6 +358,15 @@ function updateLocation(e: OnDrag) {
         // cpElement.element.x = px2unit(rect.left - offsetX)
         // cpElement.element.y = px2unit(rect.top - offsetY)
     });
+}
+
+function updateLocationEnd(e: OnDragEnd) {
+    const target = e.target as CpHtmlElement
+    target.element.runtimeOption.init.x = target.element.runtimeOption.x
+    target.element.runtimeOption.init.y = target.element.runtimeOption.y
+
+    target.element.runtimeOption.translate.x = 0
+    target.element.runtimeOption.translate.y = 0
 }
 
 function updateRect(e: OnResize) {
@@ -397,12 +406,24 @@ function updateRect(e: OnResize) {
     // target.element.runtimeOption.height = e.height
 }
 
-function updateRotate(e: OnRotate) {
-    // console.log('rotate,r: ', e.rotation)
+function updateRectEnd(e: OnResizeEnd) {
     const target = (e.target as CpHtmlElement)
-    // console.log(e.rotation)
-    // updateLocation()
-    target.element.option.rotate = e.rotation % 360
+    target.element.runtimeOption.init.width = target.element.runtimeOption.width
+    target.element.runtimeOption.init.height = target.element.runtimeOption.height
+
+    target.element.runtimeOption.init.x = target.element.runtimeOption.x
+    target.element.runtimeOption.init.y = target.element.runtimeOption.y
+}
+
+function updateRotate(e: OnRotate) {
+    const target = (e.target as CpHtmlElement)
+    target.element.runtimeOption.rotate = e.rotation % 360
+}
+
+function updateRotateEnd(e: OnRotateEnd) {
+    const target = (e.target as CpHtmlElement)
+    target.element.runtimeOption.init.runtimeOption.rotate = target.element.runtimeOption.rotate
+    target.element.option.rotate = target.element.runtimeOption.rotate
 }
 
 function computeDirectionRect(attr: string, length: number) {
@@ -417,23 +438,12 @@ function computeDirectionRect(attr: string, length: number) {
 }
 
 const onRender = (e: OnRender) => {
-    // console.log(e.cssText)
     if (e.cssText == '') {
         return
     }
+    // console.log(e.cssText)
     // console.log(e)
     e.target.style.cssText += e.cssText;
-    // console.log(e)
-    // const target = e.target as CpHtmlElement
-    // target.element.runtimeOption.translate.x = e.transformObject.translate[0]
-    // target.element.runtimeOption.translate.y = e.transformObject.translate[1]
-    // target.element.runtimeOption.rotate = rad2Ang(e.transformObject.rotate) % 360
-    //
-    // if (e.style.width) {
-    //     target.element.runtimeOption.width = e.style.width.replace("px", "")
-    //     target.element.runtimeOption.height = e.style.height.replace("px", "")
-    // }
-
     updateRuleRect()
 };
 
@@ -455,14 +465,13 @@ function changeTargets(_e: OnChangeTargets) {
 }
 
 const onDragStart = (_e: OnDragStart) => {
-
     tipsStatus.value = 'drag'
 }
 
-function onDragEnd(_e: OnDragEnd) {
+function onDragEnd(e: OnDragEnd) {
     tipsStatus.value = undefined
     // console.log('onDrag', e)
-    // updateLocation(e)
+    updateLocationEnd(e)
     // e.target.style.transform = e.transform;
 }
 
@@ -477,7 +486,12 @@ function onDragGroup(e: OnDragGroup) {
     for (let _event of e.events) {
         updateLocation(_event)
     }
-    // e.target.style.transform = e.transform;
+}
+
+function onDragGroupEnd(e: OnDragGroupEnd) {
+    for (let _event of e.events) {
+        updateLocationEnd(_event)
+    }
 }
 
 const onBeforeRotate = (e: any) => {
@@ -492,16 +506,11 @@ function rotate(e: OnRotate) {
 
 function onRotateStart(_e: OnRotateStart) {
     tipsStatus.value = 'rotate'
-    // console.log('rotate', e)
-    // updateRotate(e)
-    // e.target.style.transform = e.transform;
 }
 
-function onRotateEnd(_e: OnRotateEnd) {
+function onRotateEnd(e: OnRotateEnd) {
+    updateRotateEnd(e)
     tipsStatus.value = undefined
-    // console.log('rotate', e)
-    // updateRotate(e)
-    // e.target.style.transform = e.transform;
 }
 
 function rotateGroup(e: OnRotateGroup) {
@@ -509,21 +518,23 @@ function rotateGroup(e: OnRotateGroup) {
     for (let event of e.events) {
         updateRotate(event)
     }
-    // e.target.style.transform = e.transform;
+}
+
+function rotateGroupEnd(e: OnRotateGroupEnd) {
+    for (let event of e.events) {
+        updateRotateEnd(event)
+    }
 }
 
 function resize(e: OnResize) {
-    // console.log('resize', e)
-    // e.target.element.runtimeOption.width = e.width
-    // e.target.element.runtimeOption.height =e.height
-    // e.target.style.cssText += "width: " + e.width + "px; height:" + e.height + "px";
     updateRect(e)
-    // e.target.style.transform = e.transform;
 }
 
-function onResizeEnd(_e: OnResizeEnd) {
+function onResizeEnd(e: OnResizeEnd) {
     // console.log('onResizeEnd', e)
     tipsStatus.value = undefined
+
+    updateRectEnd(e)
 }
 
 function onResizeStart(_e: OnResizeStart) {
@@ -542,6 +553,12 @@ function resizeGroup(e: OnResizeGroup) {
         updateRect(event)
     }
     // e.target.style.transform = e.transform;
+}
+
+function resizeGroupEnd(e: OnResizeGroupEnd) {
+    for (let event of e.events) {
+        updateRectEnd(event)
+    }
 }
 
 function round(_e: OnRound) {
@@ -727,7 +744,7 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlEle
         //     }
         // } else {
         // }
-        nextTargete.element.status = 'HANDLE'
+        nextTargete.element.runtimeOption.status = 'HANDLE'
         cpList.push(nextTargete.element)
     }
 
@@ -761,7 +778,7 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlEle
 
     snapElementList.value.length = 1
     for (let element of elementList) {
-        if (element.element.status == 'NONE') {
+        if (element.element.runtimeOption.status !== 'HANDLE') {
             snapElementList.value.push({element: element})
         }
     }
@@ -933,21 +950,21 @@ const onSelectEnd = (e: OnSelectEnd) => {
         // console.log(element)
         if (Array.isArray(element)) {
             for (let elementElement of element) {
-                elementElement.classList.add('design-inactive')
-                elementElement.classList.remove('design-activate')
-                elementElement.element.status = 'NONE'
+                // elementElement.classList.add('design-inactive')
+                // elementElement.classList.remove('design-activate')
+                elementElement.element.runtimeOption.status = 'NONE'
             }
         } else {
-            element.classList.add('design-inactive')
-            element.classList.remove('design-activate')
-            element.element.status = 'NONE'
+            // element.classList.add('design-inactive')
+            // element.classList.remove('design-activate')
+            element.element.runtimeOption.status = 'NONE'
         }
     }
     for (let snapElement of added) {
         const element = snapElement as CpHtmlElement;
-        snapElement.classList.remove('design-inactive')
-        snapElement.classList.add('design-activate')
-        element.element.status = 'HANDLE'
+        // snapElement.classList.remove('design-inactive')
+        // snapElement.classList.add('design-activate')
+        element.element.runtimeOption.status = 'HANDLE'
     }
 
     let nextChilds;
@@ -1074,14 +1091,17 @@ export function initMoveable(_selecto, _highlightRule) {
     moveable.on('dragStart', onDragStart)
     moveable.on('dragEnd', onDragEnd)
     moveable.on('dragGroup', onDragGroup)
+    moveable.on('dragGroupEnd', onDragGroupEnd)
     moveable.on('rotateStart', onRotateStart)
     moveable.on('rotateEnd', onRotateEnd)
     moveable.on('rotate', rotate)
     moveable.on('rotateGroup', rotateGroup)
+    moveable.on('rotateGroupEnd', rotateGroupEnd)
     moveable.on('resizeStart', onResizeStart)
     moveable.on('resize', resize)
-    moveable.on('resizeGroup', resizeGroup)
     moveable.on('resizeEnd', onResizeEnd)
+    moveable.on('resizeGroup', resizeGroup)
+    moveable.on('resizeGroupEnd', resizeGroupEnd)
     moveable.on('beforeResize', onBeforeResize)
     moveable.on('beforeRotate', onBeforeRotate)
     moveable.on('round', round)

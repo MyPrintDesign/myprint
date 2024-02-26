@@ -14,9 +14,8 @@ import {
 } from "@cp-print/design/constants/common";
 import {mitt, to} from "./utils";
 import {_defaultNum} from "@cp-print/design/utils/numberUtil";
-import {reactive, CSSProperties, nextTick} from "vue";
+import {reactive, CSSProperties} from "vue";
 import {formatDate} from "./timeUtil";
-import numberUtil from "./numberUtil";
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
 import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
@@ -100,25 +99,25 @@ export function clearPanel(panel?: Panel) {
     panel!.elementList = []
 }
 
-export function getTranslate(element: CpElement) {
-    let translate = ''
-    if (element.translateX || element.translateY) {
-        translate = `translate(${valueUnit(element.translateX)}, ${valueUnit(element.translateY)})`
-    }
-    if (element.option.rotate != null) {
-        translate = translate + `rotate(${element.option.rotate}deg)`
-    }
-    if (translate) {
-        return translate
-    }
-    return 'none'
+export function getTranslate(_element: CpElement) {
+    // let translate = ''
+    // if (_element.translateX || _element.translateY) {
+    //     translate = `translate(${valueUnit(_element.translateX)}, ${valueUnit(_element.translateY)})`
+    // }
+    // if (_element.option.rotate != null) {
+    //     translate = translate + `rotate(${_element.option.rotate}deg)`
+    // }
+    // if (translate) {
+    //     return translate
+    // }
+    // return 'none'
 }
 
 export function none(element?: CpElement) {
     if (element == null) {
         return
     }
-    element.status = 'NONE'
+    element.runtimeOption.status = 'NONE'
     if (element.elementList != null) {
         for (let childrenElement of element.elementList) {
             none(childrenElement)
@@ -140,15 +139,15 @@ export function selectElementList(elementList?: Array<Container>) {
 }
 
 export function select(element?: Container) {
-    element!.status = 'SELECT'
+    element!.runtimeOption.status = 'SELECT'
 }
 
 export function selectRemove(element: Container) {
-    element.status = 'SELECT_REMOVE'
+    element.runtimeOption.status = 'SELECT_REMOVE'
 }
 
 export function handle(element: Container) {
-    element.status = 'HANDLE'
+    element.runtimeOption.status = 'HANDLE'
 }
 
 export function computedHandles(element: Container): Array<handleConstantsType> | undefined {
@@ -174,17 +173,17 @@ export function computeDrag(element: Container): boolean {
     return true
 }
 
-export function computeTranslate(element: CpElement) {
+export function computeTranslate(_element: CpElement) {
     // complete 更改位置
-    if (element.translateX != null) {
-        element.x = numberUtil.sum(element.x, element.translateX)
-        element.translateX = undefined
-    }
-
-    if (element.translateY != null) {
-        element.y = numberUtil.sum(element.y, element.translateY)
-        element.translateY = undefined
-    }
+    // if (_element.translateX != null) {
+    //     _element.x = numberUtil.sum(_element.x, _element.translateX)
+    //     _element.translateX = undefined
+    // }
+    //
+    // if (_element.translateY != null) {
+    //     _element.y = numberUtil.sum(_element.y, _element.translateY)
+    //     _element.translateY = undefined
+    // }
 }
 
 export function recursionForElement(container: Panel, callback: (element: CpElement) => void) {
@@ -254,6 +253,7 @@ export function initElement(element: CpElement, index: number) {
         element.runtimeOption = {} as RuntimeElementOption
     }
     element.runtimeOption.index = index
+    element.runtimeOption.status = 'NONE'
 
     if (!element.id) {
         element.id = crypto.randomUUID()
@@ -351,6 +351,7 @@ export function initElement(element: CpElement, index: number) {
         element.option.padding = {} as Position
     }
     element.runtimeOption.init = {} as Container
+    element.runtimeOption.init.runtimeOption = {} as RuntimeElementOption
     // console.log(appStore().lastPageUnit)
     element.runtimeOption.width = unit2px(element.width)
     element.runtimeOption.height = unit2px(element.height)
@@ -362,6 +363,7 @@ export function initElement(element: CpElement, index: number) {
     element.runtimeOption.init.width = element.runtimeOption.width
     element.runtimeOption.init.height = element.runtimeOption.height
     element.runtimeOption.rotate = element.option.rotate
+    element.runtimeOption.init.runtimeOption.rotate = element.runtimeOption.rotate
     element.runtimeOption.translate = {x: 0, y: 0}
     if (element.option.margin == null) {
         element.option.margin = {} as Position
@@ -432,15 +434,33 @@ export function elementUp(elementList: CpElement[], layer: number) {
         cpElement.runtimeOption.parent.elementList[newLayer] = tmp
         tmp.runtimeOption.index = newLayer
     }
-
-    nextTick()
-        .then(()=>{
-            updatePanel()
-        })
+    updatePanel(elementList)
 }
 
 export function elementDown(elementList: CpElement[], layer: number) {
+    elementList.sort(function (a, b) {
+        return a.runtimeOption.index - b.runtimeOption.index
+    })
 
+    for (let cpElement of elementList) {
+        let newLayer = cpElement.runtimeOption.index + layer
+        const parentElementList = cpElement.runtimeOption.parent.elementList
+        if (newLayer > parentElementList.length - 1) {
+            newLayer = parentElementList.length - 1
+        }
+        console.log('123,', newLayer)
+
+        const tmp = parentElementList[cpElement.runtimeOption.index]
+
+        for (let i = cpElement.runtimeOption.index; i < newLayer; i++) {
+            // console.log(i)
+            parentElementList[i] = parentElementList[i + 1]
+            parentElementList[i].runtimeOption.index = i
+        }
+        parentElementList[newLayer] = tmp
+        tmp.runtimeOption.index = newLayer
+    }
+    updatePanel(elementList)
 }
 
 function flatIdList(htmlElementList: Array<CpHtmlElement | CpHtmlElement[]>) {
@@ -549,7 +569,7 @@ export function removeElement(element: CpElement) {
                 const elementList: Array<CpElement> = []
 
                 for (let valueElement of getCurrentPanel().elementList!) {
-                    if ('SELECT' == valueElement.status) {
+                    if ('SELECT' == valueElement.runtimeOption.status) {
                         elementList.push(valueElement)
                     }
                 }
@@ -863,7 +883,7 @@ export function replaceVariables(str: string, params: { [key: string]: any }): s
 
 export function selectedElementBatchOperation(callback: (element: CpElement) => void) {
     for (let valueElement of getCurrentPanel().elementList!) {
-        if (canMoveStatusList.includes(valueElement.status)) {
+        if (canMoveStatusList.includes(valueElement.runtimeOption.status)) {
             callback(valueElement)
         }
     }
@@ -959,23 +979,49 @@ export function multipleElementGetValue(props: string) {
         return undefined
     }
 
-    const firstValue = elementList[0][props]
+    const firstValue = getNestedPropertyValue(elementList[0], props)
     for (let currentElementElement of elementList) {
-        if (currentElementElement[props] != firstValue) {
+        if (getNestedPropertyValue(currentElementElement, props) != firstValue) {
             return undefined
         }
     }
     return firstValue
 }
 
-export function multipleElementSetValue(props: string, val: any) {
+function getNestedPropertyValue(obj, propertyPath) {
+    const properties = propertyPath.split('.');
+    let currentObj = obj;
 
-    if (Array.isArray(appStore().currentElement)) {
-        for (let currentElementElement of appStore().currentElement as any) {
-            currentElementElement[props] = val
+    for (let prop of properties) {
+        if (currentObj.hasOwnProperty(prop)) {
+            currentObj = currentObj[prop];
+        } else {
+            return undefined; // 如果属性不存在，返回 undefined
         }
-    } else {
-        appStore().currentElement[props] = val
+    }
+
+    return currentObj;
+}
+
+function setNestedPropertyValue(obj, propertyPath, value) {
+    const properties = propertyPath.split('.');
+    let currentObj = obj;
+
+    for (let i = 0; i < properties.length - 1; i++) {
+        if (!currentObj.hasOwnProperty(properties[i])) {
+            currentObj[properties[i]] = {};
+        }
+        currentObj = currentObj[properties[i]];
+    }
+
+    currentObj[properties[properties.length - 1]] = value;
+}
+
+
+export function multipleElementSetValue(props: string, val: any) {
+    console.log(val)
+    for (let currentElementElement of appStore().currentElement as any) {
+        setNestedPropertyValue(currentElementElement, props, val)
     }
 }
 

@@ -72,11 +72,13 @@
         <div class="display-flex" style="gap: 2px;">
           <cp-color-picker
               :modelValue="multipleElementGetValue('option.color')"
+              @update:model-value="(val:any)=>multipleElementSetValue('option.color', val)"
               :enable="hasStyle(multipleElementGetValue('type'), 'color')">
             <i class="icon-zitiyanse iconfont" style="height: 20px"/>
           </cp-color-picker>
           <cp-color-picker
               :modelValue="multipleElementGetValue('option.background')"
+              @update:model-value="(val:any)=>multipleElementSetValue('option.background', val)"
               :enable="hasStyle(multipleElementGetValue('type'), 'background')">
             <i class="icon-bucket iconfont" style="height: 20px"/>
           </cp-color-picker>
@@ -119,7 +121,7 @@
           <i class="icon-color-qxzh iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="置于顶层" @click="alignTop()">
+        <style-icon tips="置于顶层" @click="elementUp(appStore.currentElement, 999999)">
           <i class="icon-color-zydc iconfont-color"/>
         </style-icon>
         
@@ -127,11 +129,11 @@
           <i class="icon-color-syyc iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="下移一层">
+        <style-icon tips="下移一层" @click="elementDown(appStore.currentElement, 1)">
           <i class="icon-color-xyyc iconfont-color"/>
         </style-icon>
         
-        <style-icon tips="置于底层">
+        <style-icon tips="置于底层" @click="elementDown(appStore.currentElement, 999999)">
           <i class="icon-color-zydic iconfont-color"/>
         </style-icon>
         
@@ -171,6 +173,66 @@
                     enableProps="borderAll">
           <i class="icon-jurassic_border-all iconfont" style="font-size: 18px"/>
         </style-icon>
+        
+        <style-icon tips="左对齐"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-spz iconfont-color" />
+        </style-icon>
+        
+        <style-icon tips="居中对齐"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-spjz iconfont-color" />
+        </style-icon>
+        
+        <style-icon tips="右对齐"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-spy iconfont-color" />
+        </style-icon>
+        
+        <style-icon tips="顶端对齐"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-czding iconfont-color" />
+        </style-icon>
+        
+        <style-icon tips="垂直居中对齐"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-czjz iconfont-color" />
+        </style-icon>
+        
+        <style-icon tips="底端对齐"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-czd iconfont-color" />
+        </style-icon>
+        
+        <style-icon tips="水平平均分布"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-spdjfb iconfont-color" />
+        </style-icon>
+        
+        <style-icon tips="垂直平均分布"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-czdjfb iconfont-color" />
+        </style-icon>
+        
+        <style-icon tips="父元水平直平均分布"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-fyzsp iconfont-color" />
+        </style-icon>
+        
+        <style-icon tips="父元素垂直平均分布"
+                    props="option.borderAll"
+                    enableProps="borderAll">
+          <i class="icon-color-fyscz iconfont-color" />
+        </style-icon>
       </div>
     </div>
   </div>
@@ -186,8 +248,13 @@ import {i18n} from "@cp-print/design/locales";
 import {fontList, fontSizeList, hasStyle} from "@cp-print/design/constants/common";
 import {CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
-import {alignTop, group, ungroup} from "@cp-print/design/components/moveable/moveable";
-import {elementUp, multipleElementGetValue, multipleElementSetValue} from "@cp-print/design/utils/elementUtil";
+import {group, ungroup} from "@cp-print/design/components/moveable/moveable";
+import {
+  elementDown,
+  elementUp,
+  multipleElementGetValue,
+  multipleElementSetValue
+} from "@cp-print/design/utils/elementUtil";
 import {computed} from "vue";
 
 // import {ElementOption} from "@/types/entity";

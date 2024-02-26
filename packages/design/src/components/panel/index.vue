@@ -66,6 +66,13 @@ watch(() => props.template.id, (n, _o) => {
     if (!panel.groupList) {
       panel.groupList = []
     }
+    console.log(JSON.parse(JSON.stringify(panel.elementList[0])))
+    for (let i = 0; i < 1000; i++) {
+      const  tmp = JSON.parse(JSON.stringify(panel.elementList[0]))
+      tmp.y = tmp.y + 0.2
+      // panel.elementList?.unshift(tmp)
+      
+    }
     for (let i = 0; i < panel.elementList.length; i++) {
       const element = panel.elementList[i]
       parentInitElement(panel as Container, element, i)

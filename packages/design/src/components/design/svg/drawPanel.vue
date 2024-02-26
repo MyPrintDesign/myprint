@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<{
   element: () => ({} as CpElement)
 })
 
-watch(() => props.element.status, (n, _o) => {
+watch(() => props.element.runtimeOption.status, (n, _o) => {
   if (n == 'HANDLE') {
     d3Selection.select(data.context.canvas)
         .call(data.dragFun)

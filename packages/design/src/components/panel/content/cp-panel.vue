@@ -61,6 +61,8 @@
           <!--        </vue-drag>-->
           <!--    对齐辅助线    -->
           <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
+          
+          
         </div>
       </div>
       
@@ -104,7 +106,7 @@ import {
   none,
   removeElement,
   // rotatedPoint,
-  select,
+  // select,
   // setCurrentElement,
   valueUnit
 } from "@cp-print/design/utils/elementUtil";
@@ -138,7 +140,7 @@ const designScrollRef = ref<HTMLElement>()!
 
 // 事件绑定
 mitt.on('elementClick', elementClick)
-mitt.on('elementMove', elementMove)
+// mitt.on('elementMove', elementMove)
 mitt.on('elementUp', elementUp)
 mitt.on('elementRemove', elementRemove)
 mitt.on("scaleEvent", scaleEvent)
@@ -426,40 +428,40 @@ function elementClick(element: CpElement) {
   // contentScaleRef.fresh()
 }
 
-function elementMove(element: CpElement) {
-  // let element = point.element as Element;
-  if (element.status == 'NONE') {
-    elementListNone()
-    select(element)
-  }
-  
-  // 寻找对齐的位置
-  // computedAlign(point, alignLineDataList, props.panel.elementList)
-  
-  // 高亮尺子刻度
-  // highlightRule.horizontalLeft = mm2px(element.x + point.offsetX)
-  // highlightRule.horizontalRight = mm2px(element.x + point.offsetX + element.width)
-  // highlightRule.verticalLeft = mm2px(element.y + point.offsetY)
-  // highlightRule.verticalRight = mm2px(element.y + point.offsetY + element.height)
-  
-  // console.log(point)
-  for (let valueElement of panel.elementList!) {
-    if (canMoveStatusList.includes(valueElement.status)) {
-      // console.log(valueElement)
-      valueElement.translateX = element.translateX
-      valueElement.translateY = element.translateY
-    }
-  }
-  
-  // defaultDragRectElement.translateX = point.offsetX
-  // defaultDragRectElement.translateY = point.offsetY
-}
+// function elementMove(element: CpElement) {
+//   // let element = point.element as Element;
+//   if (element.runtimeOption.status == 'NONE') {
+//     elementListNone()
+//     select(element)
+//   }
+//
+//   // 寻找对齐的位置
+//   // computedAlign(point, alignLineDataList, props.panel.elementList)
+//
+//   // 高亮尺子刻度
+//   // highlightRule.horizontalLeft = mm2px(element.x + point.offsetX)
+//   // highlightRule.horizontalRight = mm2px(element.x + point.offsetX + element.width)
+//   // highlightRule.verticalLeft = mm2px(element.y + point.offsetY)
+//   // highlightRule.verticalRight = mm2px(element.y + point.offsetY + element.height)
+//
+//   // console.log(point)
+//   for (let valueElement of panel.elementList!) {
+//     if (canMoveStatusList.includes(valueElement.runtimeOption.status)) {
+//       // console.log(valueElement)
+//       valueElement.translateX = element.translateX
+//       valueElement.translateY = element.translateY
+//     }
+//   }
+//
+//   // defaultDragRectElement.translateX = point.offsetX
+//   // defaultDragRectElement.translateY = point.offsetY
+// }
 
 function elementUp() {
   // console.log(point)
   const elementList: Array<CpElement> = []
   for (let valueElement of panel.elementList!) {
-    if (canMoveStatusList.includes(valueElement.status)) {
+    if (canMoveStatusList.includes(valueElement.runtimeOption.status)) {
       elementList.push(valueElement)
     }
   }

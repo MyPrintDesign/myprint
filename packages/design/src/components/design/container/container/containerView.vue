@@ -20,7 +20,7 @@
        @mousedown="mousedown($event)">
     <i class="icon-design-move iconfont "/>
   </div>
-  <div style="color: white">
+  <div style="color: black">
     {{ element.runtimeOption.index }}
   </div>
   <slot/>
@@ -70,7 +70,7 @@ function mousedown(event: MouseEvent) {
   // let lastX, lastY;
   let isHandle = true
   
-  if (props.element.status != 'HANDLE') {
+  if (props.element.runtimeOption.status != 'HANDLE') {
     isHandle = false
     setSelectedTargets([props.element.runtimeOption.target])
   }
@@ -101,7 +101,7 @@ function mousedown(event: MouseEvent) {
   
   function mouseup(_ev: MouseEvent) {
     if (!isHandle) {
-      props.element.status = 'NONE'
+      props.element.runtimeOption.status = 'NONE'
       setSelectedTargets([])
     }
     moveableClearDragTarget()

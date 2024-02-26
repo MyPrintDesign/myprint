@@ -5,7 +5,7 @@
       :class="[
       {
         'pointer-events': pointerEvent,
-        [classNameActive]: ['SELECT', 'HANDLE'].includes(element.status),
+        [classNameActive]: ['SELECT', 'HANDLE'].includes(element.runtimeOption.status),
         [classNameDragging]: datatmp.dragging,
         [classNameResizing]: datatmp.resizing,
         [classNameRotating]: datatmp.rotating
@@ -17,10 +17,10 @@
     
     <slot></slot>
     
-    <div class="select" :class="{realSelect: (['SELECT', 'HANDLE'].includes(element.status))}"
+    <div class="select" :class="{realSelect: (['SELECT', 'HANDLE'].includes(element.runtimeOption.status))}"
          :style="{width: valueUnit(element.width) , height: valueUnit(element.height)}"/>
     
-    <template v-if="!element.lock && element.status == 'HANDLE'">
+    <template v-if="!element.lock && element.runtimeOption.status == 'HANDLE'">
       <div class="rotate cursor-ew-rotate" v-if="handles.includes('rot')"
            @mousedown.stop.prevent="handleDown({id:'rot'}, $event)"></div>
       
@@ -37,13 +37,13 @@
     </template>
     <el-icon
         @mousedown="click($event, ()=>mitt.emit('elementRemove', props.element))"
-        v-if="!element.lock && ['SELECT_REMOVE', 'HANDLE'].includes(element.status)"
+        v-if="!element.lock && ['SELECT_REMOVE', 'HANDLE'].includes(element.runtimeOption.status)"
         :style="{left : (unit2px(element.width)+5)+'px', top : '-15px', cursor: ''}"
         class="remove">
       <CircleCloseFilled/>
     </el-icon>
     
-    <div class="center" :class="{realSelect: (['SELECT', 'HANDLE'].includes(element.status))}"></div>
+    <div class="center" :class="{realSelect: (['SELECT', 'HANDLE'].includes(element.runtimeOption.status))}"></div>
     
     <Teleport to="body">
       <div class="mouseTips" :style="{
@@ -75,7 +75,7 @@ import {mittKey, panelKey} from "@cp-print/design/constants/keys";
 import {
   // computeTranslate,
   disableHandleList,
-  getTranslate,
+  // getTranslate,
   valueUnit,
   // rotatedPoint,
   getAngle, panelDivPosition, dragLimit, getMouseOffsetTop, getMouseOffsetBottom
@@ -280,7 +280,7 @@ const style = computed(() => {
   datatmp.height = unit2px(props.element.height)
   
   // console.log(props.element.translateX)
-  _style.transform = getTranslate(props.element)
+  // _style.transform = getTranslate(props.element)
   return _style
 })
 

@@ -1,6 +1,6 @@
 <template>
-  <template v-for="(element, index) in elementList" :key="index">
-    <Design :element="element"/>
+  <template v-for="(element, index) in elementList" :key="element.id">
+    <Design :element="element" :ref="(el)=>setRef(element, el)"/>
   </template>
 </template>
 
@@ -14,4 +14,12 @@ withDefaults(defineProps<{
 }>(), {
   elementList: () => ([] as Array<CpElement>)
 })
+
+function setRef(element, el) {
+  if (el && el.$el) {
+    // console.log(element, el.$el)
+    element.runtimeOption.target = el.$el
+    el.$el.element = element
+  }
+}
 </script>

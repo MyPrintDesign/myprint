@@ -33,12 +33,17 @@ export interface Line {
 
 export interface Container extends Point, ElementRelation {
     id: string
-    status: string;
+    // status: string;
     width: number;
     height: number;
     minWidth: number;
     minHeight: number;
     type: elementType
+
+    /**
+     * 运行时配置
+     */
+    runtimeOption: RuntimeElementOption
 }
 
 export interface Panel extends Container {
@@ -124,27 +129,22 @@ export interface HandlePanel extends Container {
 }
 
 export interface CpElement extends Container {
-    id: string
-    minWidth: number
-    minHeight: number
+    // id: string
+    // minWidth: number
+    // minHeight: number
 
     contentType?: textContentType
     field?: string
-    translateX?: number
-    translateY?: number
+    // translateX?: number
+    // translateY?: number
     enable?: number
     label?: string
     data?: any
 
     columnList?: CpElement[]
-    status: elementStatus
     option: ElementOption
     svgOption: ElementSvgOption
 
-    /**
-     * 运行时配置
-     */
-    runtimeOption: RuntimeElementOption
     /**
      * 是否锁定
      */
@@ -179,6 +179,7 @@ export interface RuntimeElementOption extends Position {
     target?: any
     rotate: number
     init: Container
+    status: elementStatus
 
     /**
      * 工作环境，如果是在表格中，填充满整个cell
