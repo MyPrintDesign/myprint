@@ -269,9 +269,9 @@ export function initElement(element: CpElement, index: number) {
             initHeight = 30
             element.runtimeOption.rowList = []
             const rowList: Array<CpElement> = []
-            for (let i = 0; i < element.columnList.length; i++) {
-                initElement(element.columnList[i], i)
-                rowList.push(copyElementRefValueId(element.columnList[i]))
+            for (let i = 0; i < element.columnList!.length; i++) {
+                initElement(element.columnList![i], i)
+                rowList.push(copyElementRefValueId(element.columnList![i]))
             }
             element.runtimeOption.rowList.push(rowList)
             break
@@ -357,12 +357,12 @@ export function initElement(element: CpElement, index: number) {
     element.runtimeOption.height = unit2px(element.height)
     element.runtimeOption.x = unit2px(element.x)
     element.runtimeOption.y = unit2px(element.y)
+    element.runtimeOption.rotate = element.option.rotate
 
     element.runtimeOption.init.x = element.runtimeOption.x
     element.runtimeOption.init.y = element.runtimeOption.y
     element.runtimeOption.init.width = element.runtimeOption.width
     element.runtimeOption.init.height = element.runtimeOption.height
-    element.runtimeOption.rotate = element.option.rotate
     element.runtimeOption.init.runtimeOption.rotate = element.runtimeOption.rotate
     element.runtimeOption.translate = {x: 0, y: 0}
     if (element.option.margin == null) {
@@ -413,38 +413,39 @@ export function elementUngroup(htmlElementList: Array<CpHtmlElement>) {
     }
 }
 
-export function elementUp(elementList: CpElement[], layer: number) {
-    elementList.sort(function (a, b) {
-        return a.runtimeOption.index - b.runtimeOption.index
-    })
-
-    for (let cpElement of elementList) {
-        let newLayer = cpElement.runtimeOption.index - layer
-        if (newLayer < 0) {
-            newLayer = 0
-        }
-
-        const tmp = cpElement.runtimeOption.parent.elementList[cpElement.runtimeOption.index]
-
-        for (let i = cpElement.runtimeOption.index; i > newLayer; i--) {
-            console.log(i)
-            cpElement.runtimeOption.parent.elementList[i] = cpElement.runtimeOption.parent.elementList[i - 1]
-            cpElement.runtimeOption.parent.elementList[i].runtimeOption.index = i
-        }
-        cpElement.runtimeOption.parent.elementList[newLayer] = tmp
-        tmp.runtimeOption.index = newLayer
-    }
-    updatePanel(elementList)
-}
-
 export function elementDown(elementList: CpElement[], layer: number) {
     elementList.sort(function (a, b) {
         return a.runtimeOption.index - b.runtimeOption.index
     })
 
     for (let cpElement of elementList) {
+        let newLayer = cpElement.runtimeOption.index - layer
+        const parentElementList = cpElement.runtimeOption.parent!.elementList!
+        if (newLayer < 0) {
+            newLayer = 0
+        }
+
+        const tmp = parentElementList[cpElement.runtimeOption.index]
+
+        for (let i = cpElement.runtimeOption.index; i > newLayer; i--) {
+            console.log(i)
+            parentElementList[i] = parentElementList[i - 1]
+            parentElementList[i].runtimeOption.index = i
+        }
+        parentElementList[newLayer] = tmp
+        tmp.runtimeOption.index = newLayer
+    }
+    updatePanel(elementList)
+}
+
+export function elementUp(elementList: CpElement[], layer: number) {
+    elementList.sort(function (a, b) {
+        return a.runtimeOption.index - b.runtimeOption.index
+    })
+
+    for (let cpElement of elementList) {
         let newLayer = cpElement.runtimeOption.index + layer
-        const parentElementList = cpElement.runtimeOption.parent.elementList
+        const parentElementList = cpElement.runtimeOption.parent!.elementList!
         if (newLayer > parentElementList.length - 1) {
             newLayer = parentElementList.length - 1
         }
@@ -834,7 +835,7 @@ export function formatter(element: CpElement, variable: FormatterVariable = {}):
         // console.log(contentData)
         return contentData
     }
-    return ''
+    return element.data
 }
 
 export function extractVariableNames(template: string): string[] {

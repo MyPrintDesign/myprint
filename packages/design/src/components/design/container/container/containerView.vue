@@ -28,22 +28,13 @@
 </template>
 
 <script setup lang="ts">
-import {DragWrapper, CpElement} from "@cp-print/design/types/entity";
-import {onMounted, reactive} from "vue";
-import {
-  px2unit
-  // , unit2px
-} from "@cp-print/design/utils/devicePixelRatio";
-// import {addElement} from "@cp-print/design/utils/elementUtil";
+import {CpElement} from "@cp-print/design/types/entity";
+import {ref, onMounted} from "vue";
 import {
   moveableClearDragTarget,
   moveableDragTarget,
-  // moveableMove,
   setSelectedTargets
 } from "@cp-print/design/components/moveable/moveable";
-// import {clearEventBubble} from "@cp-print/design/utils/event";
-import {ref} from "vue-demi";
-import {elementTypeContainerList} from "@cp-print/design/constants/common";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -52,9 +43,9 @@ const props = withDefaults(defineProps<{
 })
 const containerMoveIconRef = ref()
 // const mitt = inject(mittKey)
-const data = reactive({
-  dropOver: false
-})
+// const data = reactive({
+//   dropOver: false
+// })
 
 onMounted(() => {
 
@@ -65,7 +56,7 @@ function test() {
 }
 
 function mousedown(event: MouseEvent) {
-  console.log(event)
+  // console.log(event)
   // let initX = unit2px(props.element.x!), initY = unit2px(props.element.y!);
   // let lastX, lastY;
   let isHandle = true
@@ -75,12 +66,6 @@ function mousedown(event: MouseEvent) {
     setSelectedTargets([props.element.runtimeOption.target])
   }
   moveableDragTarget(containerMoveIconRef.value, event)
-  
-  // lastX = event.clientX;
-  // lastY = event.clientY;
-  setTimeout(() => {
-  
-  }, 1)
   
   // let offsetX = 0, offsetY = 0;
   // function mousemove(ev: MouseEvent) {
@@ -115,37 +100,37 @@ function mousedown(event: MouseEvent) {
   // clearEventBubble(event)
 }
 
-function drop(dragData: DragWrapper) {
-  console.log("页脚拖放")
-  // 计算位置
-  console.log(dragData.element)
-  const dragElement = dragData.element
-  
-  dragElement.x = px2unit(dragData.end.x! - dragData.start.x!)
-  dragElement.y = px2unit(dragData.end.y! - dragData.start.y!)
-  // addElement(props.element, dragElement)
-  
-  data.dropOver = false
-}
-
-function dragover(msg: string) {
-  console.log(msg)
-  
-  data.dropOver = true
-}
-
-function dragleave(msg: string) {
-  console.log(msg)
-  data.dropOver = false
-}
-
-function dropPreventDefault(dragData: DragWrapper) {
-  const element = dragData.element
-  if (elementTypeContainerList.includes(element.type)) {
-    return false
-  }
-  return true
-}
+// function drop(dragData: DragWrapper) {
+//   console.log("页脚拖放")
+//   // 计算位置
+//   console.log(dragData.element)
+//   const dragElement = dragData.element
+//
+//   dragElement.x = px2unit(dragData.end.x! - dragData.start.x!)
+//   dragElement.y = px2unit(dragData.end.y! - dragData.start.y!)
+//   // addElement(props.element, dragElement)
+//
+//   data.dropOver = false
+// }
+//
+// function dragover(msg: string) {
+//   console.log(msg)
+//
+//   data.dropOver = true
+// }
+//
+// function dragleave(msg: string) {
+//   console.log(msg)
+//   data.dropOver = false
+// }
+//
+// function dropPreventDefault(dragData: DragWrapper) {
+//   const element = dragData.element
+//   if (elementTypeContainerList.includes(element.type)) {
+//     return false
+//   }
+//   return true
+// }
 
 // watch(() => element.height, (n, o) => {
 //   console.log(element.height)

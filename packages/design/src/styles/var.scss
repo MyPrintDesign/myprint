@@ -1,6 +1,8 @@
 :root {
   //--drag-h-color: #646cff;
   --drag-h-color: #ced0fa;
+  --drag-edit-border-color: #348302;
+  --tool-style-highlight-bg: #a0cfff;
   --red-color: red;
   --switch-off-color: gray;
   --drag-h-color1: #ced0fa66;
@@ -10,6 +12,7 @@
   --page-header-drop-color: #e6e9fa;
   --theme-colors: #646CFF;
   //--theme-colors: #a3a5f5;
+  --rotation-deg: 90;
   --20px: 20px;
   --40px: 40px;
   --60px: 60px;
@@ -18,7 +21,7 @@
   --120px: 120px;
   --140px: 140px;
   --240px: 240px;
-  --header-height: 50px;
+  --header-height: 32px;
   --header-heigh1t: calc(100% - var(--header-height));
   --panel-width: calc(100% - 20px);
 

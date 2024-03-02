@@ -1,4 +1,11 @@
-import {Container, CpElement, ElementOption, elementType, RuntimeElementOption} from "@cp-print/design/types/entity";
+import {
+    Container,
+    CpElement,
+    DownList,
+    ElementOption, elementStatus,
+    elementType,
+    RuntimeElementOption
+} from "@cp-print/design/types/entity";
 import {PropType, reactive} from "vue";
 import {i18n} from "@cp-print/design/locales";
 
@@ -17,51 +24,58 @@ export const defaultDragRectElement = reactive({
 
 export const canMoveStatusList = ['SELECT', 'HANDLE']
 
-export const fontList = [
-    {
+export const fontList: DownList[][] = [
+    [{
         label: i18n('font.default'),
         value: 'default',
     },
-    {
-        label: '等线',
-        value: 'heiti',
-    },
-    {
-        label: '宋体',
-        value: "'zh question mark','Times New Roman','Songti SC',STSong,NSimSun,SimSun,FangSong,'Nanum Myeongjo',NanumMyeongjo,Batang,serif",
-    },
-    {
-        label: '楷体',
-        value: "'zh question mark','Times New Roman','Kaiti SC',STKaiti,KaiTi,serif",
-    },
-    {
-        label: '黑体',
-        value: "'Microsoft YaHei', sans-serif",
-    },
-    {
-        label: '方圆体',
-        value: 'AlimamaFangYuanTiVF-Thin',
-    },
-    {
-        label: '数黑体',
-        value: 'AlimamaShuHeiTi-Boldr',
-    }
+        {
+            label: '等线',
+            value: 'heiti',
+        },
+        {
+            label: '宋体',
+            value: "'zh question mark','Times New Roman','Songti SC',STSong,NSimSun,SimSun,FangSong,'Nanum Myeongjo',NanumMyeongjo,Batang,serif",
+        },
+        {
+            label: '楷体',
+            value: "'zh question mark','Times New Roman','Kaiti SC',STKaiti,KaiTi,serif",
+        },
+        {
+            label: '黑体',
+            value: "'Microsoft YaHei', sans-serif",
+        },
+        {
+            label: '方圆体',
+            value: 'AlimamaFangYuanTiVF-Thin',
+        },
+        {
+            label: '数黑体',
+            value: 'AlimamaShuHeiTi-Boldr',
+        }]
 ]
 
-export const fontSizeList = [
-    {
-        value: 8
-    },
-    {
-        value: 9
-    },
-    {
-        value: 10
-    },
-    {
-        value: 18
-    }
+export const fontSizeList: DownList[][] = [
+    [
+        {
+            label: "8",
+            value: 8
+        },
+        {
+            label: "9",
+            value: 9
+        },
+        {
+            label: "10",
+            value: 10
+        },
+        {
+            label: "18",
+            value: 18
+        }
+    ]
 ]
+
 
 export const definePropType = <T>(val: any): PropType<T> => val
 type elementSettingType = keyof ElementOption | (keyof Container) | 'contentType' | 'data' | 'label'
@@ -242,6 +256,9 @@ export const cursorStyleArray = [
 
 export const elementTypeLineList: Array<elementType> = ['HorizontalLine', 'DottedHorizontalLine', 'VerticalLine', 'DottedVerticalLine']
 export const elementTypeContainerList: Array<elementType> = ['PageHeader', 'PageFooter', 'Container']
+export const elementHandleEditStatusList: Array<elementStatus> = ['HANDLE_ED', 'HANDLE_EDIT_ING']
+export const elementHandleHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED']
+export const elementHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED', 'HANDLE_EDIT_ING']
 
 export const pageUnitList = [
     'px', 'mm', 'cm'

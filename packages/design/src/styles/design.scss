@@ -26,6 +26,13 @@
     border: dashed 1px var(--drag-h-color);
   }
 }
+.design-activate-edit {
+  //z-index: 1;
+
+  &:before {
+    border: dashed 1px var(--drag-edit-border-color);
+  }
+}
 
 
 .design-inactive {

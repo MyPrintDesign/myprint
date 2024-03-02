@@ -232,7 +232,7 @@ const contentScale = reactive({
 
 onMounted(() => {
   // 挂载键盘事件
-  mountedKeyboardEvent()
+  // mountedKeyboardEvent()
   initSelecto()
   // updatePanel()
   initMoveable(selecto.value, highlightRule

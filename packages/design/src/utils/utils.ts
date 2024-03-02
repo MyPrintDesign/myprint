@@ -31,12 +31,12 @@ export function parse<T>(str: string, target: T): T {
 }
 
 
-export function to<T>(targetObj: any, target: T): T {
+export function to<T>(source: any, target: T): T {
     // for (let targetObjKey in targetObj) {
     //     target[targetObjKey] = targetObj[targetObjKey]
     // }
     // return target;
-    return Object.assign(target as any, targetObj);
+    return Object.assign(target as any, source);
 }
 
 // export function copyBasicType<T>(sourceObj: any, target: T) {
@@ -236,3 +236,4 @@ export function _height(element: CpElement) {
     }
     return element.height
 }
+

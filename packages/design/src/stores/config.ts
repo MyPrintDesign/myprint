@@ -4,7 +4,7 @@ export const useConfigStore = defineStore('config', {
     state: () => {
         return {
             collapsePanelZIndex: 1000,
-            cursor: null,
+            // cursor: null,
             showHistory: false,
             printer: null,
             defaultPrinter: null,
@@ -37,14 +37,14 @@ export const useConfigStore = defineStore('config', {
         postConfig() {
 
         },
-        changeCursor(cursor: any) {
+        changeCursor(_cursor: any) {
             // if (this.data.cursor) {
             //     document.body.classList.remove(this.data.cursor)
             // }
             // if (cursor) {
             //     document.body.classList.add(cursor)
             // }
-            this.cursor = cursor
+            // this.cursor = cursor
         }
     },
     // persist: {

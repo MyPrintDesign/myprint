@@ -100,36 +100,27 @@
   width: var(--240px) !important;
 }
 
-.cursor-nwse-resize {
-  cursor: nwse-resize;
-}
-
-.cursor-ns-resize {
-  cursor: ns-resize;
-}
-
-.cursor-nesw-resize {
-  cursor: nesw-resize;
-}
-
-.cursor-ew-resize {
-  cursor: ew-resize;
+.cp-hidden {
+  visibility: hidden;
 }
 
 .cursor-nwse-resize {
   cursor: nwse-resize;
 }
 
-.cursor-ns-resize {
-  cursor: ns-resize;
+//.cursor-resize[data-rotation="90"] {
+//  //cursor: ns-resize;
+//  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(0deg);transform-origin: 16px 16px"></path></svg>') 16 16, nwse-resize
+//}
+
+@for $rotation from 0 through 165 {
+  .cursor-resize[data-rotation="#{$rotation}"] {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M 16,5 L 12,10 L 14.5,10 L 14.5,22 L 12,22 L 16,27 L 20,22 L 17.5,22 L 17.5,10 L 20, 10 L 16,5 Z" stroke-linejoin="round" stroke-width="1.2" fill="black" stroke="white" style="transform:rotate(#{$rotation}deg);transform-origin: 16px 16px"></path></svg>') 16 16, nwse-resize !important;
+  }
 }
 
-.cursor-nesw-resize {
-  cursor: nesw-resize;
-}
-
-.cursor-ew-resize {
-  cursor: ew-resize;
+.cursor-resize[data-rotation="-2"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M7.9,15.1c-4,0-7.3-3.3-7.3-7.3s3.3-7.3,7.3-7.3c1.7,0,3.4,0.6,4.7,1.7l0.9-0.9c0.2-0.2,0.4-0.3,0.7-0.3   c0.1,0,0.3,0,0.4,0.1c0.4,0.2,0.6,0.5,0.6,0.9v4c0,0.5-0.4,1-1,1h-4c-0.4,0-0.7-0.2-0.9-0.6C9.1,6.2,9.2,5.7,9.5,5.5l0.9-0.9   C9.7,4,8.8,3.7,7.9,3.7c-2.3,0-4.2,1.9-4.2,4.2c0,2.3,1.9,4.2,4.2,4.2c1.3,0,2.5-0.6,3.3-1.6c0.1-0.1,0.3-0.2,0.5-0.3c0,0,0,0,0,0   c0.2,0,0.4,0.1,0.5,0.2l1.2,1.3c0.2,0.2,0.3,0.6,0,0.9C12.1,14.2,10,15.1,7.9,15.1z" stroke-linejoin="round" stroke-width="1.2" stroke="white" fill="black"></path></svg>') 10 10, alias !important;
 }
 
 .cursor-move {
@@ -142,10 +133,6 @@
 
 .pointer-events {
   pointer-events: none;
-}
-
-.cursor-ew-rotate {
-  cursor: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAABvUExURUdwTP///9XV1R0dHf///3Nzc////////////////1ZWVq+vr/T09PX19QQEBP///////8XFxf///////////wYGBv///+jo6P///4aGhqioqMzMzP///2BgYP///////////zExMf///wAAAP///xLps0AAAAAjdFJOUwCxxOdixRDmzSDMv8/Z+tz5wWpXWPk3zALCv8KnyXZVMNuNPnv3CwAAAJ1JREFUKM/NkckOwyAMRFkDBMhC9qWr+//fWCIV1WlzrjoXS36yxmMT8hdqqKoUvRAjMtw22kvecem1GjTuK1vApmI+wQMBbQFy5li+QQRaX4AtRX+vbntAJeRl9HTTx4TiwESs61DXNUPmVQeujzVrQwh43TTxpeRBslVfMUhbiXKWyiAwvnIsMcdyJkfJYdpNvG/ltDm+bjP+8KFP8ggL+zQLGxwAAAAASUVORK5CYII=) 14 14, alias;
 }
 
 .cp-icon {

@@ -6,6 +6,7 @@
       :visible="popoverVisible"
       :disabled="disabled"
       :show-arrow="false"
+      :show-after="0"
       :hide-after="0"
       :trigger="trigger">
     <template #reference>
@@ -114,7 +115,7 @@ function updateVisible(flag: boolean) {
         stop()
       }
     }
-  }, 200)
+  }, 0)
 }
 
 let stop: ReturnType<typeof onClickOutside>

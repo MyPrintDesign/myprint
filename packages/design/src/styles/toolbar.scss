@@ -4,12 +4,12 @@
   overflow: hidden;
   position: relative;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  background: #F6F7F8;
 
   .toolbar-tool {
     justify-content: center;
   }
 }
-
 
 .cp-group {
   padding: 2px;
@@ -22,9 +22,82 @@
 
 .cp-color-icon {
   padding-left: 4px;
+
   .cp-color-icon-arrow {
     margin-left: -10px;
 
+  }
+}
+
+.align-down-list-panel {
+  width: 150px;
+  border: 1px solid green;
+
+  .align-down-list-panel__item {
+    width: 100%;
+    height: 20px;
+  }
+
+  .align-down-list-panel__divider {
+    width: 100%;
+    height: 1px;
+    background: #090d29;
+  }
+}
+
+
+.cp-style-font-wrapper {
+  //color: white;
+  height: 24px;
+  border-radius: 5px;
+
+  .cp-style-font {
+    width: 80px;
+    //height: 20px;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  .cp-style-font_arrow {
+    font-size: 7px;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+  }
+
+  &:hover:not(.cp-icon-disabled) {
+    background: var(--tool-style-highlight-bg);
+  }
+}
+
+.cp-style-font-size-wrapper {
+  //tmp
+  //color: white;
+  height: 24px;
+  border-radius: 5px;
+
+  .cp-style-font-size {
+    text-align: center;
+    width: 30px;
+    height: 24px;
+  }
+
+  .cp-style-font-size_arrows {
+    .drop-arrow {
+
+      font-size: 7px;
+      width: 12px;
+      height: 12px;
+      line-height: 12px;
+
+      &:hover {
+        background: white;
+      }
+    }
+  }
+
+  &:hover {
+    background: var(--tool-style-highlight-bg);
   }
 }
 

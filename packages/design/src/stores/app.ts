@@ -17,7 +17,7 @@ export const useAppStoreHook = defineStore('app', {
             currentPanel: {} as Panel,
             lastPageUnit: 'px' as PageUnit,
             currentElement: defaultElement,
-            ss: 1
+            dataRotation: -1
         }
     },
     actions: {

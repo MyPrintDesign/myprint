@@ -75,6 +75,31 @@
                         historyLabel="水印内容"
                         style="margin-right: 20px"/>
     </el-form-item>
+    
+    <el-form-item label="边界限制">
+      <el-switch
+          v-model="panel.dragSnapPanelIs"
+          class="ml-2"
+          inline-prompt
+          :active-value="1"
+          :inactive-value="0"
+          style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
+          active-text="开"
+          inactive-text="关"/>
+    </el-form-item>
+    
+    <el-form-item label="拖动磁吸">
+      <el-switch
+          v-model="panel.dragSnapIs"
+          class="ml-2"
+          inline-prompt
+          :active-value="1"
+          :inactive-value="0"
+          style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
+          active-text="开"
+          inactive-text="关"/>
+    </el-form-item>
+  
   
   </el-form>
 

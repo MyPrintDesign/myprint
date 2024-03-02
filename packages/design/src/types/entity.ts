@@ -14,7 +14,7 @@ export interface Design {
 }
 
 export interface ElementRelation {
-    elementList?: CpElement[]
+    elementList: CpElement[]
 }
 
 export interface Point {
@@ -54,6 +54,8 @@ export interface Panel extends Container {
     pageUnit: PageUnit
     watermark: boolean
     watermarkContent: string
+    dragSnapPanelIs: number
+    dragSnapIs: number
     design: Design
     orientation?: "p" | "portrait" | "l" | "landscape"
     pageHeader?: CpElement
@@ -117,7 +119,7 @@ type textContentType =
     | 'QrCode'
 
 // 节点状态
-type elementStatus = 'NONE' | 'SELECT' | 'SELECT_REMOVE' | 'HANDLE'
+export type elementStatus = 'NONE' | 'SELECT' | 'SELECT_REMOVE' | 'HANDLE' | 'HANDLE_ED' | 'HANDLE_EDIT_ING'
 
 type textAlign = 'start' | 'center' | 'end'
 
@@ -169,7 +171,7 @@ export interface RuntimeElementOption extends Position {
     centerY: number
     width: number
     height: number
-    translate: Point,
+    translate: Point
     // TL: Position
     // TR: Position
     // BL: Position
@@ -254,4 +256,12 @@ export interface FormatterVariable {
 
 export type CpHtmlElement = HTMLElement & {
     element: CpElement
+}
+
+export interface DownList {
+    label: string,
+    value: any,
+    enable?: boolean,
+    click?: () => void,
+    icon?: string
 }

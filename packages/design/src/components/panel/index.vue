@@ -1,5 +1,5 @@
 <template>
-  <el-container :class="configStore.cursor">
+  <el-container class="cursor-resize" :data-rotation="appStore.dataRotation">
     <el-aside width="180" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
       <options :module="data.template.module"/>
     </el-aside>
@@ -10,7 +10,6 @@
 </template>
 
 <script setup lang="ts">
-// import { ElContainer, ElAside, ElMain } from 'element-plus'
 import Options from "./options/options.vue";
 import DesignContent from './content/index.vue'
 import {
@@ -25,14 +24,17 @@ import {
 import {init} from "@cp-print/design/utils/historyUtil";
 import {setCurrentPanel, initElement, parentInitElement} from "@cp-print/design/utils/elementUtil";
 import {Template} from "@cp-print/design/types/R";
-import {useConfigStore} from "@cp-print/design/stores/config";
+import {useAppStoreHook} from "@cp-print/design/stores/app";
 
-const configStore = useConfigStore()
+const appStore = useAppStoreHook()
 
 const $emit = defineEmits(["saveTemplate"])
 
 const provider = ref({}) as Ref<Provider>
-const panel = reactive({}) as Panel
+const panel = reactive({
+  dragSnapPanelIs: 1,
+  dragSnapIs: 1
+}) as Panel
 const mitt = inject(mittKey)!
 const previewData = ref<any>({} as any)
 provide(panelKey, panel)
@@ -56,7 +58,6 @@ watch(() => props.template.id, (n, _o) => {
   if (n != null) {
     data.template = props.template
     to(JSON.parse(props.template.content), panel)
-    console.log(panel)
     previewData.value = JSON.parse(props.template.module.previewData!)
     setCurrentPanel(panel)
     panel.type = 'Panel'
@@ -66,19 +67,21 @@ watch(() => props.template.id, (n, _o) => {
     if (!panel.groupList) {
       panel.groupList = []
     }
-    console.log(JSON.parse(JSON.stringify(panel.elementList[0])))
-    for (let i = 0; i < 1000; i++) {
-      const  tmp = JSON.parse(JSON.stringify(panel.elementList[0]))
-      tmp.y = tmp.y + 0.2
-      // panel.elementList?.unshift(tmp)
-      
-    }
+    
+    // console.log(JSON.parse(JSON.stringify(panel.elementList[0])))
+    // for (let i = 0; i < 1000; i++) {
+    //   const  tmp = JSON.parse(JSON.stringify(panel.elementList[0]))
+    //   tmp.y = tmp.y + 0.2
+    //   // panel.elementList?.unshift(tmp)
+    //
+    // }
     for (let i = 0; i < panel.elementList.length; i++) {
       const element = panel.elementList[i]
+      // console.log(element)
       parentInitElement(panel as Container, element, i)
       if (element.type == 'Table') {
-        for (let i = 0; i < element.columnList.length; i++) {
-          initElement(element.columnList[i], i)
+        for (let i = 0; i < element.columnList!.length; i++) {
+          initElement(element.columnList![i], i)
         }
       }
     }

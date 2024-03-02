@@ -25,7 +25,6 @@ const props = withDefaults(defineProps<{
       props?: string,
       propsValue?: string,
       enableProps?: string,
-      tips?: string,
       enable?: boolean | undefined,
       marginTop?: string,
     }>(),
@@ -33,11 +32,10 @@ const props = withDefaults(defineProps<{
       props: "",
       propsValue: undefined,
       enableProps: "",
-      tips: "",
       enable: undefined,
       marginTop: ""
     })
-// console.log(props.enable)
+// console.log(props.tips)
 
 const value = computed(() => {
   
@@ -48,40 +46,22 @@ const value = computed(() => {
   } else {
     return result === props.propsValue
   }
-  //
-  // if (Array.isArray(appStore.currentElement)) {
-  //   for (let currentElementElement of appStore.currentElement) {
-  //      else {
-  //       if (currentElementElement[props.props] !== props.propsValue) {
-  //         return false
-  //       }
-  //     }
-  //   }
-  //   return true
-  // } else {
-  //   if (props.propsValue == undefined) {
-  //     return appStore.currentElement[props.props]
-  //   } else {
-  //     return appStore.currentElement[props.props] === props.propsValue
-  //   }
-  // }
 })
 
 const enable = computed(() => {
   if (props.enable !== undefined) {
     return props.enable
   }
-  // console.log(appStore.currentElement)
-  // if (Array.isArray(appStore.currentElement)) {
-  //
-  // } else {
-  //   return hasStyle(appStore.currentElement.type, 'bold')
-  // }
+  if (appStore.currentElement.length == 0) {
+    return false
+  }
   for (let currentElementElement of appStore.currentElement) {
-    if (!hasStyle(currentElementElement.type, 'bold')) {
+    if (!hasStyle(currentElementElement.type, props.enableProps as any)) {
+      // console.log(props.enableProps, 'false')
       return false
     }
   }
+  // console.log(props.enableProps, 'true')
   return true
 })
 
@@ -95,6 +75,6 @@ function change(val: boolean) {
   multipleElementSetValue(props.props, tmpVal)
   
   mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement} as Snapshot)
-
+  
 }
 </script>

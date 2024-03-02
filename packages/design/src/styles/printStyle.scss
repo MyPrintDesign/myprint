@@ -10,26 +10,29 @@
   width: 100%;
   height: 100%;
   display: flex;
-  word-break: break-all;
+  //word-break: break-all;
   outline: 0;
   box-sizing: border-box;
 }
 
-.cp-print-text_label {
-  display: table-cell;
-  vertical-align: top;
-  word-break: break-all;
-  box-sizing: border-box;
-  outline: 0;
-}
+//.cp-print-text_label {
+//  //tmp
+//  color: white;
+//  vertical-align: top;
+//  //word-break: break-all;
+//  box-sizing: border-box;
+//  outline: 0;
+//  min-width: 0;
+//}
 
 .cp-print-text_content {
-  display: table-cell;
   vertical-align: top;
   word-break: break-all;
   box-sizing: border-box;
+  //tmp
   //color: white;
   outline: 0;
+  flex-grow: 1;
 }
 
 // 横线

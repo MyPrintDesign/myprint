@@ -5,23 +5,23 @@
       基础
     </el-divider>
     
-    <el-form-item label="标题显示" v-if="getElementSetting(multipleElementGetValue('ype')).includes('label')">
-      <el-switch
-          :model-value="multipleElementGetValue('option.hiddenLabel')"
-          @update:model-value="(val:any)=>multipleElementSetValue('option.hiddenLabel', val)"
-          class="ml-2"
-          inline-prompt
-          style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
-          active-text="显示"
-          inactive-text="隐藏"/>
-      <!--      <el-switch v-if="appStore.currentElement.option.hiddenLabel"-->
-      <!--                 v-model="appStore.currentElement.option.labelSplit"-->
-      <!--                 class="ml-2"-->
-      <!--                 inline-prompt-->
-      <!--                 style="&#45;&#45;el-switch-on-color: var(&#45;&#45;drag-h-color); &#45;&#45;el-switch-off-color: gray; margin-left: 10px"-->
-      <!--                 active-text="拆分"-->
-      <!--                 inactive-text="合并"/>-->
-    </el-form-item>
+<!--    <el-form-item label="标题显示" v-if="getElementSetting(multipleElementGetValue('type')).includes('label')">-->
+<!--      <el-switch-->
+<!--          :model-value="multipleElementGetValue('option.hiddenLabel')"-->
+<!--          @update:model-value="(val:any)=>multipleElementSetValue('option.hiddenLabel', val)"-->
+<!--          class="ml-2"-->
+<!--          inline-prompt-->
+<!--          style="&#45;&#45;el-switch-on-color: var(&#45;&#45;drag-h-color); &#45;&#45;el-switch-off-color: var(&#45;&#45;switch-off-color)"-->
+<!--          active-text="显示"-->
+<!--          inactive-text="隐藏"/>-->
+<!--&lt;!&ndash;            <el-switch v-if="appStore.currentElement.option.hiddenLabel"&ndash;&gt;-->
+<!--&lt;!&ndash;                       v-model="appStore.currentElement.option.labelSplit"&ndash;&gt;-->
+<!--&lt;!&ndash;                       class="ml-2"&ndash;&gt;-->
+<!--&lt;!&ndash;                       inline-prompt&ndash;&gt;-->
+<!--&lt;!&ndash;                       style="&#45;&#45;el-switch-on-color: var(&#45;&#45;drag-h-color); &#45;&#45;el-switch-off-color: gray; margin-left: 10px"&ndash;&gt;-->
+<!--&lt;!&ndash;                       active-text="拆分"&ndash;&gt;-->
+<!--&lt;!&ndash;                       inactive-text="合并"/>&ndash;&gt;-->
+<!--    </el-form-item>-->
     
     <el-form-item label="标题" v-if="getElementSetting(multipleElementGetValue('type')).includes('label')">
       <cp-history-input style="margin-right: 20px"
@@ -54,8 +54,8 @@
           class="ml-2"
           inline-prompt
           style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
-          active-text="显示"
-          inactive-text="隐藏"/>
+          active-text="是"
+          inactive-text="否"/>
     </el-form-item>
     
     <el-form-item label="位置(x/y)" v-if="getElementSetting(multipleElementGetValue('type')).includes('x')">

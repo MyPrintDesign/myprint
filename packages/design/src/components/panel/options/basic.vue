@@ -238,9 +238,9 @@ function dragStart(ev: MouseEvent) {
                 }
             ).end(() => {
           if (element.type == 'Table') {
-            for (let i = 0; i < element.columnList.length; i++) {
+            for (let i = 0; i < element.columnList!.length; i++) {
               // element.columnList[i] = to(element.columnList[i], {} as Element)
-              initElement(element.columnList[i], i)
+              initElement(element.columnList![i], i)
             }
           }
           addElement(panel, element)

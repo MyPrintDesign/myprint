@@ -21,7 +21,7 @@ import {
     MoveableInterface,
     MoveableManagerInterface, Renderer,
     MoveableOptions,
-    BoundType, MoveableRefType, ElementGuidelineValueOption, OnDragGroupEnd, OnRotateGroupEnd
+    BoundType, MoveableRefType, ElementGuidelineValueOption, OnDragGroupEnd, OnRotateGroupEnd, RectInfo, IObject
 } from './types'
 import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {reactive, Ref, ref} from "vue";
@@ -38,6 +38,7 @@ import {
     setCurrentElement
 } from "@cp-print/design/utils/elementUtil";
 import {
+    elementHandleStatusList,
     // defaultElement,
     elementTypeLineList
 } from "@cp-print/design/constants/common";
@@ -46,7 +47,7 @@ import Selecto, {OnDragStart as OnSelectDragStart, OnSelectEnd, OnSelect} from "
 import Moveable
     // , {makeAble}
     from "moveable";
-import {Container, CpElement, CpHtmlElement, elementType} from "@cp-print/design/types/entity";
+import {Container, CpElement, CpHtmlElement, elementStatus, elementType} from "@cp-print/design/types/entity";
 import numberUtil from "@cp-print/design/utils/numberUtil";
 // import MoveableManager from "moveable/declaration/MoveableManager";
 // import {MoveableInterface} from "react-moveable/src/types";
@@ -69,6 +70,8 @@ const bounds = {"left": 0, "top": 0, "right": 0, "bottom": 0, "position": "css"}
 const boundsTop = {"top": 0, "position": "css"} as BoundType;
 const boundsBottom = {"bottom": 0, "position": "css"} as BoundType;
 const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
+const snapRotationDegrees: number[] = [];
+import {useAppStoreHook} from "@cp-print/design/stores/app";
 
 const props = {dimensionViewable: true, editable: false, enterLeave: true}
 
@@ -180,6 +183,8 @@ export function dragNewElement(newElement: CpHtmlElement, inputEvent) {
     setSelectedTargets([newElement])
     moveable.bounds = {}
 
+    changeDragSnapIs(false)
+
     moveable.dragStart(inputEvent)
 
 }
@@ -224,13 +229,19 @@ export function updatePanel(list: CpElement[] = []) {
         selecto.selectableTargets = canSelectElementList
         // console.log(list.map(v=> v.runtimeOption.target))
 
-        groupManager.set(list.map(v=> v.runtimeOption.target), canSelectElementList);
+        groupManager.set([], canSelectElementList);
+
         // setSelectedTargets()
         // console.log(123123)
         // console.log(groupMap)
         for (let groupMapKey of groupElementList) {
             // console.log(groupMap[groupMapKey])
             groupManager.group(groupMapKey, true)
+        }
+        // console.log(snapElementList)
+
+        if (list.length > 0) {
+            setSelectedTargets(list.map(v => v.runtimeOption.target))
         }
     }, 1)
 }
@@ -251,6 +262,7 @@ export function moveableMove(x: number, y: number) {
 }
 
 export function group() {
+    // console.log('click')
     ungroup()
     const nextGroup = groupManager.group(targets.value, true) as CpHtmlElement[]
     // console.log(nextGroup)
@@ -273,9 +285,6 @@ export function moveableResize(width: number, height: number) {
     if (!isChangeTargetLoadFinished) {
         return
     }
-    // console.log(moveable.getTargets())
-    // console.log(targets.value)
-    // moveable.dragTarget
     // @ts-ignore
     moveable.request("resizable", {
         offsetWidth: width,
@@ -351,6 +360,10 @@ function updateLocation(e: OnDrag) {
             }
         }
 
+        if (e['isRequest']) {
+            updateLocationEnd(e as any)
+        }
+
         // const cpElement = moveableOne.getTargets()[0] as CpHtmlElement
         // console.log(rect)
         // console.log(rect.left - offsetX, rect.top - offsetY)
@@ -381,21 +394,31 @@ function updateRect(e: OnResize) {
     // console.log(e)
     computeDirectionRect('--direction-width', width)
     computeDirectionRect('--direction-height', height)
+    // const rectA = moveable.getRect()
+    // console.log(rectA.left, rectA.top)
+    // requestAnimationFrame(() => {
+    //
+    //     // @ts-ignore
+    //     for (let moveableOne of moveable.getMoveables()) {
+    //         const rect = moveableOne.getRect()
+    //         const cpElement = moveableOne.getDragElement() as CpHtmlElement
+    //
+    //         cpElement.element.runtimeOption.x = rect.left
+    //         cpElement.element.runtimeOption.y = rect.top
+    //         // console.log(rect.left, rect.top)
+    //
+    //         cpElement.element.x = px2unit(rect.left)
+    //         cpElement.element.y = px2unit(rect.top)
+    //     }
+    // });
+    const drag = e.drag
 
-    requestAnimationFrame(() => {
+    target.element.runtimeOption.x = target.element.runtimeOption.init.x + drag.translate[0]
+    target.element.runtimeOption.y = target.element.runtimeOption.init.y + drag.translate[1]
 
-        // @ts-ignore
-        for (let moveableOne of moveable.getMoveables()) {
-            const rect = moveableOne.getRect()
-            const cpElement = moveableOne.getDragElement() as CpHtmlElement
+    target.element.x = target.element.runtimeOption.x
+    target.element.y = target.element.runtimeOption.y
 
-            cpElement.element.runtimeOption.x = rect.left
-            cpElement.element.runtimeOption.y = rect.top
-
-            cpElement.element.x = px2unit(rect.left)
-            cpElement.element.y = px2unit(rect.top)
-        }
-    });
     // console.log(e.width)
     target.element.width = px2unit(e.width)
     target.element.height = px2unit(e.height)
@@ -475,9 +498,9 @@ function onDragEnd(e: OnDragEnd) {
     // e.target.style.transform = e.transform;
 }
 
-function onDrag(_e: OnDrag) {
-    // console.log('onDrag', _e)
-    updateLocation(_e)
+function onDrag(e: OnDrag) {
+    // console.log('onDrag', e)
+    updateLocation(e)
     // e.target.style.transform = e.transform;
 }
 
@@ -489,6 +512,7 @@ function onDragGroup(e: OnDragGroup) {
 }
 
 function onDragGroupEnd(e: OnDragGroupEnd) {
+    // console.log('onDragGroupEnd', e)
     for (let _event of e.events) {
         updateLocationEnd(_event)
     }
@@ -505,12 +529,14 @@ function rotate(e: OnRotate) {
 }
 
 function onRotateStart(_e: OnRotateStart) {
+    useAppStoreHook().dataRotation = -2
     tipsStatus.value = 'rotate'
 }
 
 function onRotateEnd(e: OnRotateEnd) {
     updateRotateEnd(e)
     tipsStatus.value = undefined
+    useAppStoreHook().dataRotation = -1
 }
 
 function rotateGroup(e: OnRotateGroup) {
@@ -526,6 +552,43 @@ function rotateGroupEnd(e: OnRotateGroupEnd) {
     }
 }
 
+function onResizeStart(_e: OnResizeStart) {
+    console.log('onResizeStart', _e)
+    // useConfigStore().changeCursor('cursor-ew-rotate')
+    const direction = _e.direction
+    // if (direction[0] == 0 && direction[1] == -1) {
+    //     useConfigStore().changeCursor('cursor-ns-resize')
+    // }
+    // console.log(_e.moveable.getState())
+    const {
+        // _renderPoses,
+        rotation: rotationRad,
+        // direction,
+    } = _e.moveable.getState();
+    // console.log(renderPoses, rotationRad, direction)
+    const degRotation = absDegree(rotationRad / Math.PI * 180);
+
+    // const directionSign = sign(direction);
+    console.log(direction[0] + ', ' + direction[1], DIRECTION_DIRECTION_TO_REGION[direction[0] + ', ' + direction[1]])
+    //
+    const directionRotation = (throttle(degRotation, 15) + 1 * DIRECTION_ROTATIONS[
+        DIRECTION_DIRECTION_TO_REGION[direction[0] + ', ' + direction[1]]
+        ] + 720) % 180;
+    console.log(directionRotation)
+    useAppStoreHook().dataRotation = directionRotation
+
+    // console.log(moveable.getMoveables()[0].controlGesto.data.resizable)
+    tipsStatus.value = 'resize'
+}
+
+function absDegree(deg: number) {
+    if (deg < 0) {
+        deg = deg % 360 + 360;
+    }
+    deg %= 360;
+    return deg;
+}
+
 function resize(e: OnResize) {
     updateRect(e)
 }
@@ -533,13 +596,9 @@ function resize(e: OnResize) {
 function onResizeEnd(e: OnResizeEnd) {
     // console.log('onResizeEnd', e)
     tipsStatus.value = undefined
-
+    // useConfigStore().changeCursor(null)
+    useAppStoreHook().dataRotation = -1
     updateRectEnd(e)
-}
-
-function onResizeStart(_e: OnResizeStart) {
-    // console.log('onResizeStart', _e)
-    tipsStatus.value = 'resize'
 }
 
 function onBeforeResize(_e: OnBeforeResize) {
@@ -609,13 +668,13 @@ export function alignRight() {
 
 export function alignVerticalCenter() {
     align((rect, child, i) => {
-        child.request("draggable", {y: rect.top + rect.height / 2 - rect.children[i].height / 2}, true);
+        child.request("draggable", {y: rect.top + rect.height / 2 - rect.children![i].height / 2}, true);
     })
 }
 
 export function alignHorizontalCenter() {
     align((rect, child, i) => {
-        child.request("draggable", {x: rect.left + rect.width / 2 - rect.children[i].width / 2}, true);
+        child.request("draggable", {x: rect.left + rect.width / 2 - rect.children![i].width / 2}, true);
     })
 }
 
@@ -632,7 +691,7 @@ export function arrangeVerticalSpacing() {
     if (moveables.length <= 1) {
         return;
     }
-    const gap = (groupRect.height - groupRect.children.reduce(
+    const gap = (groupRect.height - groupRect.children!.reduce(
         (prev, cur) => {
             return prev + cur.height;
         },
@@ -659,7 +718,7 @@ export function arrangeHorizontalSpacing() {
     if (moveables.length <= 1) {
         return;
     }
-    const gap = (groupRect.width - groupRect.children.reduce(
+    const gap = (groupRect.width - groupRect.children!.reduce(
         (prev, cur) => {
             return prev + cur.width;
         },
@@ -677,7 +736,7 @@ export function arrangeHorizontalSpacing() {
 }
 
 
-function align(callback: (RectInfo, MoveableManagerInterface, number) => void) {
+function align(callback: (rect: RectInfo, child: MoveableManagerInterface, i: number) => void) {
     const rect = moveable.getRect();
     const moveables = moveable.getMoveables();
     if (moveables.length <= 1) {
@@ -708,7 +767,7 @@ function onScroll({scrollContainer, direction}) {
     // options.onTriggerScroll(direction)
 }
 
-export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlElement[]>) => {
+export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlElement[]>, status: elementStatus = 'HANDLE') => {
     // console.log(nextTargetes)
     if (targets.value.length > 0) {
         if (nextTargetes.length == targets.value.length) {
@@ -744,7 +803,7 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlEle
         //     }
         // } else {
         // }
-        nextTargete.element.runtimeOption.status = 'HANDLE'
+        nextTargete.element.runtimeOption.status = status
         cpList.push(nextTargete.element)
     }
 
@@ -774,14 +833,11 @@ export const setSelectedTargets = (nextTargetes: Array<CpHtmlElement | CpHtmlEle
         } else {
             moveable.snapContainer = null
         }
+    } else {
+        moveable.checkInput = false
     }
 
-    snapElementList.value.length = 1
-    for (let element of elementList) {
-        if (element.element.runtimeOption.status !== 'HANDLE') {
-            snapElementList.value.push({element: element})
-        }
-    }
+    changeDragSnapIs()
     // console.log(snapElementList.value.length)
     if (nextTargetes.length > 0) {
         // @ts-ignore
@@ -947,23 +1003,16 @@ const onSelectEnd = (e: OnSelectEnd) => {
     } = e
     for (let snapElement of removed) {
         const element = snapElement as CpHtmlElement;
-        // console.log(element)
         if (Array.isArray(element)) {
             for (let elementElement of element) {
-                // elementElement.classList.add('design-inactive')
-                // elementElement.classList.remove('design-activate')
                 elementElement.element.runtimeOption.status = 'NONE'
             }
         } else {
-            // element.classList.add('design-inactive')
-            // element.classList.remove('design-activate')
             element.element.runtimeOption.status = 'NONE'
         }
     }
     for (let snapElement of added) {
         const element = snapElement as CpHtmlElement;
-        // snapElement.classList.remove('design-inactive')
-        // snapElement.classList.add('design-activate')
         element.element.runtimeOption.status = 'HANDLE'
     }
 
@@ -974,14 +1023,12 @@ const onSelectEnd = (e: OnSelectEnd) => {
             added,
             removed
         )
-        // console.log(3)
     } else {
         nextChilds = groupManager.selectSameDepthChilds(
             e.data.startTargets,
             added,
             removed
         )
-        // console.log(4)
     }
 
     const targetList = nextChilds.targets().filter((v: CpHtmlElement) => {
@@ -994,15 +1041,37 @@ const onSelectEnd = (e: OnSelectEnd) => {
     e.currentTarget.setSelectedTargets(nextChilds.flatten())
     firstElement = undefined
     // console.log(nextChilds.targets())
-    setSelectedTargets(targetList)
+    // console.log('select_end')
 
     if (isDragStartEnd) {
+        // 点击
+        // console.log('select_end1')
+        // console.log(e)
         inputEvent.preventDefault();
+        setSelectedTargets(targetList)
+
+        document.addEventListener('mouseup', mouseUp)
+
+        function mouseUp() {
+            // console.log('up')
+            setTimeout(() => {
+                const flatList = deepFlat(targetList)
+                for (let targetListElement of flatList) {
+                    const target = targetListElement as CpHtmlElement
+                    target.element.runtimeOption.status = 'HANDLE_ED'
+                }
+            })
+            document.removeEventListener('mouseup', mouseUp)
+        }
+
         // @ts-ignore
         moveable.waitToChangeTarget().then(() => {
+            // console.log('change')
             updateRuleRect()
             moveable.dragStart(inputEvent)
         })
+    } else {
+        setSelectedTargets(targetList, 'HANDLE_ED')
     }
 }
 
@@ -1049,7 +1118,7 @@ export function initMoveable(_selecto, _highlightRule) {
             //     return {aa:123}
             // },
             // snapGap: true,
-            snapRotationDegrees: [0, 45, 90, 135, 180, 225, 270, 315],
+            snapRotationDegrees: snapRotationDegrees,
             // , center: true, middle: true
             snapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
             elementSnapDirections: ({top: true, left: true, bottom: true, right: true, center: true, middle: true}),
@@ -1068,8 +1137,10 @@ export function initMoveable(_selecto, _highlightRule) {
             keepRatio: false,
             // Resize, Scale Events at edges.
             edge: false,
+            // dragFocusedInput: true,
+            checkInput: false,
 
-            scrollable: true,
+            scrollable: false,
             scrollOptions: ({
                 container: '.design-panel-container-width',
                 threshold: 30,
@@ -1115,6 +1186,53 @@ export function initMoveable(_selecto, _highlightRule) {
     moveable.on('beforeScale', onBeforeScale)
 }
 
+export function testMoveable() {
+    // console.log((targets.value[0] as HTMLElement).childNodes[1].childNodes[2]);
+    // console.log((targets.value[0] as HTMLElement).childNodes[1].childNodes[2])
+    // .focus();
+    moveable.checkInput = !moveable.checkInput
+}
+
+export function checkInput() {
+    // console.log((targets.value[0] as HTMLElement).childNodes[1].childNodes[2]);
+    // console.log((targets.value[0] as HTMLElement).childNodes[1].childNodes[2])
+    // .focus();
+    moveable.checkInput = true
+}
+
+export function changeDragSnapIs(filterStatus: boolean = true) {
+    const panel = getCurrentPanel()
+
+    if (panel.dragSnapPanelIs == undefined || panel.dragSnapIs == undefined) {
+        return
+    }
+    snapElementList.value.length = 0
+    snapRotationDegrees.length = 0
+
+    if (panel.dragSnapPanelIs == 1) {
+        moveable.bounds = bounds
+    } else {
+        moveable.bounds = {}
+    }
+
+    if (panel.dragSnapIs) {
+
+        snapRotationDegrees.push(...[0, 45, 90, 135, 180, 225, 270, 315])
+
+        snapElementList.value.push(".design-content")
+        for (let htmlElement of elementList) {
+            if (filterStatus) {
+                if (!elementHandleStatusList.includes(htmlElement.element.runtimeOption.status)) {
+                    snapElementList.value.push({element: htmlElement})
+                }
+            } else {
+                snapElementList.value.push({element: htmlElement})
+            }
+        }
+    }
+
+}
+
 function defaultMoveable() {
     moveable.bounds = bounds
     moveable.rotatable = true
@@ -1122,6 +1240,39 @@ function defaultMoveable() {
     moveable.draggable = true
     moveable.renderDirections = ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
 }
+
+export const DIRECTION_ROTATIONS: IObject<number> = {
+    n: 0,
+    s: 180,
+    w: 270,
+    e: 90,
+    nw: 315,
+    ne: 45,
+    sw: 225,
+    se: 135,
+};
+
+export const DIRECTION_REGION_TO_DIRECTION: Record<string, number[]> = {
+    n: [0, -1],
+    e: [1, 0],
+    s: [0, 1],
+    w: [-1, 0],
+    nw: [-1, -1],
+    ne: [1, -1],
+    sw: [-1, 1],
+    se: [1, 1],
+};
+
+export const DIRECTION_DIRECTION_TO_REGION: Record<string, string> = {
+    '0, -1': 'n',
+    '1, 0': 'e',
+    '0, 1': 's',
+    '-1, 0': 'w',
+    '-1, -1': 'nw',
+    '1, -1': 'ne',
+    '-1, 1': 'sw',
+    '1, 1': 'se',
+};
 
 // const MouseEnterLeaveAble = makeAble("enterLeave", {
 //     mouseEnter(moveable) {

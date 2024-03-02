@@ -1,49 +1,33 @@
 <template>
   <el-tooltip :content="tips"
               :disabled="tips == ''"
-              :show-after="200"
+              :show-after="50"
               :enterable="false"
               :hide-after="0"
               trigger="hover"
               placement="bottom">
-    <div class="style-icon"
-         :class="{focus: enable && (hoverFlag || modelValue), 'cp-icon-disabled': !enable}"
-         @click="click"
-         @mouseover="hover(true)"
-         @mouseleave="hover(false)">
+    <cp-icon :enable="enable"
+             :class="props.class"
+             @click="$emit('click')"
+             :modelValue="modelValue">
       <slot/>
-    </div>
+    </cp-icon>
   </el-tooltip>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-
-const emit = defineEmits(['update:modelValue', 'click'])
+import CpIcon from "@cp-print/design/components/cp/icon/cp-icon.vue";
 
 const props = withDefaults(defineProps<{
       tips?: string,
       enable?: boolean,
       modelValue?: boolean,
+      class?: string,
     }>(),
     {
       tips: "",
       enable: true,
       modelValue: false,
+      class: ""
     })
-
-const hoverFlag = ref(false)
-
-function click() {
-  if (!props.enable) {
-    return
-  }
-  emit('update:modelValue', !props.modelValue)
-  emit('click')
-}
-
-function hover(flag: boolean) {
-  hoverFlag.value = flag
-}
-
 </script>
