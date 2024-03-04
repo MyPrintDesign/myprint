@@ -24,7 +24,7 @@ const wrapperRef = ref<HTMLElement>()
 
 onMounted(() => {
   wrapperRef.value!.addEventListener('transitionend', function () {
-    console.log('动画结束');
+    // console.log('动画结束');
     props.data.visible = false
     props.data.transitionAnime = false
     // 在这里执行你的代码

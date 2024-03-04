@@ -13,6 +13,10 @@
   //word-break: break-all;
   outline: 0;
   box-sizing: border-box;
+
+  vertical-align: top;
+  word-break: break-all;
+  flex-grow: 1;
 }
 
 //.cp-print-text_label {

@@ -7,6 +7,9 @@
       <DesignContent/>
     </el-main>
   </el-container>
+  
+  <cp-mouse-tips/>
+  
 </template>
 
 <script setup lang="ts">
@@ -25,6 +28,7 @@ import {init} from "@cp-print/design/utils/historyUtil";
 import {setCurrentPanel, initElement, parentInitElement} from "@cp-print/design/utils/elementUtil";
 import {Template} from "@cp-print/design/types/R";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
+import CpMouseTips from "@cp-print/design/components/cp/cp-mouse-tips/cp-mouse-tips.vue";
 
 const appStore = useAppStoreHook()
 
@@ -32,6 +36,9 @@ const $emit = defineEmits(["saveTemplate"])
 
 const provider = ref({}) as Ref<Provider>
 const panel = reactive({
+  runtimeOption: {
+    dragInIs: false
+  },
   dragSnapPanelIs: 1,
   dragSnapIs: 1
 }) as Panel
@@ -67,6 +74,7 @@ watch(() => props.template.id, (n, _o) => {
     if (!panel.groupList) {
       panel.groupList = []
     }
+    panel.runtimeOption = {} as any
     
     // console.log(JSON.parse(JSON.stringify(panel.elementList[0])))
     // for (let i = 0; i < 1000; i++) {

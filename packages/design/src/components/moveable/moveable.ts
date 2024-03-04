@@ -173,7 +173,6 @@ const removeable = {
 
 export function dragNewElement(newElement: CpHtmlElement, inputEvent) {
     canSelectElementList.push(newElement)
-
     selecto.selectableTargets = canSelectElementList
     groupManager.set([], canSelectElementList)
 
@@ -181,18 +180,20 @@ export function dragNewElement(newElement: CpHtmlElement, inputEvent) {
     bkTargets.value = targets.value
     // 选中
     setSelectedTargets([newElement])
-    moveable.bounds = {}
-
     changeDragSnapIs(false)
 
-    moveable.dragStart(inputEvent)
+    moveable.bounds = {}
+    moveable.draggable = true
 
+    moveable.dragStart(inputEvent)
 }
 
 export function dragNewElementCancel(newElement: CpHtmlElement) {
     if (canSelectElementList.length > 0 && canSelectElementList[canSelectElementList.length - 1] === newElement) {
         canSelectElementList.pop()
-
+        if (bkTargets.value.length > 0 && !Array.isArray(bkTargets.value[0])) {
+            freshMoveableOption((bkTargets.value[0] as CpHtmlElement).element)
+        }
         selecto.selectableTargets = canSelectElementList
         groupManager.set([], canSelectElementList)
         setSelectedTargets(bkTargets.value)

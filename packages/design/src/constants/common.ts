@@ -81,12 +81,12 @@ export const definePropType = <T>(val: any): PropType<T> => val
 type elementSettingType = keyof ElementOption | (keyof Container) | 'contentType' | 'data' | 'label'
 // "x", 'y', "width", 'height', "font", 'fontSize', "color", 'hiddenLabel', 'opacity', "aspectRatio", "rotate"
 const commonElementSetting: Array<elementSettingType> = ["x", 'y', "width", 'height', 'opacity', "aspectRatio", "rotate"]
-const styleElementSetting: Array<elementSettingType> = ['textAlign', "verticalAlign", 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'font', 'fontSize']
+const styleElementSetting: Array<elementSettingType> = ['textAlign', "verticalAlign", 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'fontFamily', 'fontSize']
 const elementSetting: Record<elementType, Array<elementSettingType>> =
     {
         Image: [...commonElementSetting],
-        Text: [...commonElementSetting, ...styleElementSetting, "font", 'fontSize', "color", 'hiddenLabel', 'contentType', 'padding', "margin", 'data', 'label'],
-        TextTime: [...commonElementSetting, ...styleElementSetting, "font", 'fontSize', "color", 'hiddenLabel', "formatter", 'padding', "margin", 'label'],
+        Text: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', 'contentType', 'padding', "margin", 'data', 'label'],
+        TextTime: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', "formatter", 'padding', "margin", 'label'],
         Panel: [...commonElementSetting],
         Table: [...(commonElementSetting.filter(item => item !== "rotate"))],
         Rect: [...commonElementSetting, 'color', 'background'],

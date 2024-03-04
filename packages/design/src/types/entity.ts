@@ -202,7 +202,7 @@ export interface RuntimeElementOption extends Position {
 export interface ElementOption {
     barCodeType: string
     aspectRatio: number
-    font: string
+    fontFamily: string
     fontSize: number
     opacity: number
     color: string

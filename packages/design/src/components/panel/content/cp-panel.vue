@@ -26,7 +26,9 @@
                             minWidth: valueUnit(panel.width),
                             width: valueUnit(panel.width),
                             height: valueUnit(panel.height),
-                           }">
+                           }"
+             :class="{'dropInIs': panel.runtimeOption.dragInIs}"
+             >
           <!--         @mousedown="mousedown($event)"-->
           <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
           <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
@@ -61,22 +63,22 @@
           <!--        </vue-drag>-->
           <!--    对齐辅助线    -->
           <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
-          
-          
+        
+        
         </div>
       </div>
       
-<!--      <cp-drop-->
-<!--          ref="designContentRef"-->
-<!--          class="design-content-drop"-->
-<!--          :class="{'design-content_over': data.dropOver}"-->
-<!--          @drop="drop"-->
-<!--          @dragover="dragover"-->
-<!--          @dragleave="dragleave"-->
-<!--          @preventDefault="dropPreventDefault"-->
-<!--      >-->
-<!--        -->
-<!--      </cp-drop>-->
+      <!--      <cp-drop-->
+      <!--          ref="designContentRef"-->
+      <!--          class="design-content-drop"-->
+      <!--          :class="{'design-content_over': data.dropOver}"-->
+      <!--          @drop="drop"-->
+      <!--          @dragover="dragover"-->
+      <!--          @dragleave="dragleave"-->
+      <!--          @preventDefault="dropPreventDefault"-->
+      <!--      >-->
+      <!--        -->
+      <!--      </cp-drop>-->
       
       <!--    </el-watermark>-->
     
@@ -114,7 +116,7 @@ import {useAppStoreHook as useAppStore} from "@cp-print/design/stores/app";
 
 // import CpDrop from "@cp-print/design/components/cp/drop";
 import ElementList from "../../design/elementList.vue";
-import {mountedKeyboardEvent, unMountedKeyboardEvent} from "@cp-print/design/utils/keyboardUtil";
+import {unMountedKeyboardEvent} from "@cp-print/design/utils/keyboardUtil";
 import {
   updatePanel,
   initMoveable

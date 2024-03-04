@@ -72,7 +72,7 @@
 </template>
 
 <script setup lang="ts">
-import { ElSelect, ElOption } from 'element-plus'
+import {ElSelect, ElOption} from 'element-plus'
 
 import GroupInput from "../../design/src/components/cp/cp-group/groupInput.vue";
 import {ref} from "vue";
@@ -132,62 +132,5 @@ function clickColor() {
 
 
 <style scoped>
-
-.group {
-  display: flex;
-}
-
-.group-font {
-  width: 200px;
-}
-
-.font-style {
-  padding-top: 10px;
-}
-
-.line {
-  width: 1px;
-  display: block;
-  background: black;
-}
-
-
-</style>
-
-<style lang="scss">
-
-.font-color {
-  
-  .vc-color-wrap {
-    width: 20px;
-    height: 4px;
-  }
-  
-  .el-color-picker__trigger {
-    border: none;
-    width: 18px;
-    padding: 0;
-    height: 2px;
-    display: block;
-  }
-  
-  .el-color-picker__color {
-    border: none;
-  }
-  
-  .el-color-picker__icon {
-    display: none;
-  }
-  
-  .el-color-picker__color-inner {
-    border-radius: 50px;
-  }
-  
-  .el-color-picker--mini .el-color-picker__trigger {
-    width: 39px;
-    height: 28px;
-  }
-}
-
 
 </style>

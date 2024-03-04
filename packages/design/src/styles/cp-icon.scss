@@ -9,3 +9,18 @@
   //width: 23px;
   //height: 23px;
 }
+
+.icon-popover {
+  margin-right: 6px;
+
+  &:hover:not(.cp-icon-disabled) {
+    background: var(--tool-style-highlight-bg);
+  }
+
+  .cp-icon-downList-arrow {
+    margin-left: 1px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+  }
+}

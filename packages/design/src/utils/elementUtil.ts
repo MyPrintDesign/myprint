@@ -308,8 +308,8 @@ export function initElement(element: CpElement, index: number) {
     }
 
     if (['Text', 'TextTime', 'PageNum'].includes(element.type)) {
-        if (!element.option.font) {
-            element.option.font = 'default'
+        if (!element.option.fontFamily) {
+            element.option.fontFamily = 'default'
         }
         if (!element.option.fontSize) {
             element.option.fontSize = 13
@@ -629,7 +629,7 @@ export function elementCommonPositionStyle(element: CpElement): CSSProperties {
         // maxWidth: widthValueUnit(element),
         // height: element.runtimeOption.height + 'px',
         // maxHeight: heightValueUnit(element),
-        fontFamily: element.option.font,
+        fontFamily: element.option.fontFamily,
         fontSize: element.option.fontSize + 'px',
     } as CSSProperties
 }
@@ -662,7 +662,7 @@ export function elementCommonStyle(element: CpElement, cssStyle?: CSSProperties)
     }
 
     if (option.borderAll) {
-        cssStyle.border = '1px solid white'
+        cssStyle.border = '1px solid black'
         cssStyle.boxSizing = 'border-box'
     }
 

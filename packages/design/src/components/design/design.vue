@@ -59,12 +59,3 @@ const style = computed(() => {
   } as CSSProperties
 })
 </script>
-
-<style scoped lang="scss">
-.dropInIs {
-  z-index: 1;
-  opacity: 0.6;
-  background: var(--page-header-drop-color);
-  outline: 4px solid var(--drag-h-color);
-}
-</style>

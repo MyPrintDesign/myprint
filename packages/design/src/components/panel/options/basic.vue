@@ -2,8 +2,7 @@
   <div class="options">
     <div :class="(data as any).iconClass" class="icon"
          draggable="true"
-         @mousedown="dragStart($event)"
-    />
+         @mousedown="dragStart($event)"/>
     
     <div class="icon-tip">{{ elementTypeFormat[data.type] }}</div>
     <Teleport v-if="isDrop" to=".design-content">
@@ -19,7 +18,7 @@
 import {inject, nextTick, reactive, ref} from "vue";
 import {Container, CpElement, elementTypeFormat} from "@cp-print/design/types/entity";
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
-import {mittKey, panelKey} from "@cp-print/design/constants/keys";
+import {panelKey} from "@cp-print/design/constants/keys";
 import Design from "@cp-print/design/components/design/design.vue";
 import {
   addElement,
@@ -29,15 +28,11 @@ import {
   installParentElement
 } from "@cp-print/design/utils/elementUtil";
 import {clearEventBubble} from "@cp-print/design/utils/event";
-import {
-  dragNewElement,
-  dragNewElementCancel,
-  updatePanel
-} from "@cp-print/design/components/moveable/moveable";
+import {dragNewElement, dragNewElementCancel, updatePanel} from "@cp-print/design/components/moveable/moveable";
 import {useAppStoreHook as useAppStore} from "@cp-print/design/stores/app";
 import DragWrapper from "@cp-print/design/components/panel/options/dragWrapper.vue";
+import {mouseTips} from "@cp-print/design/utils/mouseTips";
 
-const mitt = inject(mittKey)!
 const panel = inject(panelKey)!
 const appStore = useAppStore()
 
@@ -64,20 +59,23 @@ const padding = 30
 
 function dragStart(ev: MouseEvent) {
   isDrop.value = true
+  mouseTips.visible()
   tmpElement.value = JSON.parse(JSON.stringify(props.data))
   const element = tmpElement.value
   let parentElement: CpElement
   
   let startX = 0, startY = 0
-  // element.runtimeOption = {} as RuntimeElementOption
-  // let halfWidth = element.runtimeOption.width / 2
-  // let halfHeight = element.runtimeOption.height / 2
+  
+  if (element.type == 'PageHeader' || element.type == 'PageFooter') {
+    element.width = panel.width
+  }
   
   let halfWidth = unit2unit('mm', 'px', tmpElement.value.width) / 2
   let halfHeight = unit2unit('mm', 'px', tmpElement.value.height) / 2
   
   startX = ev.clientX - halfWidth
   startY = ev.clientY - halfHeight
+  mouseTips.move(ev.clientX, ev.clientY, '松开取消')
   
   // element.runtimeOption.x = startX - appStore.panelPosition.x - padding
   // element.runtimeOption.y = startY - appStore.panelPosition.y - padding
@@ -104,10 +102,6 @@ function dragStart(ev: MouseEvent) {
   document.addEventListener('mouseup', mouseup);
   clearEventBubble(ev)
   
-  // nextTick()
-  //     .then(()=>{
-  //     })
-  //
   nextTick(() => {
     // console.log(designRef.value.$el)
     const cpHtmlElement = designRef.value.$el
@@ -133,29 +127,29 @@ function dragStart(ev: MouseEvent) {
         dragWrapper.opacity = (diffYNum / halfHeight)
       } else {
         dragWrapper.opacity = ((diffXNum / halfWidth) + (diffYNum / halfHeight)) / 2;
-        
       }
     }
     
     dragWrapper.x = element.runtimeOption.x + appStore.panelPosition.x + padding
     dragWrapper.y = element.runtimeOption.y + appStore.panelPosition.y + padding
     
+    mouseTips.move(dragWrapper.x + halfWidth, dragWrapper.y + halfHeight)
+    
     if (diffXNum == 0 && diffYNum == 0) {
       // dragWrapper.visible = false
       // console.log('进入')
+      mouseTips.setData('松开放置')
       
       // 判断有没有进入容器/页眉/页脚
       
       const point = {x: element.runtimeOption.x + halfWidth, y: element.runtimeOption.y + halfHeight}
-      // for (let elementOf of panel.elementList!) {
-      //   elementOf.runtimeOption.dragInIs = false
-      // }
+      
       if (!parentElement || !innerElementIs(point, parentElement)) {
         if (parentElement) {
           parentElement.runtimeOption.dragInIs = false
           parentElement = undefined!
         }
-        console.log('ff')
+        // console.log('ff')
         if (panel.pageHeader && innerElementIs(point, panel.pageHeader)) {
           panel.pageHeader.runtimeOption.dragInIs = true
           parentElement = panel.pageHeader
@@ -172,11 +166,17 @@ function dragStart(ev: MouseEvent) {
           }
         }
         if (parentElement) {
-          console.log('find', parentElement)
+          // console.log('find', parentElement)
+          panel.runtimeOption.dragInIs = false
+        } else {
+          // console.log('dd')
+          panel.runtimeOption.dragInIs = true
         }
       }
-      
     } else {
+      mouseTips.setData('松开取消')
+      
+      panel.runtimeOption.dragInIs = false
       // dragWrapper.visible = true
       // console.log('离开')
     }
@@ -188,16 +188,23 @@ function dragStart(ev: MouseEvent) {
   }
   
   function mouseup(_ev: MouseEvent) {
+    mouseTips.hidden()
     if (dragWrapper.opacity > 0) {
       // 放回原处
       dragWrapper.opacity = 1
-      dragWrapper.transitionAnime = true
-      dragWrapper.x = startX;
-      dragWrapper.y = startY;
+      if (dragWrapper.x == startX && dragWrapper.y == startY) {
+        console.log('==')
+        dragWrapper.visible = false
+      } else {
+        dragWrapper.transitionAnime = true
+        dragWrapper.x = startX;
+        dragWrapper.y = startY;
+      }
       dragNewElementCancel(element.runtimeOption.target)
       isDrop.value = false
     } else {
       dragWrapper.visible = false
+      panel.runtimeOption.dragInIs = false
       
       if (parentElement) {
         element.x = element.x - parentElement.x

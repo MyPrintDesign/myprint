@@ -9,6 +9,7 @@
     <cp-icon :enable="enable"
              :class="props.class"
              @click="$emit('click')"
+             @update:model-value="(val)=>$emit('update:modelValue', val)"
              :modelValue="modelValue">
       <slot/>
     </cp-icon>

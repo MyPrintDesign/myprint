@@ -1,16 +1,4 @@
 <template>
-  <!--  <cp-drop-->
-  <!--      @drop="drop"-->
-  <!--      class="design-container"-->
-  <!--      :class="{-->
-  <!--          'cp-print-container_over': data.dropOver-->
-  <!--        }"-->
-  <!--      @dragover="dragover"-->
-  <!--      @dragleave="dragleave"-->
-  <!--      @preventDefault="dropPreventDefault">-->
-  <!--    -->
-  <!--  </cp-drop>-->
-  
   <div class="container-edit-icon" @click="test">
     <i class="icon-design-edit iconfont"/>
   </div>

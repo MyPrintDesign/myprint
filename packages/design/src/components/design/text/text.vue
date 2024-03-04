@@ -1,19 +1,14 @@
 <template>
-  <div class="cp-print-text_container"
-       :style="style">
-    <cp-barcode v-if="element.contentType === 'Barcode'" :element="element"/>
-    <cp-qrcode v-else-if="element.contentType === 'QrCode'" :element="element"/>
-    <template v-else>
-      <div
-          ref="contentRef"
-          :contentEditable="elementHandleEditStatusList.includes(element.runtimeOption.status)"
-          class="cp-print-text_content"
-          v-html="element.data"
-          @input="handleInput"></div>
-    </template>
-  
-  </div>
-
+  <cp-barcode v-if="element.contentType === 'Barcode'" :element="element"/>
+  <cp-qrcode v-else-if="element.contentType === 'QrCode'" :element="element"/>
+  <div
+      v-else
+      class="cp-print-text_container"
+      ref="contentRef"
+      :contentEditable="elementHandleEditStatusList.includes(element.runtimeOption.status)"
+      v-html="element.data"
+      :style="style"
+      @input="handleInput"/>
 </template>
 <script setup lang="ts">
 
@@ -73,7 +68,7 @@ const style = computed(() => {
 
 watch(() => props.element.runtimeOption.status, (n, _o) => {
   if (n == 'HANDLE_ED') {
-    console.log('han')
+    // console.log('han')
     contentRef.value.addEventListener('click', click);
   } else {
     contentRef.value.removeEventListener('click', click);

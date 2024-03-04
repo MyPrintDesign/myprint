@@ -4,6 +4,7 @@ import {displayRatio, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {arrayIndexOf, arrayRemove} from "@cp-print/design/utils/arrays";
 // @ts-ignore
 import * as mittInit from 'mitt'
+import {fontList} from "@cp-print/design/constants/common";
 
 let collapsePanelZIndex = 1000
 
@@ -237,3 +238,15 @@ export function _height(element: CpElement) {
     return element.height
 }
 
+
+export function getFontFamilyName(val: string) {
+    for (let fontListElement of fontList) {
+        for (let downList of fontListElement) {
+            if (val == downList.value) {
+                return downList.label
+            }
+        }
+    }
+
+    return "默认"
+}
