@@ -10,6 +10,89 @@ export const customProvider: Array<CpElement> = [
         "height": 10
     } as any,
     {
+        "field": "userList",
+        iconClass: 'iconfont icon-text',
+        "type": "Table",
+        "label": "用户列表",
+        "columnList": [
+            {
+                "field": "username",
+                "type": "Text",
+                "label": "账号",
+                "data": "UN001",
+                "position": "",
+                "width": 20.25,
+                "height": 7,
+                "option": {
+                    "fontSize": 14.25,
+                    "sort": 1,
+                    "disableSort": false
+                },
+                "columnBody": {
+                    "option": {
+                        "fontSize": 14.25,
+                    },
+                }
+            },
+            {
+                "field": "nickname",
+                "type": "Text",
+                "label": "昵称",
+                "data": "张三",
+                "position": "",
+                "width": 14.25,
+                "height": 7,
+                "fontSize": 14.25,
+                "option": {
+                    "sort": 1,
+                    "disableSort": false
+                },
+                "columnBody": {
+                    "option": {
+                        "fontSize": 14.25,
+                    },
+                }
+            },
+            {
+                "field": "sexFormat",
+                "type": "Text",
+                "label": "性别",
+                "data": "男",
+                "position": "",
+                "width": 14.25,
+                "height": 7,
+                "fontSize": 14.25,
+                "option": {
+                    "sort": 1,
+                    "disableSort": false
+                },
+                "columnBody": {
+                    "type": "Text",
+                    "option": {
+                        "fontSize": 14.25,
+                    },
+                }
+            },
+            {
+                "field": "createTime",
+                "type": "Text",
+                "label": "注册时间",
+                "data": "2023-01-01aaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "position": "",
+                "width": 30,
+                "height": 7,
+                "fontSize": 14.25,
+                "option": {
+                    "sort": 1,
+                    "disableSort": false
+                }
+            }
+        ],
+        "data": "自定义文本",
+        "width": 200,
+        "height": 50
+    } as any,
+    {
         "type": "TextTime",
         contentType: "Text",
         iconClass: 'iconfont-color icon-color-text-time',

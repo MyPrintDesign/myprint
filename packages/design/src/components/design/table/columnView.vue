@@ -2,6 +2,7 @@
   <td
       ref="columnRef"
       class="cp-print-columnHead"
+      nowrap="nowrap"
       @drop="drop($event)"
       @dragover="dragover($event)"
       :draggable="!element.option.disableSort"
@@ -10,23 +11,23 @@
       :class="{cursorMove: element.option.disableSort}"
       :style="headStyle"
       @dragleave="dragleave($event)">
-    <div
-        class="cp-print-columnHead__content"
-        :style="headContentStyle"
-    >{{ element.label }}
-    </div>
-    <div v-show="data.sortTipLine" class="sort-tips-line" :style="sortTipLineStyle"/>
+    <!--    <div-->
+    <!--        class="cp-print-columnHead__content"-->
+    <!--        :style="headContentStyle"-->
+    <!--    >{{ element.label }}-->
+    <!--    </div>-->
+    <TextView :element="element"/>
   </td>
   <!--  删除按钮-->
 </template>
 <script setup lang="ts">
 
-import {computed, inject, reactive, ref, CSSProperties} from "vue";
-import {DragWrapper, CpElement} from "../../../types/entity";
-import {clearEventBubble} from "../../../utils/event";
-import {dragDataStore} from "../../../stores/dragStore";
-import {mittKey} from "../../../constants/keys";
-import {elementCommonStyle, valueUnit} from "../../../utils/elementUtil";
+import {computed, inject, reactive, ref} from "vue";
+import {CpElement, DragWrapper} from "@cp-print/design/types/entity";
+import {clearEventBubble} from "@cp-print/design/utils/event";
+import {dragDataStore} from "@cp-print/design/stores/dragStore";
+import {mittKey} from "@cp-print/design/constants/keys";
+import TextView from "@cp-print/design/components/design/text";
 
 const mitt = inject(mittKey)!
 
@@ -42,27 +43,34 @@ const data = reactive({
 
 const columnRef = ref()
 const dragDataValueStore = dragDataStore()
-const sortTipLineStyle = computed(() => {
-  const tmp = {} as CSSProperties
-  if (data.sortTipLine == 'left') {
-    tmp.left = '-1px'
-  } else {
-    tmp.right = '-1px'
-  }
-  return tmp
-})
+// const sortTipLineStyle = computed(() => {
+//   const tmp = {} as CSSProperties
+//   if (data.sortTipLine == 'left') {
+//     tmp.left = '-1px'
+//   } else {
+//     tmp.right = '-1px'
+//   }
+//   return tmp
+// })
 
 const headStyle = computed(() => {
-  return {
-    maxWidth: valueUnit(props.element.width),
-    width: valueUnit(props.element.width),
-    height: valueUnit(props.element.height)
+  const style = {
+    maxWidth: props.element.runtimeOption.width + 'px',
+    width: props.element.runtimeOption.width + 'px',
+    height: props.element.runtimeOption.height + 'px',
+    maxHeight: props.element.runtimeOption.height + 'px',
   }
+  
+  if (props.element.option.borderAll) {
+    style['border'] = '1px solid #771082'
+  } else {
+  }
+  return style
 })
-
-const headContentStyle = computed(() => {
-  return elementCommonStyle(props.element)
-})
+//
+// const headContentStyle = computed(() => {
+//   return elementCommonStyle(props.element)
+// })
 
 function drop(ev: DragEvent) {
   // 判断排序
@@ -103,7 +111,7 @@ function clearTip(ev: DragEvent) {
   clearEventBubble(ev)
 }
 
-function mousedown(ev: DragEvent) {
+function mousedown(ev: MouseEvent) {
   // console.log('down', ev)
   if (props.element.option.disableSort) {
     return

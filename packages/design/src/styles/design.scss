@@ -26,6 +26,7 @@
     border: dashed 1px var(--drag-h-color);
   }
 }
+
 .design-activate-edit {
   //z-index: 1;
 
@@ -49,4 +50,11 @@
   //color: black;
   font-weight: bold;
   color: red;
+}
+
+.cp-table-resize {
+  width: 2px;
+  height: 100%;
+  position: absolute;
+  top: 0;
 }

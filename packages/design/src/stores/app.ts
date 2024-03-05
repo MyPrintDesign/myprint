@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {PageUnit, Panel, Point} from "@cp-print/design/types/entity";
+import {PageUnit, Panel} from "@cp-print/design/types/entity";
 import {defaultElement} from "@cp-print/design/constants/common";
 import i18n from '../locales'
 
@@ -13,7 +13,9 @@ export const useAppStoreHook = defineStore('app', {
             panelPosition: {
                 x: 0,
                 y: 0,
-            } as Point,
+                scrollX: 0,
+                scrollY: 0,
+            },
             currentPanel: {} as Panel,
             lastPageUnit: 'px' as PageUnit,
             currentElement: defaultElement,

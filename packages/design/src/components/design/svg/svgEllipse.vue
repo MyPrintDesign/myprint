@@ -3,8 +3,7 @@
       :element="element"
       :svgOptions="svgOptions"
       :draw="draw"
-      :changeSize="changeSize"
-  />
+      :changeSize="changeSize"/>
 </template>
 
 <script setup lang="ts">

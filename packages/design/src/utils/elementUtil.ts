@@ -267,13 +267,47 @@ export function initElement(element: CpElement, index: number) {
         case 'Table':
             initWidth = 200
             initHeight = 30
-            element.runtimeOption.rowList = []
-            const rowList: Array<CpElement> = []
-            for (let i = 0; i < element.columnList!.length; i++) {
-                initElement(element.columnList![i], i)
-                rowList.push(copyElementRefValueId(element.columnList![i]))
+
+            if (element.option.tableHeightType == null) {
+                element.option.tableHeightType = "AUTO"
+                // element.option.tableHeightType = "FIXED"
             }
-            element.runtimeOption.rowList.push(rowList)
+
+            let maxHeadHeight = -1, maxBodyHeight = -1;
+            for (let i = 0; i < element.columnList.length; i++) {
+                const column = element.columnList[i];
+                initElement(column, i)
+                if (column.columnBody == undefined) {
+                    // debugger
+                    column.columnBody = {
+                        height: column.height,
+                        data: column.data,
+                        type: "Text",
+                        option: column.option
+                    } as CpElement
+                }
+                if (column.columnBody.type == null) {
+                    column.columnBody.type = 'Text'
+                }
+                if (column.columnBody.data == null) {
+                    column.columnBody.data = column.data
+                }
+                column.type = 'Text'
+                column.data = column.label
+                initElement(column.columnBody, element.columnList.length + i)
+
+                if (maxHeadHeight < column.height) {
+                    maxHeadHeight = column.height
+                }
+                if (maxBodyHeight < column.columnBody.height) {
+                    maxBodyHeight = column.columnBody.height
+                }
+            }
+
+            // console.log(maxHeadHeight + maxBodyHeight)
+            if (element.option.tableHeightType == "AUTO") {
+                element.height = maxHeadHeight + maxBodyHeight
+            }
             break
         case 'Image':
             initWidth = 30
@@ -307,11 +341,11 @@ export function initElement(element: CpElement, index: number) {
         }
     }
 
-    if (['Text', 'TextTime', 'PageNum'].includes(element.type)) {
+    if (['Text', 'TextTime', 'PageNum', 'Table'].includes(element.type)) {
         if (!element.option.fontFamily) {
             element.option.fontFamily = 'default'
         }
-        if (!element.option.fontSize) {
+        if (element.option.fontSize == null) {
             element.option.fontSize = 13
         }
     }
@@ -1021,8 +1055,16 @@ function setNestedPropertyValue(obj, propertyPath, value) {
 
 export function multipleElementSetValue(props: string, val: any) {
     console.log(val)
-    for (let currentElementElement of appStore().currentElement as any) {
+    for (let currentElementElement of appStore().currentElement as CpElement[]) {
+
         setNestedPropertyValue(currentElementElement, props, val)
+
+        if (currentElementElement.type == 'Table') {
+            for (let cpElement of currentElementElement.columnList) {
+                setNestedPropertyValue(cpElement, props, val)
+                setNestedPropertyValue(cpElement.columnBody, props, val)
+            }
+        }
     }
 }
 

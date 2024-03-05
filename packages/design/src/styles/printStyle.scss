@@ -84,9 +84,12 @@
 .cp-print-columnHead {
   position: relative;
   word-break: break-all;
-  text-align: center;
+  //text-align: center;
   height: 100%;
-  border: 1px solid black;
+  // tmp
+  border: 1px solid white;
+  color: white;
+
   box-sizing: border-box;
   padding: 0;
 }
@@ -107,6 +110,9 @@
   text-align: center;
   box-sizing: border-box;
   padding: 0;
+  // tmp
+  border: 1px solid white;
+  color: white;
 }
 
 .cp-print-container_over {

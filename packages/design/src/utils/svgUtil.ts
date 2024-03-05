@@ -91,6 +91,7 @@ export function updateSvg(chart, svgOptions, draw) {
     const path = draw(chartSvg)
     if (path) {
         chartSvg.select(".u-path")
+            // .style("stroke", "white")
             .style("stroke", "orange")
             .style("fill", "none")
             // .attr("stroke-width", 1.9)

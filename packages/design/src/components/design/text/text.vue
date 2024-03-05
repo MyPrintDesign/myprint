@@ -25,15 +25,17 @@ import {checkInput} from "@cp-print/design/components/moveable/moveable";
 import {elementHandleEditStatusList} from "@cp-print/design/constants/common";
 
 const props = withDefaults(defineProps<{
-  element?: CpElement
+  element: CpElement
 }>(), {
   element: () => ({} as CpElement)
 })
 const contentRef = ref()
 onMounted(() => {
-  const data = formatter(props.element)
-  if (data != null) {
-    props.element.data = data
+  if (props.element.data == null) {
+    const data = formatter(props.element)
+    if (data != null) {
+      props.element.data = data
+    }
   }
 })
 
@@ -80,10 +82,13 @@ watch(() => props.element.contentType, (n, _o) => {
     // props.element.option.aspectRatio = null
   }
 })
-watch(() => props.element.option.formatter, (_n, _o) => {
-  const data = formatter(props.element)
-  if (data != null) {
-    props.element.data = data
-  }
-})
+// watch(() => props.element.option.formatter, (_n, _o) => {
+//   const data = formatter(props.element)
+//   console.log(props.element)
+//   console.log(_n, _o)
+//   console.log(props.element.option.formatter, props.element.data)
+//   if (data != null) {
+//     props.element.data = data
+//   }
+// })
 </script>

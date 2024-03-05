@@ -9,6 +9,7 @@
        }"
        ref="designRef">
     <element-view :element="element"/>
+    <table-design v-if="element.type === 'Table'" :element="element as any"/>
     
     <cp-container v-if="element.type === 'PageHeader'" :element="element">
       <element-list :element-list="element.elementList"/>
@@ -26,13 +27,11 @@
 <script setup lang="ts">
 import ElementView from "@cp-print/design/components/design/element.vue";
 import {CpElement} from "@cp-print/design/types/entity";
-import {
-  computed,
-  CSSProperties, onMounted, ref
-} from "vue";
+import {computed, CSSProperties, onMounted, ref} from "vue";
 import {CpContainer} from "./container";
 import ElementList from "./elementList.vue";
 import {elementHandleHandleStatusList, elementHandleStatusList} from "@cp-print/design/constants/common";
+import TableDesign from "@cp-print/design/components/design/table/tableDesign.vue";
 
 const designRef = ref()
 

@@ -73,7 +73,7 @@ const tipsStatus = ref<'drag' | "resize" | 'rotate' | undefined>();
 const snapRotationDegrees: number[] = [];
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 
-const props = {dimensionViewable: true, editable: false, enterLeave: true}
+const props = {dimensionViewable: true, editable: true, enterLeave: true}
 
 export const targets = ref([]) as Ref<Array<CpHtmlElement | Array<CpHtmlElement>>>
 export const bkTargets = ref([]) as Ref<Array<CpHtmlElement | Array<CpHtmlElement>>>
@@ -885,10 +885,10 @@ export function freshMoveableOption(element: CpElement) {
         moveable.rotatable = false
         // moveable.bounds = boundsTop
     } else if (element.type == 'SvgCircle') {
-        moveable.renderDirections = []
+        // moveable.renderDirections = []
         moveable.rotatable = false
         // moveable.scalable = true
-        // moveable.keepRatio = true
+        moveable.keepRatio = true
 
     } else if (element.type == 'SvgEllipse') {
         // moveable.renderDirections = ['se']
@@ -916,6 +916,13 @@ export function freshMoveableOption(element: CpElement) {
 
     } else if (element.type == 'Container') {
         moveable.rotatable = false
+    } else if (element.type == 'Table') {
+        moveable.rotatable = false
+        console.log(element.option.tableHeightType)
+        if (element.option.tableHeightType == "AUTO") {
+            moveable.renderDirections = ['e', "w"]
+
+        }
     }
 
     if (element.lock) {

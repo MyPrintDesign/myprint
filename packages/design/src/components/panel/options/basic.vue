@@ -58,7 +58,6 @@ const props = withDefaults(defineProps<{
 const padding = 30
 
 function dragStart(ev: MouseEvent) {
-  isDrop.value = true
   mouseTips.visible()
   tmpElement.value = JSON.parse(JSON.stringify(props.data))
   const element = tmpElement.value
@@ -69,24 +68,28 @@ function dragStart(ev: MouseEvent) {
   if (element.type == 'PageHeader' || element.type == 'PageFooter') {
     element.width = panel.width
   }
+  mouseTips.move(ev.clientX, ev.clientY, '松开取消')
+  
+  element.width = unit2unit('mm', panel.pageUnit, tmpElement.value.width)
+  element.height = unit2unit('mm', panel.pageUnit, tmpElement.value.height)
+  
+  initElement(element, 0)
   
   let halfWidth = unit2unit('mm', 'px', tmpElement.value.width) / 2
   let halfHeight = unit2unit('mm', 'px', tmpElement.value.height) / 2
   
   startX = ev.clientX - halfWidth
   startY = ev.clientY - halfHeight
-  mouseTips.move(ev.clientX, ev.clientY, '松开取消')
   
-  // element.runtimeOption.x = startX - appStore.panelPosition.x - padding
-  // element.runtimeOption.y = startY - appStore.panelPosition.y - padding
+  element.x = px2unit(startX - appStore.panelPosition.x + appStore.panelPosition.scrollX - padding)
+  element.y = px2unit(startY - appStore.panelPosition.y + appStore.panelPosition.scrollY - padding)
   
-  element.x = px2unit(startX - appStore.panelPosition.x - padding)
-  element.y = px2unit(startY - appStore.panelPosition.y - padding)
+  element.runtimeOption.x = unit2px(element.x)
+  element.runtimeOption.y = unit2px(element.y)
   
-  element.width = unit2unit('mm', panel.pageUnit, tmpElement.value.width)
-  element.height = unit2unit('mm', panel.pageUnit, tmpElement.value.height)
+  element.runtimeOption.init.x = element.runtimeOption.x
+  element.runtimeOption.init.y = element.runtimeOption.y
   
-  initElement(element, 0)
   element.runtimeOption.parent = {} as Container
   
   dragWrapper.visible = true
@@ -97,6 +100,8 @@ function dragStart(ev: MouseEvent) {
   
   dragWrapper.width = element.runtimeOption.width
   dragWrapper.height = element.runtimeOption.height
+  
+  isDrop.value = true
   
   document.addEventListener('mousemove', mouseMove);
   document.addEventListener('mouseup', mouseup);
@@ -130,8 +135,8 @@ function dragStart(ev: MouseEvent) {
       }
     }
     
-    dragWrapper.x = element.runtimeOption.x + appStore.panelPosition.x + padding
-    dragWrapper.y = element.runtimeOption.y + appStore.panelPosition.y + padding
+    dragWrapper.x = element.runtimeOption.x + appStore.panelPosition.x + padding - appStore.panelPosition.scrollX
+    dragWrapper.y = element.runtimeOption.y + appStore.panelPosition.y + padding - appStore.panelPosition.scrollY
     
     mouseTips.move(dragWrapper.x + halfWidth, dragWrapper.y + halfHeight)
     

@@ -9,7 +9,7 @@
   </el-container>
   
   <cp-mouse-tips/>
-  
+
 </template>
 
 <script setup lang="ts">
@@ -19,7 +19,7 @@ import {
   inject,
   onMounted, provide, reactive, Ref, ref, watch
 } from "vue";
-import {Container, Panel, Provider} from "@cp-print/design/types/entity";
+import {Container, CpElement, Panel, Provider} from "@cp-print/design/types/entity";
 import {to} from "@cp-print/design/utils/utils";
 import {
   mittKey, panelKey, previewDataKey, providerKey
@@ -87,11 +87,11 @@ watch(() => props.template.id, (n, _o) => {
       const element = panel.elementList[i]
       // console.log(element)
       parentInitElement(panel as Container, element, i)
-      if (element.type == 'Table') {
-        for (let i = 0; i < element.columnList!.length; i++) {
-          initElement(element.columnList![i], i)
-        }
-      }
+      // if (element.type == 'Table') {
+      //   for (let i = 0; i < element.columnList.length; i++) {
+      //     initElement(element.columnList[i], i)
+      //   }
+      // }
     }
     panel.pageHeader && parentInitElement(panel, panel.pageHeader, 0)
     panel.pageFooter && parentInitElement(panel, panel.pageFooter, 0)

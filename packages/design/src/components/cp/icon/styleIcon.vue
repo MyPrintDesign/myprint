@@ -73,7 +73,7 @@ function change(val: boolean) {
     }
   }
   
-  console.log(val)
+  // console.log(val)
   multipleElementSetValue(props.props, tmpVal)
   
   mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement} as Snapshot)

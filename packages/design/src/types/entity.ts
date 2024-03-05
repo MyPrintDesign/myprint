@@ -131,21 +131,19 @@ export interface HandlePanel extends Container {
 }
 
 export interface CpElement extends Container {
-    // id: string
-    // minWidth: number
-    // minHeight: number
-
     contentType?: textContentType
     field?: string
-    // translateX?: number
-    // translateY?: number
     enable?: number
     label?: string
     data?: any
 
-    columnList?: CpElement[]
+    columnList: CpElement[]
+    columnBody: CpElement
     option: ElementOption
     svgOption: ElementSvgOption
+
+    columnOption: ElementSvgOption
+    bodyOption: ElementSvgOption
 
     /**
      * 是否锁定
@@ -229,6 +227,8 @@ export interface ElementOption {
     padding: Position
     margin: Position
     formatter?: string
+
+    tableHeightType: 'FIXED' | 'AUTO'
 }
 
 export interface ElementSvgOption {

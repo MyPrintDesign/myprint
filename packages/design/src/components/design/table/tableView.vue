@@ -1,20 +1,19 @@
 <template>
   <table class="cp-print-table"
          ref="tableRef"
-         :style="{maxWidth: valueUnit(element.width), width: valueUnit(element.width), height: valueUnit(element.height)}"
          @mousedown="mousedown($event)"
          @drop="drop($event)">
     <tbody>
-    <tr class="border-box">
+    <tr class="border-box" :key="1">
       <column-view v-for="(column, index) in columnList"
                    :element="column"
                    :key="index"/>
     </tr>
-    <tr v-for="(rowList, indexTr) in props.element.runtimeOption.rowList" :key="indexTr" class="border-box">
-      <td class="cp-print-table-column_body" v-for="(rowColumn, index) in rowList" :key="index"
-          @click="clickBody(rowColumn)"
-          :style="bodyStyle(rowColumn)">
-        <TextView v-if="rowColumn.type === 'Text'" :element="rowColumn"/>
+    <tr class="border-box" :key="2">
+      <td class="cp-print-table-column_body" v-for="(column, index) in columnList" :key="index"
+          @click="clickBody(column.columnBody)"
+          :style="bodyStyle(column.columnBody)">
+        <TextView v-if="column.columnBody.type === 'Text'" :element="column.columnBody"/>
         <!--        <ImageView v-if="column.type === 'Image'" :element="convert(column, rowData, indexTr)"/>-->
       </td>
     </tr>
@@ -27,21 +26,16 @@
 import ColumnView from "./columnView.vue";
 // import ImageView from "../image/image.vue";
 import TextView from "../text/text.vue";
-import {
-  computed,
-  onMounted,
-  watch,
-  inject
-} from "vue";
-import {CpElement, ElementOption} from "../../../types/entity";
-import {sortColumn} from "../../../utils/utils";
-import {unit2px, px2unit} from "../../../utils/devicePixelRatio";
-import {clearEventBubble} from "../../../utils/event";
-import {mittKey} from "../../../constants/keys";
-import {initElement, valueUnit} from "../../../utils/elementUtil";
+import {computed, inject, onMounted, watch} from "vue";
+import {CpElement, ElementOption} from "@cp-print/design/types/entity";
+import {sortColumn} from "@cp-print/design/utils/utils";
+import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
+import {clearEventBubble} from "@cp-print/design/utils/event";
+import {mittKey} from "@cp-print/design/constants/keys";
+import {initElement} from "@cp-print/design/utils/elementUtil";
 
 const props = withDefaults(defineProps<{
-  element?: CpElement
+  element: CpElement
 }>(), {
   element: () => ({} as CpElement)
 })
@@ -55,12 +49,13 @@ mitt.on('sortColumn', handleSortColumn)
 const bodyStyle = (column: CpElement) => {
   // console.log(column)
   const style = {
-    maxWidth: valueUnit(column.width),
-    width: valueUnit(column.width),
-    height: valueUnit(column.height)
+    maxWidth: column.runtimeOption.width + 'px',
+    width: column.runtimeOption.width + 'px',
+    height: column.runtimeOption.height + 'px',
+    maxHeight: column.runtimeOption.height + 'px'
   } as any
   if (props.element.option.borderAll) {
-    style['border'] = '1px solid #771082'
+    style['border'] = '1px solid white'
   }
   return style
 }
@@ -74,8 +69,7 @@ const copyOption = ['font', 'fontSize', 'blob', 'italic', 'underline', 'lineThro
 
 const columnList = computed(() => {
   // console.log(props.element.data)
-  
-  return props.element.columnList!.filter((v: any) => {
+  return props.element.columnList.filter((v: any) => {
     
     for (let string of copyOption) {
       let elementOption = props.element.option as any
@@ -93,17 +87,26 @@ onMounted(() => {
   }
   
   if (props.element.columnList.length == 0 || props.element.columnList[0].label !== '序号') {
-    let indexView = {} as CpElement;
-    indexView.type = 'Text'
-    indexView.option = <ElementOption>{
-      disableSort: true,
-      disableEnable: false,
-      enable: true,
-      formatter: '{{autoIncrement}}',
-    }
+    let indexView = {
+      type: "Text",
+      option: <ElementOption>{
+        disableSort: true,
+        disableEnable: false,
+        enable: true,
+        formatter: '{{autoIncrement}}',
+      }
+    } as CpElement;
     initElement(indexView, props.element.columnList.length)
     indexView.field = 'autoIncrement'
     indexView.label = '序号'
+    
+    indexView.columnBody = {
+      type: "Text",
+      data: "1",
+      option: {...indexView.option}
+    } as CpElement
+    initElement(indexView.columnBody, 0)
+    
     props.element.columnList.unshift(indexView)
   }
   
@@ -118,14 +121,11 @@ function initTable() {
   for (let i = 0; i < props.element.columnList!.length; i++) {
     const column = props.element.columnList![i]
     column.id = crypto.randomUUID()
-    columnTotalWidth += column.width
-    if (maxHeight < column.height) {
-      maxHeight = column.height
+    columnTotalWidth += column.runtimeOption.width
+    if (maxHeight < column.runtimeOption.height) {
+      maxHeight = column.runtimeOption.height
     }
     
-    if (column.option == null) {
-      column.option = {} as ElementOption
-    }
     column.option.sort = i;
     column.option.enable = column.option.enable || column.option.enable == null;
     
@@ -146,18 +146,22 @@ function initTable() {
   // console.log(titleHeight)
   // console.log(tableData)
   props.element.data = [tableData]
-  if (props.element.height != maxHeight * 2) {
+  
+  for (let i = 0; i < props.element.columnList.length; i++) {
+    props.element.columnList[i].runtimeOption.height = maxHeight;
+  }
+  if (props.element.runtimeOption.height < maxHeight * 2) {
     // 加上2像素的border的高
-    props.element.height = px2unit(unit2px(maxHeight * 2) + 2)
+    props.element.runtimeOption.height = maxHeight * 2 + 2
     // console.log(props.data!.height)
-    for (let i = 0; i < props.element.columnList!.length; i++) {
-      props.element.columnList![i].height = maxHeight;
-    }
+    // for (let i = 0; i < props.element.columnList!.length; i++) {
+    //   props.element.columnList![i].runtimeOption.height = maxHeight;
+    // }
   }
   // console.log(maxHeight * 2)
   
-  if (props.element.width < columnTotalWidth) {
-    props.element.width = columnTotalWidth
+  if (props.element.runtimeOption.width < columnTotalWidth) {
+    props.element.runtimeOption.width = columnTotalWidth
     return
   }
   
@@ -170,19 +174,24 @@ function computedWidth() {
   let columnTotalWidth = 0;
   // let minColumnTotalWidth = 0;
   // console.log(toRaw(unref(columnList.value)))
-  // for (let i = 0; i < columnList.value.length; i++) {
-  //   columnTotalWidth += columnList.value[i].width
-  //   minColumnTotalWidth += columnList.value[i].minWidth
-  // }
+  for (let i = 0; i < columnList.value.length; i++) {
+    columnTotalWidth += columnList.value[i].runtimeOption.width
+    // minColumnTotalWidth += columnList.value[i].minWidth
+  }
   // console.log('computedWidth', columnTotalWidth)
   
   // if (props.data!.width > columnTotalWidth) {
-  const diffWidth = props.element!.width - columnTotalWidth
+  const diffWidth = props.element.runtimeOption.width - columnTotalWidth
   
   const oneWidthAdd = diffWidth / columnList.value.length
   
   for (let i = 0; i < columnList.value.length; i++) {
-    columnList.value[i].width = columnList.value[i].width + oneWidthAdd
+    columnList.value[i].runtimeOption.width = columnList.value[i].runtimeOption.width + oneWidthAdd
+    columnList.value[i].width = px2unit(columnList.value[i].runtimeOption.width)
+    
+    // console.log(columnList.value[i].columnBody)
+    columnList.value[i].columnBody.runtimeOption.width = columnList.value[i].runtimeOption.width
+    columnList.value[i].columnBody.width = columnList.value[i].width
   }
   // }
 }

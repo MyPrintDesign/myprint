@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import * as d3Shape from "d3-shape";
+import {CurveGenerator} from "d3-shape";
 import * as d3Selection from "d3-selection";
 import * as d3Drag from "d3-drag";
-import { onMounted, reactive, ref, watch} from "vue";
-import {CpElement} from "@cp-print/design/types/entity";
-import {CurveGenerator} from "d3-shape";
 import {DragBehavior, DraggedElementBaseType} from "d3-drag";
+import {onMounted, reactive, ref, watch} from "vue";
+import {CpElement} from "@cp-print/design/types/entity";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+import {elementHandleStatusList} from "@cp-print/design/constants/common";
+import {douglasPeucker} from "@cp-print/design/utils/utils";
 // import {watchImmediate} from "@vueuse/core";
 // import {updateSvg} from "@cp-print/design/utils/svgUtil";
 
@@ -28,7 +30,7 @@ const props = withDefaults(defineProps<{
 })
 
 watch(() => props.element.runtimeOption.status, (n, _o) => {
-  if (n == 'HANDLE') {
+  if (elementHandleStatusList.includes(n)) {
     d3Selection.select(data.context.canvas)
         .call(data.dragFun)
   } else {
@@ -44,6 +46,14 @@ watch([() => props.element.width, () => props.element.height], (_n, _o) => {
   render()
 })
 
+if (props.element.data) {
+  const list = JSON.parse(props.element.data)
+  for (let listElement of list) {
+    listElement.data['stroke'] = listElement['stroke']
+    listElement.data['strokeWidth'] = listElement['strokeWidth']
+    data.strokes.push(listElement.data)
+  }
+}
 
 onMounted(() => {
   
@@ -57,12 +67,34 @@ onMounted(() => {
       .container(data.context.canvas)
       .subject(dragsubject)
       .on("start drag", dragged)
+      .on("end", darggend)
       .on("start.render drag.render", render)
   
   canvasRef.value.width = props.element.runtimeOption.width * 2;
   canvasRef.value.height = props.element.runtimeOption.height * 2;
   
+  render()
+  
 })
+
+function darggend() {
+  // 调用路径压缩函数
+  const pathList = []
+  for (let stroke of data.strokes) {
+    const compressedPath = douglasPeucker(stroke, 1.0);
+    
+    pathList.push({
+      stroke: stroke['stroke'],
+      strokeWidth: stroke['strokeWidth'],
+      data: compressedPath,
+    })
+  }
+  props.element.data = JSON.stringify(pathList)
+  // console.log(data.strokes)
+  // console.log(props.element.data)
+  // console.log("Original Path:", originalPath);
+  // console.log("Compressed Path:", compressedPath);
+}
 
 function render() {
   data.context.clearRect(0, 0, props.element.runtimeOption.width, props.element.runtimeOption.height);

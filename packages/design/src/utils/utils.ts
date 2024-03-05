@@ -250,3 +250,70 @@ export function getFontFamilyName(val: string) {
 
     return "默认"
 }
+
+
+export function douglasPeucker(points, epsilon) {
+    if (points.length <= 2) {
+        return points;
+    }
+
+    let dMax = 0;
+    let index = 0;
+
+    const end = points.length - 1;
+
+    for (let i = 1; i < end; i++) {
+        const d = perpendicularDistance(points[i], points[0], points[end]);
+
+        if (d > dMax) {
+            index = i;
+            dMax = d;
+        }
+    }
+
+    if (dMax > epsilon) {
+        const firstPart = douglasPeucker(points.slice(0, index + 1), epsilon);
+        const secondPart = douglasPeucker(points.slice(index, end + 1), epsilon);
+
+        return firstPart.slice(0, -1).concat(secondPart);
+    } else {
+        return [points[0], points[end]];
+    }
+}
+
+function perpendicularDistance(point, lineStart, lineEnd) {
+    const [x, y] = point;
+    const [startX, startY] = lineStart;
+    const [endX, endY] = lineEnd;
+
+    const A = x - startX;
+    const B = y - startY;
+    const C = endX - startX;
+    const D = endY - startY;
+
+    const dot = A * C + B * D;
+    const lenSq = C * C + D * D;
+    let param = -1;
+
+    if (lenSq !== 0) {
+        param = dot / lenSq;
+    }
+
+    let xx, yy;
+
+    if (param < 0) {
+        xx = startX;
+        yy = startY;
+    } else if (param > 1) {
+        xx = endX;
+        yy = endY;
+    } else {
+        xx = startX + param * C;
+        yy = startY + param * D;
+    }
+
+    const dx = x - xx;
+    const dy = y - yy;
+
+    return Math.sqrt(dx * dx + dy * dy);
+}

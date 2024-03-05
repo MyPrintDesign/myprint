@@ -20,13 +20,13 @@
   </cp-drag>
 </template>
 <script setup lang="ts">
-import CpDrag from "./drag";
-import ElementView from "./element.vue";
-import {CpElement} from "@cp-print/design/types/entity";
-import {computedHandles, computeDrag} from "@cp-print/design/utils/elementUtil";
-import {CpContainer} from "./container";
-import ElementList from "./elementList.vue";
-import TablePopoverView from "./table/tablePopoverView.vue";
+import CpDrag from "../../design/src/components/design/drag/index";
+import ElementView from "../../design/src/components/design/element.vue";
+import {CpElement} from "packages/design/src/types/entity";
+import {computedHandles, computeDrag} from "packages/design/src/utils/elementUtil";
+import {CpContainer} from "../../design/src/components/design/container";
+import ElementList from "../../design/src/components/design/elementList.vue";
+import TablePopoverView from "../../design/src/components/design/table/tablePopoverView.vue";
 
 withDefaults(defineProps<{
   element?: CpElement

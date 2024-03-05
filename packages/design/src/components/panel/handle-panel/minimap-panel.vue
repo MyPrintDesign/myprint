@@ -21,7 +21,7 @@
              :style="{left : valueUnit(element.x), top: valueUnit(element.y), width: valueUnit(element.width), height: valueUnit(element.height)}">
           <TextView v-if="element.type == 'Text'" :element="element"/>
           <ImageView v-if="element.type === 'Image'" :element="element"/>
-          <TablePopoverView v-if="element.type === 'Table'" :element="element"/>
+          <table-design v-if="element.type === 'Table'" :element="element"/>
           <RectView v-if="element.type === 'Rect'" :element="element"/>
           <horizontal-line v-if="element.type === 'HorizontalLine'" :element="element"/>
           <vertical-line v-if="element.type === 'VerticalLine'" :element="element"/>
@@ -75,7 +75,7 @@ import VerticalLine from "../../design/auxiliary/line/verticalLine";
 import TextView from "../../design/text";
 import DottedVerticalLine from "../../design/auxiliary/line/dottedVerticalLine";
 import ImageView from "../../design/image";
-import TablePopoverView from "../../design/table/tablePopoverView.vue";
+import TableDesign from "../../design/table/tableDesign.vue";
 import {Container, ContentScaleVo} from "@cp-print/design/types/entity";
 import {clearEventBubble} from "@cp-print/design/utils/event";
 import MathCalc from "@cp-print/design/utils/numberUtil";
@@ -271,7 +271,7 @@ function startScale(scale: number) {
     display: flex;
     justify-content: center;
     border-radius: 8px;
-    box-shadow: 0px 6px 20px rgba(25,25,26,.06), 0px 2px 12px rgba(25,25,26,.04);
+    box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
     //border: 1px white solid;
     //box-sizing: border-box;
     
@@ -299,23 +299,23 @@ function startScale(scale: number) {
   width: 100%;
   height: 40px;
   border-radius: 8px;
-  box-shadow: 0px 6px 20px rgba(25,25,26,.06), 0px 2px 12px rgba(25,25,26,.04);
+  box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
   
-  .mini-map-toolbar_redo-undo{
+  .mini-map-toolbar_redo-undo {
     background: white;
     margin-right: 10px;
     border-radius: 8px;
     width: 100px;
-    box-shadow: 0px 6px 20px rgba(25,25,26,.06), 0px 2px 12px rgba(25,25,26,.04);
-    border: 1px solid rgba(18,17,42,.07);
+    box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
+    border: 1px solid rgba(18, 17, 42, .07);
   }
   
   .mini-map-toolbar_control {
     background: white;
     border-radius: 8px;
     width: 100%;
-    box-shadow: 0px 6px 20px rgba(25,25,26,.06), 0px 2px 12px rgba(25,25,26,.04);
-    border: 1px solid rgba(18,17,42,.07) ;
+    box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
+    border: 1px solid rgba(18, 17, 42, .07);
   }
   
 }

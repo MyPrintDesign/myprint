@@ -12,12 +12,6 @@
             :length="panel.height"
             :highlight="highlightRule.vertical.highlight"
             :scroll="highlightRule.vertical.scroll"/>
-      <!--    <el-watermark :content="panel.w :style="{
-            minWidth: valueUnit(scaleUtil.scale(panel.width)),
-            width: valueUnit(scaleUtil.scale(panel.width)),
-            height: valueUnit(scaleUtil.scale(panel.height)),
-          }"watermark?panel.watermarkContent:''">-->
-      
       <div class="affix-container design-panel-container-width " @scroll="scroll" @wheel="wheel"
            ref="designScrollRef">
         <div class="design-content design-content-bg"
@@ -28,60 +22,18 @@
                             height: valueUnit(panel.height),
                            }"
              :class="{'dropInIs': panel.runtimeOption.dragInIs}"
-             >
+        >
           <!--         @mousedown="mousedown($event)"-->
           <design v-if="panel.pageHeader != null" :element="panel.pageHeader"/>
           <design v-if="panel.pageFooter != null" :element="panel.pageFooter"/>
           
           <element-list :elementList="panel.elementList"/>
-          <!--      <span-->
-          <!--          class="ref-line v-line"-->
-          <!--          v-for="(item, index) in vLine"-->
-          <!--          :key="'v_' + index"-->
-          <!--          v-show="item.display"-->
-          <!--          :style="{-->
-          <!--          left: item.position,-->
-          <!--          top: item.origin,-->
-          <!--          height: item.lineLength-->
-          <!--        }"-->
-          <!--      />-->
-          <!--      <span-->
-          <!--          class="ref-line h-line"-->
-          <!--          v-for="(item, index) in hLine"-->
-          <!--          :key="'h_' + index"-->
-          <!--          :style="{-->
-          <!--          top: item.position,-->
-          <!--          left: item.origin,-->
-          <!--          width: item.lineLength-->
-          <!--        }"-->
-          <!--      />-->
-          <!--    选择框    -->
-          <!--        <SelectRect v-if="visible.selectRect" :element="selectRectElement"/>-->
-          <!--    拖拽矩形    -->
-          <!--        <vue-drag v-if="defaultDragRectElement.x != null" :element="defaultDragRectElement">-->
-          <!--          <DragRect :element="defaultDragRectElement"/>-->
-          <!--        </vue-drag>-->
           <!--    对齐辅助线    -->
           <!--        <align-line v-for="(element, index) in alignLineDataList" :data="element" :key="index"/>-->
-        
         
         </div>
       </div>
       
-      <!--      <cp-drop-->
-      <!--          ref="designContentRef"-->
-      <!--          class="design-content-drop"-->
-      <!--          :class="{'design-content_over': data.dropOver}"-->
-      <!--          @drop="drop"-->
-      <!--          @dragover="dragover"-->
-      <!--          @dragleave="dragleave"-->
-      <!--          @preventDefault="dropPreventDefault"-->
-      <!--      >-->
-      <!--        -->
-      <!--      </cp-drop>-->
-      
-      <!--    </el-watermark>-->
-    
     </div>
   </div>
 
@@ -91,10 +43,9 @@
 // import { ElWatermark } from 'element-plus'
 // import {ElScrollbar} from 'element-plus'
 import Rule from "../rule.vue";
-// import {computedAlign} from "@/utils/alignUtil";
 import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
 import {inject, nextTick, onMounted, onUnmounted, reactive, ref, watch} from "vue";
-import {ContentScaleVo, DragWrapper, CpElement, Container} from "@cp-print/design/types/entity";
+import {Container, ContentScaleVo, CpElement, DragWrapper} from "@cp-print/design/types/entity";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 // import {clearEventBubble} from "@cp-print/design/utils/event";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
@@ -103,13 +54,9 @@ import {record, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {
   computeTranslate,
   handle,
-  // initElement,
   initPanelDiv,
   none,
   removeElement,
-  // rotatedPoint,
-  // select,
-  // setCurrentElement,
   valueUnit
 } from "@cp-print/design/utils/elementUtil";
 import {useAppStoreHook as useAppStore} from "@cp-print/design/stores/app";
@@ -117,10 +64,7 @@ import {useAppStoreHook as useAppStore} from "@cp-print/design/stores/app";
 // import CpDrop from "@cp-print/design/components/cp/drop";
 import ElementList from "../../design/elementList.vue";
 import {unMountedKeyboardEvent} from "@cp-print/design/utils/keyboardUtil";
-import {
-  updatePanel,
-  initMoveable
-} from "@cp-print/design/components/moveable/moveable";
+import {initMoveable, updatePanel} from "@cp-print/design/components/moveable/moveable";
 import Design from "@cp-print/design/components/design/design.vue";
 // import {onUpdated} from "vue-demi";
 import {initSelecto, selecto} from "@cp-print/design/components/moveable/selecto";
@@ -162,6 +106,9 @@ function scroll(_scrollData: any) {
     x: designScrollRef.value!.scrollLeft,
     y: designScrollRef.value!.scrollTop
   } as Container)
+  
+  appStore.panelPosition.scrollX = designScrollRef.value!.scrollLeft
+  appStore.panelPosition.scrollY = designScrollRef.value!.scrollTop
   // data.scroll.left = scrollData.scrollLeft
   // data.scroll.top = scrollData.scrollTop
 }
@@ -178,6 +125,9 @@ function wheel(event: any) {
     x: designScrollRef.value!.scrollLeft,
     y: designScrollRef.value!.scrollTop
   } as Container)
+  
+  appStore.panelPosition.scrollX = designScrollRef.value!.scrollLeft
+  appStore.panelPosition.scrollY = designScrollRef.value!.scrollTop
   
   // console.log(scrollData)
   // highlightRule.horizontal.scroll = scrollData.scrollLeft
@@ -248,7 +198,7 @@ onMounted(() => {
   } as Container)
   
   const rect = designScrollRef.value!.getBoundingClientRect()
-  appStore.panelPosition = {x: rect.x, y: rect.y}
+  appStore.panelPosition = {x: rect.x, y: rect.y, scrollX: 0, scrollY: 0}
   
 })
 

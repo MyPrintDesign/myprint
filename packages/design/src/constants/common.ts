@@ -88,7 +88,7 @@ const elementSetting: Record<elementType, Array<elementSettingType>> =
         Text: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', 'contentType', 'padding', "margin", 'data', 'label'],
         TextTime: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', "formatter", 'padding', "margin", 'label'],
         Panel: [...commonElementSetting],
-        Table: [...(commonElementSetting.filter(item => item !== "rotate"))],
+        Table: [...(commonElementSetting.filter(item => item !== "rotate")), ...styleElementSetting],
         Rect: [...commonElementSetting, 'color', 'background'],
         HorizontalLine: [...commonElementSetting, 'color', 'lineHeight'],
         DottedHorizontalLine: [...commonElementSetting, 'color', 'lineHeight', 'dottedStyle'],
