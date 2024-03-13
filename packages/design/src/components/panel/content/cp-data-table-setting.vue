@@ -2,46 +2,22 @@
   <el-form label-width="80px" size="small"
            label-position="right">
     <el-divider>
-      基础
+      列
     </el-divider>
     
-<!--    <el-form-item label="标题显示" v-if="getElementSetting(multipleElementGetValue('type')).includes('label')">-->
-<!--      <el-switch-->
-<!--          :model-value="multipleElementGetValue('option.hiddenLabel')"-->
-<!--          @update:model-value="(val:any)=>multipleElementSetValue('option.hiddenLabel', val)"-->
-<!--          class="ml-2"-->
-<!--          inline-prompt-->
-<!--          style="&#45;&#45;el-switch-on-color: var(&#45;&#45;drag-h-color); &#45;&#45;el-switch-off-color: var(&#45;&#45;switch-off-color)"-->
-<!--          active-text="显示"-->
-<!--          inactive-text="隐藏"/>-->
-<!--&lt;!&ndash;            <el-switch v-if="appStore.currentElement.option.hiddenLabel"&ndash;&gt;-->
-<!--&lt;!&ndash;                       v-model="appStore.currentElement.option.labelSplit"&ndash;&gt;-->
-<!--&lt;!&ndash;                       class="ml-2"&ndash;&gt;-->
-<!--&lt;!&ndash;                       inline-prompt&ndash;&gt;-->
-<!--&lt;!&ndash;                       style="&#45;&#45;el-switch-on-color: var(&#45;&#45;drag-h-color); &#45;&#45;el-switch-off-color: gray; margin-left: 10px"&ndash;&gt;-->
-<!--&lt;!&ndash;                       active-text="拆分"&ndash;&gt;-->
-<!--&lt;!&ndash;                       inactive-text="合并"/>&ndash;&gt;-->
-<!--    </el-form-item>-->
-    
-    <el-form-item label="标题" v-if="getElementSetting(multipleElementGetValue('type')).includes('label')">
-      <cp-history-input style="margin-right: 20px"
-                        :model-value="multipleElementGetValue('label')"
-                        @update:model-value="(val:any)=>multipleElementSetValue('label', val)"
-                        historyLabel="标题"/>
-    </el-form-item>
-    <el-form-item label="内容" v-if="getElementSetting(multipleElementGetValue('type')).includes('data')">
+    <!--    <el-form-item label="标题" v-if="getElementSetting(multipleElementGetValue('type')).includes('label')">-->
+    <!--      <cp-history-input style="margin-right: 20px"-->
+    <!--                        :model-value="multipleElementGetValue('label')"-->
+    <!--                        @update:model-value="(val:any)=>multipleElementSetValue('label', val)"-->
+    <!--                        historyLabel="标题"/>-->
+    <!--    </el-form-item>-->
+    <el-form-item label="内容" v-if="head !== undefined && getElementSetting(head.type).includes('data')">
       <cp-history-input style="margin-right: 20px"
                         historyLabel="内容"
                         :model-value="multipleElementGetValue('data')"
                         @update:model-value="(val:any)=>multipleElementSetValue('data', val)"
                         type="textarea"/>
     </el-form-item>
-    <el-form-item label="格式化器" v-if="getElementSetting(multipleElementGetValue('type')).includes('formatter')">
-      :model-value="multipleElementGetValue('option.formatter')"
-      @update:model-value="(val:any)=>multipleElementSetValue('option.formatter', val)"
-      historyLabel="格式化器"/>
-    </el-form-item>
-    
     <el-divider>
       样式
     </el-divider>
@@ -50,7 +26,6 @@
       <el-switch
           :model-value="multipleElementGetValue('lock')"
           @update:model-value="(val:any)=>multipleElementSetValue('lock', val)"
-          @change="changeLock"
           class="ml-2"
           inline-prompt
           style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
@@ -58,7 +33,14 @@
           inactive-text="否"/>
     </el-form-item>
     
-    <el-form-item label="位置(x/y)" v-if="getElementSetting(multipleElementGetValue('type')).includes('x')">
+    <el-form-item label="高度属性">
+      <el-radio-group v-model="table.option.tableHeightType" size="small">
+        <el-radio-button label="自动高度" value="AUTO" />
+        <el-radio-button label="固定高度" value="FIXED" />
+      </el-radio-group>
+    </el-form-item>
+    
+    <el-form-item label="位置(x/y)">
       <group-input>
         <cp-history-input-number class="width-60"
                                  :model-value="multipleElementGetValue('x')"
@@ -79,7 +61,6 @@
         <cp-history-input-number class="width-60"
                                  :model-value="multipleElementGetValue('width')"
                                  @update:model-value="(val:any)=>multipleElementSetValue('width', val)"
-                                 @change="changeElementWidth"
                                  historyLabel="尺寸"/>
         <cp-history-input-number class="width-60"
                                  :model-value="multipleElementGetValue('height')"
@@ -89,12 +70,34 @@
       </group-input>
     </el-form-item>
     
-    <el-form-item label="宽高比例" v-if="getElementSetting(multipleElementGetValue('type')).includes('contentType')">
+    <el-form-item label="表头高度" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
       <group-input>
-        <cp-history-input-number placeholder="例:1.25" class="width-60"
-                                 :model-value="multipleElementGetValue('option.aspectRatio')"
-                                 @update:model-value="(val:any)=>multipleElementSetValue('option.aspectRatio', val)"
-                                 historyLabel="宽高比例"/>
+        <cp-history-input-number class="width-60"
+                                 placeholder="最低高度"
+                                 :model-value="multipleElementGetValue('width')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('width', val)"
+                                 historyLabel="尺寸"/>
+        <cp-history-input-number class="width-60"
+                                 placeholder="最高高度"
+                                 :model-value="multipleElementGetValue('height')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('height', val)"
+                                 historyLabel="尺寸"/>
+        <cp-unit/>
+      </group-input>
+    </el-form-item>
+    <el-form-item label="表体高度" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
+      <group-input>
+        <cp-history-input-number class="width-60"
+                                 placeholder="最低高度"
+                                 :model-value="multipleElementGetValue('width')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('width', val)"
+                                 historyLabel="尺寸"/>
+        <cp-history-input-number class="width-60"
+                                 placeholder="最高高度"
+                                 :model-value="multipleElementGetValue('height')"
+                                 @update:model-value="(val:any)=>multipleElementSetValue('height', val)"
+                                 historyLabel="尺寸"/>
+        <cp-unit/>
       </group-input>
     </el-form-item>
     
@@ -106,16 +109,6 @@
                  :show-tooltip="false" size="small"
                  historyLabel="不透明度"/>
       <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
-    </el-form-item>
-    <el-form-item label="旋转角度" v-if="getElementSetting(multipleElementGetValue('type')).includes('rotate')">
-      <!--      <el-slider v-model="value1"/>-->
-      <el-slider class="width-120"
-                 :model-value="multipleElementGetValue('option.rotate')"
-                 @update:model-value="(val:any)=>multipleElementSetValue('option.rotate', val)"
-                 :max="359" :min="0" :step="1"
-                 @change="rotatedPoint(appStore.currentElement)"
-                 :show-tooltip="false" size="small"/>
-      <div style="margin-left: 20px">{{ multipleElementGetValue('option.rotate') }}</div>
     </el-form-item>
     
     <el-divider>
@@ -144,7 +137,6 @@
           popper-class="barcode-type-tooltip"
           effect="dark"
           :max-width="200"
-          :content="currentBarCodeEg"
           placement="top"
       >
         <el-icon style="margin-left: 5px" :size="14">
@@ -218,22 +210,15 @@
 </template>
 <script setup lang="ts">
 // import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
-import {computed, inject} from "vue";
+import {computed, inject, ref} from "vue";
 
-import {
-  barcodeTypes,
-  dottedStyleList,
-  getElementSetting,
-  textContentTypes
-} from "@cp-print/design/constants/common";
+import {barcodeTypes, dottedStyleList, getElementSetting, textContentTypes} from "@cp-print/design/constants/common";
 import {mittKey} from "@cp-print/design/constants/keys";
 import {ActionEnum, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {QuestionFilled} from "@element-plus/icons-vue";
 import GroupInput from "../../cp/cp-group/groupInput.vue";
-import {CpUnit, CpHistoryInput, CpHistorySelect, CpHistoryInputNumber} from "@cp-print/design/components/cp/input";
+import {CpHistoryInput, CpHistoryInputNumber, CpHistorySelect, CpUnit} from "@cp-print/design/components/cp/input";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
-import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
-import {freshMoveableOption, moveableResize} from "@cp-print/design/components/moveable/moveable";
 import {CpElement} from "@cp-print/design/types/entity";
 import {multipleElementGetValue, multipleElementSetValue} from "@cp-print/design/utils/elementUtil";
 
@@ -242,24 +227,27 @@ const mitt = inject(mittKey)!
 //   currentBarCodeEg: null
 // })
 const appStore = useAppStoreHook()
+const head = ref<CpElement>()
 
-const currentBarCodeEg = computed(() => {
-  if (element.value.option && element.value.option.barCodeType) {
-    return changeBarCodeType(element.value.option.barCodeType)
+const table = computed(() => {
+  
+  const first = appStore.currentElement[0]
+  
+  if (first.type != 'DataTable') {
+    head.value = first
   }
-})
-
-const element = computed(() => {
-  if (appStore.currentElement.length > 0) {
-    return appStore.currentElement[0] as CpElement
+  
+  console.log(head)
+  
+  if (first.type == 'DataTable') {
+    return first as CpElement
   } else {
-    return {} as CpElement
+    return first.runtimeOption.parent as CpElement
   }
 })
+console.log(123)
+// console.log(table)
 
-function changeLock() {
-  freshMoveableOption(element.value)
-}
 
 function rotatedPoint(rotate) {
   console.log(rotate)
@@ -270,17 +258,6 @@ function change(_val: any) {
   // record()
   mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement} as Snapshot)
   // console.log('change', val)
-}
-
-function changeElementWidth(val) {
-  // console.log(val)
-  moveableResize(unit2px(element.value.width), unit2px(element.value.height))
-}
-
-function changeBarCodeType(val: any) {
-  // record()
-  // console.log('change', val)
-  return barcodeTypes.find(v => v.value == val)!.eg
 }
 
 </script>

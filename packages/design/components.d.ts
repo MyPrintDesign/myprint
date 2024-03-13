@@ -43,7 +43,7 @@ declare module 'vue' {
     PageHeader: typeof import('./src/components/design/container/pageHeader/pageHeader.vue')['default']
     Panel: typeof import('./src/components/panel/index.vue')['default']
     Preview: typeof import('./src/components/preview/preview.vue')['default']
-    PreviewContainer: typeof import('./src/components/preview/preview-container.vue')['default']
+    PreviewContainer: typeof import('../bk/preview-container.vue')['default']
     PreviewPanel: typeof import('./src/components/preview/previewPanel.vue')['default']
     Qrcode: typeof import('./src/components/design/qrcode/qrcode.vue')['default']
     Rect: typeof import('./src/components/design/auxiliary/rect/rect/rect.vue')['default']

@@ -3,7 +3,12 @@
     <template #head>
       | {{ title }}
     </template>
-    <CpElementSetting v-if="appStore.currentElement.length > 0" class="advanced-config"/>
+    <template v-if="appStore.currentElement.length > 0">
+      <cp-data-table-setting
+          v-if="appStore.currentElement[0].type == 'DataTable' || appStore.currentElement[0].runtimeOption.parent!.type == 'DataTable'"
+          class="advanced-config"/>
+      <CpElementSetting v-else class="advanced-config"/>
+    </template>
     <CpPanelSetting v-else class="advanced-config"/>
   </cp-collapse>
 </template>
@@ -19,6 +24,7 @@ import {elementTypeFormat} from "@cp-print/design/types/entity";
 import {computed} from "vue";
 import {useConfigStore} from "@cp-print/design/stores/config";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
+import CpDataTableSetting from "@cp-print/design/components/panel/content/cp-data-table-setting.vue";
 
 const appStore = useAppStoreHook()
 const configStore = useConfigStore()

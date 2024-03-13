@@ -12,9 +12,9 @@ export const customProvider: Array<CpElement> = [
     {
         "field": "userList",
         iconClass: 'iconfont icon-text',
-        "type": "Table",
+        "type": "DataTable",
         "label": "用户列表",
-        "columnList": [
+        "headList": [
             {
                 "field": "username",
                 "type": "Text",

@@ -13,6 +13,9 @@
   //word-break: break-all;
   outline: 0;
   box-sizing: border-box;
+  // tmp
+  color: var(--tcolor);
+  caret-color: var(--tcolor);
 
   vertical-align: top;
   word-break: break-all;
@@ -34,7 +37,7 @@
   word-break: break-all;
   box-sizing: border-box;
   //tmp
-  //color: white;
+  //color: var(--tcolor);
   outline: 0;
   flex-grow: 1;
 }
@@ -76,7 +79,7 @@
   border-spacing: 0;
   padding: 0;
   word-break: break-all;
-  cursor: text;
+  //cursor: text;
   display: table;
   outline: none;
 }
@@ -87,8 +90,8 @@
   //text-align: center;
   height: 100%;
   // tmp
-  border: 1px solid white;
-  color: white;
+  //border: 1px solid black;
+  color: var(--tcolor);
 
   box-sizing: border-box;
   padding: 0;
@@ -109,10 +112,11 @@
   word-break: break-all;
   text-align: center;
   box-sizing: border-box;
+  overflow: hidden;
   padding: 0;
   // tmp
-  border: 1px solid white;
-  color: white;
+  //border: 1px solid black;
+  color: var(--tcolor);
 }
 
 .cp-print-container_over {
@@ -143,7 +147,8 @@
 .cp-print-preview-panel__content_page {
   position: relative;
   overflow: hidden;
-  background: white;
+  // tmp cancel
+  //background: white;
 }
 
 .cp-print-draw_panel {

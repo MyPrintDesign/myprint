@@ -9,7 +9,7 @@
        }"
        ref="designRef">
     <element-view :element="element"/>
-    <table-design v-if="element.type === 'Table'" :element="element as any"/>
+    <table-design v-if="element.type === 'DataTable'" :element="element as any"/>
     
     <cp-container v-if="element.type === 'PageHeader'" :element="element">
       <element-list :element-list="element.elementList"/>

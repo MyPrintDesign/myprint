@@ -530,7 +530,7 @@ function rotate(e: OnRotate) {
 }
 
 function onRotateStart(_e: OnRotateStart) {
-    useAppStoreHook().dataRotation = -2
+    useAppStoreHook().dataRotation = 'rotate'
     tipsStatus.value = 'rotate'
 }
 
@@ -554,7 +554,7 @@ function rotateGroupEnd(e: OnRotateGroupEnd) {
 }
 
 function onResizeStart(_e: OnResizeStart) {
-    console.log('onResizeStart', _e)
+    // console.log('onResizeStart', _e)
     // useConfigStore().changeCursor('cursor-ew-rotate')
     const direction = _e.direction
     // if (direction[0] == 0 && direction[1] == -1) {
@@ -570,12 +570,12 @@ function onResizeStart(_e: OnResizeStart) {
     const degRotation = absDegree(rotationRad / Math.PI * 180);
 
     // const directionSign = sign(direction);
-    console.log(direction[0] + ', ' + direction[1], DIRECTION_DIRECTION_TO_REGION[direction[0] + ', ' + direction[1]])
+    // console.log(direction[0] + ', ' + direction[1], DIRECTION_DIRECTION_TO_REGION[direction[0] + ', ' + direction[1]])
     //
     const directionRotation = (throttle(degRotation, 15) + 1 * DIRECTION_ROTATIONS[
         DIRECTION_DIRECTION_TO_REGION[direction[0] + ', ' + direction[1]]
         ] + 720) % 180;
-    console.log(directionRotation)
+    // console.log(directionRotation)
     useAppStoreHook().dataRotation = directionRotation
 
     // console.log(moveable.getMoveables()[0].controlGesto.data.resizable)
@@ -749,6 +749,10 @@ function align(callback: (rect: RectInfo, child: MoveableManagerInterface, i: nu
     moveable.updateRect();
 }
 
+export function updateMoveableRect() {
+    moveable.updateRect();
+}
+
 function onScroll({scrollContainer, direction}) {
     let elemtnt = scrollContainer as HTMLElement
     // console.log(elemtnt.childNodes[0])
@@ -916,9 +920,9 @@ export function freshMoveableOption(element: CpElement) {
 
     } else if (element.type == 'Container') {
         moveable.rotatable = false
-    } else if (element.type == 'Table') {
+    } else if (element.type == 'DataTable') {
         moveable.rotatable = false
-        console.log(element.option.tableHeightType)
+        // console.log(element.option.tableHeightType)
         if (element.option.tableHeightType == "AUTO") {
             moveable.renderDirections = ['e', "w"]
 

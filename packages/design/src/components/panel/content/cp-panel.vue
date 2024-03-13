@@ -51,14 +51,7 @@ import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
 import {canMoveStatusList, defaultDragRectElement} from "@cp-print/design/constants/common";
 import {record, Snapshot} from "@cp-print/design/utils/historyUtil";
-import {
-  computeTranslate,
-  handle,
-  initPanelDiv,
-  none,
-  removeElement,
-  valueUnit
-} from "@cp-print/design/utils/elementUtil";
+import {computeTranslate, handle, none, removeElement, valueUnit} from "@cp-print/design/utils/elementUtil";
 import {useAppStoreHook as useAppStore} from "@cp-print/design/stores/app";
 
 // import CpDrop from "@cp-print/design/components/cp/drop";
@@ -478,9 +471,9 @@ function elementListNone() {
 
 watch([() => panel.width, () => panel.height], (_w, _h) => {
   // console.log(stringify(panel, 'parent', 'runtimeOption'))
-  nextTick(() => {
-    initPanelDiv(panel, designScrollRef.value)
-  })
+  // nextTick(() => {
+  //   initPanelDiv(panel, designScrollRef.value)
+  // })
   
 })
 

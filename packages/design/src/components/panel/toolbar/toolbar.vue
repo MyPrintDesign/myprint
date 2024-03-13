@@ -33,13 +33,14 @@ import {inject} from 'vue'
 import StyleDesign from "./styleDesign.vue";
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
 import {i18n} from "@cp-print/design/locales";
-import {clearPanel} from "@cp-print/design/utils/elementUtil";
+import {clearPanel, displayModel} from "@cp-print/design/utils/elementUtil";
 import {ActionEnum, record, Snapshot} from "@cp-print/design/utils/historyUtil";
 
 const panel = inject(panelKey)
 const mitt = inject(mittKey)!
 
 function preview() {
+  displayModel('preview')
   mitt.emit('previewPanel', {} as any)
 }
 

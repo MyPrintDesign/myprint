@@ -5,6 +5,7 @@ export const mouseEventType = {
     UP: 'mouseup'
 }
 
+
 // 获取rect模型
 export function getSize(el: HTMLElement) {
     const rect = el.getBoundingClientRect();
@@ -64,3 +65,42 @@ export function removeEvent(el: any, event: any, handler: any) {
         el["on" + event] = null;
     }
 }
+
+export const tableColClone = {
+    showIs: false,
+    clonedTable: document.createElement('table'),
+    init() {
+        this.clonedTable.classList.add("cp-print-table")
+        this.clonedTable.classList.add("cp-print-table-clone-drag")
+    },
+
+    show(columnLeft: number, columnTop: number, width: number, height: number | undefined, rows: any, colIndex: number) {
+        if (this.showIs) {
+            return
+        }
+        this.showIs = true
+        this.clonedTable.style.left = columnLeft-0.5 + 'px'
+        this.clonedTable.style.top = (columnTop-0.5) + 'px'
+        this.clonedTable.style.width = width+1 + 'px'
+        this.clonedTable.style.height = (height!-1) + 'px'
+
+        // 复制选中列的所有单元格并添加到新的表格中
+        for (let i = 0; i < rows.length; i++) {
+            const clonedCell = rows[i].cells[colIndex].cloneNode(true)
+            this.clonedTable.appendChild(document.createElement('tr')).appendChild(clonedCell);
+        }
+        document.body.appendChild(this.clonedTable)
+    },
+    move(columnLeft: number) {
+        this.clonedTable.style.left = columnLeft + 'px'
+    },
+    hidden() {
+        if (!this.showIs) {
+            return
+        }
+        this.showIs = false
+        this.clonedTable.innerHTML = ''
+        document.body.removeChild(this.clonedTable)
+    }
+}
+tableColClone.init()

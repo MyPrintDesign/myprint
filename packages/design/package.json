@@ -46,6 +46,7 @@
     "html2canvas": "^1.4.1",
     "jsbarcode": "^3.11.5",
     "jspdf": "^2.5.1",
+    "lodash": "^4.17.21",
     "moveable": "^0.53.0",
     "qrcode": "^1.5.3",
     "selecto": "^1.26.3",

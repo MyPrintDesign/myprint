@@ -119,8 +119,16 @@
   }
 }
 
-.cursor-resize[data-rotation="-2"] {
+.cursor-resize[data-rotation="rotate"] {
   cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32px" height="32px" viewBox="0 0 32 32" ><path d="M7.9,15.1c-4,0-7.3-3.3-7.3-7.3s3.3-7.3,7.3-7.3c1.7,0,3.4,0.6,4.7,1.7l0.9-0.9c0.2-0.2,0.4-0.3,0.7-0.3   c0.1,0,0.3,0,0.4,0.1c0.4,0.2,0.6,0.5,0.6,0.9v4c0,0.5-0.4,1-1,1h-4c-0.4,0-0.7-0.2-0.9-0.6C9.1,6.2,9.2,5.7,9.5,5.5l0.9-0.9   C9.7,4,8.8,3.7,7.9,3.7c-2.3,0-4.2,1.9-4.2,4.2c0,2.3,1.9,4.2,4.2,4.2c1.3,0,2.5-0.6,3.3-1.6c0.1-0.1,0.3-0.2,0.5-0.3c0,0,0,0,0,0   c0.2,0,0.4,0.1,0.5,0.2l1.2,1.3c0.2,0.2,0.3,0.6,0,0.9C12.1,14.2,10,15.1,7.9,15.1z" stroke-linejoin="round" stroke-width="1.2" stroke="white" fill="black"></path></svg>') 10 10, alias !important;
+}
+
+.cursor-resize[data-rotation="move"] {
+  cursor: move !important;
+}
+
+.cursor-resize[data-rotation="col-resize"] {
+  cursor: col-resize !important;
 }
 
 .cursor-move {

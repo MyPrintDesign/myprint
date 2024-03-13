@@ -1,11 +1,11 @@
 import {parse, stringify} from "@cp-print/design/utils/utils";
 import {unit2px, px2unit} from "@cp-print/design/utils/devicePixelRatio";
-import {nextTick, reactive,Ref} from "vue";
-import {FormatterVariable, Panel, PreviewWrapper, RuntimeElementOption} from "@cp-print/design/types/entity";
+import {nextTick, reactive, Ref} from "vue";
+import {CpElement, FormatterVariable, Panel, PreviewWrapper, RuntimeElementOption} from "@cp-print/design/types/entity";
 import {copyElementRefValueId, formatter, getCurrentPanel, initElement} from "@cp-print/design/utils/elementUtil";
 import numberUtil from "@cp-print/design/utils/numberUtil";
 
-export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLDivElement[]|undefined>, itemRefs: any, previewData: Ref<any>) {
+export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLDivElement[] | undefined>, itemRefs: any, previewData: Ref<any>) {
     // console.log(itemRefs)
 
     const data = {
@@ -38,8 +38,8 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
     let offsetLastElementTop = 0
 
     for (let previewWrapper of previewElementList) {
-        previewWrapper.offsetLastElementTop = numberUtil.subScale(previewWrapper.element!.y, offsetLastElementTop)
-        offsetLastElementTop = numberUtil.sumScale(previewWrapper.element!.y, previewWrapper.element!.height)
+        previewWrapper.offsetLastElementTop = numberUtil.subScale(previewWrapper.element.y, offsetLastElementTop)
+        offsetLastElementTop = numberUtil.sumScale(previewWrapper.element.y, previewWrapper.element.height)
         // console.log(previewWrapper.element.y, offsetLastElementTop, previewWrapper.element.label, previewWrapper)
     }
 
@@ -78,7 +78,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
         if (element.type == 'HorizontalLine' || element.type == 'VerticalLine'
             || element.type == 'DottedHorizontalLine' || element.type == 'DottedVerticalLine'
             || element.type == 'Rect') {
-            data.currentPage!.elementList!.push(previewWrapper);
+            data.currentPage.elementList.push(previewWrapper);
             await nextTick()
         } else {
             // 需要data
@@ -105,7 +105,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
                 await nextTick()
             } else if (element.type == 'Text' || element.type == 'PageNum' || element.type == 'TextTime') {
                 if (element.contentType == 'Text') {
-                    previewContext.elementChangeHeightIs = await autoTextElement(previewWrapper, previewDataTmp)
+                    previewContext.elementChangeHeightIs = await autoTextElement(previewWrapper, previewDataTmp, true)
                 }
                 if (element.contentType == 'QrCode') {
                     data.currentPage!.elementList!.push(previewWrapper);
@@ -115,7 +115,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
                     data.currentPage!.elementList!.push(previewWrapper);
                     await nextTick()
                 }
-            } else if (element.type == 'Table') {
+            } else if (element.type == 'DataTable') {
                 element.runtimeOption = parse(stringify(element.runtimeOption, 'parent'), {} as RuntimeElementOption)
                 element.runtimeOption.rowList = reactive([])
                 previewContext.elementChangeHeightIs = (await autoTableRow(previewWrapper, previewDataTmp, 0))!
@@ -131,16 +131,27 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
         previewContext.lastPreviewWrapper = previewWrapper
     }
 
-    async function autoTextElement(previewWrapper: PreviewWrapper, previewData: string) {
+    async function autoTextElement(previewWrapper: PreviewWrapper, previewData: string, first: boolean) {
         // let previewWrapper = {element: element} as PreviewWrapper
         let element = previewWrapper.element!
         element.data = previewData
+        previewWrapper.element.previewRuntimeOption.heightIs = false
         data.currentPage!.elementList!.push(previewWrapper);
         await nextTick()
         console.log(previewData)
 
         const height = itemRefs[previewWrapper.element!.id].$el.clientHeight;
-        // const height = itemRefs[previewWrapper.element.id].clientHeight;
+
+        console.log(previewWrapper.element.id, height, previewWrapper.element.runtimeOption.height)
+        if (first && height < previewWrapper.element.runtimeOption.height) {
+            previewWrapper.element.previewRuntimeOption.heightIs = true
+            console.log('大')
+            return false
+        } else {
+            console.log('小')
+            // previewWrapper.element.previewRuntimeOption.heightIs = false
+        }
+
         console.log(height)
         if (previewWrapper.element!.y! + px2unit(height) < data.bottom) {
             return false
@@ -158,7 +169,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
             previewWrapper.element = element
             element.y = data.top
             // console.log(element)
-            await autoTextElement(previewWrapper, previewData.substring(mid + 1, previewData.length))
+            await autoTextElement(previewWrapper, previewData.substring(mid + 1, previewData.length), false)
             return true
             // data.currentPage.offsetTop = computeBottom({element: element} as PreviewWrapper)
         }
@@ -185,11 +196,12 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
                 datum['autoIncrement'] = i + 1
                 // console.log(i + 1)
             }
-            const rowList = []
-            for (let j = 0; j < element.columnList!.length; j++) {
-                initElement(element.columnList![j], j)
-                element.columnList![j].data = datum[element.columnList![j].field!]
-                rowList.push(copyElementRefValueId(element.columnList![j]))
+            const rowList: CpElement[] = []
+            for (let j = 0; j < element.headList.length; j++) {
+                initElement(element.headList[j], j)
+                const head = element.headList[j]
+                element.headList[j].data = datum[head.field!]
+                rowList.push(copyElementRefValueId(head))
             }
             element.runtimeOption.rowList!.push(rowList)
             await nextTick()
@@ -278,7 +290,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
         const itemRef = itemRefs[previewWrapper.element!.id];
         // console.log(div)
         if (!itemRef) {
-            debugger
+            // debugger
             console.log(itemRef)
             return
         }

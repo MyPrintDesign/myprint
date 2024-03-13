@@ -9,9 +9,9 @@
 <script setup lang="ts">
 
 import {computed, CSSProperties} from "vue";
-import {CpElement, PreviewWrapper} from "../../types/entity";
-import {valueUnit} from "../../utils/elementUtil";
-import Preview from "./preview.vue";
+import {CpElement, PreviewWrapper} from "../design/src/types/entity";
+import {valueUnit} from "../design/src/utils/elementUtil";
+import Preview from "../design/src/components/preview/preview.vue";
 
 console.log({} as PreviewWrapper)
 const style = computed(() => {

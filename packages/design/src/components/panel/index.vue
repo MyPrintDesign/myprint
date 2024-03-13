@@ -15,17 +15,12 @@
 <script setup lang="ts">
 import Options from "./options/options.vue";
 import DesignContent from './content/index.vue'
-import {
-  inject,
-  onMounted, provide, reactive, Ref, ref, watch
-} from "vue";
-import {Container, CpElement, Panel, Provider} from "@cp-print/design/types/entity";
+import {inject, onMounted, provide, reactive, Ref, ref, watch} from "vue";
+import {Container, Panel, Provider} from "@cp-print/design/types/entity";
 import {to} from "@cp-print/design/utils/utils";
-import {
-  mittKey, panelKey, previewDataKey, providerKey
-} from "@cp-print/design/constants/keys";
+import {mittKey, panelKey, previewDataKey, providerKey} from "@cp-print/design/constants/keys";
 import {init} from "@cp-print/design/utils/historyUtil";
-import {setCurrentPanel, initElement, parentInitElement} from "@cp-print/design/utils/elementUtil";
+import {parentInitElement, setCurrentPanel} from "@cp-print/design/utils/elementUtil";
 import {Template} from "@cp-print/design/types/R";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 import CpMouseTips from "@cp-print/design/components/cp/cp-mouse-tips/cp-mouse-tips.vue";
@@ -102,9 +97,10 @@ watch(() => props.template.id, (n, _o) => {
     // console.log(provider.value.elementList)
     if (provider.value.elementList) {
       for (let elementListElement of provider.value.elementList) {
-        if (elementListElement.type == 'Table') {
+        if (elementListElement.type == 'DataTable') {
           let width = 0, height = 0
-          for (let columnListElement of elementListElement.columnList!) {
+          // console.log(elementListElement)
+          for (let columnListElement of elementListElement.headList) {
             width += columnListElement.width
             height = Math.max(height, columnListElement.height)
           }

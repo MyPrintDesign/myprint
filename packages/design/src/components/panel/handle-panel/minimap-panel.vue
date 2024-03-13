@@ -21,7 +21,7 @@
              :style="{left : valueUnit(element.x), top: valueUnit(element.y), width: valueUnit(element.width), height: valueUnit(element.height)}">
           <TextView v-if="element.type == 'Text'" :element="element"/>
           <ImageView v-if="element.type === 'Image'" :element="element"/>
-          <table-design v-if="element.type === 'Table'" :element="element"/>
+          <table-design v-if="element.type === 'DataTable'" :element="element"/>
           <RectView v-if="element.type === 'Rect'" :element="element"/>
           <horizontal-line v-if="element.type === 'HorizontalLine'" :element="element"/>
           <vertical-line v-if="element.type === 'VerticalLine'" :element="element"/>

@@ -6,13 +6,13 @@
       class="cp-print-text_container"
       ref="contentRef"
       :contentEditable="elementHandleEditStatusList.includes(element.runtimeOption.status)"
-      v-html="element.data"
+      v-html="data.content"
       :style="style"
       @input="handleInput"/>
 </template>
 <script setup lang="ts">
 
-import {computed, onMounted, watch, ref} from "vue";
+import {computed, onMounted, watch, ref, reactive} from "vue";
 import {CpElement} from "@cp-print/design/types/entity";
 import CpBarcode from "@cp-print/design/components/design/barcode";
 import CpQrcode from "@cp-print/design/components/design/qrcode";
@@ -30,11 +30,16 @@ const props = withDefaults(defineProps<{
   element: () => ({} as CpElement)
 })
 const contentRef = ref()
+const data = reactive({
+  content: ''
+})
 onMounted(() => {
+  data.content = props.element.data
   if (props.element.data == null) {
-    const data = formatter(props.element)
-    if (data != null) {
-      props.element.data = data
+    const elementData = formatter(props.element)
+    if (elementData != null) {
+      props.element.data = elementData
+      data.content = elementData
     }
   }
 })
@@ -74,6 +79,12 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
     contentRef.value.addEventListener('click', click);
   } else {
     contentRef.value.removeEventListener('click', click);
+  }
+})
+
+watch(() => props.element.data, (n, _o) => {
+  if (data.content !== props.element.data) {
+    data.content = props.element.data
   }
 })
 

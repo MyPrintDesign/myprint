@@ -39,6 +39,7 @@ export interface Container extends Point, ElementRelation {
     minWidth: number;
     minHeight: number;
     type: elementType
+    visibility: 'visible' | 'hidden'
 
     /**
      * 运行时配置
@@ -65,7 +66,7 @@ export interface Panel extends Container {
 
 
 export interface PreviewWrapper {
-    element: CpElement | undefined
+    element: CpElement
     offsetLastElementTop: number
 }
 
@@ -83,7 +84,8 @@ export const elementTypeFormat = {
     Text: '文本',
     TextTime: '时间文本',
     Image: '图片',
-    Table: '表格',
+    DataTable: '数据表格',
+    FREETable: '自由表格',
     Rect: '矩形',
     HorizontalLine: '横线',
     DottedHorizontalLine: '横虚线',
@@ -108,10 +110,16 @@ export const elementTypeFormat = {
     PrivateDragRectElement: '内置框选',
 }
 
+export const tableTrTypeFormat = {
+    Head: '',
+    Body: '',
+}
+
 export type DisplayModel = 'design' | 'preview'
 export type PageUnit = 'px' | 'mm' | 'cm' | 'in'
 
 export type elementType = keyof typeof elementTypeFormat
+export type tableTrType = keyof typeof tableTrTypeFormat
 
 type textContentType =
     'Text'
@@ -137,14 +145,17 @@ export interface CpElement extends Container {
     label?: string
     data?: any
 
-    columnList: CpElement[]
+    headList: CpElement[]
+    bodyList: CpElement[][]
     columnBody: CpElement
     option: ElementOption
     svgOption: ElementSvgOption
 
     columnOption: ElementSvgOption
     bodyOption: ElementSvgOption
-
+    previewRuntimeOption: {
+        heightIs: boolean
+    }
     /**
      * 是否锁定
      */
@@ -170,10 +181,6 @@ export interface RuntimeElementOption extends Position {
     width: number
     height: number
     translate: Point
-    // TL: Position
-    // TR: Position
-    // BL: Position
-    // BR: Position
     bounds: Position
     parent?: Container
     target?: any
@@ -185,16 +192,15 @@ export interface RuntimeElementOption extends Position {
      * 工作环境，如果是在表格中，填充满整个cell
      */
     workEnvironment: elementType
+    tableTrType: tableTrType
 
     rowList?: Array<CpElement[]>
 
+    // 是否拖拽进入
     dragInIs: boolean
 
     // 下标
     index: number
-
-    // onDragStart: () => void
-    // onDragEnd: () => void
 }
 
 export interface ElementOption {

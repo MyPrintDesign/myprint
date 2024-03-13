@@ -1,7 +1,7 @@
 import {clearEventBubble} from "./event"
 import {CpElement, Panel} from "@cp-print/design/types/entity";
 import {displayRatio, unit2px} from "@cp-print/design/utils/devicePixelRatio";
-import {arrayIndexOf, arrayRemove} from "@cp-print/design/utils/arrays";
+// import {arrayIndexOf, arrayRemove} from "@cp-print/design/utils/arrays";
 // @ts-ignore
 import * as mittInit from 'mitt'
 import {fontList} from "@cp-print/design/constants/common";
@@ -10,15 +10,25 @@ let collapsePanelZIndex = 1000
 
 export const mitt = mittInit.default()
 
-export function sortColumn(arr: any, dragData: any, b: any, flag: any) {
-    arrayRemove(arr, dragData)
-    // console.log(arr)
-    let index = arrayIndexOf(arr, b)
-    // console.log(index, flag)
-    arr.splice(flag ? index : index + 1, 0, dragData)
-    for (let i = 0; i < arr.length; i++) {
-        arr[i].option.sort = i;
+export function sortColumn(cpElement: CpElement, sourceIndex: any, targetIndex: any) {
+    // console.log(sourceIndex, targetIndex)
+    const source = cpElement.headList[sourceIndex]
+    cpElement.headList.splice(sourceIndex, 1)
+
+    cpElement.headList.splice(targetIndex, 0, source)
+
+    for (let bodyRowList of cpElement.bodyList) {
+
+        const source = bodyRowList[sourceIndex]
+        bodyRowList.splice(sourceIndex, 1)
+
+        bodyRowList.splice(targetIndex, 0, source)
     }
+
+    // for (let i = 0; i < arr.length; i++) {
+    //     console.log(arr[i])
+    //     arr[i].option.sort = i;
+    // }
 }
 
 export function click(ev: any, realFun: () => void) {

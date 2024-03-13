@@ -1,5 +1,5 @@
 import {defineStore} from 'pinia'
-import {PageUnit, Panel} from "@cp-print/design/types/entity";
+import {DisplayModel, PageUnit, Panel} from "@cp-print/design/types/entity";
 import {defaultElement} from "@cp-print/design/constants/common";
 import i18n from '../locales'
 
@@ -7,6 +7,7 @@ export const useAppStoreHook = defineStore('app', {
     state: () => {
         return {
             locale: localStorage.getItem('lang') || 'zhCn',
+            displayModel: 'design' as DisplayModel,
             client: {
                 connect: false
             },
@@ -19,7 +20,7 @@ export const useAppStoreHook = defineStore('app', {
             currentPanel: {} as Panel,
             lastPageUnit: 'px' as PageUnit,
             currentElement: defaultElement,
-            dataRotation: -1
+            dataRotation: -1 as number | "rotate" | "move" | "none" | "col-resize"
         }
     },
     actions: {

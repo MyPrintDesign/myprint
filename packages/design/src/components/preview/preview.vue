@@ -3,7 +3,7 @@
        ref="previewWrapRef"
        :style="style">
     <element-view :element="element"/>
-    <TableView v-if="element!.type === 'Table'" :element="element"/>
+    <TableView v-if="element!.type === 'DataTable'" :element="element"/>
     <!--    <preview-container v-if="element.type === 'PageHeader'" :element="element"/>-->
     <!--    <preview-container v-if="element.type === 'PageFooter'" :element="element"/>-->
   
@@ -24,14 +24,20 @@ const style = computed(() => {
     left: valueUnit(element.value!.x),
     top: valueUnit(element.value!.y),
   } as CSSProperties
+  if (element.value.previewRuntimeOption.heightIs) {
+    _style.height = valueUnit(element.value!.height)
+  }
+  console.log('change', element.value.previewRuntimeOption.heightIs)
   // _style.transform = getTranslate(element.value!)
   return _style
 })
 const props = withDefaults(defineProps<{
-  preview?: PreviewWrapper
+  preview: PreviewWrapper
 }>(), {
   preview: () => ({} as PreviewWrapper)
 })
-const element = computed(() => props.preview.element)!
+// console.log(props.preview)
+
+const element = computed(() => props.preview.element)
 
 </script>

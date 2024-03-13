@@ -1,5 +1,5 @@
 <template>
-  <div class="design-panel-container">
+  <div class="design-panel-container" v-show="useAppStoreHook().displayModel == 'design'">
     <Toolbar/>
     <div class="display-flex design-panel-container-height design-panel-wrapper">
       <cp-panel/>
@@ -14,21 +14,13 @@
       </div>
       <minimap-panel/>
     </div>
-    <!--      <div class="display-flex width-100-p">-->
-    <!--        -->
-    <!--        -->
-    
-    <!--      </div>-->
   </div>
   <preview-panel/>
 </template>
 
 <script setup lang="ts">
 // import { ElScrollbar } from 'element-plus'
-import {
-  // inject,
-  onMounted
-} from "vue";
+import {onMounted} from "vue";
 
 import Toolbar from '../toolbar/toolbar.vue'
 import PreviewPanel from "../../preview/previewPanel.vue";
@@ -43,6 +35,7 @@ import OperationPanel from "../handle-panel/operation-panel.vue";
 import SettingPanel from "../handle-panel/setting/setting-panel.vue";
 import {useConfigStore} from "@cp-print/design/stores/config";
 import MinimapPanel from "@cp-print/design/components/panel/handle-panel/minimap-panel.vue";
+import {useAppStoreHook} from "@cp-print/design/stores/app";
 
 const configStore = useConfigStore()
 

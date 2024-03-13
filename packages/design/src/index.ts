@@ -5,7 +5,7 @@ import CpDottedVerticalLine from './components/design/auxiliary/line/dottedVerti
 import CpHorizontalLine from './components/design/auxiliary/line/horizontalLine'
 import CpVerticalLine from './components/design/auxiliary/line/verticalLine'
 import CpPageHeader from './components/design/container/pageHeader'
-import CpPageFooter from './components/design/container/pageFooter'
+// import CpPageFooter from './components/design/container/pageFooter'
 import CpPanel from './components/panel'
 // import CpTest from './components/test/index.vue'
 import CpTest from './components/design/svg/test.vue'
@@ -25,7 +25,7 @@ export {
     CpHorizontalLine,
     CpVerticalLine,
     CpPageHeader,
-    CpPageFooter,
+    // CpPageFooter,
 
     CpPanel,
 }

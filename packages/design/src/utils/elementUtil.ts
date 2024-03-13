@@ -1,52 +1,50 @@
 import {
-    Container, DisplayModel,
+    Container,
     CpElement,
+    CpHtmlElement,
+    DisplayModel,
     ElementOption,
-    elementType, FormatterVariable,
+    elementType,
+    FormatterVariable,
+    PageUnit,
     Panel,
+    Point,
+    PointLabel,
     Position,
-    RuntimeElementOption, PageUnit, PointLabel, CpHtmlElement, Point
+    RuntimeElementOption
 } from "@cp-print/design/types/entity";
 import {
     canMoveStatusList,
-    defaultDragRectElement, elementTypeLineList,
+    defaultDragRectElement,
+    elementTypeLineList,
     handleConstantsType
 } from "@cp-print/design/constants/common";
 import {mitt, to} from "./utils";
 import {_defaultNum} from "@cp-print/design/utils/numberUtil";
-import {reactive, CSSProperties} from "vue";
+import {CSSProperties, reactive} from "vue";
 import {formatDate} from "./timeUtil";
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {arrayRemove} from "@cp-print/design/utils/arrays";
 import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
 import {updatePanel} from "@cp-print/design/components/moveable/moveable";
 
-let runtime = {
-    displayModel: 'design' as DisplayModel
-}
-
 export function displayModel(displayModel?: DisplayModel) {
     if (displayModel) {
-        runtime.displayModel = displayModel
+        appStore().displayModel = displayModel
     }
-    return runtime.displayModel
+    return appStore().displayModel
 }
 
 export function displayModelPreview() {
-    return runtime.displayModel != 'preview'
+    return appStore().displayModel != 'preview'
 }
 
 export function setCurrentPanel(panel: Panel) {
-    // currentPanel = panel
-    // console.log(JSON.stringify(panel))
-    // console.log("useappStore().SET_LOCALE(\"123\")")
     appStore().currentPanel = panel
     appStore().lastPageUnit = panel.pageUnit
 }
 
 export function getCurrentPanel(): Panel {
-    // console.log("useappStore().SET_LOCALE(\"123\")")
-    // console.log(JSON.stringify(appStore().currentPanel))
     return appStore().currentPanel as Panel
 }
 
@@ -59,11 +57,11 @@ export function valueUnit(value: number | undefined) {
 }
 
 export function widthValueUnit(element: CpElement) {
-    return element.runtimeOption.workEnvironment == 'Table' ? '100%' : (element.width + getCurrentPanel().pageUnit)
+    return element.runtimeOption.workEnvironment == 'DataTable' ? '100%' : (element.width + getCurrentPanel().pageUnit)
 }
 
 export function heightValueUnit(element: CpElement) {
-    return element.runtimeOption.workEnvironment == 'Table' ? '100%' : (element.height + getCurrentPanel().pageUnit)
+    return element.runtimeOption.workEnvironment == 'DataTable' ? '100%' : (element.height + getCurrentPanel().pageUnit)
 }
 
 export function width(element: CpElement) {
@@ -97,20 +95,6 @@ export function clearPanel(panel?: Panel) {
     panel!.pageHeader = undefined
     panel!.pageFooter = undefined
     panel!.elementList = []
-}
-
-export function getTranslate(_element: CpElement) {
-    // let translate = ''
-    // if (_element.translateX || _element.translateY) {
-    //     translate = `translate(${valueUnit(_element.translateX)}, ${valueUnit(_element.translateY)})`
-    // }
-    // if (_element.option.rotate != null) {
-    //     translate = translate + `rotate(${_element.option.rotate}deg)`
-    // }
-    // if (translate) {
-    //     return translate
-    // }
-    // return 'none'
 }
 
 export function none(element?: CpElement) {
@@ -157,7 +141,7 @@ export function computedHandles(element: Container): Array<handleConstantsType> 
     if (element.type == 'PageFooter') {
         return ['tm']
     }
-    if (element.type == 'Table') {
+    if (element.type == 'DataTable') {
         return ['lm', 'rm']
     }
     return undefined
@@ -217,7 +201,7 @@ export function disableHandleList(element: CpElement) {
             break
         case 'Image':
             return ['tm', 'bm', 'lm', 'rm']
-        case 'Table':
+        case 'DataTable':
             return ['tl', 'tm', 'tr', 'bl', 'bm', 'br']
         case 'HorizontalLine':
         case 'DottedHorizontalLine':
@@ -255,85 +239,108 @@ export function initElement(element: CpElement, index: number) {
     element.runtimeOption.index = index
     element.runtimeOption.status = 'NONE'
 
+    let initWidth = 0, initHeight = 0, initBorderWidth = 0
+
     if (!element.id) {
         element.id = crypto.randomUUID()
-    }
-    let initWidth = 0, initHeight = 0, initBorderWidth = 0
-    switch (element.type) {
-        case 'Text':
-            initWidth = 30
-            initHeight = 8
-            break
-        case 'Table':
-            initWidth = 200
-            initHeight = 30
 
-            if (element.option.tableHeightType == null) {
-                element.option.tableHeightType = "AUTO"
-                // element.option.tableHeightType = "FIXED"
-            }
+        switch (element.type) {
+            case 'Text':
+                initWidth = 30
+                initHeight = 8
+                break
+            case 'DataTable':
+                initWidth = 200
+                initHeight = 30
 
-            let maxHeadHeight = -1, maxBodyHeight = -1;
-            for (let i = 0; i < element.columnList.length; i++) {
-                const column = element.columnList[i];
-                initElement(column, i)
-                if (column.columnBody == undefined) {
-                    // debugger
-                    column.columnBody = {
-                        height: column.height,
-                        data: column.data,
+                if (element.option.tableHeightType == null) {
+                    element.option.tableHeightType = "AUTO"
+                    // element.option.tableHeightType = "FIXED"
+                }
+
+                if (element.bodyList == undefined) {
+                    element.bodyList = [[]]
+
+                    let indexView = {
                         type: "Text",
-                        option: column.option
+                        option: <ElementOption>{
+                            disableSort: true,
+                            disableEnable: false,
+                            enable: true,
+                            formatter: '{{autoIncrement}}',
+                        }
+                    } as CpElement;
+                    indexView.field = 'autoIncrement'
+                    indexView.label = '序号'
+
+                    indexView.columnBody = {
+                        type: "Text",
+                        data: "1",
+                        option: {...indexView.option}
                     } as CpElement
-                }
-                if (column.columnBody.type == null) {
-                    column.columnBody.type = 'Text'
-                }
-                if (column.columnBody.data == null) {
-                    column.columnBody.data = column.data
-                }
-                column.type = 'Text'
-                column.data = column.label
-                initElement(column.columnBody, element.columnList.length + i)
 
-                if (maxHeadHeight < column.height) {
-                    maxHeadHeight = column.height
-                }
-                if (maxBodyHeight < column.columnBody.height) {
-                    maxBodyHeight = column.columnBody.height
-                }
-            }
+                    element.headList.unshift(indexView)
 
-            // console.log(maxHeadHeight + maxBodyHeight)
-            if (element.option.tableHeightType == "AUTO") {
-                element.height = maxHeadHeight + maxBodyHeight
-            }
-            break
-        case 'Image':
-            initWidth = 30
-            initHeight = 30
-            break
-        case 'Rect':
-            initWidth = 30
-            initHeight = 30
-            initBorderWidth = px2unit(1)
-            break
-        case 'HorizontalLine':
-        case 'DottedHorizontalLine':
-            initWidth = 30
-            initBorderWidth = px2unit(1)
-            initHeight = px2unit(initBorderWidth + 3)
-            break
-        case 'VerticalLine':
-        case 'DottedVerticalLine':
-            initHeight = 30
-            initBorderWidth = px2unit(1)
-            initWidth = px2unit(initBorderWidth + 3)
-            break
+                    let maxHeadHeight = -1, maxBodyHeight = -1;
+                    for (let i = 0; i < element.headList.length; i++) {
+                        const column = element.headList[i];
+                        if (column.columnBody == undefined) {
+                            column.columnBody = {
+                                height: column.height,
+                                data: column.data,
+                                type: "Text",
+                                option: column.option
+                            } as CpElement
+                        }
+                        if (column.columnBody.type == null) {
+                            column.columnBody.type = 'Text'
+                        }
+                        if (column.columnBody.data == null) {
+                            column.columnBody.data = column.data
+                        }
+                        column.type = 'Text'
+                        column.data = column.label
+
+                        element.bodyList[0].push(column.columnBody)
+
+                        if (maxHeadHeight < column.height) {
+                            maxHeadHeight = column.height
+                        }
+                        if (maxBodyHeight < column.columnBody.height) {
+                            maxBodyHeight = column.columnBody.height
+                        }
+
+                        column.columnBody = undefined!
+                    }
+
+                    if (element.option.tableHeightType == "AUTO") {
+                        element.height = maxHeadHeight + maxBodyHeight
+                    }
+                }
+                break
+            case 'Image':
+                initWidth = 30
+                initHeight = 30
+                break
+            case 'Rect':
+                initWidth = 30
+                initHeight = 30
+                initBorderWidth = px2unit(1)
+                break
+            case 'HorizontalLine':
+            case 'DottedHorizontalLine':
+                initWidth = 30
+                initBorderWidth = px2unit(1)
+                initHeight = px2unit(initBorderWidth + 3)
+                break
+            case 'VerticalLine':
+            case 'DottedVerticalLine':
+                initHeight = 30
+                initBorderWidth = px2unit(1)
+                initWidth = px2unit(initBorderWidth + 3)
+                break
+        }
     }
-    // if (!element.status) {
-    //     element.status = 'NONE'
-    // }
 
     if (element.type == 'Text') {
         if (!element.contentType) {
@@ -341,7 +348,19 @@ export function initElement(element: CpElement, index: number) {
         }
     }
 
-    if (['Text', 'TextTime', 'PageNum', 'Table'].includes(element.type)) {
+    if (element.type == 'DataTable') {
+        for (let i = 0; i < element.headList.length; i++) {
+            const column = element.headList[i];
+            parentInitElement(element, column, i)
+            column.runtimeOption.workEnvironment = 'DataTable'
+            for (let j = 0; j < element.bodyList.length; j++) {
+                parentInitElement(element, element.bodyList[j][i], element.headList.length + i)
+                element.bodyList[j][i].runtimeOption.workEnvironment = 'DataTable'
+            }
+        }
+    }
+
+    if (['Text', 'TextTime', 'PageNum', 'DataTable'].includes(element.type)) {
         if (!element.option.fontFamily) {
             element.option.fontFamily = 'default'
         }
@@ -368,7 +387,7 @@ export function initElement(element: CpElement, index: number) {
     if (element.width == null) {
         element.width = initWidth
     }
-    // debugger
+
     if (element.height == null) {
         element.height = initHeight
     }
@@ -380,13 +399,12 @@ export function initElement(element: CpElement, index: number) {
     if (!element.option.rotate) {
         element.option.rotate = 0
     }
-    // rotatedPoint(element)
+
     if (element.option.padding == null) {
         element.option.padding = {} as Position
     }
     element.runtimeOption.init = {} as Container
     element.runtimeOption.init.runtimeOption = {} as RuntimeElementOption
-    // console.log(appStore().lastPageUnit)
     element.runtimeOption.width = unit2px(element.width)
     element.runtimeOption.height = unit2px(element.height)
     element.runtimeOption.x = unit2px(element.x)
@@ -534,6 +552,7 @@ export function clearPanelParent(panel: Panel) {
 export function copyElementRefValueId(element: CpElement) {
     element = to(element, reactive({}) as CpElement)
     element.id = crypto.randomUUID()
+    element.previewRuntimeOption = {heightIs: true}
     return element
 }
 
@@ -582,7 +601,7 @@ export function addElement(parent: Container, element: CpElement) {
         parent.elementList = []
     }
     parent.elementList.push(element)
-    initElement(element, parent.elementList.length)
+    initElement(element, parent.elementList.length - 1)
     installParentElement(parent, element)
 }
 
@@ -695,10 +714,17 @@ export function elementCommonStyle(element: CpElement, cssStyle?: CSSProperties)
         cssStyle.alignItems = option.verticalAlign
     }
 
-    if (option.borderAll) {
-        cssStyle.border = '1px solid black'
-        cssStyle.boxSizing = 'border-box'
+    if (element.runtimeOption.workEnvironment != 'DataTable') {
+        if (option.borderAll) {
+            cssStyle.border = '1px solid var(--tcolor)'
+            cssStyle.boxSizing = 'border-box'
+        }
+    } else {
+        cssStyle.height = element.runtimeOption.init.height + 'px'
+        cssStyle.maxHeight = element.runtimeOption.init.height + 'px'
+        cssStyle.overflow = 'hidden'
     }
+
 
     return cssStyle
 }
@@ -717,136 +743,6 @@ export function isPageFooter(element: Container) {
 
 export function isPanel(element: Container) {
     return element.type == 'Panel'
-}
-
-export function getMouseOffsetTop(panel: Panel, element: CpElement) {
-
-    const pageHeaderFooter = isPageHeaderFooter(element)
-
-    const parent = element.runtimeOption!.parent as Container
-    let top = panelDivPosition.top!
-    if (!pageHeaderFooter || !isPageHeaderFooter(parent)) {
-        top = top + unit2px(panel!.pageHeader?.height)
-    }
-
-    // console.log(parent)
-    if (isPanel(parent)) {
-        return top
-    }
-    if (isPageHeader(parent)) {
-        return top
-    }
-    if (isPageFooter(parent)) {
-        // console.log(panelDivPosition.top, mm2px(parent.y))
-        return top + unit2px(parent.y)
-    }
-    return top
-}
-
-export function getMouseOffsetBottom(panel: Panel, element: CpElement) {
-
-    const pageHeaderFooter = isPageHeaderFooter(element)
-
-    const parent = element.runtimeOption!.parent as Container
-    let bottom = panelDivPosition.bottom!
-    if (!pageHeaderFooter || !isPageHeaderFooter(parent)) {
-        bottom = bottom - unit2px(panel.pageHeader?.height)
-    }
-    if (isPanel(parent)) {
-        return bottom
-    }
-    if (isPageHeader(parent)) {
-        return bottom + unit2px(parent.height)
-    }
-    if (isPageFooter(parent)) {
-        // console.log(panelDivPosition.bottom)
-        return bottom
-    }
-    return bottom
-}
-
-export function clearOption(element: CpElement) {
-    if (element == null) {
-        return
-    }
-    // delete element.runtimeOption
-}
-
-// 返回相对于参考点旋转后的坐标
-// export function rotatedPoint(element: CpElement) {
-//     const {x, y, width, height} = element
-//     const centerX = x! + width / 2;
-//     const centerY = y! + height / 2;
-//     const rotate = element.option!.rotate ? element.option!.rotate : 0
-//     const runtimeOption = element.runtimeOption!
-//     // runtimeOption.TL = _rotatedPoint(centerX, centerY, x!, y!, rotate);
-//     // runtimeOption.TR = _rotatedPoint(centerX, centerY, x! + width, y!, rotate);
-//     // runtimeOption.BL = _rotatedPoint(centerX, centerY, x!, y! + height, rotate);
-//     // runtimeOption.BR = _rotatedPoint(centerX, centerY, x! + width, y! + height, rotate);
-//
-//     runtimeOption.bounds = {
-//         top: Math.min(runtimeOption.TL.y!, runtimeOption.TR.y!, runtimeOption.BL.y!, runtimeOption.BR.y!),
-//         bottom: Math.max(runtimeOption.TL.y!, runtimeOption.TR.y!, runtimeOption.BL.y!, runtimeOption.BR.y!),
-//         left: Math.min(runtimeOption.TL.x!, runtimeOption.TR.x!, runtimeOption.BL.x!, runtimeOption.BR.x!),
-//         right: Math.max(runtimeOption.TL.x!, runtimeOption.TR.x!, runtimeOption.BL.x!, runtimeOption.BR.x!)
-//     } as Position
-// }
-
-// function _rotatedPoint(originX: number, originY: number, offsetX: number, offsetY: number, rotate = 0): Position {
-//     const rad = (Math.PI / 180) * rotate;
-//     const cos = Math.cos(rad);
-//     const sin = Math.sin(rad);
-//     let x = offsetX - originX;
-//     let y = offsetY - originY;
-//     return {
-//         x: x * cos - y * sin + originX,
-//         y: x * sin + y * cos + originY
-//     } as any
-// }
-
-
-// 根据相对坐标返回角度，正方形为顺时针
-export function getAngle(x: number, y: number) {
-    let theta = Math.atan2(y, x); // 正切转弧度
-    theta = Math.round((180 / Math.PI) * theta); // 弧度转角度
-    if (theta < 0) theta = 360 + theta; // 控制角度在0~360度
-    return theta; // 返回角度
-}
-
-export const panelDivPosition = reactive({}) as Position
-
-export function initPanelDiv(panel: Panel, el: HTMLElement) {
-    if (!panel.width) {
-        return
-    }
-    // console.log(123)
-    // console.log(stringify(panel, 'parent'))
-    // console.log(el)
-    const rect = el.getBoundingClientRect()
-    // console.log(JSON.stringify(rect))
-    panelDivPosition.left = rect.left
-    panelDivPosition.top = rect.top
-    panelDivPosition.right = rect.right
-    panelDivPosition.bottom = rect.bottom
-}
-
-export function dragLimit(element: CpElement) {
-    const {bounds, parent} = element.runtimeOption
-
-    let top = -bounds.top
-    let bottom = parent!.height - bounds.bottom
-
-    if (parent!.type == 'Panel') {
-        const panel = parent as Panel
-        top = -bounds.top + _defaultNum(panel.pageHeader?.height!, 0)
-        bottom = parent!.height - bounds.bottom - _defaultNum(panel.pageFooter?.height!, 0)
-    }
-    return {
-        left: -bounds.left,
-        right: parent!.width - bounds.right,
-        top: top,
-        bottom: bottom
-    } as Position
 }
 
 export function formatter(element: CpElement, variable: FormatterVariable = {}): string {
@@ -1059,8 +955,8 @@ export function multipleElementSetValue(props: string, val: any) {
 
         setNestedPropertyValue(currentElementElement, props, val)
 
-        if (currentElementElement.type == 'Table') {
-            for (let cpElement of currentElementElement.columnList) {
+        if (currentElementElement.type == 'DataTable') {
+            for (let cpElement of currentElementElement.headList) {
                 setNestedPropertyValue(cpElement, props, val)
                 setNestedPropertyValue(cpElement.columnBody, props, val)
             }

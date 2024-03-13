@@ -249,14 +249,14 @@ function dragStart(ev: MouseEvent) {
                   installParentElement(panel, element)
                 }
             ).end(() => {
-          if (element.type == 'Table') {
-            for (let i = 0; i < element.columnList!.length; i++) {
-              // element.columnList[i] = to(element.columnList[i], {} as Element)
-              initElement(element.columnList![i], i)
-            }
-          }
+          // if (element.type == 'Table') {
+          //   for (let i = 0; i < element.headList!.length; i++) {
+          //     initElement(element.headList![i], i)
+          //   }
+          // }
           addElement(panel, element)
         })
+        console.log(panel)
       }
       
       nextTick(() => {

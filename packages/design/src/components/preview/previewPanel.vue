@@ -24,7 +24,8 @@
                 <preview
                     v-for="(element, index) in page.elementList"
                     :ref="(el) => setItemRef(el, element.element)"
-                    :key="index" :preview="element"/>
+                    :key="index"
+                    :preview="element"/>
               </div>
             </div>
           </div>
@@ -62,18 +63,16 @@
 
 <script setup lang="ts">
 // import { ElDialog, ElScrollbar, ElButton, ElSelect, ElOption } from 'element-plus'
-import {ref, inject, onMounted, reactive} from "vue";
+import {inject, onMounted, reactive, ref} from "vue";
 import {toPdf} from "@cp-print/design/utils/pdfUtil";
 import {download, printCssStyle} from "@cp-print/design/utils/utils";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import Preview from "./preview.vue";
 import {CpElement, Panel} from "@cp-print/design/types/entity";
-import {
-  messageFun, mittKey, panelKey, previewDataKey
-} from "@cp-print/design/constants/keys";
+import {messageFun, mittKey, panelKey, previewDataKey} from "@cp-print/design/constants/keys";
 import {useSocket} from "@cp-print/design/stores/socket";
 import {i18n} from "@cp-print/design/locales";
-import {valueUnit} from "@cp-print/design/utils/elementUtil";
+import {displayModel, valueUnit} from "@cp-print/design/utils/elementUtil";
 import {useConfigStore} from "@cp-print/design/stores/config";
 import {autoPage} from "./autoPage";
 
@@ -148,6 +147,7 @@ function previewPanel() {
 }
 
 function closePreviewPanel() {
+  displayModel('design')
   data.pageList = []
 }
 
