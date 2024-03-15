@@ -155,9 +155,9 @@ export interface CpElement extends Container {
 
     columnOption: ElementSvgOption
     bodyOption: ElementSvgOption
-    previewRuntimeOption: {
-        heightIs: boolean
-    }
+    // previewRuntimeOption: {
+    //     heightIs: boolean
+    // }
     /**
      * 是否锁定
      */

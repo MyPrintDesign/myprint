@@ -74,6 +74,7 @@ import {sortColumn} from "@cp-print/design/utils/utils";
 import {updateMoveableRect} from "@cp-print/design/components/moveable/moveable";
 import _ from 'lodash'
 import {setCurrentElement} from "@cp-print/design/utils/elementUtil";
+import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 
 const props = withDefaults(defineProps<{
   element: CpElement
@@ -114,20 +115,20 @@ let resizeObserver: ResizeObserver
 onMounted(() => {
   
   // 创建 ResizeObserver 实例
-  // resizeObserver = new ResizeObserver((entries) => {
-  //   // entries 是 ResizeObserverEntry 对象的数组
-  //   for (const entry of entries) {
-  //     // console.log(entry)
-  //     // entry.contentRect 包含元素的新尺寸
-  //     // console.log('元素尺寸改变:', entry.contentRect.width, entry.contentRect.height);
-  //     // props.element.runtimeOption.height = entry.contentRect.height + 1
-  //     // props.element.runtimeOption.init.height = props.element.runtimeOption.height
-  //     props.element.width = px2unit(props.element.runtimeOption.width)
-  //     // props.element.height = px2unit(props.element.runtimeOption.height)
-  //
-  //   }
-  // });
-  // resizeObserver.observe(tableRef.value.$el);
+  resizeObserver = new ResizeObserver((entries) => {
+    // entries 是 ResizeObserverEntry 对象的数组
+    for (const entry of entries) {
+      // console.log(entry)
+      // entry.contentRect 包含元素的新尺寸
+      // console.log('元素尺寸改变:', entry.contentRect.width, entry.contentRect.height);
+      props.element.runtimeOption.height = entry.contentRect.height + 1
+      props.element.runtimeOption.init.height = props.element.runtimeOption.height
+      props.element.width = px2unit(props.element.runtimeOption.width)
+      // props.element.height = px2unit(props.element.runtimeOption.height)
+
+    }
+  });
+  resizeObserver.observe(tableRef.value.$el);
   
   tableRef.value.$el.parentNode.addEventListener('mouseover', function (event: any) {
     const target = event.target;
@@ -156,7 +157,7 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-  // resizeObserver.disconnect()
+  resizeObserver.disconnect()
 })
 
 function controlPointMouseDown(ev: MouseEvent, col: number) {
@@ -331,11 +332,11 @@ function tableMouseDown(ev: MouseEvent) {
 }
 
 watch(() => props.element.option.tableHeightType, (n, _o) => {
-  // if (n == 'AUTO') {
-  //   resizeObserver.observe(tableRef.value.$el);
-  // } else {
-  //   resizeObserver.unobserve(tableRef.value.$el);
-  // }
+  if (n == 'AUTO') {
+    resizeObserver.observe(tableRef.value.$el);
+  } else {
+    resizeObserver.unobserve(tableRef.value.$el);
+  }
 })
 
 watch(() => props.element.runtimeOption.status, (n, _o) => {

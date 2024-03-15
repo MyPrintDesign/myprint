@@ -23,7 +23,7 @@
                     }">
                 <preview
                     v-for="(element, index) in page.elementList"
-                    :ref="(el) => setItemRef(el, element.element)"
+                    :ref="(el) => setItemRef(el, element)"
                     :key="index"
                     :preview="element"/>
               </div>

@@ -90,7 +90,7 @@ export const customProvider: Array<CpElement> = [
         ],
         "data": "自定义文本",
         "width": 200,
-        "height": 50
+        "height": 14
     } as any,
     {
         "type": "TextTime",

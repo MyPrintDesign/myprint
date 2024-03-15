@@ -1,13 +1,16 @@
 import {parse, stringify} from "@cp-print/design/utils/utils";
-import {unit2px, px2unit} from "@cp-print/design/utils/devicePixelRatio";
+import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {nextTick, reactive, Ref} from "vue";
 import {CpElement, FormatterVariable, Panel, PreviewWrapper, RuntimeElementOption} from "@cp-print/design/types/entity";
-import {copyElementRefValueId, formatter, getCurrentPanel, initElement} from "@cp-print/design/utils/elementUtil";
+import {copyElementRefValueId, formatter, getCurrentPanel} from "@cp-print/design/utils/elementUtil";
 import numberUtil from "@cp-print/design/utils/numberUtil";
 
-export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLDivElement[] | undefined>, itemRefs: any, previewData: Ref<any>) {
-    // console.log(itemRefs)
+interface PreviewContext {
+    elementChangeHeightIs: boolean,
+    currentPreview: PreviewWrapper
+}
 
+export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLDivElement[] | undefined>, itemRefs: any, previewData: Ref<any>) {
     const data = {
         panel: getCurrentPanel(),
         currentPage: {} as any,
@@ -26,170 +29,172 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
 
     // 处理elementWrapper
     const previewElementList = data.panel.elementList!.map(v => {
-        return {element: copyElementRefValueId(v)} as PreviewWrapper
+        return copyElementRefValueId(v) as PreviewWrapper
     })
 
     // 排序
     previewElementList.sort((o1, o2) => {
-        return o1.element!.y! - o2.element!.y!
+        return o1.y - o2.y
     })
 
     // 初始化element offsetTop
     let offsetLastElementTop = 0
 
     for (let previewWrapper of previewElementList) {
-        previewWrapper.offsetLastElementTop = numberUtil.subScale(previewWrapper.element.y, offsetLastElementTop)
-        offsetLastElementTop = numberUtil.sumScale(previewWrapper.element.y, previewWrapper.element.height)
+        previewWrapper.offsetLastElementTop = numberUtil.subScale(previewWrapper.y, offsetLastElementTop)
+        offsetLastElementTop = numberUtil.sumScale(previewWrapper.y, previewWrapper.height)
         // console.log(previewWrapper.element.y, offsetLastElementTop, previewWrapper.element.label, previewWrapper)
     }
 
     let previewContext = {
         elementChangeHeightIs: false,
-        lastPreviewWrapper: undefined as PreviewWrapper | undefined
-    }
+        currentPreview: undefined!
+    } as PreviewContext
 
     for (let i = 0; i < previewElementList.length; i++) {
         const previewWrapper = previewElementList[i];
-        let element = previewWrapper.element!
 
         // 计算顶部需不需要偏移
-        if (element.label == '文本1112') {
-            console.log(element.y)
+        if (previewWrapper.label == '文本1112') {
+            console.log(previewWrapper.y)
         }
-        // console.log(data.currentPage.offsetTop, previewWrapper.offsetLastElementTop)
-        if (data.currentPage!.offsetTop > 0) {
+        if (data.currentPage.offsetTop > 0) {
             if (previewContext.elementChangeHeightIs) {
-                element.y = numberUtil.sumScale(data.currentPage!.offsetTop, previewWrapper.offsetLastElementTop)
+                previewWrapper.y = numberUtil.sumScale(data.currentPage.offsetTop, previewWrapper.offsetLastElementTop)
             } else {
-                if (previewContext.lastPreviewWrapper) {
-                    element.y = previewContext.lastPreviewWrapper.element!.y! + previewContext.lastPreviewWrapper.element!.height + previewWrapper.offsetLastElementTop
+                if (previewContext.currentPreview) {
+                    previewWrapper.y = previewContext.currentPreview.y + previewContext.currentPreview.height + previewWrapper.offsetLastElementTop
                 }
             }
         }
 
         // 判断需不需要分页
-        if (data.currentPage!.elementList!.length > 0 && (await isNeedNewPage(element.y, data.bottom) || await isNeedNewPage(element.y! + element.height, data.bottom))) {
-            element.y = 1
+        if (data.currentPage.elementList.length > 0 && (await isNeedNewPage(previewWrapper.y, data.bottom) || await isNeedNewPage(previewWrapper.y + previewWrapper.height, data.bottom))) {
+            previewWrapper.y = 1
             data.currentPage!.offsetTop = 1
         }
 
         previewContext.elementChangeHeightIs = false
+        previewContext.currentPreview = previewWrapper
 
-        if (element.type == 'HorizontalLine' || element.type == 'VerticalLine'
-            || element.type == 'DottedHorizontalLine' || element.type == 'DottedVerticalLine'
-            || element.type == 'Rect') {
+        // 需要data
+        let previewDataTmp: any
+
+        if (previewWrapper.field) {
+            previewDataTmp = previewData.value[previewWrapper.field]
+        }
+
+        if (!previewDataTmp) {
+            previewDataTmp = formatter(previewWrapper, variable)
+        }
+
+        if (!previewDataTmp) {
+            previewDataTmp = previewWrapper.data
+        }
+
+        if (previewWrapper.type == 'Image') {
+            previewWrapper.data = previewDataTmp
             data.currentPage.elementList.push(previewWrapper);
             await nextTick()
-        } else {
-            // 需要data
-            let previewDataTmp: any
-
-            if (element.field) {
-                previewDataTmp = previewData.value[element.field]
+        } else if (previewWrapper.type == 'Text' || previewWrapper.type == 'PageNum' || previewWrapper.type == 'TextTime') {
+            if (previewWrapper.contentType == 'Text') {
+                previewContext.elementChangeHeightIs = await autoTextElement(previewContext, previewDataTmp, true)
             }
-
-            if (!previewDataTmp) {
-                previewDataTmp = formatter(element, variable)
-            }
-
-            if (!previewDataTmp) {
-                previewDataTmp = element.data
-            }
-
-            if (!previewDataTmp) {
-                continue
-            }
-            if (element.type == 'Image') {
-                element.data = previewDataTmp
-                data.currentPage!.elementList!.push(previewWrapper);
+            if (previewWrapper.contentType == 'QrCode') {
+                data.currentPage.elementList.push(previewWrapper);
                 await nextTick()
-            } else if (element.type == 'Text' || element.type == 'PageNum' || element.type == 'TextTime') {
-                if (element.contentType == 'Text') {
-                    previewContext.elementChangeHeightIs = await autoTextElement(previewWrapper, previewDataTmp, true)
-                }
-                if (element.contentType == 'QrCode') {
-                    data.currentPage!.elementList!.push(previewWrapper);
-                    await nextTick()
-                }
-                if (element.contentType == 'Barcode') {
-                    data.currentPage!.elementList!.push(previewWrapper);
-                    await nextTick()
-                }
-            } else if (element.type == 'DataTable') {
-                element.runtimeOption = parse(stringify(element.runtimeOption, 'parent'), {} as RuntimeElementOption)
-                element.runtimeOption.rowList = reactive([])
-                previewContext.elementChangeHeightIs = (await autoTableRow(previewWrapper, previewDataTmp, 0))!
             }
+            if (previewWrapper.contentType == 'Barcode') {
+                data.currentPage.elementList.push(previewWrapper);
+                await nextTick()
+            }
+        } else if (previewWrapper.type == 'DataTable') {
+            previewWrapper.runtimeOption = parse(stringify(previewWrapper.runtimeOption, 'parent', 'target'), {} as RuntimeElementOption)
+            previewContext.elementChangeHeightIs = await autoTableRow(previewContext, previewDataTmp, 0)
+        } else if (previewWrapper.type == 'Container') {
+            // element.runtimeOption = parse(stringify(element.runtimeOption, 'parent', 'target'), {} as RuntimeElementOption)
+            // previewContext.elementChangeHeightIs = await autoTableRow(previewWrapper, previewDataTmp, 0)
+            console.log(previewWrapper)
+            data.currentPage.elementList.push(previewWrapper);
+        } else {
+            // console.log(previewWrapper)
+            data.currentPage.elementList.push(previewWrapper);
         }
 
         if (previewContext.elementChangeHeightIs) {
             // 重新计算顶部偏移
-            data.currentPage!.offsetTop = await computeBottom(previewWrapper)
-            console.log("顶部偏移" + data.currentPage!.offsetTop)
+            data.currentPage.offsetTop = await computeBottom(previewWrapper)
+            console.log("顶部偏移" + data.currentPage.offsetTop)
         }
 
-        previewContext.lastPreviewWrapper = previewWrapper
+        previewContext.currentPreview = previewWrapper
     }
 
-    async function autoTextElement(previewWrapper: PreviewWrapper, previewData: string, first: boolean) {
-        // let previewWrapper = {element: element} as PreviewWrapper
-        let element = previewWrapper.element!
-        element.data = previewData
-        previewWrapper.element.previewRuntimeOption.heightIs = false
-        data.currentPage!.elementList!.push(previewWrapper);
+    async function autoTextElement(previewContext: PreviewContext, previewData: string, first: boolean) {
+        let previewWrapper = previewContext.currentPreview
+        previewWrapper.data = previewData
+        previewWrapper.heightIs = false
+        data.currentPage.elementList.push(previewWrapper);
         await nextTick()
-        console.log(previewData)
+        // console.log(previewData)
 
-        const height = itemRefs[previewWrapper.element!.id].$el.clientHeight;
+        const height = itemRefs[previewWrapper.id].$el.clientHeight;
 
-        console.log(previewWrapper.element.id, height, previewWrapper.element.runtimeOption.height)
-        if (first && height < previewWrapper.element.runtimeOption.height) {
-            previewWrapper.element.previewRuntimeOption.heightIs = true
-            console.log('大')
+        // console.log(previewWrapper.previewWrapper.id, height, previewWrapper.previewWrapper.runtimeOption.height)
+        if (first && height < previewWrapper.runtimeOption.height) {
+            previewWrapper.heightIs = true
+            console.log('小')
             return false
         } else {
-            console.log('小')
-            // previewWrapper.element.previewRuntimeOption.heightIs = false
+            // console.log('大')
+            // previewWrapper.previewWrapper.previewRuntimeOption.heightIs = false
         }
 
-        console.log(height)
-        if (previewWrapper.element!.y! + px2unit(height) < data.bottom) {
+        // console.log(height)
+        if (previewWrapper.y! + px2unit(height) < data.bottom) {
             return false
         } else {
-            console.log(element)
+            // console.log(previewWrapper)
         }
 
         let mid = await binary_search(previewWrapper, previewData, 1, previewData.length)
-        console.log(mid)
+        // console.log(mid)
 
         if (mid > 0 && mid < previewData.length) {
             console.log('文本分页')
             await newPage()
-            element = copyElementRefValueId(element)
-            previewWrapper.element = element
-            element.y = data.top
-            // console.log(element)
-            await autoTextElement(previewWrapper, previewData.substring(mid + 1, previewData.length), false)
+            previewContext.currentPreview = copyElementRefValueId(previewWrapper)
+            // previewWrapper.element = previewWrapper
+            previewContext.currentPreview.y = data.top
+            // console.log(previewWrapper)
+            await autoTextElement(previewContext, previewData.substring(mid + 1, previewData.length), false)
             return true
-            // data.currentPage.offsetTop = computeBottom({element: element} as PreviewWrapper)
+            // data.currentPage.offsetTop = computeBottom({previewWrapper: previewWrapper} as PreviewWrapper)
         }
 
         return false
     }
 
-    async function autoTableRow(previewWrapper: PreviewWrapper, previewData: Array<any>, index: number) {
-        // console.log(data)
-        // let previewWrapper = {element: element}
-        data.currentPage!.elementList!.push(previewWrapper);
-        let element = previewWrapper.element!
+    async function autoTableRow(previewContext: PreviewContext, previewData: Array<any>, index: number) {
+        let previewWrapper = previewContext.currentPreview
+        // console.log(previewWrapper.option.tableHeightType)
+        if (previewWrapper.option.tableHeightType == 'AUTO') {
+            previewWrapper.heightIs = false
+        }
+
+        data.currentPage.elementList.push(previewWrapper);
+        // let previewWrapper = previewWrapper
         await nextTick()
-        const table = itemRefs[element.id]
+        const table = itemRefs[previewWrapper.id]
         // console.log(table)
         if (!table) {
-            return
+            return false
         }
 
         let isNewPage = false
+
+        const bodyList = previewWrapper.bodyList[0]
+
         for (let i = index; i < previewData.length; i++) {
             const datum = previewData[i]
             if (!datum['autoIncrement']) {
@@ -197,28 +202,29 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
                 // console.log(i + 1)
             }
             const rowList: CpElement[] = []
-            for (let j = 0; j < element.headList.length; j++) {
-                initElement(element.headList[j], j)
-                const head = element.headList[j]
-                element.headList[j].data = datum[head.field!]
-                rowList.push(copyElementRefValueId(head))
+            for (let j = 0; j < bodyList.length; j++) {
+                // initElement(previewWrapper.headList[j], j)
+                const head = previewWrapper.headList[j]
+                // console.log(datum)
+                bodyList[j].data = datum[head.field!]
+                rowList.push(copyElementRefValueId(bodyList[j]))
             }
-            element.runtimeOption.rowList!.push(rowList)
+            previewWrapper.bodyList.push(rowList)
             await nextTick()
             // console.log(table.height())
-            // console.log(mm2px(element.y) + table.$el.clientHeight, mm2px(data.bottom))
-            if (await isNeedNewPage(unit2px(element.y) + table.$el.clientHeight, unit2px(data.bottom))) {
+            // console.log(mm2px(previewWrapper.y) + table.$el.clientHeight, mm2px(data.bottom))
+            if (await isNeedNewPage(unit2px(previewWrapper.y) + table.$el.clientHeight, unit2px(data.bottom))) {
                 // 删除刚才创建的
-                // console.log(element.runtimeOption.rowList)
-                element.runtimeOption.rowList!.pop()
-                element = copyElementRefValueId(element)
-                previewWrapper.element = element
-                element.runtimeOption = parse(stringify(element.runtimeOption, 'parent'), {} as RuntimeElementOption)
-                element.runtimeOption.rowList = reactive([])
-                element.y = data.top + 1
-                await autoTableRow(previewWrapper, previewData, i)
+                // console.log(previewWrapper.runtimeOption.rowList)
+                previewWrapper.bodyList.pop()
+                previewContext.currentPreview = copyElementRefValueId(previewWrapper)
+                previewWrapper = previewContext.currentPreview
+                previewWrapper.runtimeOption = parse(stringify(previewWrapper.runtimeOption, 'parent'), {} as RuntimeElementOption)
+                previewWrapper.bodyList = [bodyList]
+                previewWrapper.y = data.top + 1
+                await autoTableRow(previewContext, previewData, i)
                 isNewPage = true
-                // data.currentPage.offsetTop = await computeBottom({element: element} as PreviewWrapper)
+                // data.currentPage.offsetTop = await computeBottom({previewWrapper: previewWrapper} as PreviewWrapper)
                 break
             }
         }
@@ -230,7 +236,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
      * 单位 px
      */
     async function isNeedNewPage(y: number | undefined, bottom: number | undefined, callback?: () => void) {
-        if (y! > bottom!) {
+        if (y! > bottom! + 1) {
             if (callback) {
                 callback()
             }
@@ -254,12 +260,12 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
         getPanelDiv()
 
         if (data.panel.pageHeader) {
-            let preview = {element: data.panel.pageHeader} as PreviewWrapper
+            let preview = data.panel.pageHeader as PreviewWrapper
             data.currentPage!.elementList!.push(preview)
             data.top = (await computeBottom(preview))!
         }
         if (data.panel.pageFooter) {
-            let preview = {element: data.panel.pageFooter} as PreviewWrapper
+            let preview = data.panel.pageFooter as PreviewWrapper
             data.currentPage!.elementList!.push(preview)
             data.bottom = (await computeTop(preview))!
         }
@@ -267,36 +273,36 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
 
     async function computeBottom(previewWrapper: PreviewWrapper) {
         await nextTick()
-        if (!itemRefs[previewWrapper.element!.id]) {
+        if (!itemRefs[previewWrapper.id]) {
             return
         }
-        const div = itemRefs[previewWrapper.element!.id].$el as HTMLDivElement
+        const div = itemRefs[previewWrapper.id].$el as HTMLDivElement
         return numberUtil.toFixed(px2unit(numberUtil.sumScale(div.offsetTop, div.offsetHeight)))
     }
 
     async function computeTop(previewWrapper: PreviewWrapper) {
         await nextTick()
-        if (!itemRefs[previewWrapper.element!.id]) {
+        if (!itemRefs[previewWrapper.id]) {
             return
         }
-        const div = itemRefs[previewWrapper.element!.id].$el as HTMLDivElement
+        const div = itemRefs[previewWrapper.id].$el as HTMLDivElement
         console.log(div.offsetTop)
         return numberUtil.toFixed(px2unit(div.offsetTop))
     }
 
     async function computeTextHeight(previewWrapper: PreviewWrapper, previewDataTmp: any) {
-        previewWrapper.element!.data = previewDataTmp
+        previewWrapper.data = previewDataTmp
         await nextTick()
-        const itemRef = itemRefs[previewWrapper.element!.id];
+        const itemRef = itemRefs[previewWrapper.id];
         // console.log(div)
         if (!itemRef) {
             // debugger
             console.log(itemRef)
             return
         }
-        const height = itemRefs[previewWrapper.element!.id].$el.clientHeight;
+        const height = itemRefs[previewWrapper.id].$el.clientHeight;
         // const height = itemRefs[previewWrapper.element.id].clientHeight;
-        return previewWrapper.element!.y! + px2unit(height) < data.bottom;
+        return previewWrapper.y! + px2unit(height) < data.bottom;
     }
 
     async function binary_search(previewWrapper: PreviewWrapper, previewData: string, low: number, height: number): Promise<any> {

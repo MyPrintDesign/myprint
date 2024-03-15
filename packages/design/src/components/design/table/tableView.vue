@@ -2,7 +2,7 @@
   <table class="cp-print-table"
          ref="tableRef">
     <tbody>
-    <tr class="border-box" :key="1">
+    <tr class="border-box" :key="0">
       <column-view v-for="(column, index) in props.element.headList"
                    :element="column"
                    :key="index"/>
@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<{
   element: () => ({} as CpElement)
 })
 
-console.log(props.element)
+// console.log(props.element)
 defineExpose({computedWidth})
 
 const bodyStyle = (column: CpElement) => {
@@ -44,7 +44,8 @@ const bodyStyle = (column: CpElement) => {
     // height: column.runtimeOption.init.height + 'px',
     // maxHeight: column.runtimeOption.init.height + 'px'
   } as any
-  if (props.element.option.borderAll) {
+  if (column.option.borderAll) {
+    // console.log(column.option.borderAll)
     style['border'] = '1px solid var(--tcolor)'
   }
   return style

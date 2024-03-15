@@ -270,10 +270,12 @@ export function initElement(element: CpElement, index: number) {
                         }
                     } as CpElement;
                     indexView.field = 'autoIncrement'
+                    indexView.width = 10
                     indexView.label = '序号'
-
+                    indexView.height = element.headList[0].height
                     indexView.columnBody = {
                         type: "Text",
+                        height: indexView.height,
                         data: "1",
                         option: {...indexView.option}
                     } as CpElement
@@ -296,6 +298,9 @@ export function initElement(element: CpElement, index: number) {
                         }
                         if (column.columnBody.data == null) {
                             column.columnBody.data = column.data
+                        }
+                        if (column.columnBody.height == null) {
+                            column.columnBody.height = column.height
                         }
                         column.type = 'Text'
                         column.data = column.label
@@ -553,6 +558,14 @@ export function copyElementRefValueId(element: CpElement) {
     // element = to(element, reactive({}) as CpElement)
     previewWrapper.id = crypto.randomUUID()
     previewWrapper.heightIs = true
+
+    if (element.elementList != null && element.elementList.length > 0) {
+        // const pList: PreviewWrapper[] = []
+        previewWrapper.previewWrapperList = []
+        for (let cpElement of element.elementList) {
+            previewWrapper.previewWrapperList.push(copyElementRefValueId(cpElement))
+        }
+    }
     return previewWrapper
 }
 
@@ -919,7 +932,7 @@ export function multipleElementGetValue(props: string) {
     return firstValue
 }
 
-function getNestedPropertyValue(obj, propertyPath) {
+function getNestedPropertyValue(obj: any, propertyPath: any) {
     const properties = propertyPath.split('.');
     let currentObj = obj;
 
@@ -934,8 +947,9 @@ function getNestedPropertyValue(obj, propertyPath) {
     return currentObj;
 }
 
-function setNestedPropertyValue(obj, propertyPath, value) {
+function setNestedPropertyValue(obj: any, propertyPath: any, value: any) {
     const properties = propertyPath.split('.');
+    // console.log(obj)
     let currentObj = obj;
 
     for (let i = 0; i < properties.length - 1; i++) {
@@ -950,7 +964,8 @@ function setNestedPropertyValue(obj, propertyPath, value) {
 
 
 export function multipleElementSetValue(props: string, val: any) {
-    console.log(val)
+    // console.log(val)
+    // console.log(appStore().currentElement)
     for (let currentElementElement of appStore().currentElement as CpElement[]) {
 
         setNestedPropertyValue(currentElementElement, props, val)
@@ -958,7 +973,12 @@ export function multipleElementSetValue(props: string, val: any) {
         if (currentElementElement.type == 'DataTable') {
             for (let cpElement of currentElementElement.headList) {
                 setNestedPropertyValue(cpElement, props, val)
-                setNestedPropertyValue(cpElement.columnBody, props, val)
+            }
+            // console.log(currentElementElement.bodyList)
+            for (let bodyRowList of currentElementElement.bodyList) {
+                for (let cpElement of bodyRowList) {
+                    setNestedPropertyValue(cpElement, props, val)
+                }
             }
         }
     }
