@@ -71,7 +71,7 @@ export const tableColClone = {
     clonedTable: document.createElement('table'),
     init() {
         this.clonedTable.classList.add("cp-print-table")
-        this.clonedTable.classList.add("cp-print-table-clone-drag")
+        this.clonedTable.classList.add("cp-table-clone-drag")
     },
 
     show(columnLeft: number, columnTop: number, width: number, height: number | undefined, rows: any, colIndex: number) {

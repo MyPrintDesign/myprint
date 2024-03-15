@@ -31,15 +31,18 @@ const props = withDefaults(defineProps<{
 })
 const contentRef = ref()
 const data = reactive({
-  content: ''
+  content: '',
+  innerContent: '',
 })
 onMounted(() => {
   data.content = props.element.data
+  data.innerContent = props.element.data
   if (props.element.data == null) {
     const elementData = formatter(props.element)
     if (elementData != null) {
       props.element.data = elementData
       data.content = elementData
+      data.innerContent = elementData
     }
   }
 })
@@ -67,6 +70,7 @@ function click(event: MouseEvent) {
 function handleInput(event) {
   // 处理输入事件，更新 content
   props.element.data = event.target.innerHTML;
+  data.innerContent = event.target.innerHTML;
 }
 
 const style = computed(() => {
@@ -83,8 +87,9 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
 })
 
 watch(() => props.element.data, (n, _o) => {
-  if (data.content !== props.element.data) {
+  if (data.innerContent !== props.element.data) {
     data.content = props.element.data
+    data.innerContent = props.element.data
   }
 })
 

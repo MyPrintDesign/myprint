@@ -16,6 +16,8 @@
   width: var(--panel-width);
   position: relative;
   background: white;
+  border: var(--tcolor) 1px solid;
+  box-sizing: border-box;
   box-shadow: 5px 10px 15px 5px rgba(0, 21, 41, 0.08);
 }
 

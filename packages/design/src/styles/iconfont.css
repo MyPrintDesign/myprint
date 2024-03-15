@@ -4,7 +4,7 @@
 }
 
 .iconfont {
-  color: white;
+  color: var(--tcolor);
   font-family: "iconfont" !important;
   font-size: 16px;
   font-style: normal;

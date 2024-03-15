@@ -65,9 +65,11 @@ export interface Panel extends Container {
 }
 
 
-export interface PreviewWrapper {
-    element: CpElement
+export interface PreviewWrapper extends CpElement{
+    // element: CpElement
     offsetLastElementTop: number
+    heightIs: boolean
+    previewWrapperList: PreviewWrapper[]
 }
 
 export interface DragWrapper {
@@ -193,8 +195,6 @@ export interface RuntimeElementOption extends Position {
      */
     workEnvironment: elementType
     tableTrType: tableTrType
-
-    rowList?: Array<CpElement[]>
 
     // 是否拖拽进入
     dragInIs: boolean

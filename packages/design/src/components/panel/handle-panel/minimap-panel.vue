@@ -6,8 +6,10 @@
          v-if="configStore.settingPanel.miniMap.visible">
       <div class="scale-design-content"
            ref="designContentRef"
-           :style="{transformOrigin: '50% 0%',
-                            minWidth: valueUnit(scaleUtil.scale(panel.width)),
+           :style="{
+        left : 0,
+        top :'0px',
+        transformOrigin: '0% 0%',
                             width: valueUnit(scaleUtil.scale(panel.width)),
                             height: valueUnit(scaleUtil.scale(panel.height)),
                             scale: data.scale
@@ -28,37 +30,35 @@
           <dotted-horizontal-line v-if="element.type === 'DottedHorizontalLine'" :element="element"/>
           <dotted-vertical-line v-if="element.type === 'DottedVerticalLine'" :element="element"/>
         </div>
-        
-        <div class="viewport" :style="lookStyle"/>
+      
       </div>
+      
+      <div class="viewport" :style="lookStyle"/>
     </div>
     
     <div class="mini-map-toolbar display-flex">
       <div class="mini-map-toolbar_redo-undo display-flex">
         <div @mousedown="($event)=>$event.stopPropagation()" @click="undoPanel"
              :class="[{'cp-icon-disabled': !canUndo}]"
-             class="cp-icon iconfont icon-undo cp-handle-panel-icon"/>
+             class="cp-icon iconfont icon-undo mini-map-toolbar-icon"/>
         <div @mousedown="($event)=>$event.stopPropagation()" @click="redoPanel"
              :class="[{'cp-icon-disabled': !canRedo}]"
-             class="cp-icon iconfont icon-redo cp-handle-panel-icon"/>
+             class="cp-icon iconfont icon-redo mini-map-toolbar-icon"/>
       </div>
       
       <div class="mini-map-toolbar_control display-flex">
         <!--        <div>手势</div>-->
-        <div class="display-flex space-between width-100-p">
-          <tip-icon tips="缩小" @click="startScale(-0.1)">
-            <i class="icon-suoxiao iconfont"/>
-          </tip-icon>
-          <div>
+        <div class="display-flex space-between width-100-p mini-map-toolbar_control_scale">
+          <tip-icon tips="缩小" @click="startScale(-0.1)"
+                    class="icon-suoxiao iconfont mini-map-toolbar-icon"/>
+          <div class="mini-map-toolbar_control_ratio">
             {{ MathCalc.mul(scaleUtil.miniMap.scale, 100) }}%
           </div>
-          <tip-icon tips="放大" @click="startScale(0.1)">
-            <i class="icon-fangda iconfont"/>
-          </tip-icon>
+          <tip-icon tips="放大" @click="startScale(0.1)"
+                    class="icon-fangda iconfont mini-map-toolbar-icon"/>
           <tip-icon tips="导航" :modelValue="configStore.settingPanel.miniMap.visible"
-                    @update:model-value="flag => {configStore.settingPanel.miniMap.visible = flag}">
-            <i class="icon-map iconfont"/>
-          </tip-icon>
+                    @update:model-value="flag => configStore.settingPanel.miniMap.visible = flag"
+                    class="icon-map iconfont mini-map-toolbar-icon"/>
         </div>
       </div>
     </div>
@@ -138,8 +138,7 @@ function changePageSize() {
   const width = unit2px(panel.width)
   const height = unit2px(panel.height)
   // console.log(width)
-  
-  let widthCalc = (scaleContainerWidth) / width
+  let widthCalc = (scaleContainerWidth) / (width)
   let heightCalc = (scaleContainerHeight) / height
   let min = Math.min(widthCalc, heightCalc);
   min = min / scaleUtil.miniMap.scale
@@ -160,17 +159,20 @@ const lookStyle = computed(() => {
   const viewport = data.viewport;
   // console.log(viewport)
   
-  let w = viewport.width
+  let w = viewport.width - 100
   let h = viewport.height
   let x = viewport.x
   let y = viewport.y
   // console.log(translate.x, scaleContainerWidth, w)
   // let tmpw = Math.max(translate.x, scaleContainerWidth - w)
   // let tmph = Math.max(translate.y, scaleContainerHeight - h)
-  style['left'] = x + 'px'
-  style['top'] = y + 'px'
-  style['width'] = w + 'px'
-  style['height'] = (h - 1) + 'px'
+  
+  let viewportWidth = (w * data.scale)
+  // console.log(data.scale)
+  style['left'] = (x * data.scale + (scaleContainerWidth - viewportWidth) / 2) + 'px'
+  style['top'] = y * data.scale + 'px'
+  style['width'] = viewportWidth + 'px'
+  style['height'] = (h - 1) * data.scale + 'px'
   return style;
 })
 
@@ -249,74 +251,3 @@ function startScale(scale: number) {
   changePageSize()
 }
 </script>
-
-<style scoped lang="scss">
-//transition: all 0.3s ease-in-out;
-.content-scale {
-  width: 260px;
-  height: 205px;
-  //background: #79bbff;
-  //border: 1px white solid;
-  position: absolute;
-  right: 20px;
-  bottom: 7px;
-  //box-sizing: border-box;
-  
-  .scale-preview {
-    width: 100%;
-    height: calc(100% - 45px);
-    background: gray;
-    overflow: hidden;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    border-radius: 8px;
-    box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
-    //border: 1px white solid;
-    //box-sizing: border-box;
-    
-    .scale-design-content {
-      //border: 1px solid white;
-      background: white;
-      scale: 0;
-      box-shadow: 0px 6px 20px rgba(25, 25, 26, 0.06), 0px 2px 12px rgba(25, 25, 26, 0.04);;
-      
-      .viewport {
-        pointer-events: none;
-        border: 5px solid #ee3846;
-        box-sizing: border-box;
-        border-radius: 5px;
-        position: absolute;
-        opacity: 0.8;
-      }
-    }
-  }
-}
-
-.mini-map-toolbar {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  height: 40px;
-  border-radius: 8px;
-  box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
-  
-  .mini-map-toolbar_redo-undo {
-    background: white;
-    margin-right: 10px;
-    border-radius: 8px;
-    width: 100px;
-    box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
-    border: 1px solid rgba(18, 17, 42, .07);
-  }
-  
-  .mini-map-toolbar_control {
-    background: white;
-    border-radius: 8px;
-    width: 100%;
-    box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
-    border: 1px solid rgba(18, 17, 42, .07);
-  }
-  
-}
-</style>

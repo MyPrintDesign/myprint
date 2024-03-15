@@ -10,7 +10,7 @@ import {
     Panel,
     Point,
     PointLabel,
-    Position,
+    Position, PreviewWrapper,
     RuntimeElementOption
 } from "@cp-print/design/types/entity";
 import {
@@ -19,8 +19,7 @@ import {
     elementTypeLineList,
     handleConstantsType
 } from "@cp-print/design/constants/common";
-import {mitt, to} from "./utils";
-import {_defaultNum} from "@cp-print/design/utils/numberUtil";
+import {mitt, parse, stringify} from "./utils";
 import {CSSProperties, reactive} from "vue";
 import {formatDate} from "./timeUtil";
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
@@ -550,10 +549,11 @@ export function clearPanelParent(panel: Panel) {
 }
 
 export function copyElementRefValueId(element: CpElement) {
-    element = to(element, reactive({}) as CpElement)
-    element.id = crypto.randomUUID()
-    element.previewRuntimeOption = {heightIs: true}
-    return element
+    const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList'), reactive({}) as PreviewWrapper)
+    // element = to(element, reactive({}) as CpElement)
+    previewWrapper.id = crypto.randomUUID()
+    previewWrapper.heightIs = true
+    return previewWrapper
 }
 
 

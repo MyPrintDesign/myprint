@@ -43,19 +43,19 @@
 }
 
 // 横线
-.cp-horizontal-line__wrapper {
+.cp-print-horizontal-line__wrapper {
   word-break: break-all;
   cursor: move;
   outline: none;
 }
 
-.cp-horizontal-line {
+.cp-print-horizontal-line {
   //background: black;
   position: absolute;
 }
 
 // 矩形
-.cp-rect__wrapper {
+.cp-print-rect__wrapper {
   word-break: break-all;
   border: 1px #000 solid;
   box-sizing: border-box;
@@ -65,7 +65,7 @@
   cursor: text;
 }
 
-.cp-dotted-rect__wrapper {
+.cp-print-dotted-rect__wrapper {
   word-break: break-all;
   outline: #000 dotted;
   position: absolute;
@@ -142,11 +142,14 @@
 
 .cp-print-preview-panel__content {
   position: relative;
+
 }
 
 .cp-print-preview-panel__content_page {
   position: relative;
   overflow: hidden;
+  border: var(--tcolor) 1px solid;
+  box-sizing: border-box;
   // tmp cancel
   //background: white;
 }

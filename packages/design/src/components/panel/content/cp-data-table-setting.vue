@@ -237,7 +237,7 @@ const table = computed(() => {
     head.value = first
   }
   
-  console.log(head)
+  // console.log(head)
   
   if (first.type == 'DataTable') {
     return first as CpElement
@@ -245,7 +245,7 @@ const table = computed(() => {
     return first.runtimeOption.parent as CpElement
   }
 })
-console.log(123)
+// console.log(123)
 // console.log(table)
 
 

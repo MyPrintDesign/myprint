@@ -235,10 +235,9 @@ function resize(e:MouseEvent) {
       }
     }
     
-  }
-  
-  .is-active {
-    transform: rotate(90deg);
+    .is-active {
+      transform: rotate(90deg);
+    }
   }
   
   .collapse-panel-resize {

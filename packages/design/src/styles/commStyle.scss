@@ -149,7 +149,8 @@
 }
 
 .cp-icon-disabled {
-  opacity: 0.5;
+  //opacity: 0.5;
+  color: var(--icon-disable-color) !important;
   cursor: not-allowed !important;
 }
 

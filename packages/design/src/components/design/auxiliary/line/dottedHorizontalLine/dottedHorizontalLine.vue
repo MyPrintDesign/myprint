@@ -1,8 +1,8 @@
 <template>
-  <div class="cp-horizontal-line__wrapper"
+  <div class="cp-print-horizontal-line__wrapper"
        :style="{maxWidth: valueUnit(element.width), width: valueUnit(element.width), height: valueUnit(element.option!.borderWidth + 2)}">
     <div
-        class="cp-horizontal-line"
+        class="cp-print-horizontal-line"
         :style="labelStyle"/>
   </div>
 </template>

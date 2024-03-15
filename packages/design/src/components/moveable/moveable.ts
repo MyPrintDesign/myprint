@@ -417,13 +417,13 @@ function updateRect(e: OnResize) {
     target.element.runtimeOption.x = target.element.runtimeOption.init.x + drag.translate[0]
     target.element.runtimeOption.y = target.element.runtimeOption.init.y + drag.translate[1]
 
-    target.element.x = target.element.runtimeOption.x
-    target.element.y = target.element.runtimeOption.y
+    target.element.x = px2unit(target.element.runtimeOption.x)
+    target.element.y = px2unit(target.element.runtimeOption.y)
 
     // console.log(e.width)
     target.element.width = px2unit(e.width)
     target.element.height = px2unit(e.height)
-
+    // console.log(target.element.height)
     target.element.runtimeOption.width = e.width
     target.element.runtimeOption.height = e.height
     // target.element.runtimeOption.width = e.width
@@ -925,7 +925,6 @@ export function freshMoveableOption(element: CpElement) {
         // console.log(element.option.tableHeightType)
         if (element.option.tableHeightType == "AUTO") {
             moveable.renderDirections = ['e', "w"]
-
         }
     }
 
@@ -1250,6 +1249,7 @@ function defaultMoveable() {
     moveable.rotatable = true
     moveable.keepRatio = false
     moveable.draggable = true
+    moveable.resizable = true
     moveable.renderDirections = ["n", "nw", "ne", "s", "se", "sw", "e", "w"]
 }
 

@@ -99,3 +99,108 @@
     color: darkred;
   }
 }
+
+//transition: all 0.3s ease-in-out;
+.content-scale {
+  width: 260px;
+  height: 40px;
+  //background: #79bbff;
+  //border: 1px white solid;
+  position: absolute;
+  right: 20px;
+  bottom: 7px;
+  //box-sizing: border-box;
+
+  .scale-preview {
+    position: absolute;
+    bottom: 50px;
+    width: 100%;
+    height: 162px;
+    background: #edeef3;
+    //overflow: hidden;
+    //position: relative;
+    //display: flex;
+    //justify-content: center;
+    border-radius: 8px;
+    box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
+    border: 1px white solid;
+    box-sizing: border-box;
+
+    .scale-design-content {
+      //border: 1px solid white;
+      position: absolute;
+      background: white;
+      scale: 0;
+      box-shadow: 0px 6px 20px rgba(25, 25, 26, 0.06), 0px 2px 12px rgba(25, 25, 26, 0.04);;
+
+    }
+    .viewport {
+      pointer-events: none;
+      border: 2px solid #ee3846;
+      box-sizing: border-box;
+      border-radius: 5px;
+      position: absolute;
+      opacity: 0.8;
+    }
+  }
+}
+
+.mini-map-toolbar {
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: 40px;
+  border-radius: 8px;
+  box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
+
+  .mini-map-toolbar_redo-undo {
+    background: white;
+    margin-right: 10px;
+    border-radius: 8px;
+    align-items: center;
+    width: 100px;
+    box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
+    border: 1px solid rgba(18, 17, 42, .07);
+  }
+
+  .mini-map-toolbar_control {
+    background: white;
+    border-radius: 8px;
+    width: 100%;
+    box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);
+    border: 1px solid rgba(18, 17, 42, .07);
+
+    .mini-map-toolbar_control_scale {
+      align-items: center;
+    }
+
+    .mini-map-toolbar_control_ratio {
+      text-align: center;
+      width: 40px;
+      align-items: center;
+      font-weight: 600;
+      font-size: 12px;
+      user-select: none;
+    }
+  }
+
+  .mini-map-toolbar-icon {
+    font-size: 20px !important;
+    height: 32px;
+    width: 32px;
+    margin: 2px;
+    display: inline-block;
+    cursor: pointer;
+    line-height: 32px;
+    overflow: hidden;
+    border-radius: 3px;
+    text-align: center;
+
+    &:hover:not(.cp-icon-disabled) {
+      background: var(--drag-h-color);
+      //color: var(--drag-h-color);
+    }
+  }
+
+
+}

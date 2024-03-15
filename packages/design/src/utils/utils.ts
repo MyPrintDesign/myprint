@@ -200,25 +200,20 @@ export function printCssStyle() {
 
     let cssRuleList = ''
     let styleSheets = document.styleSheets;
+    // console.log(styleSheets)
     for (let i = 0; i < styleSheets.length; i++) {
         let styleSheet = styleSheets[i];
         let cssRules = styleSheet.cssRules || styleSheet.rules;
-        let isCss = false
-        if (cssRules.length > 3) {
-            let selectorText = (cssRules[2] as CSSStyleRule).selectorText
+        // let isCss = false
+        for (let j = 0; j < cssRules.length; j++) {
+            let cssRule = cssRules[j]
+            let selectorText = (cssRule as CSSStyleRule).selectorText
             if (selectorText && selectorText.startsWith('.cp-print-')) {
-                // console.log(styleSheet)
-                isCss = true
+                console.log(cssRule.cssText)
+                cssRuleList = cssRuleList + cssRule.cssText;
             }
         }
-
-        if (isCss) {
-            for (let j = 0; j < cssRules.length; j++) {
-                cssRuleList = cssRuleList + cssRules[j].cssText;
-                // 处理获取到的样式规则
-            }
-            return printCssStyleCache = cssRuleList
-        }
+        return printCssStyleCache = cssRuleList
     }
 }
 

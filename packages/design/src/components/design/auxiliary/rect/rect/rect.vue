@@ -1,5 +1,5 @@
 <template>
-  <div class="cp-rect__wrapper"
+  <div class="cp-print-rect__wrapper"
        :style="{maxWidth: valueUnit(element.width),
        width: valueUnit(trend1(element.width)),
        height: valueUnit(trend1(element.height)),

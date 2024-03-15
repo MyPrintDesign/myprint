@@ -1,5 +1,5 @@
 <template>
-  <div class="cp-dotted-rect__wrapper"
+  <div class="cp-print-dotted-rect__wrapper"
        ref="textRef"
        :style="{maxWidth: widthValueUnit(data), width: valueUnit(trend1(data.width - 2 * data.option.borderWidth)),
        height: valueUnit(trend1(data.height - 2 * data.option.borderWidth)),
