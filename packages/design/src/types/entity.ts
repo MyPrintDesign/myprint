@@ -247,10 +247,13 @@ export interface Position extends Point {
     right: number
 }
 
-export interface ContentScaleVo {
+export interface ContentScaleVo{
     viewport: Container
+    miniMap: Container
     scale: number
     openIs: boolean
+    width: number
+    height: number
 }
 
 

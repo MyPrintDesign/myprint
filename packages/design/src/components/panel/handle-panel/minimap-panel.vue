@@ -3,18 +3,18 @@
        :class="{run: appStore.currentElement.id == null}">
     
     <div class="scale-preview" ref="scalePreviewRef"
-         v-if="configStore.settingPanel.miniMap.visible">
+         v-if="configStore.settingPanel.miniMap.visible"
+         @mousedown="mousedown($event)">
       <div class="scale-design-content"
            ref="designContentRef"
            :style="{
-        left : 0,
-        top :'0px',
+        left : data.miniMap.x+'px',
+        top :data.miniMap.y+'px',
         transformOrigin: '0% 0%',
-                            width: valueUnit(scaleUtil.scale(panel.width)),
-                            height: valueUnit(scaleUtil.scale(panel.height)),
+                            width: scaleUtil.scale(data.width)+ 'px',
+                            height: scaleUtil.scale(data.height)+'px',
                             scale: data.scale
-                           }"
-           @mousedown="mousedown($event)">
+                           }">
         
         <div style="position: absolute;"
              v-for="(element, index) in panel.elementList"
@@ -33,7 +33,7 @@
       
       </div>
       
-      <div class="viewport" :style="lookStyle"/>
+      <div class="viewport" :style="viewportStyle"/>
     </div>
     
     <div class="mini-map-toolbar display-flex">
@@ -67,15 +67,15 @@
 
 <script setup lang="ts">
 import {mittKey, panelKey} from "@cp-print/design/constants/keys";
-import {computed, inject, onMounted, reactive} from "vue";
-import HorizontalLine from "../../design/auxiliary/line/horizontalLine";
-import RectView from "../../design/auxiliary/rect/rect";
-import DottedHorizontalLine from "../../design/auxiliary/line/dottedHorizontalLine";
-import VerticalLine from "../../design/auxiliary/line/verticalLine";
-import TextView from "../../design/text";
-import DottedVerticalLine from "../../design/auxiliary/line/dottedVerticalLine";
-import ImageView from "../../design/image";
-import TableDesign from "../../design/table/tableDesign.vue";
+import {computed, inject, onMounted, reactive, ref} from "vue";
+import HorizontalLine from "@cp-print/design/components/design/auxiliary/line/horizontalLine";
+import RectView from "@cp-print/design/components/design/auxiliary/rect/rect";
+import DottedHorizontalLine from "@cp-print/design/components/design/auxiliary/line/dottedHorizontalLine";
+import VerticalLine from "@cp-print/design/components/design/auxiliary/line/verticalLine";
+import TextView from "@cp-print/design/components/design/text";
+import DottedVerticalLine from "@cp-print/design/components/design/auxiliary/line/dottedVerticalLine";
+import ImageView from "@cp-print/design/components/design/image";
+import TableDesign from "@cp-print/design/components/design/table/tableDesign.vue";
 import {Container, ContentScaleVo} from "@cp-print/design/types/entity";
 import {clearEventBubble} from "@cp-print/design/utils/event";
 import MathCalc from "@cp-print/design/utils/numberUtil";
@@ -89,61 +89,51 @@ import TipIcon from "@cp-print/design/components/cp/icon/tip-icon.vue";
 
 const appStore = useAppStoreHook()
 const configStore = useConfigStore()
-
-// const emit = defineEmits(['scale'])
+const designContentRef = ref<HTMLDivElement>()
 const panel = inject(panelKey)!
 const mitt = inject(mittKey)!
-// const props = withDefaults(defineProps<{
-//   data?: ContentScaleVo
-// }>(), {
-//   data: () => ()
-// })
 const data = reactive({
   viewport: {
     x: 0,
     y: 0
   },
+  width: 0,
+  height: 0,
+  miniMap: {
+    x: 0,
+    y: 0,
+  },
   scale: 0,
   openIs: true
 } as ContentScaleVo)
-// console.log(data)
 mitt.on('minimapViewportSize', minimapViewportSize)
 mitt.on('minimapViewportScroll', minimapViewportScroll)
 
 function minimapViewportSize(size: Container) {
   data.viewport.width = size.width
   data.viewport.height = size.height
-  // changePageSize()
 }
 
 function minimapViewportScroll(size: Container) {
-  // console.log(size)
   data.viewport.x = size.x
   data.viewport.y = size.y
 }
 
-// const scalePreviewRef = ref<HTMLDivElement>()!
-const translate = reactive({
-  onScroll: true,
-  x: 0,
-  y: 0,
-  translateX: 0,
-  translateY: 0,
-})
-
 mitt.on('changePageSize', changePageSize)
 
 function changePageSize() {
-  // console.log(123)
-  const width = unit2px(panel.width)
-  const height = unit2px(panel.height)
-  // console.log(width)
-  let widthCalc = (scaleContainerWidth) / (width)
-  let heightCalc = (scaleContainerHeight) / height
+  data.width = unit2px(panel.width)
+  data.height = unit2px(panel.height)
+  let widthCalc = (scaleContainerWidth) / (data.width)
+  let heightCalc = (scaleContainerHeight) / data.height
   let min = Math.min(widthCalc, heightCalc);
   min = min / scaleUtil.miniMap.scale
   data.scale = min
-  // console.log(min)
+  
+  data.miniMap.width = data.width * min
+  data.miniMap.height = data.height * min
+  data.miniMap.x = (scaleContainerWidth - data.miniMap.width) / 2
+  data.miniMap.y = (scaleContainerHeight - data.miniMap.height) / 2
 }
 
 onMounted(() => {
@@ -153,101 +143,70 @@ onMounted(() => {
 const scaleContainerWidth = 260
 const scaleContainerHeight = 160
 
-const lookStyle = computed(() => {
+const viewportStyle = computed(() => {
   
   const style = {} as any
   const viewport = data.viewport;
-  // console.log(viewport)
   
-  let w = viewport.width - 100
+  let w = viewport.width - 10
   let h = viewport.height
   let x = viewport.x
   let y = viewport.y
-  // console.log(translate.x, scaleContainerWidth, w)
-  // let tmpw = Math.max(translate.x, scaleContainerWidth - w)
-  // let tmph = Math.max(translate.y, scaleContainerHeight - h)
   
-  let viewportWidth = (w * data.scale)
-  // console.log(data.scale)
-  style['left'] = (x * data.scale + (scaleContainerWidth - viewportWidth) / 2) + 'px'
-  style['top'] = y * data.scale + 'px'
+  let viewportWidth = Math.min((w * data.scale), data.miniMap.width)
+  let t = x * data.scale + data.miniMap.x + viewportWidth
+  console.log(x * data.scale, data.miniMap.x, viewportWidth)
+  if (t > 260) {
+    t = 260 - viewportWidth
+  } else {
+    t = t - viewportWidth
+  }
+  console.log(t)
+  style['left'] = t + 'px'
+  style['top'] = data.miniMap.y + y * data.scale + 'px'
   style['width'] = viewportWidth + 'px'
-  style['height'] = (h - 1) * data.scale + 'px'
+  style['height'] = Math.min((h - 1) * data.scale, data.miniMap.height) + 'px'
   return style;
 })
 
 function mousedown(ev: MouseEvent) {
-  // const tmpX = ev.clientX;
-  // const tmpY = ev.clientY;
-  // // 鼠标按下，计算当前元素距离可视区的距离
-  // document.addEventListener('mousemove', mousemove);
-  // document.addEventListener('mouseup', mouseup);
-  translate.onScroll = false
+  const tmpX = ev.clientX;
+  const tmpY = ev.clientY;
+  document.addEventListener('mousemove', mousemove);
+  document.addEventListener('mouseup', mouseup);
+  appStore.dataRotation = 'move'
   
-  // function mousemove(ev: MouseEvent) {
-  //   // console.log(ev)
-  //   // 移动当前元素
-  //   let offsetX = (ev.clientX - tmpX) / calc.value
-  //   let offsetY = (ev.clientY - tmpY) / calc.value
-  //   translate.translateX = offsetX
-  //   translate.translateY = offsetY
-  //   if (translate.translateX + translate.x / calc.value > 0) {
-  //     translate.translateX = -translate.x / calc.value
-  //   }
-  //   if (translate.translateY + translate.y / calc.value > 0) {
-  //     translate.translateY = -translate.y / calc.value
-  //   }
-  //
-  //   mitt.emit("scaleMove", {x: (-translate.x / calc.value - offsetX), y: (-translate.y / calc.value - offsetY)})
-  //   clearEventBubble(ev)
-  //   return true
-  // }
-  //
-  // function mouseup(ev: MouseEvent) {
-  //   // console.log(ev)
-  //
-  //   clearEventBubble(ev)
-  //
-  //   document.removeEventListener('mousemove', mousemove);
-  //   document.removeEventListener('mouseup', mouseup);
-  //   translate.onScroll = true
-  //   translate.x = translate.x + translate.translateX * calc.value
-  //   translate.y = translate.y + translate.translateY * calc.value
-  //   translate.translateX = 0
-  //   translate.translateY = 0
-  //   // // 鼠标按下，计算当前元素距离可视区的距离
-  //   // return false不加的话可能导致黏连，就是拖到一个地方时div粘在鼠标上不下来，相当于onmouseup失效
-  //   return false
-  // }
+  let offsetScrollX = ev.offsetX - data.viewport.width / 2
+  let offsetScrollY = ev.offsetY - data.viewport.height / 2
+  
+  mitt.emit("scaleMove", {x: offsetScrollX, y: offsetScrollY})
+  
+  function mousemove(ev: MouseEvent) {
+    let offsetX = (ev.clientX - tmpX) / data.scale + offsetScrollX
+    let offsetY = (ev.clientY - tmpY) / data.scale + offsetScrollY
+    
+    mitt.emit("scaleMove", {x: offsetX, y: offsetY})
+    clearEventBubble(ev)
+    return true
+  }
+  
+  function mouseup(ev: MouseEvent) {
+    clearEventBubble(ev)
+    
+    document.removeEventListener('mousemove', mousemove);
+    document.removeEventListener('mouseup', mouseup);
+    // // 鼠标按下，计算当前元素距离可视区的距离
+    // return false不加的话可能导致黏连，就是拖到一个地方时div粘在鼠标上不下来，相当于onmouseup失效
+    appStore.dataRotation = 'none'
+    return false
+  }
   
   clearEventBubble(ev)
   return true;
 }
 
-// function fresh() {
-//   // console.log(1)
-//   // if (minimap != null) {
-//   //   minimap.reset()
-//   // }
-// }
-//
-// function scaleLoopMove(data: any) {
-//   if (!translate.onScroll) {
-//     return
-//   }
-//   translate.x = -data.x * calc.value / (scaleUtil.miniMap.scale)
-//   translate.y = -data.y * calc.value / (scaleUtil.miniMap.scale)
-// }
-//
-// defineExpose({
-//   fresh,
-//   scaleLoopMove
-// })
-
 function startScale(scale: number) {
-  // console.log(123)
   scaleUtil.miniMap.scale = MathCalc.sum(scaleUtil.miniMap.scale, scale)
-  // emit('scale')
   changePageSize()
 }
 </script>

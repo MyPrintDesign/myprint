@@ -61,6 +61,7 @@ const popoverVisible = computed(() => {
   return props.lock || visible.value.popover
 })
 let timer: any = null
+let stop: ReturnType<typeof onClickOutside>
 
 function mousedown(_ev: MouseEvent) {
   // ev.stopPropagation()
@@ -117,7 +118,4 @@ function updateVisible(flag: boolean) {
     }
   }, 0)
 }
-
-let stop: ReturnType<typeof onClickOutside>
-
 </script>

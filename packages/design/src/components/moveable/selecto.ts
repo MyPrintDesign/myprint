@@ -11,7 +11,7 @@ export function initSelecto() {
         console.log('初始化selecto')
         selecto.value = new Selecto({
             // The container to add a selection element
-            container: document.querySelector('.design-panel-container-width') as HTMLElement,
+            container: document.querySelector('.design-content-scroll') as HTMLElement,
             // Selecto's root container (No transformed container. (default: null)
             rootContainer: null,
             // The area to drag selection element (default: container)

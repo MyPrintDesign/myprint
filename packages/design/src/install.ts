@@ -65,6 +65,7 @@ const install = {
             // .use(VueCropper)
             .use(Vue3ColorPicker)
         app.provide(messageFun, onSocketMessage)
+        //@ts-ignore
         app.provide(mittKey, mitt)
 
         useSocket().INIT_SOCKET(onSocketMessage)

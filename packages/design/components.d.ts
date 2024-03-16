@@ -7,7 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AlignLine: typeof import('./src/components/panel/alignLine.vue')['default']
     Barcode: typeof import('./src/components/design/barcode/barcode.vue')['default']
     Basic: typeof import('./src/components/panel/options/basic.vue')['default']
     ColumnView: typeof import('./src/components/design/table/columnView.vue')['default']
@@ -38,7 +37,6 @@ declare module 'vue' {
     Image: typeof import('./src/components/preview/image.vue')['default']
     OperationPanel: typeof import('./src/components/panel/handle-panel/operation-panel.vue')['default']
     Options: typeof import('./src/components/panel/options/index.vue')['default']
-    Page: typeof import('./src/components/panel/toolbar/Page.vue')['default']
     PageFooter: typeof import('./src/components/design/container/pageFooter/pageFooter.vue')['default']
     PageHeader: typeof import('./src/components/design/container/pageHeader/pageHeader.vue')['default']
     Panel: typeof import('./src/components/panel/index.vue')['default']
@@ -49,7 +47,7 @@ declare module 'vue' {
     Rect: typeof import('./src/components/design/auxiliary/rect/rect/rect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    Rule: typeof import('./src/components/panel/rule.vue')['default']
+    Rule: typeof import('./src/components/cp/cp-rule/rule.vue')['default']
     SelectRect: typeof import('./src/components/panel/selectRect.vue')['default']
     SettingAbout: typeof import('./src/components/panel/handle-panel/setting/setting-about.vue')['default']
     SettingDesign: typeof import('./src/components/panel/handle-panel/setting/setting-design.vue')['default']

@@ -34,7 +34,7 @@ const props = withDefaults(defineProps<{
 }>(), {
   direction: 'horizontal',
   highlight: () => {
-    return {x: undefined, width: 1} as Container
+    return {x: undefined! as number, width: 1} as Container
   },
   length: 0,
   scroll: 0
@@ -69,6 +69,7 @@ const length = ref(0);
 
 const ruleWidth = ref(0);
 const ruleHeight = ref(0);
+let chartSvg: any
 
 // 可以直接侦听一个 ref
 // watch(() => props.highlight, (_newQuestion, _oldQuestion) => {
@@ -222,7 +223,6 @@ function drawRuler() {
       .attr("d", path.toString())
 }
 
-let chartSvg
 onMounted(() => {
   chartSvg = d3Selection.select(canvas.value!)
 })

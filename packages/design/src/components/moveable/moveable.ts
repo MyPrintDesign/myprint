@@ -1109,7 +1109,7 @@ export function initMoveable(_selecto, _highlightRule) {
     // @ts-ignore
     moveable = new Moveable(
         document.querySelector(".design-content") as HTMLElement
-        // document.querySelector("#app > section > main > div > div.display-flex.design-panel-container-height > div.design-panel.drag.user-select-none > div.display-flex > div.el-scrollbar.affix-container.design-panel-container-width > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default") as HTMLElement
+        // document.querySelector("#app > section > main > div > div.display-flex.design-panel-container-height > div.design-panel.drag.user-select-none > div.display-flex > div.el-scrollbar.affix-container.design-content-scroll > div.el-scrollbar__wrap.el-scrollbar__wrap--hidden-default") as HTMLElement
         , {
             // If the container is null, the position is fixed. (default: parentElement(document.body))
             // container: document.querySelector(".design-content") as HTMLElement,
@@ -1153,7 +1153,7 @@ export function initMoveable(_selecto, _highlightRule) {
 
             scrollable: false,
             scrollOptions: ({
-                container: '.design-panel-container-width',
+                container: '.design-content-scroll',
                 threshold: 30,
                 checkScrollEvent: true,
                 throttleTime: 0

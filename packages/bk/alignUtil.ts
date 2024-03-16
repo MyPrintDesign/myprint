@@ -1,4 +1,4 @@
-import {CpElement} from "@cp-print/design/types/entity";
+import {CpElement} from "packages/design/src/types/entity";
 // import {px2unit} from "./devicePixelRatio";
 // import {canMoveStatusList} from "@cp-print/design/constants/common";
 

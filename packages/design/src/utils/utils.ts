@@ -209,7 +209,7 @@ export function printCssStyle() {
             let cssRule = cssRules[j]
             let selectorText = (cssRule as CSSStyleRule).selectorText
             if (selectorText && selectorText.startsWith('.cp-print-')) {
-                console.log(cssRule.cssText)
+                // console.log(cssRule.cssText)
                 cssRuleList = cssRuleList + cssRule.cssText;
             }
         }
@@ -321,4 +321,9 @@ function perpendicularDistance(point, lineStart, lineEnd) {
     const dy = y - yy;
 
     return Math.sqrt(dx * dx + dy * dy);
+}
+
+// 函数类型
+export function isFunction(func:any) {
+    return typeof func === "function" || Object.prototype.toString.call(func) === "[object Function]";
 }

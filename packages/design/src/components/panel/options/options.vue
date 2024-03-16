@@ -7,7 +7,6 @@
       <div style="flex: 1;"> {{ moduleName }}</div>
     </div>
     <div class="option-container display-flex-column">
-      
       <el-scrollbar>
         <el-collapse v-model="openPanel" class="option-collapse">
           <el-collapse-item title="业务字段" name="1"
@@ -30,13 +29,7 @@
           </el-collapse-item>
         </el-collapse>
       </el-scrollbar>
-      
-      <!--        缩放预览视图-->
-      <!--      <content-scale-->
-      <!--          :data="contentScale"-->
-      <!--          ref="contentScaleRef"-->
-      <!--          @scale="startScale"/>-->
-    
+
     </div>
     <div class="option-bottom">
 <!--      <img class="cp-logo" src="../../../assets/cprint-logo.png" alt="cp-logo"/>-->
@@ -55,25 +48,14 @@ import {inject, ref} from "vue";
 import {providerKey} from "@cp-print/design/constants/keys";
 import {customProvider} from "@cp-print/design/constants/provider/custom";
 import {auxiliaryProvider} from "@cp-print/design/constants/provider/auxiliary";
-// import ContentScale from "../content/contentScale.vue";
-// import {ContentScaleVo} from "@cp-print/design/types/entity";
 import {ArrowLeft} from "@element-plus/icons-vue";
-// import {Module} from "@cp-print/design/types/R";
 
 const provider = inject(providerKey)!
-// const mitt = inject(mittKey)!
 withDefaults(defineProps<{
   moduleName?: string
 }>(), {
   moduleName: '默认名称'
 })
 const openPanel = ref(['1', '2', '3'])
-// const openPanel = ref([])
-// const contentScaleRef = ref(<InstanceType<typeof ContentScale>>{})
-//
-// const contentScale = reactive(<ContentScaleVo>{openIs: false})
 
-// function startScale() {
-//   mitt.emit("scaleEvent")
-// }
 </script>

@@ -15,7 +15,6 @@
 
 
 <script setup lang="ts">
-
 import {handlePanelElementList} from "@cp-print/design/constants/settingPanel";
 import CpCollapse from "../../cp/cp-collapse/cp-collapse.vue";
 import CpElementSetting from "../content/cp-element-setting.vue";

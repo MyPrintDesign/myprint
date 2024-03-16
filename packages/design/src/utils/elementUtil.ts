@@ -853,7 +853,7 @@ export function changePageSize(val?: any) {
         panel.pageFooter.y = unit2unit('mm', panel.pageUnit, panel.height - panel.pageFooter.height)
         panel.pageFooter.runtimeOption.width = unit2px(panel.width)
     }
-    mitt.emit('pageSize')
+    mitt.emit('changePageSize')
 }
 
 export function changePageUnit() {

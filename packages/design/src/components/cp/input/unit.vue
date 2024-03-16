@@ -11,9 +11,3 @@ defineOptions({name: 'CpUnit'})
 
 const useAppStore = appStore()
 </script>
-
-
-<style scoped>
-
-
-</style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="cp-element-wrapper design-wrapper "
+  <div class="cp-element-wrapper"
        :style="style"
        :class="{
          'dropInIs': element.runtimeOption.dragInIs,
@@ -21,14 +21,15 @@
       <element-list :element-list="element.elementList"/>
     </cp-container>
     
-    <div class="container-edit-icon" @click="test"
-         v-if="element.type == 'Container'">
+    <div class="container-edit-icon" @click="elementEditClick"
+         v-if="elementTypeContainerList.includes(element.type)">
       <i class="icon-design-edit iconfont"/>
     </div>
+    
     <div class="container-move-icon"
          ref="containerMoveIconRef"
          v-if="element.type == 'Container'"
-         @mousedown="mousedown($event)">
+         @mousedown="elementMoveMouseDown($event)">
       <i class="icon-design-move iconfont "/>
     </div>
   </div>
@@ -41,7 +42,11 @@ import {CpElement} from "@cp-print/design/types/entity";
 import {computed, CSSProperties, onMounted, ref} from "vue";
 import {CpContainer} from "./container";
 import ElementList from "./elementList.vue";
-import {elementHandleHandleStatusList, elementHandleStatusList} from "@cp-print/design/constants/common";
+import {
+  elementHandleHandleStatusList,
+  elementHandleStatusList,
+  elementTypeContainerList
+} from "@cp-print/design/constants/common";
 import TableDesign from "@cp-print/design/components/design/table/tableDesign.vue";
 import {
   moveableClearDragTarget,
@@ -75,12 +80,11 @@ const style = computed(() => {
   } as CSSProperties
 })
 
-
-function test() {
+function elementEditClick() {
   setSelectedTargets([props.element.runtimeOption.target])
 }
 
-function mousedown(event: MouseEvent) {
+function elementMoveMouseDown(event: MouseEvent) {
   // console.log(event)
   // let initX = unit2px(props.element.x!), initY = unit2px(props.element.y!);
   // let lastX, lastY;
@@ -115,13 +119,9 @@ function mousedown(event: MouseEvent) {
       setSelectedTargets([])
     }
     moveableClearDragTarget()
-    // document.removeEventListener('mousemove', mousemove);
     document.removeEventListener('mouseup', mouseup);
-    // ev.stopPropagation()
   }
   
-  // document.addEventListener('mousemove', mousemove)
   document.addEventListener('mouseup', mouseup);
-  // clearEventBubble(event)
 }
 </script>

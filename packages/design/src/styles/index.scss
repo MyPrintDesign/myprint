@@ -3,6 +3,7 @@
 //src: url('../assets/fonts/iconfont.woff2?t=1696741414919') format('woff2');
 @use './commStyle.scss';
 // component styles
+@use './cp-collapse.scss';
 @use './cp-colorPicker.scss';
 @use './cp-icon.scss';
 @use './cp-image.scss';

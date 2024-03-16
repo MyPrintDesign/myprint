@@ -127,13 +127,16 @@
     box-sizing: border-box;
 
     .scale-design-content {
+      user-select: none;
+      overflow: hidden;
       //border: 1px solid white;
       position: absolute;
       background: white;
       scale: 0;
       box-shadow: 0px 6px 20px rgba(25, 25, 26, 0.06), 0px 2px 12px rgba(25, 25, 26, 0.04);;
-
+      cursor: move;
     }
+
     .viewport {
       pointer-events: none;
       border: 2px solid #ee3846;

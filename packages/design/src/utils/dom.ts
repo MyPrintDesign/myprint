@@ -1,4 +1,4 @@
-import {isFunction} from "./fns";
+import {isFunction} from "./utils";
 
 export const mouseEventType = {
     MOVE: 'mousemove',
