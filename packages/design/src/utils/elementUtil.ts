@@ -34,8 +34,8 @@ export function displayModel(displayModel?: DisplayModel) {
     return appStore().displayModel
 }
 
-export function displayModelPreview() {
-    return appStore().displayModel != 'preview'
+export function displayModelDesign() {
+    return appStore().displayModel == 'design'
 }
 
 export function setCurrentPanel(panel: Panel) {
@@ -342,6 +342,15 @@ export function initElement(element: CpElement, index: number) {
                 initHeight = 30
                 initBorderWidth = px2unit(1)
                 initWidth = px2unit(initBorderWidth + 3)
+                break
+            case 'SvgPolygonLine':
+                const tmpDataList = JSON.parse(element.data) as Point[]
+                for (let point of tmpDataList) {
+                    point.x = unit2px(point.x)
+                    point.y = unit2px(point.y)
+                }
+                console.log(tmpDataList)
+                element.data = JSON.stringify(tmpDataList)
                 break
         }
     }
@@ -738,6 +747,41 @@ export function elementCommonStyle(element: CpElement, cssStyle?: CSSProperties)
         cssStyle.overflow = 'hidden'
     }
 
+    // console.log(option.padding)
+    if (option.padding) {
+        if (option.padding.top) cssStyle.paddingTop = valueUnit(option.padding.top)
+        if (option.padding.bottom) cssStyle.paddingBottom = valueUnit(option.padding.bottom)
+        if (option.padding.left) cssStyle.paddingLeft = valueUnit(option.padding.left)
+        if (option.padding.right) cssStyle.paddingRight = valueUnit(option.padding.right)
+    }
+
+    if (option.margin) {
+        let subWidth = 0, subHeight = 0
+        if (option.margin.top) {
+            cssStyle.marginTop = valueUnit(option.margin.top)
+            subHeight += unit2px(option.margin.top)
+        }
+        if (option.margin.bottom) {
+            cssStyle.marginBottom = valueUnit(option.margin.bottom)
+            subHeight += unit2px(option.margin.bottom)
+        }
+        if (option.margin.left) {
+            cssStyle.marginLeft = valueUnit(option.margin.left)
+            subWidth += unit2px(option.margin.left)
+        }
+        if (option.margin.right) {
+            cssStyle.marginRight = valueUnit(option.margin.right)
+            subWidth += unit2px(option.margin.right)
+        }
+        if (subWidth > 0) {
+            cssStyle.width = `calc(100% - ${subWidth}px)`
+        }
+        if (subHeight > 0) {
+            cssStyle.height = `calc(100% - ${subHeight}px)`
+        }
+
+    }
+    // console.log(cssStyle)
 
     return cssStyle
 }

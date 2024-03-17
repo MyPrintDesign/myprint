@@ -8,53 +8,54 @@
           :style="{width: valueUnit(element.width), height: valueUnit(element.height)}"
           :src="contentBase64" alt="image"/>
       
-      <div class="img-tool_wrapper" v-if="displayModelPreview()">
+      <div class="img-tool_wrapper"
+           v-if="displayModelDesign() && elementHandleStatusList.includes(element.runtimeOption.status)">
         <el-icon class="img-tool-icon" @click="editImgClick">
           <Crop/>
         </el-icon>
-        <el-icon class="img-tool-icon">
-          <MoreFilled/>
-        </el-icon>
+<!--        <el-icon class="img-tool-icon">-->
+<!--          <MoreFilled/>-->
+<!--        </el-icon>-->
       </div>
     </div>
     <div class="choose-img_wrapper" v-else>
-      <el-icon class="avatar-uploader-icon" @click="chooseImg">
+      <el-icon v-if="displayModelDesign()" class="avatar-uploader-icon" @click="clickPlus">
         <Plus/>
       </el-icon>
-      <input type="file" ref="uploadFileRef" style="visibility: hidden"
-             accept="image/png, image/jpeg, image/jpg" @change="selectImg($event)">
+    
     </div>
     <el-dialog
+        class="image-crop-dialog"
         v-model="data.cropVisible"
         width="640px"
         title="图片裁剪"
         append-to-body>
       <div style="width: 600px; height: 500px">
-<!--        <VueCropper ref="cropper"-->
-<!--                    :img="sourceBase64"-->
-<!--                    :outputSize="option.outputSize"-->
-<!--                    :outputType="option.outputType"-->
-<!--                    :info="option.info"-->
-<!--                    :canScale="option.canScale"-->
-<!--                    :autoCrop="option.autoCrop"-->
-<!--                    :autoCropWidth="option.autoCropWidth"-->
-<!--                    :autoCropHeight="option.autoCropHeight"-->
-<!--                    :fixed="option.fixed"-->
-<!--                    :fixedNumber="option.fixedNumber"-->
-<!--                    :full="option.full"-->
-<!--                    :fixedBox="option.fixedBox"-->
-<!--                    :canMove="option.canMove"-->
-<!--                    :canMoveBox="option.canMoveBox"-->
-<!--                    :original="option.original"-->
-<!--                    :centerBox="option.centerBox"-->
-<!--                    :height="option.height"-->
-<!--                    :infoTrue="option.infoTrue"-->
-<!--                    :maxImgSize="option.maxImgSize"-->
-<!--                    :enlarge="option.enlarge"-->
-<!--                    :mode="option.mode"-->
-<!--                    @realTime="realTime"-->
-<!--                    @imgLoad="imgLoad">-->
-<!--        </VueCropper>-->
+        <VueCropper ref="cropper"
+                    :img="sourceBase64"
+                    :outputSize="option.outputSize"
+                    :outputType="option.outputType"
+                    :info="option.info"
+                    :canScale="option.canScale"
+                    :autoCrop="option.autoCrop"
+                    :autoCropWidth="option.autoCropWidth"
+                    :autoCropHeight="option.autoCropHeight"
+                    :fixed="element.option.keepRatio"
+                    :fixedNumber="option.fixedNumber"
+                    :full="option.full"
+                    :fixedBox="option.fixedBox"
+                    :canMove="option.canMove"
+                    :canMoveBox="option.canMoveBox"
+                    :original="option.original"
+                    :centerBox="option.centerBox"
+                    :height="option.height"
+                    :infoTrue="option.infoTrue"
+                    :maxImgSize="option.maxImgSize"
+                    :enlarge="option.enlarge"
+                    :mode="option.mode"
+                    @realTime="realTime"
+                    @imgLoad="imgLoad">
+        </VueCropper>
       
       </div>
       <div class="image-handle-wrapper">
@@ -76,20 +77,53 @@
       </div>
     
     </el-dialog>
+    
+    <el-dialog
+        class="choose-image-type-dialog"
+        v-model="data.chooseImageVisible"
+        width="520px"
+        align-center
+        :show-close="false"
+        :show-header="false"
+        append-to-body>
+      
+      <div class="choose-image-type-dialog-header display-flex">
+        <!--        <div class="choose-image-type-dialog-header_tab">-->
+        <!--          <div class="choose-image-type-dialog-header-title">本地上传</div>-->
+        <!--          <div class="choose-image-type-dialog-header-title">图片链接</div>-->
+        <!--        </div>-->
+        <cp-tabs class="choose-image-type-dialog-header_tab" v-model="data.chooseImageType"
+                 :item-list="chooseImgTypeList"/>
+        <el-icon color="#666666" size="20" class="cursor-pointer" @click="data.chooseImageVisible = false">
+          <CloseBold/>
+        </el-icon>
+      </div>
+      
+      <div class="choose-image-localFile-panel display-flex" v-if="data.chooseImageType == 'localFile'">
+        <div class="choose-image-localFile-btn" @click="chooseImage">上传本地图片</div>
+      </div>
+      
+      <div class="choose-image-url-panel display-flex" v-if="data.chooseImageType == 'url'">
+        <div class="choose-image-url-btn">上传本地图片</div>
+      </div>
+    </el-dialog>
+    
+    <input type="file" ref="uploadFileRef" style="visibility: hidden"
+           accept="image/png, image/jpeg, image/jpg" @change="selectImg($event)">
   
   </div>
 </template>
 <script setup lang="ts">
 // import { ElIcon, ElDialog } from 'element-plus'
-// import 'vue-cropper/dist/index.css'
-// import { VueCropper }  from "vue-cropper";
+import 'vue-cropper/dist/index.css'
+import {VueCropper} from "vue-cropper";
 
 import {onMounted, reactive, ref} from "vue";
-import {CpElement} from "@cp-print/design/types/entity";
+import {CpElement, DownList} from "@cp-print/design/types/entity";
 // import {useBase64} from "@vueuse/core";
 import {
   // aspectRatioHeight,
-  displayModelPreview,
+  displayModelDesign,
   handleAspectRatioHeight,
   valueUnit
 } from "@cp-print/design/utils/elementUtil";
@@ -101,9 +135,11 @@ import {
   RefreshRight,
   ZoomIn,
   ZoomOut,
-  Check
+  Check, CloseBold
 } from "@element-plus/icons-vue";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+import {elementHandleStatusList} from "@cp-print/design/constants/common";
+import CpTabs from "@cp-print/design/components/cp/cp-tabs/cpTabs.vue";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -115,7 +151,7 @@ const cropper = ref({} as InstanceType<any>)
 const uploadFileRef = ref<HTMLInputElement>()
 const sourceBase64 = ref()
 const contentBase64 = ref()
-const option = {
+const option = reactive({
   outputSize: 1, //裁剪生成图片的质量(可选0.1 - 1)
   outputType: 'jpeg', //裁剪生成图片的格式（jpeg || png || webp）
   info: true, //图片大小信息
@@ -123,9 +159,9 @@ const option = {
   autoCrop: true, //是否默认生成截图框
   autoCropWidth: unit2px(props.element.width), //默认生成截图框宽度
   autoCropHeight: unit2px(props.element.height), //默认生成截图框高度
-  fixed: false, //是否开启截图框宽高固定比例
+  fixed: true, //是否开启截图框宽高固定比例
   fixedNumber: [props.element.width, props.element.height], //截图框的宽高比例
-  full: false, //false按原比例裁切图片，不失真
+  full: true, //false按原比例裁切图片，不失真
   fixedBox: false, //固定截图框大小，不允许改变
   canMove: true, //上传图片是否可以移动
   canMoveBox: true, //截图框能否拖动
@@ -136,29 +172,29 @@ const option = {
   maxImgSize: 3000, //限制图片最大宽度和高度
   enlarge: 1, //图片根据截图框输出比例倍数
   mode: '600px 600px' //图片默认渲染方式
-}
+})
+const chooseImgTypeList = reactive([
+  {value: 'localFile', label: '本地上传'},
+  // {value: 'url', label: '图片链接'}
+]) as DownList[]
 // console.log(option)
 const data = reactive({
   cropVisible: false,
-  dragFlag: false
-})
-
-onMounted(() => {
-  props.element.runtimeOption.onDragStart = () => {
-    data.dragFlag = true
-  }
+  chooseImageVisible: false,
+  dragFlag: false,
+  chooseImageType: "localFile"
 })
 
 function editImgClick() {
   data.cropVisible = true
 }
 
-// function realTime(_data: any) {
-//   console.log(data)
-//   // let that = this
-//   // that.previews = data
-//
-// }
+function realTime(_data: any) {
+  // console.log(data)
+  // let that = this
+  // that.previews = data
+  
+}
 
 function imageZoomIn() {
   cropper.value.changeScale(1)
@@ -197,11 +233,12 @@ function blobToDataURI(blob: any, callback: any) {
   }
 }
 
-// function imgLoad() {
-//
-// }
+function imgLoad() {
+
+}
 
 function selectImg(event: any) {
+  
   let file = event.target.files[0]
   if (!/\.(jpg|jpeg|png|JPG|PNG)$/.test(event.target.value)) {
     // this.$message({
@@ -225,16 +262,20 @@ function selectImg(event: any) {
       // console.log('选择图片2', props.element.data)
     }
     contentBase64.value = sourceBase64.value
+    
+    data.chooseImageVisible = false
+    // data.cropVisible = true
   }
   //转化为base64
   reader.readAsDataURL(file)
 }
 
-function chooseImg(_ev: any) {
-  if (data.dragFlag) {
-    data.dragFlag = false
-    return
-  }
+function clickPlus(_ev: any) {
+  data.chooseImageVisible = true
+  // uploadFileRef.value!.click()
+}
+
+function chooseImage(_ev: any) {
   uploadFileRef.value!.click()
 }
 

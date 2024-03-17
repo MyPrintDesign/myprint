@@ -16,7 +16,7 @@
 <script setup lang="ts">
 
 import {inject, nextTick, reactive, ref} from "vue";
-import {Container, CpElement, elementTypeFormat} from "@cp-print/design/types/entity";
+import {Container, CpElement, elementTypeFormat, Point} from "@cp-print/design/types/entity";
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {panelKey} from "@cp-print/design/constants/keys";
 import Design from "@cp-print/design/components/design/design.vue";
@@ -72,6 +72,14 @@ function dragStart(ev: MouseEvent) {
   
   element.width = unit2unit('mm', panel.pageUnit, tmpElement.value.width)
   element.height = unit2unit('mm', panel.pageUnit, tmpElement.value.height)
+  if (element.type == 'SvgPolygonLine') {
+    const tmpDataList = JSON.parse(element.data) as Point[]
+    for (let point of tmpDataList) {
+      point.x = unit2unit('mm', panel.pageUnit, point.x)
+      point.y = unit2unit('mm', panel.pageUnit, point.y)
+    }
+    element.data = JSON.stringify(tmpDataList)
+  }
   
   initElement(element, 0)
   

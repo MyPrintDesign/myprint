@@ -155,13 +155,13 @@ const viewportStyle = computed(() => {
   
   let viewportWidth = Math.min((w * data.scale), data.miniMap.width)
   let t = x * data.scale + data.miniMap.x + viewportWidth
-  console.log(x * data.scale, data.miniMap.x, viewportWidth)
+  // console.log(x * data.scale, data.miniMap.x, viewportWidth)
   if (t > 260) {
     t = 260 - viewportWidth
   } else {
     t = t - viewportWidth
   }
-  console.log(t)
+  // console.log(t)
   style['left'] = t + 'px'
   style['top'] = data.miniMap.y + y * data.scale + 'px'
   style['width'] = viewportWidth + 'px'

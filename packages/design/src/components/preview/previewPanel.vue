@@ -152,7 +152,7 @@ function closePreviewPanel() {
 }
 
 function printArea() {
-  let html = '<div>'
+  let html = '<div style="  --tcolor: black;">'
   for (let i = 0; i < previewContent.value!.length; i++) {
     html += previewContent.value![i].outerHTML
   }
@@ -163,8 +163,8 @@ function printArea() {
   iframe.setAttribute("id", "print-box");
   iframe.setAttribute(
       "style",
-      "height: 800px; width: 2000px; position: absolute; left : 0; top: 0;border: 0;" +
-      "z-index: 10000; background: wheat;"
+      `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; position: absolute; left : 100px; top: 0;border: 0;
+      z-index: 10000; background: white;`
   );
   // 在页面插入iframe
   document.body.appendChild(iframe);

@@ -219,6 +219,20 @@
   top: 6px;
 }
 
+.moveable-control-box[data-able-groupable="true"] {
+
+  .moveable-line {
+    background: var(--drag-h-color) !important;
+    //border-bottom: 1px dashed var(--drag-h-color);
+  }
+
+  .moveable-line.moveable-direction {
+    //background: transparent !important;
+    //border-bottom: none !important;
+    display: block !important;
+  }
+}
+
 .moveable-control-box {
 
   .moveable-line {
@@ -234,7 +248,7 @@
   // 辅助线 加粗 -
   //moveable-line moveable-guideline moveable-horizontal moveable-bold
   .moveable-line.moveable-guideline.moveable-horizontal.moveable-bold {
-    background: #204b20 !important;
+    background: var(--drag-h-color) !important;
   }
 
   // 辅助线 - 虚线组
@@ -242,8 +256,8 @@
 
   // 辅助线 -虚线
   .moveable-line.moveable-guideline.moveable-horizontal.moveable-dashed {
-    border-top: 1px dashed var(--drag-h-color);
-    border-top-color: var(--drag-h-color);
+    border-top: 1px dashed red;
+    border-top-color: red;
   }
 
   // 辅助线 -文本
@@ -256,7 +270,7 @@
 
   // -- 垂直 --
   .moveable-line.moveable-guideline.moveable-vertical.moveable-bold {
-    background: #33CC33 !important;
+    background: var(--drag-h-color) !important;
   }
 
   .moveable-line.moveable-guideline.moveable-vertical.moveable-dashed {

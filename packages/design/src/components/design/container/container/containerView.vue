@@ -1,9 +1,11 @@
 <template>
-
-<!--  <div style="color: black">-->
-<!--    {{ element.runtimeOption.index }}-->
-<!--  </div>-->
-  <slot/>
+  
+  <!--  <div style="color: black">-->
+  <!--    {{ element.runtimeOption.index }}-->
+  <!--  </div>-->
+  <div>
+    <slot/>
+  </div>
 
 </template>
 

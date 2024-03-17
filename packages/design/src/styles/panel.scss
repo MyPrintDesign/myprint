@@ -92,8 +92,8 @@
           width: var(--panel-width);
           position: relative;
           background: white;
-          border: var(--tcolor) 1px solid;
-          box-sizing: border-box;
+          //border: var(--tcolor) 1px solid;
+          //box-sizing: border-box;
           box-shadow: 5px 10px 15px 5px rgba(0, 21, 41, 0.08);
         }
 
@@ -140,10 +140,18 @@
 }
 
 .dropInIs {
-  //z-index: 1;
-  opacity: 0.6;
-  background: var(--page-header-drop-color);
+  z-index: 999;
+  //opacity: 0.6;
+  background: white;
   outline: 4px solid var(--drag-h-color);
+
+  &:before {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    content: '';
+    background: rgba(230, 233, 250, 0.4) !important;
+  }
 }
 
 .mouse-tips {

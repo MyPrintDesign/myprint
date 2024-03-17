@@ -9,8 +9,8 @@ import {createPinia} from "pinia";
 // @ts-ignore
 // import piniaPersist from 'pinia-plugin-persist';
 import Vue3ColorPicker from "vue3-colorpicker";
-// import VueCropper from 'vue-cropper';
-// import 'vue-cropper/dist/index.css'
+import VueCropper from 'vue-cropper';
+import 'vue-cropper/dist/index.css'
 // import i18n from "./locales";
 import {useSocket} from "./stores/socket";
 import {mitt} from "@cp-print/design/utils/utils";
@@ -62,7 +62,7 @@ const install = {
             // .use(ElDivider)
             // .use(ElSwitch)
             // .use(i18n)
-            // .use(VueCropper)
+            .use(VueCropper)
             .use(Vue3ColorPicker)
         app.provide(messageFun, onSocketMessage)
         //@ts-ignore

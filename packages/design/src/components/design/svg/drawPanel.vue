@@ -1,3 +1,8 @@
+<template>
+  <img alt="" class="cp-print-draw_panel_img" v-if="useAppStoreHook().displayModel == 'preview'" :src="data.imgSrc">
+  <canvas ref="canvasRef" class="cp-print-draw_panel"/>
+</template>
+
 <script setup lang="ts">
 import * as d3Shape from "d3-shape";
 import {CurveGenerator} from "d3-shape";
@@ -9,6 +14,7 @@ import {CpElement} from "@cp-print/design/types/entity";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {elementHandleStatusList} from "@cp-print/design/constants/common";
 import {douglasPeucker} from "@cp-print/design/utils/utils";
+import {useAppStoreHook} from "@cp-print/design/stores/app";
 // import {watchImmediate} from "@vueuse/core";
 // import {updateSvg} from "@cp-print/design/utils/svgUtil";
 
@@ -18,6 +24,7 @@ const data = reactive({
   curve: {} as CurveGenerator,
   strokes: [] as Array<Array<number>>,
   redo: [],
+  imgSrc: "",
   stroke: 'black',
   strokeWidth: 5,
   dragFun: {} as DragBehavior<DraggedElementBaseType, any, any>
@@ -111,6 +118,9 @@ function render() {
     data.curve.lineEnd();
     data.context.stroke();
   }
+  
+  const dataURL = canvasRef.value.toDataURL();
+  data.imgSrc = dataURL;
   // data.context.canvas.value = data.strokes;
   // context.canvas.dispatchEvent(new CustomEvent("input"));
 }
@@ -148,11 +158,3 @@ function dragged({subject, x, y}) {
 //
 // }
 </script>
-
-<template>
-  <canvas ref="canvasRef" class="cp-print-draw_panel"/>
-</template>
-
-<style scoped>
-
-</style>

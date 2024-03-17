@@ -9,10 +9,12 @@
 
 <script setup lang="ts">
 import {CpElement} from "@cp-print/design/types/entity";
-import {ref, watch} from "vue";
+import {nextTick, ref, watch} from "vue";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import QRCode from 'qrcode'
 import {heightValueUnit, widthValueUnit} from "@cp-print/design/utils/elementUtil";
+import {updateMoveableRect} from "@cp-print/design/components/moveable/moveable";
+import _ from 'lodash'
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -22,7 +24,8 @@ const props = withDefaults(defineProps<{
 
 const qrCode = ref()
 const src = ref()
-watch([() => qrCode.value, () => props.element.data, () => props.element.height, () => props.element.option.color, () => props.element.option.background], (_n, _o) => {
+
+const freshQrCode = _.throttle((resetHeight: boolean) => {
   if (qrCode.value == null) {
     return
   }
@@ -32,7 +35,7 @@ watch([() => qrCode.value, () => props.element.data, () => props.element.height,
   if (props.element.data == '') {
     return
   }
-  console.log(props.element.data)
+  // console.log(props.element.data)
   
   QRCode.toDataURL(props.element.data, {
     // version: 1,
@@ -40,7 +43,7 @@ watch([() => qrCode.value, () => props.element.data, () => props.element.height,
     maskPattern: 7, // 0, 1, 2, 3, 4, 5, 6, 7
     margin: 0, // Define how much wide the quiet zone should be
     scale: 4,
-    width: unit2px(props.element.width), // 宽度
+    width: unit2px(Math.min(props.element.width, props.element.height)), // 宽度
     color: {
       light: props.element.option.background, // 背景色
       dark: props.element.option.color // 二维码颜色
@@ -52,9 +55,25 @@ watch([() => qrCode.value, () => props.element.data, () => props.element.height,
     }
     
     src.value = url
-    // console.log('success!')
   })
-  props.element.height = props.element.width
-  props.element.option.aspectRatio = 1
+  // console.log(props.element.runtimeOption.workEnvironment )
+  if (resetHeight && props.element.runtimeOption.workEnvironment !== 'DataTable') {
+    props.element.height = props.element.width
+    props.element.runtimeOption.height = props.element.runtimeOption.width
+    props.element.runtimeOption.init.height = props.element.runtimeOption.width
+    nextTick(() => {
+      updateMoveableRect()
+    })
+  }
+}, 100)
+
+
+watch([() => qrCode.value, () => props.element.data, () => props.element.option.color, () => props.element.option.background], (_n, _o) => {
+  freshQrCode(true)
+}, {immediate: true})
+
+
+watch([() => props.element.width, () => props.element.height], (_n, _o) => {
+  freshQrCode(false)
 }, {immediate: true})
 </script>

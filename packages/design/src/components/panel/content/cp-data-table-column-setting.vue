@@ -1,37 +1,20 @@
 <template>
   <el-form label-width="80px" size="small"
            label-position="right">
-    
-    <el-divider class="divider-setting-layout">
-      布局
-      <cp-icon class="divider-setting-layout-lock iconfont"
-               :model-value="multipleElementGetValue('lock')"
-               :class="[multipleElementGetValue('lock')? 'icon-lock': 'icon-unlock']"
-               @click="changeLock"
-               @update:model-value="(val:any)=>multipleElementSetValue('lock', val)"/>
+    <el-divider>
+      列
     </el-divider>
     
-    <el-form-item label="高度属性">
-      <el-radio-group v-model="table.option.tableHeightType" size="small">
-        <el-radio-button label="AUTO" value="AUTO">自动高度</el-radio-button>
-        <el-radio-button label="FIXED" value="FIXED">固定高度</el-radio-button>
-      </el-radio-group>
+    <el-form-item label="内容" v-if="getElementSetting(multipleElementGetValue('type')).includes('data')">
+      <cp-history-input style="margin-right: 20px"
+                        historyLabel="内容"
+                        :model-value="multipleElementGetValue('data')"
+                        @update:model-value="(val:any)=>multipleElementSetValue('data', val)"
+                        type="textarea"/>
     </el-form-item>
-    
-    <el-form-item label="坐标(x/y)">
-      <group-input>
-        <cp-history-input-number class="width-60"
-                                 :model-value="multipleElementGetValue('x')"
-                                 @update:model-value="(val:any)=>multipleElementSetValue('x', val)"
-                                 @change="change"
-                                 historyLabel="位置"/>
-        <cp-history-input-number class="width-60"
-                                 :model-value="multipleElementGetValue('y')"
-                                 @update:model-value="(val:any)=>multipleElementSetValue('y', val)"
-                                 historyLabel="位置"/>
-        <cp-unit/>
-      </group-input>
-    </el-form-item>
+    <el-divider class="divider-setting-layout">
+      布局
+    </el-divider>
     
     <el-form-item label="宽/高" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
       <group-input>
@@ -40,7 +23,6 @@
                                  @update:model-value="(val:any)=>multipleElementSetValue('width', val)"
                                  historyLabel="尺寸"/>
         <cp-history-input-number class="width-60"
-                                 :disabled="table.option.tableHeightType == 'AUTO'"
                                  :model-value="multipleElementGetValue('height')"
                                  @update:model-value="(val:any)=>multipleElementSetValue('height', val)"
                                  historyLabel="尺寸"/>
@@ -77,7 +59,8 @@
                          @update:model-value="(val:any)=>multipleElementSetValue('option.barCodeType', val)"
                          placeholder="条码类型"
                          historyLabel="条码类型">
-        <el-option v-for="(item, index) in barcodeTypes" :key="index" :label="item.label" :value="item.value"/>
+        <el-option v-for="(item, index) in barcodeTypes" :key="index" :label="item.label" :value="item.value"
+        />
       </cp-history-select>
       <el-tooltip
           popper-class="barcode-type-tooltip"
@@ -156,40 +139,19 @@
 </template>
 <script setup lang="ts">
 // import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
-import {inject} from "vue";
 
 import {barcodeTypes, dottedStyleList, getElementSetting, textContentTypes} from "@cp-print/design/constants/common";
-import {mittKey} from "@cp-print/design/constants/keys";
-import {ActionEnum, Snapshot} from "@cp-print/design/utils/historyUtil";
 import {QuestionFilled} from "@element-plus/icons-vue";
 import GroupInput from "../../cp/cp-group/groupInput.vue";
-import {CpHistoryInputNumber, CpHistorySelect, CpUnit} from "@cp-print/design/components/cp/input";
-import {useAppStoreHook} from "@cp-print/design/stores/app";
+import {CpHistoryInput, CpHistoryInputNumber, CpHistorySelect, CpUnit} from "@cp-print/design/components/cp/input";
 import {multipleElementGetValue, multipleElementSetValue} from "@cp-print/design/utils/elementUtil";
-import CpIcon from "@cp-print/design/components/cp/icon/cp-icon.vue";
-import {freshMoveableOption} from "@cp-print/design/components/moveable/moveable";
-
-const mitt = inject(mittKey)!
-// const data = reactive({
-//   currentBarCodeEg: null
-// })
-const appStore = useAppStoreHook()
-
-const table = appStore.currentElement[0]
-
-function rotatedPoint(rotate) {
-  console.log(rotate)
-  // freshMoveableOption(appStore.currentElement)
-}
-
-function changeLock() {
-  freshMoveableOption(appStore.currentElement[0])
-}
-
-function change(_val: any) {
-  // record()
-  mitt.emit('panelSnapshot', {action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement} as Snapshot)
-  // console.log('change', val)
-}
+//
+// const mitt = inject(mittKey)!
+// // const data = reactive({
+// //   currentBarCodeEg: null
+// // })
+// const appStore = useAppStoreHook()
+// const head = ref<CpElement>()
+//
 
 </script>

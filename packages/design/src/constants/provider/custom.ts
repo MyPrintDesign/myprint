@@ -115,7 +115,7 @@ export const customProvider: Array<CpElement> = [
         "label": "横实线",
         "width": 30.25,
         "option": {
-            borderWidth: 0.3
+            lineWidth: 0.3
         } as ElementOption
     } as any,
     {
@@ -124,7 +124,7 @@ export const customProvider: Array<CpElement> = [
         "label": "竖实线",
         "height": 21,
         "option": {
-            borderWidth: 0.3
+            lineWidth: 0.3
         } as ElementOption,
     } as any,
     {
@@ -132,7 +132,7 @@ export const customProvider: Array<CpElement> = [
         iconClass: 'iconfont-color icon-color-vertical_dottedline',
         "width": 21,
         "option": {
-            borderWidth: 0.3
+            lineWidth: 0.3
         } as ElementOption,
     } as any,
     {
@@ -140,7 +140,7 @@ export const customProvider: Array<CpElement> = [
         iconClass: 'iconfont-color icon-color-crossrange_dottedline',
         "height": 21,
         option: {
-            borderWidth: 0.3
+            lineWidth: 0.3
         } as ElementOption,
     } as any,
     {
@@ -149,7 +149,7 @@ export const customProvider: Array<CpElement> = [
         "data": "",
         "width": 30,
         option: {
-            borderWidth: 0.3
+            lineWidth: 0.3
         } as ElementOption,
         "height": 30,
     } as any,
@@ -189,6 +189,7 @@ export const customProvider: Array<CpElement> = [
     {
         field: "",
         type: "SvgPolygonLine",
+        data: "[{\"x\": 0,\"y\": 0},{\"x\": 30,\"y\": 0},{\"x\": 30,\"y\": 30},{\"x\": 0,\"y\": 30}]",
         iconClass: 'iconfont-color icon-color-svg-rect',
         width: 30,
         "option": {

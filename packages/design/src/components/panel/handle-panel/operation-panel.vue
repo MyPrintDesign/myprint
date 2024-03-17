@@ -5,7 +5,10 @@
     </template>
     <template v-if="appStore.currentElement.length > 0">
       <cp-data-table-setting
-          v-if="appStore.currentElement[0].type == 'DataTable' || appStore.currentElement[0].runtimeOption.parent!.type == 'DataTable'"
+          v-if="appStore.currentElement[0].type == 'DataTable'"
+          class="advanced-config"/>
+      <cp-data-table-column-setting
+          v-else-if="appStore.currentElement[0].runtimeOption.parent!.type == 'DataTable'"
           class="advanced-config"/>
       <CpElementSetting v-else class="advanced-config"/>
     </template>
@@ -24,6 +27,7 @@ import {computed} from "vue";
 import {useConfigStore} from "@cp-print/design/stores/config";
 import {useAppStoreHook} from "@cp-print/design/stores/app";
 import CpDataTableSetting from "@cp-print/design/components/panel/content/cp-data-table-setting.vue";
+import CpDataTableColumnSetting from "@cp-print/design/components/panel/content/cp-data-table-column-setting.vue";
 
 const appStore = useAppStoreHook()
 const configStore = useConfigStore()

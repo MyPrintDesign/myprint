@@ -15,6 +15,12 @@
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
+
+.group-container > :not(:last-child).cp-input-unit__wrapper {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
 .group-container .is-focus {
   z-index: 2;
 }
@@ -24,7 +30,7 @@
   border-bottom-left-radius: 0 !important;
 }
 
-.group-container > :not(:first-child) .el-input__wrapper {
+.group-container > :not(:first-child).setting-wh-lock {
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
 }

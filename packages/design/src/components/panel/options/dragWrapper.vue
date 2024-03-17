@@ -43,8 +43,8 @@ const style = computed(() => {
     // maxHeight: heightValueUnit(element),
   } as CSSProperties
   if (props.data.transitionAnime) {
-    iStyle.transition = 'left .32s cubic-bezier(0, 0, 0.02, 0.97) 0s, ' +
-        'top .32s cubic-bezier(0, 0, 0.02, 0.97) 0s'
+    iStyle.transition = 'left .42s cubic-bezier(0, 0, 0.02, 0.97) 0s, ' +
+        'top .42s cubic-bezier(0, 0, 0.02, 0.97) 0s'
   }
   return iStyle
 })

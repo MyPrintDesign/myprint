@@ -11,15 +11,15 @@
 
 <script setup lang="ts">
 import {reactive} from 'vue'
-
 import * as d3Path from "d3-path";
+import {Path} from "d3-path";
 import {CpElement, Line, Point, PointLabel} from "@cp-print/design/types/entity";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {computeLineAngle, rotatePoint} from "@cp-print/design/utils/svgUtil";
 import {computedShapeBound} from "@cp-print/design/utils/elementUtil";
 import {moveableMove, moveableResize} from "@cp-print/design/components/moveable/moveable";
-import {Path} from "d3-path";
 import SvgBase from "@cp-print/design/components/design/svg/svgBase.vue";
+import {D3DragEvent} from "@cp-print/design/types/d3Type";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -31,16 +31,15 @@ let orgPoint
 const svgOptions = reactive({
   width: 0,
   height: 0,
-  rotateControl: {},
+  // 辅助线
   controlLine: [] as Array<Line>,
   controlLineStart: {} as Point,
   controlPointEnd: {} as PointLabel,
   controlPointEndDragStart: {} as Point,
   // svg 形状点
-  allPoint: [] as Array<PointLabel>,
-  // 辅助线点
   linePoints: [] as Array<Point>,
-  drawAuxiliary: false
+  // svg 形状点(包括控制点)
+  allPoint: [] as Array<PointLabel>,
 })
 
 svgOptions.width = unit2px(props.element.width)
@@ -49,27 +48,24 @@ svgOptions.height = unit2px(props.element.height)
 initPoint()
 
 function initPoint() {
-  svgOptions.linePoints = [{x: 0, y: 0}, {x: svgOptions.width, y: 0}, {
-    x: svgOptions.width,
-    y: svgOptions.height
-  }, {x: 0, y: svgOptions.height}];
+  svgOptions.linePoints = JSON.parse(props.element.data);
   
   svgOptions.controlPointEndDragStart = {...svgOptions.controlPointEnd}
   
   svgOptions.controlLineStart = {x: svgOptions.width / 2, y: svgOptions.height / 2}
-  svgOptions.controlPointEnd = {x: svgOptions.width / 2, y: -20, label: "cc"}
+  svgOptions.controlPointEnd = {x: svgOptions.width / 2, y: -20, label: ""}
   svgOptions.allPoint = [...svgOptions.linePoints, svgOptions.controlPointEnd]
   svgOptions.controlLine = [{start: svgOptions.controlLineStart, end: svgOptions.controlPointEnd}]
 }
 
-function dragStart(subject) {
+function dragStart(subject: PointLabel) {
   if (subject.label) {
     orgPoint = JSON.parse(JSON.stringify(svgOptions.allPoint));
   }
   svgOptions.controlPointEndDragStart = {...svgOptions.controlPointEnd}
 }
 
-function dragIng(subject, event, dx, dy) {
+function dragIng(subject: PointLabel, event: D3DragEvent, dx: number, dy: number) {
   subject.x = event.x + dx;
   subject.y = event.y + dy;
   
@@ -117,6 +113,8 @@ function dragEnd() {
   svgOptions.controlLineStart.y = rect.height / 2
   svgOptions.controlPointEnd.x = rect.width / 2
   svgOptions.controlPointEnd.y = -20
+  
+  props.element.data = JSON.stringify(svgOptions.linePoints)
 }
 
 function draw() {

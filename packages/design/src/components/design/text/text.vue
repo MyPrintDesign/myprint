@@ -78,6 +78,9 @@ const style = computed(() => {
 })
 
 watch(() => props.element.runtimeOption.status, (n, _o) => {
+  if (contentRef.value == undefined) {
+    return
+  }
   if (n == 'HANDLE_ED') {
     // console.log('han')
     contentRef.value.addEventListener('click', click);

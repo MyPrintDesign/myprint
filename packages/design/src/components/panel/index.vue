@@ -141,7 +141,7 @@ function saveTemplate() {
     if ("status" == key) return undefined
     return value
   })
-  
+  console.log(JSON.parse(template.content))
   $emit("saveTemplate", template);
 }
 </script>

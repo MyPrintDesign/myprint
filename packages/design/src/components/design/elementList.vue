@@ -1,7 +1,5 @@
 <template>
-  <template v-for="(element) in elementList" :key="element.id">
-    <Design :element="element"/>
-  </template>
+  <Design v-for="(element) in elementList" :key="element.id" :element="element"/>
 </template>
 
 <script setup lang="ts">

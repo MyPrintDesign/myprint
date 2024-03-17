@@ -8,14 +8,7 @@
       
       <TableView :element="element" ref="tableRef"/>
       
-      <template v-if="'HANDLE_ED' == element.runtimeOption.status">
-        
-        <div class="cp-table-control-head-point" v-for="(item, index) in data.controlPointList"
-             :class="{'cp-table-control-head-point-active': data.col == index && data.status != 'RESIZE'}"
-             :style="{left: item.x + 'px'}"
-             @mousedown="controlPointMouseDown($event, index)">
-          <div class="cp-table-control-head-box-point"/>
-        </div>
+      <template v-if="'HANDLE_ED' == element.runtimeOption.status && !element.lock">
         
         <div class="cp-table-resize" v-for="(item, index) in data.resizeControlList"
              :style="{left: item.x + 'px'}" @mousedown="resizeMouseDown($event, index)"/>
@@ -29,12 +22,18 @@
         <div class="cp-table-highlight-column pointer-events"
              v-show="data.highlightColumn.visibility == 'visible'"
              :style="{
-        left: data.highlightColumn.x+'px',
-        top: data.highlightColumn.y+'px',
-        width: data.highlightColumn.width+'px',
-        height: data.highlightColumn.height+'px',
+        left: (data.highlightColumn.x-1)+'px',
+        top: (data.highlightColumn.y)+'px',
+        width: (data.highlightColumn.width+2)+'px',
+        height: (data.highlightColumn.height + 3)+'px',
            }"
         />
+        
+        <div class="cp-table-control-head-point iconfont icon-sigedian" v-for="(item, index) in data.controlPointList"
+             :class="{'cp-table-control-head-point-active': data.col == index && data.status != 'RESIZE'}"
+             :style="{left: item.x + 'px'}"
+             @mousedown="controlPointMouseDown($event, index)">
+        </div>
       </template>
     
     </template>
@@ -125,7 +124,7 @@ onMounted(() => {
       props.element.runtimeOption.init.height = props.element.runtimeOption.height
       props.element.width = px2unit(props.element.runtimeOption.width)
       // props.element.height = px2unit(props.element.runtimeOption.height)
-
+      
     }
   });
   resizeObserver.observe(tableRef.value.$el);

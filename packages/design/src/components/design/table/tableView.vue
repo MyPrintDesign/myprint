@@ -23,7 +23,7 @@
 import ColumnView from "./columnView.vue";
 // import ImageView from "../image/image.vue";
 import TextView from "../text/text.vue";
-import {computed, onMounted, watch} from "vue";
+import {computed, CSSProperties, onMounted, watch} from "vue";
 import {CpElement} from "@cp-print/design/types/entity";
 import {px2unit} from "@cp-print/design/utils/devicePixelRatio";
 
@@ -43,10 +43,13 @@ const bodyStyle = (column: CpElement) => {
     // width: column.runtimeOption.width + 'px',
     // height: column.runtimeOption.init.height + 'px',
     // maxHeight: column.runtimeOption.init.height + 'px'
-  } as any
+  } as CSSProperties
   if (column.option.borderAll) {
     // console.log(column.option.borderAll)
     style['border'] = '1px solid var(--tcolor)'
+  }
+  if (column.contentType == 'QrCode' || column.type == 'Image') {
+    style.lineHeight = 0
   }
   return style
 }

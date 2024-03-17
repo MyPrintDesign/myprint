@@ -1,0 +1,20 @@
+.cp_tab {
+  width: 100%;
+
+  .cp_tab-tab {
+    display: flex;
+    width: 100%;
+
+    .cp_tab-title {
+      font: inherit;
+      text-align: center;
+      font-size: 14px;
+      color: #2b2b2b;
+      width: 80px;
+    }
+
+    .active {
+      font-weight: 600;
+    }
+  }
+}

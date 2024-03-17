@@ -206,6 +206,9 @@ export interface RuntimeElementOption extends Position {
 export interface ElementOption {
     barCodeType: string
     aspectRatio: number
+    keepRatio: boolean
+    // 固定位置打印
+    fixed: boolean
     fontFamily: string
     fontSize: number
     opacity: number
@@ -217,6 +220,7 @@ export interface ElementOption {
     italic: boolean
     borderAll: boolean
     borderWidth: number
+    lineWidth: number
     rotate: number
     textType: string
     textAlign: textAlign

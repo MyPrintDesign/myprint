@@ -43,7 +43,7 @@
       </cp-history-select>
     </el-form-item>
     
-    <el-form-item label="尺寸(宽/高)">
+    <el-form-item label="宽/高">
       <group-input>
         <cp-history-input-number class="width-60" v-model="panel.width"
                                  @change="changePanelWidth"
@@ -58,15 +58,15 @@
     <!--    <style-icon tips="水印" v-model="panel.watermark" enable>-->
     <!--      <i class="iconfont-color icon-color-watermark cp-watermark"/>-->
     <!--    </style-icon>-->
-    <el-form-item label="水印">
-      <el-switch
-          v-model="panel.watermark"
-          class="ml-2"
-          inline-prompt
-          style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
-          active-text="开启"
-          inactive-text="关闭"/>
-    </el-form-item>
+<!--    <el-form-item label="水印">-->
+<!--      <el-switch-->
+<!--          v-model="panel.watermark"-->
+<!--          class="ml-2"-->
+<!--          inline-prompt-->
+<!--          style="&#45;&#45;el-switch-on-color: var(&#45;&#45;drag-h-color); &#45;&#45;el-switch-off-color: var(&#45;&#45;switch-off-color)"-->
+<!--          active-text="开启"-->
+<!--          inactive-text="关闭"/>-->
+<!--    </el-form-item>-->
     
     <el-form-item label="水印内容" v-if="panel.watermark">
       <cp-history-input v-model="panel.watermarkContent"

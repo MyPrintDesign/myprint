@@ -63,6 +63,13 @@
   }
 }
 
+.design-inactive {
+
+  &:before {
+    border: dashed 1px var(--dnb-highlight-color);
+  }
+}
+
 .design-activate-edit {
   //z-index: 1;
 
@@ -71,13 +78,6 @@
   }
 }
 
-
-.design-inactive {
-
-  &:before {
-    border: dashed 1px var(--dnb-highlight-color);
-  }
-}
 
 .desgin-remove {
   padding: 0;
@@ -114,7 +114,8 @@
 .cp-table-highlight-column {
   position: absolute;
   top: 0;
-  border: 3px solid var(--tcolor);
+  border: 2px solid var(--drag-h-color);
+  box-sizing: border-box;
 }
 
 .cp-table-highlight-sort {
@@ -136,12 +137,95 @@
   cursor: move;
   top: -10px;
   width: 20px;
-  height: 20px;
+  font-size: 14px !important;
+  height: 15px;
+  line-height: 15px;
+  text-align: center;
   visibility: hidden;
+  border-radius: 3px;
+  border: 1px black dashed;
   background: white !important;
 }
 
 .cp-table-control-head-point-active {
   visibility: visible;
-  background: green !important;
+  //background: green !important;
+}
+
+.image-crop-dialog {
+  user-select: none;
+}
+
+.choose-image-type-dialog {
+  border-radius: 8px !important;
+  overflow: hidden;
+
+  .el-dialog__header {
+    display: none;
+  }
+
+  .el-dialog__body {
+    padding: 0 !important;
+  }
+
+  .choose-image-type-dialog-header {
+    height: 51px;
+    padding: 0 37px;
+    background: white;
+    box-sizing: border-box;
+    border-bottom: 1px solid #e9e9e9;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+
+    .choose-image-type-dialog-header_tab {
+      display: flex;
+      width: 100%;
+
+      .setting-panel-header-close {
+        width: 24px;
+      }
+    }
+
+  }
+
+  .choose-image-localFile-panel {
+
+    width: 520px;
+    height: 117px;
+    user-select: none;
+    align-items: center;
+    justify-content: center;
+
+    .choose-image-localFile-btn {
+      width: 250px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      border-radius: 5px;
+      color: white;
+      background: var(--drag-h-color);
+      font-weight: 600;
+    }
+  }
+
+  .choose-image-url-panel {
+    width: 520px;
+    height: 117px;
+    user-select: none;
+    align-items: center;
+    justify-content: center;
+
+    .choose-image-url-btn {
+      width: 250px;
+      height: 30px;
+      line-height: 30px;
+      text-align: center;
+      border-radius: 5px;
+      color: white;
+      background: var(--drag-h-color);
+      font-weight: 600;
+    }
+  }
+
 }

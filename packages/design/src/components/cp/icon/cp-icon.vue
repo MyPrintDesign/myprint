@@ -1,6 +1,6 @@
 <template>
   <div class="style-icon"
-       :class="{focus: enable && (hoverFlag || modelValue), 'cp-icon-disabled': !enable}"
+       :class="{focus: enable && (hoverFlag || modelValue), 'cp-icon-disabled': !enable, active: modelValue}"
        @click="click"
        @mouseover="hover(true)"
        @mouseleave="hover(false)">

@@ -3,7 +3,7 @@
        :style="style"
        :class="{
          'dropInIs': element.runtimeOption.dragInIs,
-         'design-inactive': !elementHandleStatusList.includes(element.runtimeOption.status),
+         'design-inactive': !elementHandleStatusList.includes(element.runtimeOption.status) && !elementTypeLineList.includes(element.type),
          'design-activate': elementHandleHandleStatusList.includes(element.runtimeOption.status),
          'design-activate-edit': element.runtimeOption.status == 'HANDLE_EDIT_ING',
        }"
@@ -45,7 +45,7 @@ import ElementList from "./elementList.vue";
 import {
   elementHandleHandleStatusList,
   elementHandleStatusList,
-  elementTypeContainerList
+  elementTypeContainerList, elementTypeLineList
 } from "@cp-print/design/constants/common";
 import TableDesign from "@cp-print/design/components/design/table/tableDesign.vue";
 import {
@@ -53,6 +53,7 @@ import {
   moveableDragTarget,
   setSelectedTargets
 } from "@cp-print/design/components/moveable/moveable";
+import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 
 const designRef = ref()
 const containerMoveIconRef = ref()
@@ -69,12 +70,28 @@ onMounted(() => {
 })
 
 const style = computed(() => {
+  
+  let width = props.element.runtimeOption.init.width;
+  let height = props.element.runtimeOption.init.height;
+  if (props.element.type == 'DottedVerticalLine' || props.element.type == 'VerticalLine') {
+    const lineWidth = unit2px(props.element.option.lineWidth)
+    if (width < lineWidth) {
+      width = lineWidth
+    }
+  }
+  if (props.element.type == 'DottedHorizontalLine' || props.element.type == 'HorizontalLine') {
+    const lineWidth = unit2px(props.element.option.lineWidth)
+    if (height < lineWidth) {
+      height = lineWidth
+    }
+  }
+  
   return {
     left: props.element.runtimeOption.init.x + 'px',
     top: props.element.runtimeOption.init.y + 'px',
     transform: `translate(0px, 0px) rotate(${props.element.runtimeOption.init.runtimeOption.rotate}deg)`,
-    width: props.element.runtimeOption.init.width + 'px',
-    height: props.element.runtimeOption.init.height + 'px',
+    width: width + 'px',
+    height: height + 'px',
     // maxWidth: widthValueUnit(element),
     // maxHeight: heightValueUnit(element),
   } as CSSProperties

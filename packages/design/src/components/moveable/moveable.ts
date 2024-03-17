@@ -900,6 +900,8 @@ export function freshMoveableOption(element: CpElement) {
         // moveable.scalable = true
         // moveable.keepRatio = true
 
+    } else if (element.type == 'Image' || element.contentType == 'QrCode') {
+        moveable.keepRatio = true
     } else if (element.type == 'DrawPanel') {
         // moveable.renderDirections = []
         // moveable.clippable = true

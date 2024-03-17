@@ -1,6 +1,6 @@
 <template>
   <!--  多边形的线-->
-  <svg ref="chartRef" class="chart">
+  <svg ref="chartRef" class="cp-print-chart">
     <path class="u-path" d=""/>
     
     <!--    <line class="u-line"/>-->
@@ -22,22 +22,23 @@ import * as d3Drag from "d3-drag";
 import {CpElement, Line, Point, PointLabel} from "@cp-print/design/types/entity";
 import {dist, updateSvg} from "@cp-print/design/utils/svgUtil";
 import {Path} from "d3-path";
+import {elementHandleHandleStatusList} from "@cp-print/design/constants/common";
+import {D3DragEvent} from "@cp-print/design/types/d3Type";
 
 const props = withDefaults(defineProps<{
   element?: CpElement,
   svgOptions: any,
-  draw: Function,
-  dragStart?: Function,
-  dragIng?: Function,
-  dragEnd?: Function,
-  changeSize?: Function,
+  draw: (chart: any) => void,
+  dragStart?: (subject: PointLabel) => void,
+  dragIng?: (subject: PointLabel, event: D3DragEvent, dx: number, dy: number) => void,
+  dragEnd?: (subject: PointLabel) => void,
+  changeSize?: () => boolean,
 }>(), {
   element: () => ({} as CpElement),
   svgOptions: () => {
     return {
       width: 0,
       height: 0,
-      rotateControl: {},
       controlLine: [] as Array<Line>,
       centerPoint: {} as Point,
       controlPointScale: {} as PointLabel,
@@ -52,7 +53,7 @@ const props = withDefaults(defineProps<{
   },
   dragStart: () => {
   },
-  dragIng: () => {
+  dragIng: (_subject: PointLabel, _event: D3DragEvent, _dx: number, _dy: number) => {
   },
   dragEnd: () => {
   },
@@ -67,7 +68,13 @@ const chartRef = ref()
 
 watch(() => props.element.runtimeOption.status, (n, _o) => {
   // console.log(o, n)
-  props.svgOptions.drawAuxiliary = n == 'HANDLE';
+  props.svgOptions.drawAuxiliary = elementHandleHandleStatusList.includes(n) && !props.element.lock;
+  updateSvg(chartRef.value, props.svgOptions, props.draw);
+})
+
+watch(() => props.element.lock, (n, _o) => {
+  // console.log(o, n)
+  props.svgOptions.drawAuxiliary = elementHandleHandleStatusList.includes(props.element.runtimeOption.status) && !props.element.lock;
   updateSvg(chartRef.value, props.svgOptions, props.draw);
 })
 
@@ -132,7 +139,7 @@ function draggable() {
               })
               .on("end", () => {
                 // console.log('end')
-                props.dragEnd(subject)
+                props.dragEnd(subject!)
                 updateSvg(chartRef.value, props.svgOptions, props.draw)
               })
               .on("start.render drag.render end.render", () =>
@@ -142,11 +149,5 @@ function draggable() {
 }
 </script>
 <style scoped>
-.chart {
-  position: absolute;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
+
 </style>

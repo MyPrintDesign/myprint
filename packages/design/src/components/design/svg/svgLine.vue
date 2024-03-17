@@ -3,7 +3,6 @@
       :element="element"
       :svgOptions="svgOptions"
       :draw="draw"
-      :dragStart="dragStart"
       :dragIng="dragIng"
       :dragEnd="dragEnd"
   />
@@ -19,6 +18,7 @@ import {moveableMove, moveableResize} from "@cp-print/design/components/moveable
 import {Path} from "d3-path";
 import SvgBase from "@cp-print/design/components/design/svg/svgBase.vue";
 import {computedShapeBound} from "@cp-print/design/utils/elementUtil";
+import {D3DragEvent} from "@cp-print/design/types/d3Type";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -62,11 +62,7 @@ function initPoint() {
   svgOptions.allPoint = [...svgOptions.linePoints]
 }
 
-function dragStart() {
-
-}
-
-function dragIng(subject, event, dx, dy) {
+function dragIng(subject: PointLabel, event: D3DragEvent, dx: number, dy: number) {
   if (subject.label) {
     subject.x = event.x + dx;
     subject.y = event.y + dy;
@@ -87,7 +83,6 @@ function dragEnd() {
     allPointElement.x -= rect.x
     allPointElement.y -= rect.y
   }
-  
 }
 
 </script>
