@@ -78,35 +78,35 @@ export const fontSizeList: DownList[][] = [
 
 
 export const definePropType = <T>(val: any): PropType<T> => val
-type elementSettingType = keyof ElementOption | (keyof Container) | 'contentType' | 'data' | 'label'
+type elementSettingType = keyof ElementOption | (keyof Container) | 'contentType' | 'data' | 'label' | 'common'
 // "x", 'y', "width", 'height', "font", 'fontSize', "color", 'hiddenLabel', 'opacity', "aspectRatio", "rotate"
 const commonElementSetting: Array<elementSettingType> = ["x", 'y', "width", 'height', 'opacity', "aspectRatio", "rotate"]
 const styleElementSetting: Array<elementSettingType> = ['textAlign', "verticalAlign", 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'fontFamily', 'fontSize']
 const elementSetting: Record<elementType, Array<elementSettingType>> =
     {
-        Image: [...commonElementSetting],
-        Text: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', 'contentType', 'padding', "margin", 'data', 'label'],
-        TextTime: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', "formatter", 'padding', "margin", 'label'],
-        Panel: [...commonElementSetting],
-        DataTable: [...(commonElementSetting.filter(item => item !== "rotate")), ...styleElementSetting],
-        FREETable: [...(commonElementSetting.filter(item => item !== "rotate")), ...styleElementSetting],
-        Rect: [...commonElementSetting, 'color', 'background'],
-        HorizontalLine: [...commonElementSetting, 'color', 'lineHeight', 'lineWidth'],
-        DottedHorizontalLine: [...commonElementSetting, 'color', 'lineHeight', 'dottedStyle', 'lineWidth'],
-        VerticalLine: [...commonElementSetting, 'color', 'lineHeight', 'lineWidth'],
-        DottedVerticalLine: [...commonElementSetting, 'color', 'lineHeight', 'dottedStyle', 'lineWidth'],
-        Container: [...commonElementSetting],
-        PageHeader: [...commonElementSetting],
-        PageFooter: [...commonElementSetting],
-        PageNum: [...commonElementSetting, ...styleElementSetting, "formatter"],
+        Image: [...commonElementSetting, 'common'],
+        Text: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', 'contentType', 'padding', "margin", 'data', 'label', 'common'],
+        TextTime: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', "formatter", 'padding', "margin", 'label', 'common'],
+        Panel: [...commonElementSetting, 'common'],
+        DataTable: [...(commonElementSetting.filter(item => item !== "rotate")), ...styleElementSetting, 'common'],
+        FREETable: [...(commonElementSetting.filter(item => item !== "rotate")), ...styleElementSetting, 'common'],
+        Rect: [...commonElementSetting, 'color', 'background', 'common'],
+        HorizontalLine: [...commonElementSetting, 'color', 'lineHeight', 'lineWidth', 'common'],
+        DottedHorizontalLine: [...commonElementSetting, 'color', 'lineHeight', 'dottedStyle', 'lineWidth', 'common'],
+        VerticalLine: [...commonElementSetting, 'color', 'lineHeight', 'lineWidth', 'common'],
+        DottedVerticalLine: [...commonElementSetting, 'color', 'lineHeight', 'dottedStyle', 'lineWidth', 'common'],
+        Container: [...commonElementSetting, 'common'],
+        PageHeader: [...commonElementSetting, 'common'],
+        PageFooter: [...commonElementSetting, 'common'],
+        PageNum: [...commonElementSetting, ...styleElementSetting, "formatter", 'common'],
         PrivateDragRectElement: [],
-        SvgPolygonLine: [],
-        SvgCircle: [],
-        SvgEllipse: [],
-        SvgLine: [],
-        SvgBezierCurve: [],
-        SvgBezierCurveThree: [],
-        DrawPanel: [],
+        SvgPolygonLine: ['color', 'background', 'common'],
+        SvgCircle: ['color', 'background', 'common'],
+        SvgEllipse: ['color', 'background', 'common'],
+        SvgLine: ['color', 'background', 'common'],
+        SvgBezierCurve: ['color', 'background', 'common'],
+        SvgBezierCurveThree: ['color', 'background', 'common'],
+        DrawPanel: ['color', 'background', 'borderAll', 'common'],
     }
 
 export function getElementSetting(type: elementType) {

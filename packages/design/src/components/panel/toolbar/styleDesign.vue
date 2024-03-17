@@ -96,7 +96,7 @@
                 class="icon-color-qxzh iconfont-color cursor-pointer cp-style-item"/>
     
     <tool-icon-popover
-        :enable="hasStyle(multipleElementGetValue('type'), 'background')">
+        :enable="hasStyle(multipleElementGetValue('type'), 'common')">
       <template #reference>
         <i class="icon-color-zydic iconfont-color"/>
       </template>
@@ -107,7 +107,7 @@
     </tool-icon-popover>
     
     <tool-icon-popover
-        :enable="hasStyle(multipleElementGetValue('type'), 'background')">
+        :enable="hasStyle(multipleElementGetValue('type'), 'common')">
       <template #reference>
         <i class="icon-color-spz iconfont-color"/>
       </template>

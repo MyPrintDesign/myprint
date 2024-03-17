@@ -867,6 +867,7 @@ export function freshMoveableOption(element: CpElement) {
     // "sw" 可以解释为 "左下"，表示向左下方移动或相对于参考点的较左下位置。
     // "e" 可以解释为 "右"，表示向右移动或相对于参考点的较右位置。
     // "w" 可以解释为 "左"，表示向左移动或相对于参考点的较左位置。
+    moveable.keepRatio = element.option.keepRatio
 
     if (element.type == 'HorizontalLine' || element.type == 'DottedHorizontalLine') {
         moveable.renderDirections = ["w", "e"]
@@ -901,7 +902,6 @@ export function freshMoveableOption(element: CpElement) {
         // moveable.keepRatio = true
 
     } else if (element.type == 'Image' || element.contentType == 'QrCode') {
-        moveable.keepRatio = true
     } else if (element.type == 'DrawPanel') {
         // moveable.renderDirections = []
         // moveable.clippable = true

@@ -25,7 +25,7 @@ const data = reactive({
   strokes: [] as Array<Array<number>>,
   redo: [],
   imgSrc: "",
-  stroke: 'black',
+  // stroke: 'black',
   strokeWidth: 5,
   dragFun: {} as DragBehavior<DraggedElementBaseType, any, any>
 })
@@ -44,12 +44,16 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
     d3Selection.select(data.context.canvas)
         .on(".drag", null)
   }
+  render()
 })
 
 
 watch([() => props.element.width, () => props.element.height], (_n, _o) => {
   canvasRef.value.width = unit2px(props.element.width) * 2;
   canvasRef.value.height = unit2px(props.element.height) * 2;
+  render()
+})
+watch([() => props.element.option.borderAll], (_n, _o) => {
   render()
 })
 
@@ -104,16 +108,29 @@ function darggend() {
 }
 
 function render() {
-  data.context.clearRect(0, 0, props.element.runtimeOption.width, props.element.runtimeOption.height);
+  // console.log(123)
+  data.context.clearRect(0, 0, props.element.runtimeOption.width * 2, props.element.runtimeOption.height * 2);
+  
+  if (props.element.option.background) {
+    data.context.fillStyle = props.element.option.background
+    data.context.fillRect(0, 0, props.element.runtimeOption.width * 2, props.element.runtimeOption.height * 2)
+  }
+  
+  if (props.element.option.borderAll) {
+    data.context.strokeStyle = 'black';
+    data.context.lineWidth = 2;
+    data.context.strokeRect(1, 1, props.element.runtimeOption.width * 2 - 2.5, props.element.runtimeOption.height * 2 - 2.5)
+  }
   for (const stroke of data.strokes) {
     data.context.strokeStyle = stroke['stroke'];
     data.context.lineWidth = stroke['strokeWidth'];
     data.context.beginPath();
     data.curve.lineStart();
-    // console.log(stroke)
+    
     for (const point of stroke) {
       data.curve.point(point[0], point[1]);
     }
+    
     if (stroke.length === 1) data.curve.point(stroke[0][0], stroke[0][1]);
     data.curve.lineEnd();
     data.context.stroke();
@@ -127,7 +144,7 @@ function render() {
 
 function dragsubject() {
   const currentStroke = [];
-  currentStroke['stroke'] = data.stroke;
+  currentStroke['stroke'] = props.element.option.color ? props.element.option.color : 'black';
   currentStroke['strokeWidth'] = data.strokeWidth;
   data.strokes.push(currentStroke);
   data.redo.length = 0;

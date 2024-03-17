@@ -40,6 +40,7 @@ const svgOptions = reactive({
   linePoints: [] as Array<Point>,
   // svg 形状点(包括控制点)
   allPoint: [] as Array<PointLabel>,
+  virtualPoint: [] as Array<PointLabel>,
 })
 
 svgOptions.width = unit2px(props.element.width)
@@ -53,7 +54,7 @@ function initPoint() {
   svgOptions.controlPointEndDragStart = {...svgOptions.controlPointEnd}
   
   svgOptions.controlLineStart = {x: svgOptions.width / 2, y: svgOptions.height / 2}
-  svgOptions.controlPointEnd = {x: svgOptions.width / 2, y: -20, label: ""}
+  svgOptions.controlPointEnd = {x: svgOptions.width / 2, y: -20}
   svgOptions.allPoint = [...svgOptions.linePoints, svgOptions.controlPointEnd]
   svgOptions.controlLine = [{start: svgOptions.controlLineStart, end: svgOptions.controlPointEnd}]
 }
@@ -129,6 +130,34 @@ function draw() {
   // path.rect(...allPoint[1], ...allPoint[2]);
   path.closePath()
   // console.log(123)
+  
+  svgOptions.virtualPoint.length = 0
+  
+  if (svgOptions.linePoints.length > 1) {
+    for (let i = 0; i < svgOptions.linePoints.length - 1; i++) {
+      const start = svgOptions.linePoints[i];
+      const end = svgOptions.linePoints[i + 1];
+      svgOptions.virtualPoint.push(
+          {
+            x: (start.x + end.x) / 2,
+            y: (start.y + end.y) / 2,
+            type: 'virtual',
+            insertIndex: i + 1
+          }
+      );
+    }
+    
+    const start = svgOptions.linePoints[svgOptions.linePoints.length - 1];
+    const end = svgOptions.linePoints[0];
+    svgOptions.virtualPoint.push(
+        {
+          x: (start.x + end.x) / 2,
+          y: (start.y + end.y) / 2,
+          type: 'virtual',
+          insertIndex: svgOptions.linePoints.length
+        }
+    );
+  }
   
   return path;
 }

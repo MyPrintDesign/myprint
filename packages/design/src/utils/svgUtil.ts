@@ -1,4 +1,4 @@
-import {Line, Point} from "@cp-print/design/types/entity";
+import {CpElement, Line, Point} from "@cp-print/design/types/entity";
 import * as d3Selection from "d3-selection";
 
 // import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
@@ -87,17 +87,17 @@ export function dist(p, m) {
 
 export function updateSvg(chart, svgOptions, draw) {
     // console.log(draw())
+    const element = svgOptions.element as CpElement
     const chartSvg = d3Selection.select(chart)
     const path = draw(chartSvg)
     if (path) {
         chartSvg.select(".u-path")
             // .style("stroke", "white")
-            .style("stroke", "orange")
-            .style("fill", "none")
+            .style("stroke", element.option.color ? element.option.color : "black")
+            .style("fill", element.option.background ? element.option.background : "none")
             // .attr("stroke-width", 1.9)
             .attr("d", path)
     }
-
 
     // .attr("transform", "rotate(45,100,100)")
     // .call(drag)
@@ -108,8 +108,8 @@ export function updateSvg(chart, svgOptions, draw) {
         if (svgOptions.allPoint) {
             chartSvg
                 .selectAll(".u-point")
-                .style("stroke", "orange")
-                .style("fill", "white")
+                .style("stroke", "var(--drag-h-color)")
+                .style("fill", "var(--drag-h-color)")
                 .style("display", null)
 
                 .data(svgOptions.allPoint)
@@ -118,15 +118,29 @@ export function updateSvg(chart, svgOptions, draw) {
                         .append("g")
                         .classed("u-point", true)
                         .style("fill", "white")
-                        // .style("fill", "none")
                         .call(g => {
                             g.append("circle").attr("r", 3)
-                            // .attr("cx", d => d.x)
-                            // .attr("cy", d => d.y)
                             ;
-                            // g.append("text")
-                            //     .text((d: PointLabel) => d.label!)
-                            //     .attr("dy", (d: Point) => (d.y > 100 ? 15 : -5));
+                        })
+                )
+                .attr("transform", (d: Point) => `translate(${[d.x, d.y]})`);
+        }
+
+        if (svgOptions.virtualPoint) {
+            chartSvg
+                .selectAll(".uv-point")
+                .style("stroke", "var(--dnb-highlight-color)")
+                .style("fill", "var(--dnb-highlight-color)")
+                .style("display", null)
+
+                .data(svgOptions.virtualPoint)
+                .join(enter =>
+                    enter
+                        .append("g")
+                        .classed("uv-point", true)
+                        .style("fill", "white")
+                        .call(g => {
+                            g.append("circle").attr("r", 3)
                         })
                 )
                 .attr("transform", (d: Point) => `translate(${[d.x, d.y]})`);

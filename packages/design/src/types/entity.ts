@@ -23,7 +23,9 @@ export interface Point {
 }
 
 export interface PointLabel extends Point {
-    label?: string;
+    label?: string
+    type: 'control' | 'virtual'
+    insertIndex: number
 }
 
 export interface Line {
@@ -65,7 +67,7 @@ export interface Panel extends Container {
 }
 
 
-export interface PreviewWrapper extends CpElement{
+export interface PreviewWrapper extends CpElement {
     // element: CpElement
     offsetLastElementTop: number
     heightIs: boolean
@@ -251,7 +253,7 @@ export interface Position extends Point {
     right: number
 }
 
-export interface ContentScaleVo{
+export interface ContentScaleVo {
     viewport: Container
     miniMap: Container
     scale: number

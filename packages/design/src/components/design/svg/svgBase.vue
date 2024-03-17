@@ -3,13 +3,16 @@
   <svg ref="chartRef" class="cp-print-chart">
     <path class="u-path" d=""/>
     
-    <!--    <line class="u-line"/>-->
-    <line class="u-line" v-for="(_index, _item) in svgOptions.controlLine"/>
-    
-    <g class="u-point" style="display: none" v-for="(_index, _item) in svgOptions.allPoint">
-      <circle r="3"/>
-    </g>
-  
+    <template v-if="displayModelDesign()">
+      <line class="u-line" v-for="(_index, _item) in svgOptions.controlLine"/>
+      
+      <g class="u-point" style="display: none" v-for="(_index, _item) in svgOptions.allPoint">
+        <circle r="3"/>
+      </g>
+      <g class="uv-point" style="display: none" v-for="(_index, _item) in svgOptions.virtualPoint">
+        <circle r="3"/>
+      </g>
+    </template>
   </svg>
 </template>
 
@@ -24,6 +27,7 @@ import {dist, updateSvg} from "@cp-print/design/utils/svgUtil";
 import {Path} from "d3-path";
 import {elementHandleHandleStatusList} from "@cp-print/design/constants/common";
 import {D3DragEvent} from "@cp-print/design/types/d3Type";
+import {displayModelDesign} from "@cp-print/design/utils/elementUtil";
 
 const props = withDefaults(defineProps<{
   element?: CpElement,
@@ -46,6 +50,7 @@ const props = withDefaults(defineProps<{
       controlPointEndDragStart: {} as Point,
       // svg 形状点
       allPoint: [] as Array<PointLabel>,
+      virtualPoint: [] as Array<PointLabel>,
       drawAuxiliary: false
     }
   },
@@ -76,6 +81,10 @@ watch(() => props.element.lock, (n, _o) => {
   // console.log(o, n)
   props.svgOptions.drawAuxiliary = elementHandleHandleStatusList.includes(props.element.runtimeOption.status) && !props.element.lock;
   updateSvg(chartRef.value, props.svgOptions, props.draw);
+  if (!props.svgOptions.drawAuxiliary) {
+    // d3Selection.select(data.context.canvas)
+    //     .call(data.dragFun)
+  }
 })
 
 watch([() => props.element.width, () => props.element.height], (_n, _o) => {
@@ -86,6 +95,7 @@ watch([() => props.element.width, () => props.element.height], (_n, _o) => {
 })
 
 onMounted(() => {
+  props.svgOptions.element = props.element
   draggable();
 })
 
@@ -109,6 +119,11 @@ function draggable() {
     // 拖动范围
     if (dist(p, subject) > 12) subject = null;
     
+    if (subject == null && props.svgOptions.virtualPoint && props.svgOptions.virtualPoint.length > 0) {
+      subject = d3Array.least(props.svgOptions.virtualPoint, (a, b) => dist(p, a) - dist(p, b))!;
+      if (dist(p, subject) > 12) subject = null;
+    }
+    
     if (subject)
       d3Selection.select(chartRef.value)
           .style("cursor", "hand")
@@ -129,6 +144,16 @@ function draggable() {
                   dx = subject.x - event.x;
                   dy = subject.y - event.y;
                   props.dragStart(subject)
+                  
+                  if (subject.type == 'virtual') {
+                    // console.log('v')
+                    const insertIndex = subject.insertIndex
+                    delete subject.insertIndex
+                    delete subject.type
+                    props.svgOptions.allPoint.splice(insertIndex, 0, subject)
+                    props.svgOptions.linePoints.splice(insertIndex, 0, subject)
+                    updateSvg(chartRef.value, props.svgOptions, props.draw)
+                  }
                 }
               })
               .on("drag", event => {

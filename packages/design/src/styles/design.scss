@@ -46,7 +46,8 @@
   //z-index: 9999;
 
   &:before {
-    z-index: -1;
+    //z-index: -1;
+    pointer-events: none;
     position: absolute;
     content: '';
     box-sizing: border-box;
