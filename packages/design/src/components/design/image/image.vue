@@ -121,22 +121,8 @@ import {VueCropper} from "vue-cropper";
 import {onMounted, reactive, ref} from "vue";
 import {CpElement, DownList} from "@cp-print/design/types/entity";
 // import {useBase64} from "@vueuse/core";
-import {
-  // aspectRatioHeight,
-  displayModelDesign,
-  handleAspectRatioHeight,
-  valueUnit
-} from "@cp-print/design/utils/elementUtil";
-import {
-  Crop,
-  MoreFilled,
-  Plus,
-  RefreshLeft,
-  RefreshRight,
-  ZoomIn,
-  ZoomOut,
-  Check, CloseBold
-} from "@element-plus/icons-vue";
+import {displayModelDesign, handleAspectRatioHeight, valueUnit} from "@cp-print/design/utils/elementUtil";
+import {Check, CloseBold, Crop, Plus, RefreshLeft, RefreshRight, ZoomIn, ZoomOut} from "@element-plus/icons-vue";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {elementHandleStatusList} from "@cp-print/design/constants/common";
 import CpTabs from "@cp-print/design/components/cp/cp-tabs/cpTabs.vue";

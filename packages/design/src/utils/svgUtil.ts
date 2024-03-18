@@ -93,7 +93,7 @@ export function updateSvg(chart, svgOptions, draw) {
     if (path) {
         chartSvg.select(".u-path")
             // .style("stroke", "white")
-            .style("stroke", element.option.color ? element.option.color : "black")
+            .style("stroke", element.option.color ? element.option.color : "white")
             .style("fill", element.option.background ? element.option.background : "none")
             // .attr("stroke-width", 1.9)
             .attr("d", path)
@@ -164,6 +164,8 @@ export function updateSvg(chart, svgOptions, draw) {
     } else {
         chartSvg
             .selectAll(".u-point")
+            .style("display", "none")
+        chartSvg.selectAll(".uv-point")
             .style("display", "none")
         chartSvg.selectAll(".u-line")
             .style("display", "none")

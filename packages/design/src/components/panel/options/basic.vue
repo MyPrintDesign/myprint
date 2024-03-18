@@ -16,7 +16,7 @@
 <script setup lang="ts">
 
 import {inject, nextTick, reactive, ref} from "vue";
-import {Container, CpElement, elementTypeFormat, Point} from "@cp-print/design/types/entity";
+import {Container, CpElement, elementTypeFormat, Point, SvgData} from "@cp-print/design/types/entity";
 import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
 import {panelKey} from "@cp-print/design/constants/keys";
 import Design from "@cp-print/design/components/design/design.vue";
@@ -72,13 +72,27 @@ function dragStart(ev: MouseEvent) {
   
   element.width = unit2unit('mm', panel.pageUnit, tmpElement.value.width)
   element.height = unit2unit('mm', panel.pageUnit, tmpElement.value.height)
-  if (element.type == 'SvgPolygonLine') {
-    const tmpDataList = JSON.parse(element.data) as Point[]
-    for (let point of tmpDataList) {
-      point.x = unit2unit('mm', panel.pageUnit, point.x)
-      point.y = unit2unit('mm', panel.pageUnit, point.y)
+  if (element.type.startsWith('Svg') && element.data) {
+    const data = JSON.parse(element.data) as SvgData
+    const points = data.points as Point[]
+    const controlPoints = data.controlPoints as Point[]
+    const dataJson = {} as SvgData
+    if (points) {
+      for (let point of points) {
+        point.x = unit2unit('mm', panel.pageUnit, point.x)
+        point.y = unit2unit('mm', panel.pageUnit, point.y)
+      }
+      dataJson.points = points
     }
-    element.data = JSON.stringify(tmpDataList)
+    
+    if (controlPoints) {
+      for (let point of controlPoints) {
+        point.x = unit2unit('mm', panel.pageUnit, point.x)
+        point.y = unit2unit('mm', panel.pageUnit, point.y)
+      }
+      dataJson.controlPoints = controlPoints
+    }
+    element.data = JSON.stringify(dataJson)
   }
   
   initElement(element, 0)

@@ -11,7 +11,7 @@ import {
     Point,
     PointLabel,
     Position, PreviewWrapper,
-    RuntimeElementOption
+    RuntimeElementOption, SvgData
 } from "@cp-print/design/types/entity";
 import {
     canMoveStatusList,
@@ -344,13 +344,33 @@ export function initElement(element: CpElement, index: number) {
                 initWidth = px2unit(initBorderWidth + 3)
                 break
             case 'SvgPolygonLine':
-                const tmpDataList = JSON.parse(element.data) as Point[]
-                for (let point of tmpDataList) {
-                    point.x = unit2px(point.x)
-                    point.y = unit2px(point.y)
+            case 'SvgBezierCurve':
+            case 'SvgBezierCurveThree':
+            case 'SvgLine':
+                if (element.data) {
+                    const data = JSON.parse(element.data) as SvgData
+                    const points = data.points as Point[]
+                    const controlPoints = data.controlPoints as Point[]
+                    const dataJson = {} as SvgData
+                    if (points) {
+                        for (let point of points) {
+                            point.x = unit2px(point.x)
+                            point.y = unit2px(point.y)
+                        }
+                        dataJson.points = points
+                    }
+
+                    if (controlPoints) {
+                        for (let point of controlPoints) {
+                            point.x = unit2px(point.x)
+                            point.y = unit2px(point.y)
+                        }
+                        dataJson.controlPoints = controlPoints
+                    }
+
+                    // console.log(tmpDataList)
+                    element.data = JSON.stringify(dataJson)
                 }
-                console.log(tmpDataList)
-                element.data = JSON.stringify(tmpDataList)
                 break
         }
     }
@@ -959,6 +979,16 @@ export function computedShapeBound(points: Array<PointLabel>): Container {
         width: maxX - minX,
         height: maxY - minY
     } as Container
+}
+
+export function setElementWidthHeightPx(width: number, height: number, element: CpElement) {
+    element.runtimeOption.width = width
+    element.runtimeOption.height = height
+    element.runtimeOption.init.width = width
+    element.runtimeOption.init.height = height
+
+    element.width = px2unit(width)
+    element.height = px2unit(height)
 }
 
 export function multipleElementGetValue(props: string) {

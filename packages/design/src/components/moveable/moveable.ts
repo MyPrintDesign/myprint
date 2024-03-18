@@ -35,7 +35,7 @@ import {
     recursionForElement,
     getCurrentPanel, groupListToMap,
     removeElement,
-    setCurrentElement
+    setCurrentElement, setElementWidthHeightPx
 } from "@cp-print/design/utils/elementUtil";
 import {
     elementHandleStatusList,
@@ -292,6 +292,20 @@ export function moveableResize(width: number, height: number) {
         offsetHeight: height,
         useSnap: true
     }, true);
+}
+
+export function moveableDragResize(x: number, y: number, width: number, height: number, element: CpElement) {
+    if (!isChangeTargetLoadFinished) {
+        return
+    }
+
+    setElementWidthHeightPx(width, height, element)
+
+    updateMoveableRect()
+
+    setTimeout(() => {
+        moveableMove(x, y)
+    }, 1)
 }
 
 export function moveableScalable(width: number, height: number) {

@@ -70,21 +70,21 @@ const props = withDefaults(defineProps<{
 let path: Path
 
 const chartRef = ref()
+let subject: PointLabel = undefined!, dx, dy;
+let startX, startY;
+let dragFun
 
 watch(() => props.element.runtimeOption.status, (n, _o) => {
   // console.log(o, n)
   props.svgOptions.drawAuxiliary = elementHandleHandleStatusList.includes(n) && !props.element.lock;
   updateSvg(chartRef.value, props.svgOptions, props.draw);
+  draggable()
 })
 
 watch(() => props.element.lock, (n, _o) => {
-  // console.log(o, n)
   props.svgOptions.drawAuxiliary = elementHandleHandleStatusList.includes(props.element.runtimeOption.status) && !props.element.lock;
   updateSvg(chartRef.value, props.svgOptions, props.draw);
-  if (!props.svgOptions.drawAuxiliary) {
-    // d3Selection.select(data.context.canvas)
-    //     .call(data.dragFun)
-  }
+  draggable()
 })
 
 watch([() => props.element.width, () => props.element.height], (_n, _o) => {
@@ -96,81 +96,94 @@ watch([() => props.element.width, () => props.element.height], (_n, _o) => {
 
 onMounted(() => {
   props.svgOptions.element = props.element
-  draggable();
+  dragFun = d3Drag
+      .drag()
+      .subject(dragSubject)
+      .on("start", event => {
+        if (subject) {
+          d3Selection.select(chartRef.value).style("cursor", "grabbing");
+          dx = subject.x - event.x;
+          dy = subject.y - event.y;
+          props.dragStart(subject)
+          
+          startX = event.x
+          startY = event.y
+          
+          if (subject.type == 'virtual') {
+            const insertIndex = subject.insertIndex
+            subject.insertIndex = undefined!
+            subject.type = undefined!
+            props.svgOptions.allPoint.splice(insertIndex, 0, subject)
+            props.svgOptions.linePoints.splice(insertIndex, 0, subject)
+            updateSvg(chartRef.value, props.svgOptions, props.draw)
+          }
+        }
+      })
+      .on("drag", event => {
+        if (subject) {
+          props.dragIng(subject, event, dx, dy)
+        }
+      })
+      .on("end", (event) => {
+        if (subject) {
+          if (startX == event.x && startY == event.y) {
+            console.log('click')
+            // props.dragEnd(subject!)
+          } else {
+            console.log('end')
+            props.dragEnd(subject!)
+          }
+          // event
+        }
+        d3Selection.select(chartRef.value).style("cursor", null);
+   
+        updateSvg(chartRef.value, props.svgOptions, props.draw)
+      })
+      .on("start.render drag.render end.render", () =>
+          updateSvg(chartRef.value, props.svgOptions, props.draw)
+      )
+  updateSvg(chartRef.value, props.svgOptions, props.draw)
 })
 
 function draggable() {
-  updateSvg(chartRef.value, props.svgOptions, props.draw);
+  if (!props.svgOptions.drawAuxiliary) {
+    d3Selection.select(chartRef.value)
+        .on("mousemove", null)
+        .on(".drag", null)
+    d3Selection.select(chartRef.value).style("cursor", null);
+  } else {
+    d3Selection.select(chartRef.value)
+        .on("mousemove", event => dragSubject({sourceEvent: event}))
+        .call(dragFun)
+  }
+}
+
+function dragSubject(event) {
+  // 拖动开始判断是哪个
+  // console.log(event)
+  // 拖动的鼠标的位置
+  if (!props.svgOptions.allPoint) {
+    return null
+  }
+  const p = d3Selection.pointer(event.sourceEvent, chartRef.value);
+  // console.log(p)
+  // 找到的最近的点
+  subject = d3Array.least(props.svgOptions.allPoint, (a, b) => dist(p, a) - dist(p, b))!;
+  // console.log(subject)
+  // 拖动范围
+  if (dist(p, subject) > 12) subject = undefined!;
   
-  var subject: PointLabel | null, dx, dy;
-  
-  function dragSubject(event) {
-    // 拖动开始判断是哪个
-    // console.log(event)
-    // 拖动的鼠标的位置
-    if (!props.svgOptions.allPoint) {
-      return null
-    }
-    const p = d3Selection.pointer(event.sourceEvent, chartRef.value);
-    // console.log(p)
-    // 找到的最近的点
-    subject = d3Array.least(props.svgOptions.allPoint, (a, b) => dist(p, a) - dist(p, b))!;
-    // console.log(subject)
-    // 拖动范围
-    if (dist(p, subject) > 12) subject = null;
-    
-    if (subject == null && props.svgOptions.virtualPoint && props.svgOptions.virtualPoint.length > 0) {
-      subject = d3Array.least(props.svgOptions.virtualPoint, (a, b) => dist(p, a) - dist(p, b))!;
-      if (dist(p, subject) > 12) subject = null;
-    }
-    
-    if (subject)
-      d3Selection.select(chartRef.value)
-          .style("cursor", "hand")
-          .style("cursor", "grab");
-    else d3Selection.select(chartRef.value).style("cursor", null);
-    return subject;
+  if (subject == null && props.svgOptions.virtualPoint && props.svgOptions.virtualPoint.length > 0) {
+    subject = d3Array.least(props.svgOptions.virtualPoint, (a, b) => dist(p, a) - dist(p, b))!;
+    if (dist(p, subject) > 12) subject = undefined!;
   }
   
-  d3Selection.select(chartRef.value)
-      .on("mousemove", event => dragSubject({sourceEvent: event}))
-      .call(
-          d3Drag
-              .drag()
-              .subject(dragSubject)
-              .on("start", event => {
-                if (subject) {
-                  d3Selection.select(chartRef.value).style("cursor", "grabbing");
-                  dx = subject.x - event.x;
-                  dy = subject.y - event.y;
-                  props.dragStart(subject)
-                  
-                  if (subject.type == 'virtual') {
-                    // console.log('v')
-                    const insertIndex = subject.insertIndex
-                    delete subject.insertIndex
-                    delete subject.type
-                    props.svgOptions.allPoint.splice(insertIndex, 0, subject)
-                    props.svgOptions.linePoints.splice(insertIndex, 0, subject)
-                    updateSvg(chartRef.value, props.svgOptions, props.draw)
-                  }
-                }
-              })
-              .on("drag", event => {
-                // console.log(event)
-                if (subject) {
-                  props.dragIng(subject, event, dx, dy)
-                }
-              })
-              .on("end", () => {
-                // console.log('end')
-                props.dragEnd(subject!)
-                updateSvg(chartRef.value, props.svgOptions, props.draw)
-              })
-              .on("start.render drag.render end.render", () =>
-                  updateSvg(chartRef.value, props.svgOptions, props.draw)
-              )
-      );
+  if (subject)
+    d3Selection.select(chartRef.value)
+        .style("cursor", "hand")
+        .style("cursor", "grab");
+  else d3Selection.select(chartRef.value).style("cursor", null);
+  return subject;
 }
 </script>
 <style scoped>

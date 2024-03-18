@@ -13,13 +13,14 @@
 import {reactive} from 'vue'
 
 import * as d3Path from "d3-path";
+import {Path} from "d3-path";
 import {CpElement, Line, Point, PointLabel} from "@cp-print/design/types/entity";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
-import {moveableMove, moveableResize} from "@cp-print/design/components/moveable/moveable";
-import {Path} from "d3-path";
+import {moveableDragResize} from "@cp-print/design/components/moveable/moveable";
 import SvgBase from "@cp-print/design/components/design/svg/svgBase.vue";
 import {computedShapeBound} from "@cp-print/design/utils/elementUtil";
-import { bezier2} from "@cp-print/design/utils/bezierUtil";
+import {bezier2} from "@cp-print/design/utils/bezierUtil";
+import {stringify} from "@cp-print/design/utils/utils";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -35,11 +36,11 @@ const svgOptions = reactive({
   rotateControl: {},
   controlLine: [] as Array<Line>,
   centerPoint: {} as Point,
-  controlPointLineStart: {} as PointLabel,
-  controlPointLineEnd: {} as PointLabel,
-  controlPointList: {} as PointLabel,
+  // controlPointLineStart: {} as PointLabel,
+  // controlPointLineEnd: {} as PointLabel,
+  controlPoint: {} as PointLabel,
   // svg 形状点
-  linePoints: [] as Array<Point>,
+  linePoints: [] as PointLabel[],
   allPoint: [] as Array<PointLabel>,
   drawAuxiliary: false
 })
@@ -50,33 +51,34 @@ svgOptions.height = unit2px(props.element.height)
 initPoint()
 
 function draw() {
+  // console.log('draw', svgOptions.controlPointLineEnd.x)
   path = d3Path.path() as Path;
   
-  path.moveTo(svgOptions.controlPointLineStart.x, svgOptions.controlPointLineStart.y);
-  path.quadraticCurveTo(svgOptions.controlPointList.x, svgOptions.controlPointList.y, svgOptions.controlPointLineEnd.x, svgOptions.controlPointLineEnd.y);
+  path.moveTo(svgOptions.linePoints[0].x, svgOptions.linePoints[0].y);
+  path.quadraticCurveTo(svgOptions.controlPoint.x, svgOptions.controlPoint.y, svgOptions.linePoints[1].x, svgOptions.linePoints[1].y);
   return path;
 }
 
 function initPoint() {
-  svgOptions.controlPointLineStart = {x: 0, y: 0, label: "scale"}
-  svgOptions.controlPointLineEnd = {x: svgOptions.width, y: 0, label: "resize"}
-  svgOptions.controlPointList = {x: svgOptions.width / 2, y: svgOptions.height + 20, label: "resize"}
-  svgOptions.linePoints = [svgOptions.controlPointLineStart, svgOptions.controlPointLineEnd]
-  svgOptions.allPoint = [...svgOptions.linePoints, svgOptions.controlPointList]
+  const data = JSON.parse(props.element.data);
+  svgOptions.linePoints = data.points;
+  svgOptions.controlPoint = data.controlPoints[0]
+  svgOptions.controlPoint.type = 'control'
+  svgOptions.allPoint = [...svgOptions.linePoints, svgOptions.controlPoint]
   
-  svgOptions.controlLine = [{start: svgOptions.controlPointLineStart, end: svgOptions.controlPointList},
-    {start: svgOptions.controlPointLineEnd, end: svgOptions.controlPointList}]
+  svgOptions.controlLine = [{start: svgOptions.linePoints[0], end: svgOptions.controlPoint},
+    {start: svgOptions.linePoints[1], end: svgOptions.controlPoint}]
 }
 
 function dragStart() {
 
 }
 
-function dragIng(subject, event, dx, dy) {
-  if (subject.label) {
+function dragIng(subject: PointLabel, event, dx, dy) {
+  // if (subject.type == 'control') {
     subject.x = event.x + dx;
     subject.y = event.y + dy;
-  }
+  // }
 }
 
 function dragEnd() {
@@ -87,8 +89,7 @@ function dragEnd() {
   // console.log("Highest point on Bezier curve: " + bezierProperties.maxY);
   const rect = computedShapeBound(svgOptions.linePoints)
   // console.log(rect)
-  moveableMove(bezierProperties.x + unit2px(props.element.x), bezierProperties.y + unit2px(props.element.y))
-  moveableResize(bezierProperties.width, bezierProperties.height)
+  moveableDragResize(rect.x + unit2px(props.element.x), rect.y + unit2px(props.element.y), rect.width, rect.height, props.element)
   
   svgOptions.width = rect.width
   svgOptions.height = rect.height
@@ -98,6 +99,8 @@ function dragEnd() {
     allPointElement.x -= bezierProperties.x
     allPointElement.y -= bezierProperties.y
   }
+  
+  props.element.data = stringify({points: svgOptions.linePoints, controlPoints: [svgOptions.controlPoint]}, "type")
 }
 
 </script>

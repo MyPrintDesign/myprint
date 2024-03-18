@@ -12,13 +12,14 @@
 import {reactive} from 'vue'
 
 import * as d3Path from "d3-path";
-import {CpElement, Line, Point, PointLabel} from "@cp-print/design/types/entity";
-import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
-import {moveableMove, moveableResize} from "@cp-print/design/components/moveable/moveable";
 import {Path} from "d3-path";
+import {CpElement, PointLabel} from "@cp-print/design/types/entity";
+import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+import {moveableDragResize} from "@cp-print/design/components/moveable/moveable";
 import SvgBase from "@cp-print/design/components/design/svg/svgBase.vue";
 import {computedShapeBound} from "@cp-print/design/utils/elementUtil";
 import {D3DragEvent} from "@cp-print/design/types/d3Type";
+import {stringify} from "@cp-print/design/utils/utils";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -32,13 +33,8 @@ const svgOptions = reactive({
   width: 0,
   height: 0,
   rotateControl: {},
-  controlLine: [] as Array<Line>,
-  centerPoint: {} as Point,
-  controlPointLineStart: {} as PointLabel,
-  controlPointLineEnd: {} as PointLabel,
-  controlPointEndDragStart: {} as Point,
   // svg 形状点
-  linePoints: [] as Array<Point>,
+  linePoints: [] as Array<PointLabel>,
   allPoint: [] as Array<PointLabel>,
   drawAuxiliary: false
 })
@@ -49,31 +45,31 @@ svgOptions.height = unit2px(props.element.height)
 initPoint()
 
 function draw() {
-  path = d3Path.path() as Path;
-  path.moveTo(svgOptions.controlPointLineStart.x, svgOptions.controlPointLineStart.y);
-  path.lineTo(svgOptions.controlPointLineEnd.x, svgOptions.controlPointLineEnd.y);
-  return path;
+  path = d3Path.path() as Path
+  if (svgOptions.linePoints.length > 1) {
+    path.moveTo(svgOptions.linePoints[0].x, svgOptions.linePoints[0].y)
+    path.lineTo(svgOptions.linePoints[1].x, svgOptions.linePoints[1].y)
+  }
+  return path
 }
 
 function initPoint() {
-  svgOptions.controlPointLineStart = {x: 0, y: 0, label: "scale"}
-  svgOptions.controlPointLineEnd = {x: svgOptions.width, y: svgOptions.height, label: "resize"}
-  svgOptions.linePoints = [svgOptions.controlPointLineStart, svgOptions.controlPointLineEnd]
+  if (props.element.data) {
+    const data = JSON.parse(props.element.data);
+    svgOptions.linePoints = data.points;
+  }
   svgOptions.allPoint = [...svgOptions.linePoints]
 }
 
 function dragIng(subject: PointLabel, event: D3DragEvent, dx: number, dy: number) {
-  if (subject.label) {
-    subject.x = event.x + dx;
-    subject.y = event.y + dy;
-  }
+  subject.x = event.x + dx;
+  subject.y = event.y + dy;
 }
 
 function dragEnd() {
   const rect = computedShapeBound(svgOptions.linePoints)
-  // console.log(rect)
-  moveableMove(rect.x + unit2px(props.element.x), rect.y + unit2px(props.element.y))
-  moveableResize(rect.width, rect.height)
+  
+  moveableDragResize(rect.x + unit2px(props.element.x), rect.y + unit2px(props.element.y), rect.width, rect.height, props.element)
   
   svgOptions.width = rect.width
   svgOptions.height = rect.height
@@ -83,6 +79,8 @@ function dragEnd() {
     allPointElement.x -= rect.x
     allPointElement.y -= rect.y
   }
+  
+  props.element.data = stringify({points: svgOptions.linePoints})
 }
 
 </script>

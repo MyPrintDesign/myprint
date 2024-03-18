@@ -189,7 +189,7 @@ export const customProvider: Array<CpElement> = [
     {
         field: "",
         type: "SvgPolygonLine",
-        data: "[{\"x\": 0,\"y\": 0},{\"x\": 30,\"y\": 0},{\"x\": 30,\"y\": 30},{\"x\": 0,\"y\": 30}]",
+        data: "{\"points\":[{\"x\": 0,\"y\": 0},{\"x\": 30,\"y\": 0},{\"x\": 30,\"y\": 30},{\"x\": 0,\"y\": 30}]}",
         iconClass: 'iconfont-color icon-color-svg-rect',
         width: 30,
         "option": {
@@ -230,6 +230,7 @@ export const customProvider: Array<CpElement> = [
     {
         field: "",
         type: "SvgLine",
+        data: "{\"points\":[{\"x\": 0,\"y\": 0},{\"x\": 30,\"y\": 30}]}",
         iconClass: 'iconfont-color icon-color-svg-line',
         width: 30,
         "option": {
@@ -240,6 +241,7 @@ export const customProvider: Array<CpElement> = [
     {
         field: "",
         type: "SvgBezierCurve",
+        data: "{\"points\":[{\"x\": 0,\"y\": 0},{\"x\": 30,\"y\": 0}],\"controlPoints\":[{\"x\": 15,\"y\": 50}]}",
         iconClass: 'iconfont-color icon-color-svg-bezier2',
         width: 30,
         "option": {
@@ -250,6 +252,7 @@ export const customProvider: Array<CpElement> = [
     {
         field: "",
         type: "SvgBezierCurveThree",
+        data: "{\"points\":[{\"x\": 0,\"y\": 15},{\"x\": 30,\"y\": 15}],\"controlPoints\":[{\"x\": 10,\"y\": 30},{\"x\": 20,\"y\": 0}]}",
         iconClass: 'iconfont-color icon-color-svg-bezier3',
         width: 30,
         "option": {

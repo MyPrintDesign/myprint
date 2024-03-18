@@ -22,6 +22,11 @@ export interface Point {
     y: number;
 }
 
+export interface SvgData {
+    points: Point[]
+    controlPoints: Point[]
+}
+
 export interface PointLabel extends Point {
     label?: string
     type: 'control' | 'virtual'

@@ -8,7 +8,6 @@ import CpPageHeader from './components/design/container/pageHeader'
 // import CpPageFooter from './components/design/container/pageFooter'
 import CpPanel from './components/panel'
 // import CpTest from './components/test/index.vue'
-import CpTest from './components/design/svg/test.vue'
 
 
 
@@ -17,7 +16,6 @@ export * from './components/design/auxiliary'
 import {install as createPrint} from './install'
 
 export {
-    CpTest,
     CpText,
     CpImage,
     CpDottedHorizontalLine,

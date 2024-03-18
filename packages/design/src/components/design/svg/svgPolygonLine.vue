@@ -13,13 +13,14 @@
 import {reactive} from 'vue'
 import * as d3Path from "d3-path";
 import {Path} from "d3-path";
-import {CpElement, Line, Point, PointLabel} from "@cp-print/design/types/entity";
+import {CpElement, Line, PointLabel} from "@cp-print/design/types/entity";
 import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
 import {computeLineAngle, rotatePoint} from "@cp-print/design/utils/svgUtil";
 import {computedShapeBound} from "@cp-print/design/utils/elementUtil";
-import {moveableMove, moveableResize} from "@cp-print/design/components/moveable/moveable";
+import {moveableDragResize} from "@cp-print/design/components/moveable/moveable";
 import SvgBase from "@cp-print/design/components/design/svg/svgBase.vue";
 import {D3DragEvent} from "@cp-print/design/types/d3Type";
+import {stringify} from "@cp-print/design/utils/utils";
 
 const props = withDefaults(defineProps<{
   element?: CpElement
@@ -33,11 +34,11 @@ const svgOptions = reactive({
   height: 0,
   // 辅助线
   controlLine: [] as Array<Line>,
-  controlLineStart: {} as Point,
+  controlLineStart: {} as PointLabel,
   controlPointEnd: {} as PointLabel,
-  controlPointEndDragStart: {} as Point,
+  controlPointEndDragStart: {} as PointLabel,
   // svg 形状点
-  linePoints: [] as Array<Point>,
+  linePoints: [] as PointLabel[],
   // svg 形状点(包括控制点)
   allPoint: [] as Array<PointLabel>,
   virtualPoint: [] as Array<PointLabel>,
@@ -49,12 +50,13 @@ svgOptions.height = unit2px(props.element.height)
 initPoint()
 
 function initPoint() {
-  svgOptions.linePoints = JSON.parse(props.element.data);
-  
+  const data = JSON.parse(props.element.data);
+  // console.log(data.points[2].x, data.points[2].y)
+  svgOptions.linePoints = data.points;
   svgOptions.controlPointEndDragStart = {...svgOptions.controlPointEnd}
   
-  svgOptions.controlLineStart = {x: svgOptions.width / 2, y: svgOptions.height / 2}
-  svgOptions.controlPointEnd = {x: svgOptions.width / 2, y: -20}
+  svgOptions.controlLineStart = {x: svgOptions.width / 2, y: svgOptions.height / 2} as PointLabel
+  svgOptions.controlPointEnd = {x: svgOptions.width / 2, y: -20} as PointLabel
   svgOptions.allPoint = [...svgOptions.linePoints, svgOptions.controlPointEnd]
   svgOptions.controlLine = [{start: svgOptions.controlLineStart, end: svgOptions.controlPointEnd}]
 }
@@ -77,8 +79,8 @@ function dragIng(subject: PointLabel, event: D3DragEvent, dx: number, dy: number
         },
         {start: svgOptions.controlLineStart, end: {x: subject.x, y: subject.y}})
     // console.log(angle)
-    var centerX = svgOptions.width / 2;
-    var centerY = svgOptions.height / 2;
+    const centerX = svgOptions.width / 2;
+    const centerY = svgOptions.height / 2;
     for (let i = 0; i < 4; i++) {
       let point = orgPoint[i]
       const po = rotatePoint(centerX, centerY, point.x, point.y, angle)
@@ -91,7 +93,8 @@ function dragIng(subject: PointLabel, event: D3DragEvent, dx: number, dy: number
 
 function dragEnd() {
   const rect = computedShapeBound(svgOptions.linePoints)
-  
+  // console.log(rect.y)
+  // console.log(rect.y + unit2px(props.element.y), rect.height)
   // const width = d3Selection.select(chart)
   //     .select(".u-path")
   //     .node()
@@ -99,8 +102,8 @@ function dragEnd() {
   //     .getBoundingClientRect();
   // console.log(width)
   // console.log(rect)
-  moveableMove(rect.x + unit2px(props.element.x), rect.y + unit2px(props.element.y))
-  moveableResize(rect.width, rect.height)
+  
+  moveableDragResize(rect.x + unit2px(props.element.x), rect.y + unit2px(props.element.y), rect.width, rect.height, props.element)
   
   svgOptions.width = rect.width
   svgOptions.height = rect.height
@@ -115,7 +118,7 @@ function dragEnd() {
   svgOptions.controlPointEnd.x = rect.width / 2
   svgOptions.controlPointEnd.y = -20
   
-  props.element.data = JSON.stringify(svgOptions.linePoints)
+  props.element.data = stringify({points: svgOptions.linePoints}, 'insertIndex')
 }
 
 function draw() {
@@ -123,13 +126,9 @@ function draw() {
   
   path.moveTo(svgOptions.linePoints[0].x, svgOptions.linePoints[0].y);
   for (let i = 1; i < svgOptions.linePoints.length; i++) {
-    // console.log(333)
     path.lineTo(svgOptions.linePoints[i].x, svgOptions.linePoints[i].y);
   }
-  // path.moveTo(...allPoint[0]);
-  // path.rect(...allPoint[1], ...allPoint[2]);
   path.closePath()
-  // console.log(123)
   
   svgOptions.virtualPoint.length = 0
   
