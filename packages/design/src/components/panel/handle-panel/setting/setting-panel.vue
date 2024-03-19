@@ -39,7 +39,7 @@ import {CloseBold} from "@element-plus/icons-vue";
 import {reactive, ref} from "vue";
 import SettingPrinter from "./setting-printer.vue";
 import SettingAbout from "./setting-about.vue";
-import {useConfigStore} from "@cp-print/design/stores/config";
+import {useConfigStore} from "@myprint/design/stores/config";
 import SettingDesign from "./setting-design.vue";
 
 const configStore = useConfigStore()

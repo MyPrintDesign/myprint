@@ -1,3 +1,3 @@
-import CpImage from './image.vue'
+import MyImage from './image.vue'
 
-export default CpImage
+export default MyImage

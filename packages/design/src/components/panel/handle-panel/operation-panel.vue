@@ -1,33 +1,33 @@
 <template>
-  <cp-collapse v-model="configStore.settingPanel.operation.visible" :element="handlePanelElementList.operation">
+  <my-collapse v-model="configStore.settingPanel.operation.visible" :element="handlePanelElementList.operation">
     <template #head>
       | {{ title }}
     </template>
     <template v-if="appStore.currentElement.length > 0">
-      <cp-data-table-setting
+      <my-data-table-setting
           v-if="appStore.currentElement[0].type == 'DataTable'"
           class="advanced-config"/>
-      <cp-data-table-column-setting
+      <my-data-table-column-setting
           v-else-if="appStore.currentElement[0].runtimeOption.parent!.type == 'DataTable'"
           class="advanced-config"/>
-      <CpElementSetting v-else class="advanced-config"/>
+      <MyElementSetting v-else class="advanced-config"/>
     </template>
-    <CpPanelSetting v-else class="advanced-config"/>
-  </cp-collapse>
+    <MyPanelSetting v-else class="advanced-config"/>
+  </my-collapse>
 </template>
 
 
 <script setup lang="ts">
-import {handlePanelElementList} from "@cp-print/design/constants/settingPanel";
-import CpCollapse from "../../cp/cp-collapse/cp-collapse.vue";
-import CpElementSetting from "../content/cp-element-setting.vue";
-import CpPanelSetting from "../content/cp-panel-setting.vue";
-import {elementTypeFormat} from "@cp-print/design/types/entity";
+import {handlePanelElementList} from "@myprint/design/constants/settingPanel";
+import MyCollapse from "@myprint/design/components/my/collapse/my-collapse.vue";
+import MyElementSetting from "../content/my-element-setting.vue";
+import MyPanelSetting from "../content/my-panel-setting.vue";
+import {elementTypeFormat} from "@myprint/design/types/entity";
 import {computed} from "vue";
-import {useConfigStore} from "@cp-print/design/stores/config";
-import {useAppStoreHook} from "@cp-print/design/stores/app";
-import CpDataTableSetting from "@cp-print/design/components/panel/content/cp-data-table-setting.vue";
-import CpDataTableColumnSetting from "@cp-print/design/components/panel/content/cp-data-table-column-setting.vue";
+import {useConfigStore} from "@myprint/design/stores/config";
+import {useAppStoreHook} from "@myprint/design/stores/app";
+import MyDataTableSetting from "@myprint/design/components/panel/content/my-data-table-setting.vue";
+import MyDataTableColumnSetting from "@myprint/design/components/panel/content/my-data-table-column-setting.vue";
 
 const appStore = useAppStoreHook()
 const configStore = useConfigStore()

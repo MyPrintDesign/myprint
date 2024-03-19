@@ -1,5 +1,5 @@
 <template>
-  <div class="cp-print-rect__wrapper"
+  <div class="my-print-rect__wrapper"
        :style="{maxWidth: valueUnit(element.width),
        width: valueUnit(trend1(element.width)),
        height: valueUnit(trend1(element.height)),
@@ -9,12 +9,12 @@
 <script setup lang="ts">
 
 import {PropType} from "vue";
-import {CpElement} from "@cp-print/design/types/entity";
-import {trend1} from "@cp-print/design/utils/utils";
-import {valueUnit} from "@cp-print/design/utils/elementUtil";
+import {MyElement} from "@myprint/design/types/entity";
+import {trend1} from "@myprint/design/utils/utils";
+import {valueUnit} from "@myprint/design/utils/elementUtil";
 
 defineProps({
-  element: {type: Object as PropType<CpElement>, default: () => ({} as CpElement)}
+  element: {type: Object as PropType<MyElement>, default: () => ({} as MyElement)}
 })
 
 function drop(_event: DragEvent) {

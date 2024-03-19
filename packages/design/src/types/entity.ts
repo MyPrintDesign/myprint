@@ -6,7 +6,7 @@ export interface Option {
 export interface Provider {
     width: number;
     height: number;
-    elementList: CpElement[];
+    elementList: MyElement[];
 }
 
 export interface Design {
@@ -14,7 +14,7 @@ export interface Design {
 }
 
 export interface ElementRelation {
-    elementList: CpElement[]
+    elementList: MyElement[]
 }
 
 export interface Point {
@@ -66,14 +66,13 @@ export interface Panel extends Container {
     dragSnapIs: number
     design: Design
     orientation?: "p" | "portrait" | "l" | "landscape"
-    pageHeader?: CpElement
-    pageFooter?: CpElement
+    pageHeader?: MyElement
+    pageFooter?: MyElement
     groupList: string[][]
 }
 
 
-export interface PreviewWrapper extends CpElement {
-    // element: CpElement
+export interface PreviewWrapper extends MyElement {
     offsetLastElementTop: number
     heightIs: boolean
     previewWrapperList: PreviewWrapper[]
@@ -82,7 +81,7 @@ export interface PreviewWrapper extends CpElement {
 export interface DragWrapper {
     dragIng: boolean
     type: string
-    element: CpElement,
+    element: MyElement,
     start: Position
     end: Position
 }
@@ -147,16 +146,16 @@ export interface HandlePanel extends Container {
     right: number
 }
 
-export interface CpElement extends Container {
+export interface MyElement extends Container {
     contentType?: textContentType
     field?: string
     enable?: number
     label?: string
     data?: any
 
-    headList: CpElement[]
-    bodyList: CpElement[][]
-    columnBody: CpElement
+    headList: MyElement[]
+    bodyList: MyElement[][]
+    columnBody: MyElement
     option: ElementOption
     svgOption: ElementSvgOption
 
@@ -176,7 +175,7 @@ export interface CpElement extends Container {
     groupIs?: boolean
 }
 
-export interface TextElement extends CpElement {
+export interface TextElement extends MyElement {
     labelOption?: ElementOption
     contentType: textContentType
 }
@@ -274,8 +273,8 @@ export interface FormatterVariable {
     nowDate?: Date
 }
 
-export type CpHtmlElement = HTMLElement & {
-    element: CpElement
+export type MyHtmlElement = HTMLElement & {
+    element: MyElement
 }
 
 export interface DownList {

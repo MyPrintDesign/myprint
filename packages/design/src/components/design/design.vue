@@ -1,5 +1,5 @@
 <template>
-  <div class="cp-element-wrapper"
+  <div class="my-element-wrapper"
        :style="style"
        :class="{
          'dropInIs': element.runtimeOption.dragInIs,
@@ -11,15 +11,15 @@
     <element-view :element="element"/>
     <table-design v-if="element.type === 'DataTable'" :element="element as any"/>
     
-    <cp-container v-if="element.type === 'PageHeader'" :element="element">
+    <my-container v-if="element.type === 'PageHeader'" :element="element">
       <element-list :element-list="element.elementList"/>
-    </cp-container>
-    <cp-container v-else-if="element.type === 'PageFooter'" :element="element">
+    </my-container>
+    <my-container v-else-if="element.type === 'PageFooter'" :element="element">
       <element-list :element-list="element.elementList"/>
-    </cp-container>
-    <cp-container v-else-if="element.type === 'Container'" :element="element">
+    </my-container>
+    <my-container v-else-if="element.type === 'Container'" :element="element">
       <element-list :element-list="element.elementList"/>
-    </cp-container>
+    </my-container>
     
     <div class="container-edit-icon" @click="elementEditClick"
          v-if="elementTypeContainerList.includes(element.type)">
@@ -37,31 +37,31 @@
 </template>
 
 <script setup lang="ts">
-import ElementView from "@cp-print/design/components/design/element.vue";
-import {CpElement} from "@cp-print/design/types/entity";
+import ElementView from "@myprint/design/components/design/element.vue";
+import {MyElement} from "@myprint/design/types/entity";
 import {computed, CSSProperties, onMounted, ref} from "vue";
-import {CpContainer} from "./container";
+import {MyContainer} from "./container";
 import ElementList from "./elementList.vue";
 import {
   elementHandleHandleStatusList,
   elementHandleStatusList,
   elementTypeContainerList, elementTypeLineList
-} from "@cp-print/design/constants/common";
-import TableDesign from "@cp-print/design/components/design/table/tableDesign.vue";
+} from "@myprint/design/constants/common";
+import TableDesign from "@myprint/design/components/design/data-table/table-design.vue";
 import {
   moveableClearDragTarget,
   moveableDragTarget,
   setSelectedTargets
-} from "@cp-print/design/components/moveable/moveable";
-import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+} from "@myprint/design/plugins/moveable/moveable";
+import {unit2px} from "@myprint/design/utils/devicePixelRatio";
 
 const designRef = ref()
 const containerMoveIconRef = ref()
 
 const props = withDefaults(defineProps<{
-  element?: CpElement
+  element?: MyElement
 }>(), {
-  element: () => ({} as CpElement)
+  element: () => ({} as MyElement)
 })
 
 onMounted(() => {

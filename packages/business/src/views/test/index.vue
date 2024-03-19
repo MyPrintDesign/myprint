@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import {CpTest} from "@cp-print/design/index";
+import {MyTest} from "@myprint/design/index";
 </script>
 
 <template>
-  <cp-test/>
+  <my-test/>
 </template>
 
 <style scoped>

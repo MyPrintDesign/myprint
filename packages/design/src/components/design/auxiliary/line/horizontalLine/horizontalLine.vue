@@ -1,22 +1,22 @@
 <template>
-  <div class="cp-print-horizontal-line__wrapper"
+  <div class="my-print-horizontal-line__wrapper"
        :style="{maxWidth: valueUnit(element.width), width: valueUnit(element.width), height: unit2px(element.option.lineWidth)+4 +'px'}">
-    <div class="cp-print-horizontal-line"
+    <div class="my-print-horizontal-line"
          :style="labelStyle"/>
   </div>
 </template>
 <script setup lang="ts">
 
 import {computed} from "vue";
-import {CpElement} from "@cp-print/design/types/entity";
-import {valueUnit} from "@cp-print/design/utils/elementUtil";
+import {MyElement} from "@myprint/design/types/entity";
+import {valueUnit} from "@myprint/design/utils/elementUtil";
 import {computedStyle} from "../computeStyle";
-import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+import {unit2px} from "@myprint/design/utils/devicePixelRatio";
 
 const props = withDefaults(defineProps<{
-  element?: CpElement
+  element?: MyElement
 }>(), {
-  element: () => ({} as CpElement)
+  element: () => ({} as MyElement)
 })
 const labelStyle = computed(() => {
   return computedStyle(props.element, 'horizontal', 'solid')

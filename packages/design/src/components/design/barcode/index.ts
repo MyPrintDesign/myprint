@@ -1,3 +1,3 @@
-import CpBarcode from './barcode.vue'
+import MyBarcode from './barcode.vue'
 
-export default CpBarcode
+export default MyBarcode

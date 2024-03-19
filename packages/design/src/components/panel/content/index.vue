@@ -2,11 +2,11 @@
   <div class="design-panel-container" v-show="useAppStoreHook().displayModel == 'design'">
     <Toolbar/>
     <div class="display-flex design-panel-container-height">
-      <cp-panel/>
+      <my-panel/>
       <div style="background: white;" class="display-flex-column width-20">
         <div v-for="(value, key) in handlePanelElementList"
              @click="clickHandlePanelIcon(key)"
-             :class="['cp-icon handle-panel-icon iconfont',{'handle-panel-icon-active': configStore.settingPanel[key].visible}, value.icon]"
+             :class="['my-icon handle-panel-icon iconfont',{'handle-panel-icon-active': configStore.settingPanel[key].visible}, value.icon]"
              :key="key"/>
         <history-panel/>
         <operation-panel/>
@@ -20,15 +20,15 @@
 
 <script setup lang="ts">
 import Toolbar from '../toolbar/toolbar.vue'
-import PreviewPanel from "../../preview/previewPanel.vue";
-import CpPanel from "./cp-panel.vue";
-import {handlePanelElementList} from "@cp-print/design/constants/settingPanel";
+import PreviewPanel from "../../preview/preview-panel.vue";
+import MyPanel from "./my-panel.vue";
+import {handlePanelElementList} from "@myprint/design/constants/settingPanel";
 import HistoryPanel from "../handle-panel/history-panel.vue";
 import OperationPanel from "../handle-panel/operation-panel.vue";
 import SettingPanel from "../handle-panel/setting/setting-panel.vue";
-import {useConfigStore} from "@cp-print/design/stores/config";
-import MinimapPanel from "@cp-print/design/components/panel/handle-panel/minimap-panel.vue";
-import {useAppStoreHook} from "@cp-print/design/stores/app";
+import {useConfigStore} from "@myprint/design/stores/config";
+import MinimapPanel from "@myprint/design/components/panel/handle-panel/minimap-panel.vue";
+import {useAppStoreHook} from "@myprint/design/stores/app";
 
 const configStore = useConfigStore()
 

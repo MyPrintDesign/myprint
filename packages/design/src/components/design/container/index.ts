@@ -1,10 +1,5 @@
-import CpContainer from "./container"
-import CpPageHeader from "./pageHeader"
-// import CpPageFooter from "./pageFooter"
-
+import MyContainer from "./container"
 
 export {
-    CpContainer,
-    CpPageHeader,
-    // CpPageFooter
+    MyContainer,
 }

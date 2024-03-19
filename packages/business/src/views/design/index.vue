@@ -1,14 +1,17 @@
+<template>
+  <my-panel :template="data.template" @saveTemplate="saveTemplate"
+  ></my-panel>
+  <!--  <my-text :element="text"/>-->
+</template>
 <script setup lang="ts">
-import {CpPanel, CpText} from '@cp-print/design/index'
-import {templateDetail, templateUpdate} from "@/api/template";
-import {onMounted, reactive} from "vue";
-import {useRoute} from "vue-router";
-import {CpElement, ElementOption, TextElement} from "@cp-print/design/types/entity";
-import {initElement} from "@cp-print/design/utils/elementUtil";
-import {Template} from "@cp-print/design/types/R";
+import { MyPanel } from "@myprint/design/index";
+import { templateDetail, templateUpdate } from "@/api/template";
+import { onMounted, reactive } from "vue";
+import { useRoute } from "vue-router";
+import { Template } from "@myprint/design/types/R";
 
 const route = useRoute()
-const text = {} as TextElement
+// const text = {} as TextElement
 // initElement(text)
 const {templateId} = route.query
 const data = reactive({
@@ -39,13 +42,3 @@ function saveTemplate(template: Template) {
   
 }
 </script>
-
-<template>
-  <cp-panel :template="data.template" @saveTemplate="saveTemplate"
-  ></cp-panel>
-  <!--  <cp-text :element="text"/>-->
-</template>
-
-<style scoped>
-
-</style>

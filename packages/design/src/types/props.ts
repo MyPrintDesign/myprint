@@ -1,4 +1,4 @@
-// import {HandlePanel} from "@cp-print/design/types/entity";
+// import {HandlePanel} from "@myprint/design/types/entity";
 // import {PropType} from "vue";
 export interface Props {
     msg: string,

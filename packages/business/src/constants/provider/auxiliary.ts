@@ -1,6 +1,6 @@
-import {CpElement} from "@cp-print/design/types/entity";
+import {MyElement} from "@myprint/design/types/entity";
 
-export const auxiliaryProvider: Array<CpElement> = [
+export const auxiliaryProvider: Array<MyElement> = [
     // {
     //     type: "Text",
     //     label: "标尺",

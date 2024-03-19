@@ -92,7 +92,7 @@
         <!--          <div class="choose-image-type-dialog-header-title">本地上传</div>-->
         <!--          <div class="choose-image-type-dialog-header-title">图片链接</div>-->
         <!--        </div>-->
-        <cp-tabs class="choose-image-type-dialog-header_tab" v-model="data.chooseImageType"
+        <my-tabs class="choose-image-type-dialog-header_tab" v-model="data.chooseImageType"
                  :item-list="chooseImgTypeList"/>
         <el-icon color="#666666" size="20" class="cursor-pointer" @click="data.chooseImageVisible = false">
           <CloseBold/>
@@ -119,18 +119,18 @@ import 'vue-cropper/dist/index.css'
 import {VueCropper} from "vue-cropper";
 
 import {onMounted, reactive, ref} from "vue";
-import {CpElement, DownList} from "@cp-print/design/types/entity";
+import {MyElement, DownList} from "@myprint/design/types/entity";
 // import {useBase64} from "@vueuse/core";
-import {displayModelDesign, handleAspectRatioHeight, valueUnit} from "@cp-print/design/utils/elementUtil";
+import {displayModelDesign, handleAspectRatioHeight, valueUnit} from "@myprint/design/utils/elementUtil";
 import {Check, CloseBold, Crop, Plus, RefreshLeft, RefreshRight, ZoomIn, ZoomOut} from "@element-plus/icons-vue";
-import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
-import {elementHandleStatusList} from "@cp-print/design/constants/common";
-import CpTabs from "@cp-print/design/components/cp/cp-tabs/cpTabs.vue";
+import {unit2px} from "@myprint/design/utils/devicePixelRatio";
+import {elementHandleStatusList} from "@myprint/design/constants/common";
+import MyTabs from "@myprint/design/components/my/tabs/my-tabs.vue";
 
 const props = withDefaults(defineProps<{
-  element?: CpElement
+  element?: MyElement
 }>(), {
-  element: () => ({} as CpElement)
+  element: () => ({} as MyElement)
 })
 // type s = typeof VueCropper
 const cropper = ref({} as InstanceType<any>)

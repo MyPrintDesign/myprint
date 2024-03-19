@@ -1,11 +1,11 @@
 import {ref} from "vue";
-import {CpElement, elementTypeFormat, Panel} from "@cp-print/design/types/entity";
+import {MyElement, elementTypeFormat, Panel} from "@myprint/design/types/entity";
 import {useManualRefHistory} from '@vueuse/core';
 import {
     getCurrentPanel,
     installPanelParentElement
 } from "./elementUtil";
-import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
+import {useAppStoreHook as appStore} from "@myprint/design/stores/app";
 
 export enum ActionEnum {
     INIT = '加载',
@@ -23,7 +23,7 @@ let max = 50
 
 export interface Snapshot {
     panel?: Panel
-    elementList?: CpElement[]
+    elementList?: MyElement[]
     content?: string
     action: ActionEnum,
     type?: 'Element' | 'PANEL'
@@ -59,8 +59,8 @@ function record(snapshot: Snapshot) {
     let action = snapshot.action as any
     let label = ""
     if (snapshot.elementList) {
-        for (let cpElement of snapshot.elementList) {
-            label = label + (cpElement.label ? cpElement.label : elementTypeFormat[cpElement.type]) + ","
+        for (let myElement of snapshot.elementList) {
+            label = label + (myElement.label ? myElement.label : elementTypeFormat[myElement.type]) + ","
         }
     }else {
         label = "面板"
@@ -153,7 +153,7 @@ export function changeWrapper(val: string | number, title?: string, callback?: (
     }
 }
 
-export function changeLog(action: ActionEnum, element: CpElement) {
+export function changeLog(_action: ActionEnum, _element: MyElement) {
     // record(<Snapshot>{
     //     elementList: element,
     //     action: action,

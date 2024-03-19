@@ -16,7 +16,7 @@
     "rootDir": ".",
     "types": [],
     "paths": {
-      "@cp-print/design/*": [
+      "@myprint/design/*": [
         "packages/design/src/*"
       ],
       "@/*": [

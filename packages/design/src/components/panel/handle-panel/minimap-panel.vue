@@ -21,14 +21,14 @@
              :key="index"
              class="pointer-events"
              :style="{left : valueUnit(element.x), top: valueUnit(element.y), width: valueUnit(element.width), height: valueUnit(element.height)}">
-          <TextView v-if="element.type == 'Text'" :element="element"/>
-          <ImageView v-if="element.type === 'Image'" :element="element"/>
-          <table-design v-if="element.type === 'DataTable'" :element="element"/>
-          <RectView v-if="element.type === 'Rect'" :element="element"/>
-          <horizontal-line v-if="element.type === 'HorizontalLine'" :element="element"/>
-          <vertical-line v-if="element.type === 'VerticalLine'" :element="element"/>
-          <dotted-horizontal-line v-if="element.type === 'DottedHorizontalLine'" :element="element"/>
-          <dotted-vertical-line v-if="element.type === 'DottedVerticalLine'" :element="element"/>
+          <MyText v-if="element.type == 'Text'" :element="element"/>
+          <MyImage v-if="element.type === 'Image'" :element="element"/>
+          <data-table v-if="element.type === 'DataTable'" :element="element"/>
+          <MyRect v-if="element.type === 'Rect'" :element="element"/>
+          <my-horizontal-line v-if="element.type === 'HorizontalLine'" :element="element"/>
+          <my-vertical-line v-if="element.type === 'VerticalLine'" :element="element"/>
+          <my-dotted-horizontal-line v-if="element.type === 'DottedHorizontalLine'" :element="element"/>
+          <my-dotted-vertical-line v-if="element.type === 'DottedVerticalLine'" :element="element"/>
         </div>
       
       </div>
@@ -39,11 +39,11 @@
     <div class="mini-map-toolbar display-flex">
       <div class="mini-map-toolbar_redo-undo display-flex">
         <div @mousedown="($event)=>$event.stopPropagation()" @click="undoPanel"
-             :class="[{'cp-icon-disabled': !canUndo}]"
-             class="cp-icon iconfont icon-undo mini-map-toolbar-icon"/>
+             :class="[{'my-icon-disabled': !canUndo}]"
+             class="my-icon iconfont icon-undo mini-map-toolbar-icon"/>
         <div @mousedown="($event)=>$event.stopPropagation()" @click="redoPanel"
-             :class="[{'cp-icon-disabled': !canRedo}]"
-             class="cp-icon iconfont icon-redo mini-map-toolbar-icon"/>
+             :class="[{'my-icon-disabled': !canRedo}]"
+             class="my-icon iconfont icon-redo mini-map-toolbar-icon"/>
       </div>
       
       <div class="mini-map-toolbar_control display-flex">
@@ -66,26 +66,25 @@
 </template>
 
 <script setup lang="ts">
-import {mittKey, panelKey} from "@cp-print/design/constants/keys";
+import {mittKey, panelKey} from "@myprint/design/constants/keys";
 import {computed, inject, onMounted, reactive, ref} from "vue";
-import HorizontalLine from "@cp-print/design/components/design/auxiliary/line/horizontalLine";
-import RectView from "@cp-print/design/components/design/auxiliary/rect/rect";
-import DottedHorizontalLine from "@cp-print/design/components/design/auxiliary/line/dottedHorizontalLine";
-import VerticalLine from "@cp-print/design/components/design/auxiliary/line/verticalLine";
-import TextView from "@cp-print/design/components/design/text";
-import DottedVerticalLine from "@cp-print/design/components/design/auxiliary/line/dottedVerticalLine";
-import ImageView from "@cp-print/design/components/design/image";
-import TableDesign from "@cp-print/design/components/design/table/tableDesign.vue";
-import {Container, ContentScaleVo} from "@cp-print/design/types/entity";
-import {clearEventBubble} from "@cp-print/design/utils/event";
-import MathCalc from "@cp-print/design/utils/numberUtil";
-import {scaleUtil} from "@cp-print/design/utils/scaleUtil";
-import {useAppStoreHook} from "@cp-print/design/stores/app";
-import {valueUnit} from "@cp-print/design/utils/elementUtil";
-import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
-import {useConfigStore} from "@cp-print/design/stores/config";
-import {canRedo, canUndo, redoPanel, undoPanel} from "@cp-print/design/utils/historyUtil";
-import TipIcon from "@cp-print/design/components/cp/icon/tip-icon.vue";
+import MyHorizontalLine from "@myprint/design/components/design/auxiliary/line/horizontalLine";
+import MyRect from "@myprint/design/components/design/auxiliary/rect/rect";
+import MyDottedHorizontalLine from "@myprint/design/components/design/auxiliary/line/dottedHorizontalLine";
+import MyVerticalLine from "@myprint/design/components/design/auxiliary/line/verticalLine";
+import MyDottedVerticalLine from "@myprint/design/components/design/auxiliary/line/dottedVerticalLine";
+import MyImage from "@myprint/design/components/design/image";
+import DataTable from "@myprint/design/components/design/data-table/data-table.vue";
+import {Container, ContentScaleVo} from "@myprint/design/types/entity";
+import {clearEventBubble} from "@myprint/design/utils/event";
+import MathCalc from "@myprint/design/utils/numberUtil";
+import {scaleUtil} from "@myprint/design/utils/scaleUtil";
+import {useAppStoreHook} from "@myprint/design/stores/app";
+import {valueUnit} from "@myprint/design/utils/elementUtil";
+import {unit2px} from "@myprint/design/utils/devicePixelRatio";
+import {useConfigStore} from "@myprint/design/stores/config";
+import {canRedo, canUndo, redoPanel, undoPanel} from "@myprint/design/utils/historyUtil";
+import TipIcon from "@myprint/design/components/my/icon/tip-icon.vue";
 
 const appStore = useAppStoreHook()
 const configStore = useConfigStore()

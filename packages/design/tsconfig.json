@@ -16,7 +16,7 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@cp-print/design/*": [
+      "@myprint/design/*": [
         "src/*"
       ]
     },

@@ -1,13 +1,10 @@
-import CpText from './components/design/text'
-import CpImage from './components/design/image'
-import CpDottedHorizontalLine from './components/design/auxiliary/line/dottedHorizontalLine'
-import CpDottedVerticalLine from './components/design/auxiliary/line/dottedVerticalLine'
-import CpHorizontalLine from './components/design/auxiliary/line/horizontalLine'
-import CpVerticalLine from './components/design/auxiliary/line/verticalLine'
-import CpPageHeader from './components/design/container/pageHeader'
-// import CpPageFooter from './components/design/container/pageFooter'
-import CpPanel from './components/panel'
-// import CpTest from './components/test/index.vue'
+import MyText from './components/design/text'
+import MyImage from './components/design/image'
+import MyDottedHorizontalLine from './components/design/auxiliary/line/dottedHorizontalLine'
+import MyDottedVerticalLine from './components/design/auxiliary/line/dottedVerticalLine'
+import MyHorizontalLine from './components/design/auxiliary/line/horizontalLine'
+import MyVerticalLine from './components/design/auxiliary/line/verticalLine'
+import MyPanel from './components/panel'
 
 
 
@@ -16,16 +13,13 @@ export * from './components/design/auxiliary'
 import {install as createPrint} from './install'
 
 export {
-    CpText,
-    CpImage,
-    CpDottedHorizontalLine,
-    CpDottedVerticalLine,
-    CpHorizontalLine,
-    CpVerticalLine,
-    CpPageHeader,
-    // CpPageFooter,
-
-    CpPanel,
+    MyText,
+    MyImage,
+    MyDottedHorizontalLine,
+    MyDottedVerticalLine,
+    MyHorizontalLine,
+    MyVerticalLine,
+    MyPanel,
 }
 
 export {createPrint}

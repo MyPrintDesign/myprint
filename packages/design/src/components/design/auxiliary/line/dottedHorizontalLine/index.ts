@@ -1,3 +1,3 @@
-import CpDottedHorizontalLine from './dottedHorizontalLine.vue'
+import MyDottedHorizontalLine from './dottedHorizontalLine.vue'
 
-export default CpDottedHorizontalLine
+export default MyDottedHorizontalLine

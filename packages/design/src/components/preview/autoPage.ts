@@ -1,9 +1,9 @@
-import {parse, stringify} from "@cp-print/design/utils/utils";
-import {px2unit, unit2px} from "@cp-print/design/utils/devicePixelRatio";
+import {parse, stringify} from "@myprint/design/utils/utils";
+import {px2unit, unit2px} from "@myprint/design/utils/devicePixelRatio";
 import {nextTick, reactive, Ref} from "vue";
-import {CpElement, FormatterVariable, Panel, PreviewWrapper, RuntimeElementOption} from "@cp-print/design/types/entity";
-import {copyElementRefValueId, formatter, getCurrentPanel} from "@cp-print/design/utils/elementUtil";
-import numberUtil from "@cp-print/design/utils/numberUtil";
+import {MyElement, FormatterVariable, Panel, PreviewWrapper, RuntimeElementOption} from "@myprint/design/types/entity";
+import {copyElementRefValueId, formatter, getCurrentPanel} from "@myprint/design/utils/elementUtil";
+import numberUtil from "@myprint/design/utils/numberUtil";
 
 interface PreviewContext {
     elementChangeHeightIs: boolean,
@@ -201,7 +201,7 @@ export async function autoPage(pageList: Array<Panel>, previewContent: Ref<HTMLD
                 datum['autoIncrement'] = i + 1
                 // console.log(i + 1)
             }
-            const rowList: CpElement[] = []
+            const rowList: MyElement[] = []
             for (let j = 0; j < bodyList.length; j++) {
                 // initElement(previewWrapper.headList[j], j)
                 const head = previewWrapper.headList[j]

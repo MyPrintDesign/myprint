@@ -1,6 +1,6 @@
-import numberUtil from "@cp-print/design/utils/numberUtil";
-import {PageUnit} from "@cp-print/design/types/entity";
-import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
+import numberUtil from "@myprint/design/utils/numberUtil";
+import {PageUnit} from "@myprint/design/types/entity";
+import {useAppStoreHook as appStore} from "@myprint/design/stores/app";
 
 let mmDiv = document.createElement("div");
 let body = document.querySelector("body")!

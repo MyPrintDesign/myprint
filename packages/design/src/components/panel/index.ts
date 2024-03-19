@@ -1,3 +1,3 @@
-import CpPanel from './index.vue'
+import MyPanel from './index.vue'
 
-export default CpPanel
+export default MyPanel

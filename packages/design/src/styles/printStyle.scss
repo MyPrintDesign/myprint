@@ -6,7 +6,7 @@
 }
 
 // 文本
-.cp-print-text_container {
+.my-print-text_container {
   width: 100%;
   height: 100%;
   display: flex;
@@ -22,7 +22,7 @@
   flex-grow: 1;
 }
 
-//.cp-print-text_label {
+//.my-print-text_label {
 //  //tmp
 //  color: white;
 //  vertical-align: top;
@@ -32,7 +32,7 @@
 //  min-width: 0;
 //}
 
-.cp-print-text_content {
+.my-print-text_content {
   vertical-align: top;
   word-break: break-all;
   box-sizing: border-box;
@@ -43,19 +43,19 @@
 }
 
 // 横线
-.cp-print-horizontal-line__wrapper {
+.my-print-horizontal-line__wrapper {
   word-break: break-all;
   cursor: move;
   outline: none;
 }
 
-.cp-print-horizontal-line {
+.my-print-horizontal-line {
   //background: black;
   position: absolute;
 }
 
 // 矩形
-.cp-print-rect__wrapper {
+.my-print-rect__wrapper {
   word-break: break-all;
   border: 1px #000 solid;
   box-sizing: border-box;
@@ -63,7 +63,7 @@
   cursor: text;
 }
 
-.cp-print-dotted-rect__wrapper {
+.my-print-dotted-rect__wrapper {
   word-break: break-all;
   outline: #000 dotted;
   position: absolute;
@@ -71,7 +71,7 @@
 }
 
 // 表格
-.cp-print-table {
+.my-print-table {
   text-indent: initial;
   border-collapse: collapse;
   border-spacing: 0;
@@ -83,7 +83,7 @@
   outline: none;
 }
 
-.cp-print-columnHead {
+.my-print-columnHead {
   position: relative;
   word-break: break-all;
   //text-align: center;
@@ -96,18 +96,18 @@
   padding: 0;
 }
 
-.cp-print-columnHead__content {
+.my-print-columnHead__content {
   height: 100%;
 }
 
-.cp-print-container {
+.my-print-container {
   width: var(--design-width);
   max-width: var(--design-width);
   height: var(--design-height);
   max-height: var(--design-height);
 }
 
-.cp-print-table-column_body {
+.my-print-table-column_body {
   word-break: break-all;
   text-align: center;
   box-sizing: border-box;
@@ -118,33 +118,33 @@
   color: var(--tcolor);
 }
 
-.cp-print-container_over {
+.my-print-container_over {
   z-index: 1;
   opacity: 0.6;
   background: var(--page-header-drop-color);
   outline: 4px solid var(--drag-h-color);
 }
 
-.cp-print-preview-wrap {
+.my-print-preview-wrap {
   position: absolute;
 }
 
-.cp-print-preview-wrap_container {
+.my-print-preview-wrap_container {
 }
 
-.cp-print-preview-panel__wrap {
+.my-print-preview-panel__wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.cp-print-preview-panel__content {
+.my-print-preview-panel__content {
   position: relative;
 
 }
 
-.cp-print-preview-panel__content_page {
+.my-print-preview-panel__content_page {
   position: relative;
   overflow: hidden;
   //border: var(--tcolor) 1px solid;
@@ -153,12 +153,12 @@
   //background: white;
 }
 
-.cp-print-draw_panel {
+.my-print-draw_panel {
   width: 100%;
   height: 100%;
 }
 
-.cp-print-draw_panel_img {
+.my-print-draw_panel_img {
   position: absolute;
   left: 0;
   top: 0;
@@ -167,7 +167,7 @@
 }
 
 //svg
-.cp-print-chart {
+.my-print-chart {
   position: absolute;
   box-sizing: border-box;
   width: 100%;

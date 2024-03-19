@@ -19,7 +19,7 @@
 
 }
 
-.cp-element-setting-choose-img {
+.my-element-setting-choose-img {
   margin-left: 30px;
 }
 
@@ -253,7 +253,7 @@
     border-radius: 3px;
     text-align: center;
 
-    &:hover:not(.cp-icon-disabled) {
+    &:hover:not(.my-icon-disabled) {
       background: var(--drag-h-color);
       //color: var(--drag-h-color);
     }

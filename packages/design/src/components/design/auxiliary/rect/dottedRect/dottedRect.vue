@@ -1,5 +1,5 @@
 <template>
-  <div class="cp-print-dotted-rect__wrapper"
+  <div class="my-print-dotted-rect__wrapper"
        ref="textRef"
        :style="{maxWidth: widthValueUnit(data), width: valueUnit(trend1(data.width - 2 * data.option.borderWidth)),
        height: valueUnit(trend1(data.height - 2 * data.option.borderWidth)),
@@ -11,12 +11,12 @@
 <script setup lang="ts">
 
 import {onUnmounted, PropType, ref} from "vue";
-import {CpElement} from "@cp-print/design/types/entity";
-import {trend1} from "@cp-print/design/utils/utils";
-import {valueUnit, widthValueUnit} from "@cp-print/design/utils/elementUtil";
+import {MyElement} from "@myprint/design/types/entity";
+import {trend1} from "@myprint/design/utils/utils";
+import {valueUnit, widthValueUnit} from "@myprint/design/utils/elementUtil";
 
 defineProps({
-  data: {type: Object as PropType<CpElement>, default: () => ({} as CpElement)}
+  data: {type: Object as PropType<MyElement>, default: () => ({} as MyElement)}
 })
 const textRef = ref()
 onUnmounted(() => {

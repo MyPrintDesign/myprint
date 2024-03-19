@@ -37,13 +37,6 @@
   padding-top: 10px;
 }
 
-.cp-line {
-  width: 1px;
-  display: block;
-  background: black;
-  margin: 0 5px;
-}
-
 .num-2 {
   width: 80px;
 }
@@ -100,7 +93,7 @@
   width: var(--240px) !important;
 }
 
-.cp-hidden {
+.my-hidden {
   visibility: hidden;
 }
 
@@ -143,18 +136,15 @@
   pointer-events: none;
 }
 
-.cp-icon {
-  display: inline-block;
-  line-height: 1;
-}
 
-.cp-icon-disabled {
+
+.my-icon-disabled {
   //opacity: 0.5;
   color: var(--icon-disable-color) !important;
   cursor: not-allowed !important;
 }
 
-.cp-handle-panel-icon {
+.my-handle-panel-icon {
   font-size: 16px;
   height: 16px;
   width: 16px;

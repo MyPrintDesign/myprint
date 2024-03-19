@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-defineOptions({name: 'CpUnit'})
+// defineOptions({name: 'MyUnit'})
 
 </script>
 

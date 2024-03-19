@@ -70,8 +70,8 @@ export const tableColClone = {
     showIs: false,
     clonedTable: document.createElement('table'),
     init() {
-        this.clonedTable.classList.add("cp-print-table")
-        this.clonedTable.classList.add("cp-table-clone-drag")
+        this.clonedTable.classList.add("my-print-table")
+        this.clonedTable.classList.add("my-table-clone-drag")
     },
 
     show(columnLeft: number, columnTop: number, width: number, height: number | undefined, rows: any, colIndex: number) {

@@ -11,12 +11,12 @@
   }
 }
 
-.cp-group {
+.my-group {
   height: 40px;
   display: flex;
   align-items: center;
 
-  .cp-style-item {
+  .my-style-item {
     line-height: 16px;
     padding: 4px;
     margin-right: 6px;
@@ -26,12 +26,12 @@
 .font-color {
   margin-right: 6px;
 
-  &:hover:not(.cp-icon-disabled) {
+  &:hover:not(.my-icon-disabled) {
     background: var(--tool-style-highlight-bg);
   }
 }
 
-.cp-color-downList-arrow {
+.my-color-downList-arrow {
   margin-left: -4px;
   line-height: 16px;
 }
@@ -40,10 +40,10 @@
   width: 200px;
 }
 
-.cp-color-icon {
+.my-color-icon {
   //padding-left: 4px;
 
-  .cp-color-icon-arrow {
+  .my-color-icon-arrow {
     margin-left: -10px;
 
   }
@@ -100,13 +100,13 @@
 }
 
 
-.cp-style-font-wrapper {
+.my-style-font-wrapper {
   //color: white;
   height: 24px;
   border-radius: 5px;
   margin-right: 6px;
 
-  .cp-style-font {
+  .my-style-font {
     width: 60px;
     height: 24px;
     line-height: 24px;
@@ -114,26 +114,26 @@
     font-size: 13px;
   }
 
-  &:hover:not(.cp-icon-disabled) {
+  &:hover:not(.my-icon-disabled) {
     background: var(--tool-style-highlight-bg);
   }
 }
 
-.cp-style-font_arrow {
+.my-style-font_arrow {
   font-size: 7px;
   width: 12px;
   height: 24px;
   line-height: 24px;
 }
 
-.cp-style-font-size-wrapper {
+.my-style-font-size-wrapper {
   //tmp
   //color: white;
   height: 24px;
   border-radius: 5px;
   margin-right: 6px;
 
-  .cp-style-font-size {
+  .my-style-font-size {
     text-align: center;
     width: 45px;
     height: 24px;
@@ -152,7 +152,7 @@
     }
   }
 
-  .cp-style-font-size_arrows {
+  .my-style-font-size_arrows {
     .drop-arrow {
 
       font-size: 7px;
@@ -166,12 +166,12 @@
     }
   }
 
-  &:hover:not(.cp-icon-disabled) {
+  &:hover:not(.my-icon-disabled) {
     background: var(--tool-style-highlight-bg);
   }
 }
 
-.cp-style-divider {
+.my-style-divider {
   margin-right: 8px;
   height: 20px;
   width: 0;

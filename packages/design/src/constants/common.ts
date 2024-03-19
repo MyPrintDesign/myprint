@@ -1,15 +1,15 @@
 import {
     Container,
-    CpElement,
+    MyElement,
     DownList,
     ElementOption, elementStatus,
     elementType,
     RuntimeElementOption
-} from "@cp-print/design/types/entity";
+} from "@myprint/design/types/entity";
 import {PropType, reactive} from "vue";
-import {i18n} from "@cp-print/design/locales";
+import {i18n} from "@myprint/design/locales";
 
-export const defaultElement: CpElement[] = []
+export const defaultElement: MyElement[] = []
 
 export const defaultDragRectElement = reactive({
     type: 'PrivateDragRectElement',
@@ -19,7 +19,7 @@ export const defaultDragRectElement = reactive({
         margin: {}
     } as ElementOption,
     runtimeOption: {} as RuntimeElementOption
-} as CpElement)
+} as MyElement)
 
 
 export const canMoveStatusList = ['SELECT', 'HANDLE']
@@ -266,8 +266,8 @@ export const pageUnitList = [
 ]
 
 export const clientProtocolList = {
-    cprint: {
-        protocol: 'cprint',
+    myprint: {
+        protocol: 'myprint',
         clientUrl: 'ws://127.0.0.1:8888'
     },
     lodop: {

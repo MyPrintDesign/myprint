@@ -39,7 +39,7 @@
   opacity: 0.2;
 }
 
-.cp-element-wrapper {
+.my-element-wrapper {
   will-change: transform;
   position: absolute;
   box-sizing: border-box;
@@ -89,7 +89,7 @@
   color: red;
 }
 
-.cp-table-resize {
+.my-table-resize {
   width: 9px;
   height: 100%;
   position: absolute;
@@ -112,14 +112,14 @@
   }
 }
 
-.cp-table-highlight-column {
+.my-table-highlight-column {
   position: absolute;
   top: 0;
   border: 2px solid var(--drag-h-color);
   box-sizing: border-box;
 }
 
-.cp-table-highlight-sort {
+.my-table-highlight-sort {
   position: absolute;
   top: 0;
   left: 20px;
@@ -128,12 +128,12 @@
   background: #0ec300 !important;
 }
 
-.cp-table-clone-drag {
+.my-table-clone-drag {
   position: absolute;
   cursor: move;
 }
 
-.cp-table-control-head-point {
+.my-table-control-head-point {
   position: absolute;
   cursor: move;
   top: -10px;
@@ -148,7 +148,7 @@
   background: white !important;
 }
 
-.cp-table-control-head-point-active {
+.my-table-control-head-point-active {
   visibility: visible;
   //background: green !important;
 }

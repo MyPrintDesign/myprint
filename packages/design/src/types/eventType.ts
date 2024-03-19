@@ -1,4 +1,4 @@
-import {Container, CpElement, Panel} from "./entity";
+import {Container, MyElement, Panel} from "./entity";
 import {Snapshot} from "../utils/historyUtil";
 
 export type EventTypes = {
@@ -9,11 +9,11 @@ export type EventTypes = {
     scaleEvent: any;
 
     optionsDragStart: any;
-    elementClick: CpElement;
+    elementClick: MyElement;
     elementMove: any;
     elementUp: any;
-    elementRemove: CpElement;
-    previewPanel: CpElement;
+    elementRemove: MyElement;
+    previewPanel: MyElement;
     clearPanel: Panel;
     panelSnapshot: Snapshot;
     sortColumn: any;

@@ -1,6 +1,6 @@
 import {createApp} from 'vue'
-import '@cp-print/design/styles/index.scss'
-import {createPrint} from '@cp-print/design/index'
+import '@myprint/design/styles/index.scss'
+import {createPrint} from '@myprint/design/index'
 
 import {mittKey} from "@/constants/keys";
 import router from './router'

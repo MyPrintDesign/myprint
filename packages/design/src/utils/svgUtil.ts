@@ -1,7 +1,7 @@
-import {CpElement, Line, Point} from "@cp-print/design/types/entity";
+import {MyElement, Line, Point} from "@myprint/design/types/entity";
 import * as d3Selection from "d3-selection";
 
-// import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+// import {unit2px} from "@myprint/design/utils/devicePixelRatio";
 
 // export function computeLineAngle(lineA: Line, lineB: Line) {
 //     // controlLineStart
@@ -87,7 +87,7 @@ export function dist(p, m) {
 
 export function updateSvg(chart, svgOptions, draw) {
     // console.log(draw())
-    const element = svgOptions.element as CpElement
+    const element = svgOptions.element as MyElement
     const chartSvg = d3Selection.select(chart)
     const path = draw(chartSvg)
     if (path) {

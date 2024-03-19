@@ -4,13 +4,13 @@
 
 <script setup lang="ts">
 
-import {CpElement} from "@cp-print/design/types/entity";
-import Design from "@cp-print/design/components/design/design.vue";
+import {MyElement} from "@myprint/design/types/entity";
+import Design from "@myprint/design/components/design/design.vue";
 
 withDefaults(defineProps<{
-  elementList?: Array<CpElement>
+  elementList?: Array<MyElement>
 }>(), {
-  elementList: () => ([] as Array<CpElement>)
+  elementList: () => ([] as Array<MyElement>)
 })
 
 // function setRef(element, el) {

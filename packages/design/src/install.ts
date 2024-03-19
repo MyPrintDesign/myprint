@@ -13,7 +13,7 @@ import VueCropper from 'vue-cropper';
 import 'vue-cropper/dist/index.css'
 // import i18n from "./locales";
 import {useSocket} from "./stores/socket";
-import {mitt} from "@cp-print/design/utils/utils";
+import {mitt} from "@myprint/design/utils/utils";
 // import 'element-plus/es/components/button/style/index'
 // import 'element-plus/es/components/scrollbar/style/index'
 // import 'element-plus/es/components/switch/style/index'
@@ -33,7 +33,7 @@ const install = {
         // comps.map((component:any)=>{
         //     Vue.component(component.__name as string, component);
         // })
-        console.log("~~~CpPrint 初始化~~~")
+        console.log("~~~MyPrint 初始化~~~")
         // console.log(app)
         if (app.config.globalProperties.$pinia) {
             // Pinia 插件已安装

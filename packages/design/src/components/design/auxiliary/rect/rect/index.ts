@@ -1,3 +1,3 @@
-import CpRect from './rect.vue'
+import MyRect from './rect.vue'
 
-export default CpRect
+export default MyRect

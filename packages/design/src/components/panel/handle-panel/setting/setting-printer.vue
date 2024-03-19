@@ -53,17 +53,17 @@
     
     </el-form>
     
-    <!--    <div>下载客户端 cprint/lodop/hiprint</div>-->
+    <!--    <div>下载客户端 myprint/lodop/hiprint</div>-->
   
   </div>
 </template>
 
 <script setup lang="ts">
 // import { ElForm, ElFormItem, ElSwitch, ElSelect, ElOption } from 'element-plus'
-import {useSocket} from "@cp-print/design/stores/socket";
+import {useSocket} from "@myprint/design/stores/socket";
 import {computed} from "vue";
-import {clientProtocolList} from "@cp-print/design/constants/common";
-import {useConfigStore} from "@cp-print/design/stores/config";
+import {clientProtocolList} from "@myprint/design/constants/common";
+import {useConfigStore} from "@myprint/design/stores/config";
 
 const useSocketData = useSocket()
 const configStore = useConfigStore()

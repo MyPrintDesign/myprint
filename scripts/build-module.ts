@@ -83,7 +83,7 @@ const build = async (pkgDirName: string) => {
             }),
             alias({
                 entries: [{
-                    find: '@cp-print/design',
+                    find: '@myprint/design',
                     // customResolver: nodeResolve({
                     //     extensions: ['.mjs', '.vue', '.js', '.json', '.ts']
                     // }),

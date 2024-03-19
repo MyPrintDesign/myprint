@@ -16,29 +16,29 @@
 <script setup lang="ts">
 
 import {inject, nextTick, reactive, ref} from "vue";
-import {Container, CpElement, elementTypeFormat, Point, SvgData} from "@cp-print/design/types/entity";
-import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
-import {panelKey} from "@cp-print/design/constants/keys";
-import Design from "@cp-print/design/components/design/design.vue";
+import {Container, MyElement, elementTypeFormat, Point, SvgData} from "@myprint/design/types/entity";
+import {px2unit, unit2px, unit2unit} from "@myprint/design/utils/devicePixelRatio";
+import {panelKey} from "@myprint/design/constants/keys";
+import Design from "@myprint/design/components/design/design.vue";
 import {
   addElement,
   handleElementType,
   initElement,
   innerElementIs,
   installParentElement
-} from "@cp-print/design/utils/elementUtil";
-import {clearEventBubble} from "@cp-print/design/utils/event";
-import {dragNewElement, dragNewElementCancel, updatePanel} from "@cp-print/design/components/moveable/moveable";
-import {useAppStoreHook as useAppStore} from "@cp-print/design/stores/app";
-import DragWrapper from "@cp-print/design/components/panel/options/dragWrapper.vue";
-import {mouseTips} from "@cp-print/design/utils/mouseTips";
+} from "@myprint/design/utils/elementUtil";
+import {clearEventBubble} from "@myprint/design/utils/event";
+import {dragNewElement, dragNewElementCancel, updatePanel} from "@myprint/design/plugins/moveable/moveable";
+import {useAppStoreHook as useAppStore} from "@myprint/design/stores/app";
+import DragWrapper from "@myprint/design/components/panel/options/dragWrapper.vue";
+import {mouseTips} from "@myprint/design/utils/mouseTips";
 
 const panel = inject(panelKey)!
 const appStore = useAppStore()
 
 const designRef = ref()
 const isDrop = ref(false)
-const tmpElement = ref({} as CpElement)
+const tmpElement = ref({} as MyElement)
 const dragWrapper = reactive({
   visible: false,
   transitionAnime: false,
@@ -50,9 +50,9 @@ const dragWrapper = reactive({
 } as Container & { visible: boolean, opacity: number, transitionAnime: boolean })
 
 const props = withDefaults(defineProps<{
-  data?: CpElement
+  data?: MyElement
 }>(), {
-  data: () => ({} as CpElement)
+  data: () => ({} as MyElement)
 })
 
 const padding = 30
@@ -61,7 +61,7 @@ function dragStart(ev: MouseEvent) {
   mouseTips.visible()
   tmpElement.value = JSON.parse(JSON.stringify(props.data))
   const element = tmpElement.value
-  let parentElement: CpElement
+  let parentElement: MyElement
   
   let startX = 0, startY = 0
   
@@ -131,9 +131,9 @@ function dragStart(ev: MouseEvent) {
   
   nextTick(() => {
     // console.log(designRef.value.$el)
-    const cpHtmlElement = designRef.value.$el
-    element.runtimeOption.target = cpHtmlElement
-    cpHtmlElement.element = element
+    const myHtmlElement = designRef.value.$el
+    element.runtimeOption.target = myHtmlElement
+    myHtmlElement.element = element
     dragNewElement(element.runtimeOption.target, ev)
   })
   

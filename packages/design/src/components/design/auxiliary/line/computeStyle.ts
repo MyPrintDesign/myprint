@@ -1,9 +1,9 @@
 import {CSSProperties} from "vue";
-import {valueUnit} from "@cp-print/design/utils/elementUtil";
-import {_defaultNum} from "@cp-print/design/utils/numberUtil";
-import {CpElement} from "@cp-print/design/types/entity";
+import {valueUnit} from "@myprint/design/utils/elementUtil";
+import {_defaultNum} from "@myprint/design/utils/numberUtil";
+import {MyElement} from "@myprint/design/types/entity";
 
-export function computedStyle(element: CpElement, type: 'horizontal' | 'vertical', lineStyle: 'dotted' | 'solid' | 'dashed') {
+export function computedStyle(element: MyElement, type: 'horizontal' | 'vertical', lineStyle: 'dotted' | 'solid' | 'dashed') {
     const style = <CSSProperties>{}
     const lineHeight = _defaultNum(element.option.lineWidth, 0)
     if (type == 'horizontal') {

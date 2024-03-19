@@ -1,3 +1,3 @@
-import CpQrcode from './qrcode.vue'
+import MyQrcode from './qrcode.vue'
 
-export default CpQrcode
+export default MyQrcode

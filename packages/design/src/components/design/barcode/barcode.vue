@@ -5,15 +5,15 @@
 
 <script setup lang="ts">
 import JsBarcode from "jsbarcode";
-import {CpElement} from "@cp-print/design/types/entity";
+import {MyElement} from "@myprint/design/types/entity";
 import {reactive, ref, watch} from "vue";
-import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
-import {_defaultNum} from "@cp-print/design/utils/numberUtil";
+import {unit2px} from "@myprint/design/utils/devicePixelRatio";
+import {_defaultNum} from "@myprint/design/utils/numberUtil";
 
 const props = withDefaults(defineProps<{
-  element?: CpElement
+  element?: MyElement
 }>(), {
-  element: () => ({} as CpElement)
+  element: () => ({} as MyElement)
 })
 
 const barCode = ref()

@@ -9,10 +9,10 @@
 <script setup lang="ts">
 
 import {inject, ref} from "vue";
-import {CpElement} from "@cp-print/design/types/entity";
-import {dragDataStore} from "@cp-print/design/stores/dragStore";
-import {dragImg, removeDragImg} from "@cp-print/design/utils/utils";
-import {mittKey, panelKey} from "@cp-print/design/constants/keys";
+import {MyElement} from "@myprint/design/types/entity";
+import {dragDataStore} from "@myprint/design/stores/dragStore";
+import {dragImg, removeDragImg} from "@myprint/design/utils/utils";
+import {mittKey, panelKey} from "@myprint/design/constants/keys";
 
 const mitt = inject(mittKey)!
 const panel = inject(panelKey)!
@@ -21,9 +21,9 @@ const dragDataValueStore = dragDataStore()
 const isDrop = ref(false)
 
 const props = withDefaults(defineProps<{
-  data?: CpElement
+  data?: MyElement
 }>(), {
-  data: () => ({} as CpElement)
+  data: () => ({} as MyElement)
 })
 
 function dragStart(ev: DragEvent) {

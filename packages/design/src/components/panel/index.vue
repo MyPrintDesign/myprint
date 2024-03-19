@@ -8,7 +8,7 @@
     </el-main>
   </el-container>
   
-  <cp-mouse-tips/>
+  <my-mouse-tips/>
 
 </template>
 
@@ -16,14 +16,14 @@
 import Options from "./options/options.vue";
 import DesignContent from './content/index.vue'
 import {inject, onMounted, provide, reactive, Ref, ref, watch} from "vue";
-import {Container, Panel, Provider} from "@cp-print/design/types/entity";
-import {to} from "@cp-print/design/utils/utils";
-import {mittKey, panelKey, previewDataKey, providerKey} from "@cp-print/design/constants/keys";
-import {init} from "@cp-print/design/utils/historyUtil";
-import {parentInitElement, setCurrentPanel} from "@cp-print/design/utils/elementUtil";
-import {Template} from "@cp-print/design/types/R";
-import {useAppStoreHook} from "@cp-print/design/stores/app";
-import CpMouseTips from "@cp-print/design/components/cp/cp-mouse-tips/cp-mouse-tips.vue";
+import {Container, Panel, Provider} from "@myprint/design/types/entity";
+import {to} from "@myprint/design/utils/utils";
+import {mittKey, panelKey, previewDataKey, providerKey} from "@myprint/design/constants/keys";
+import {init} from "@myprint/design/utils/historyUtil";
+import {parentInitElement, setCurrentPanel} from "@myprint/design/utils/elementUtil";
+import {Template} from "@myprint/design/types/R";
+import {useAppStoreHook} from "@myprint/design/stores/app";
+import MyMouseTips from "@myprint/design/components/my/mouse-tips/my-mouse-tips.vue";
 
 const appStore = useAppStoreHook()
 
@@ -64,7 +64,7 @@ watch(() => props.template.id, (n, _o) => {
     setCurrentPanel(panel)
     panel.type = 'Panel'
     if (!panel.watermarkContent) {
-      panel.watermarkContent = 'cp-print'
+      panel.watermarkContent = 'my-print'
     }
     if (!panel.groupList) {
       panel.groupList = []

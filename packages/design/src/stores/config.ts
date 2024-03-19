@@ -8,7 +8,7 @@ export const useConfigStore = defineStore('config', {
             showHistory: false,
             printer: null,
             defaultPrinter: null,
-            clientProtocol: 'cprint',
+            clientProtocol: 'myprint',
             clientUrl: 'ws://127.0.0.1:9898',
             autoConnect: true,
             settingPanel: {

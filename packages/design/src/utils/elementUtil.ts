@@ -1,7 +1,7 @@
 import {
     Container,
-    CpElement,
-    CpHtmlElement,
+    MyElement,
+    MyHtmlElement,
     DisplayModel,
     ElementOption,
     elementType,
@@ -12,20 +12,20 @@ import {
     PointLabel,
     Position, PreviewWrapper,
     RuntimeElementOption, SvgData
-} from "@cp-print/design/types/entity";
+} from "@myprint/design/types/entity";
 import {
     canMoveStatusList,
     defaultDragRectElement,
     elementTypeLineList,
     handleConstantsType
-} from "@cp-print/design/constants/common";
+} from "@myprint/design/constants/common";
 import {mitt, parse, stringify} from "./utils";
 import {CSSProperties, reactive} from "vue";
 import {formatDate} from "./timeUtil";
-import {px2unit, unit2px, unit2unit} from "@cp-print/design/utils/devicePixelRatio";
-import {arrayRemove} from "@cp-print/design/utils/arrays";
-import {useAppStoreHook as appStore} from "@cp-print/design/stores/app";
-import {updatePanel} from "@cp-print/design/components/moveable/moveable";
+import {px2unit, unit2px, unit2unit} from "@myprint/design/utils/devicePixelRatio";
+import {arrayRemove} from "@myprint/design/utils/arrays";
+import {useAppStoreHook as appStore} from "@myprint/design/stores/app";
+import {updatePanel} from "@myprint/design/plugins/moveable/moveable";
 
 export function displayModel(displayModel?: DisplayModel) {
     if (displayModel) {
@@ -47,7 +47,7 @@ export function getCurrentPanel(): Panel {
     return appStore().currentPanel as Panel
 }
 
-export function setCurrentElement(element: CpElement[]) {
+export function setCurrentElement(element: MyElement[]) {
     appStore().currentElement = element
 }
 
@@ -55,36 +55,36 @@ export function valueUnit(value: number | undefined) {
     return value + getCurrentPanel().pageUnit
 }
 
-export function widthValueUnit(element: CpElement) {
+export function widthValueUnit(element: MyElement) {
     return element.runtimeOption.workEnvironment == 'DataTable' ? '100%' : (element.width + getCurrentPanel().pageUnit)
 }
 
-export function heightValueUnit(element: CpElement) {
+export function heightValueUnit(element: MyElement) {
     return element.runtimeOption.workEnvironment == 'DataTable' ? '100%' : (element.height + getCurrentPanel().pageUnit)
 }
 
-export function width(element: CpElement) {
+export function width(element: MyElement) {
     if (['DottedVerticalLine', 'VerticalLine'].includes(element.type)) {
         return element.option.borderWidth + 0.6
     }
     return element.width
 }
 
-export function height(element: CpElement) {
+export function height(element: MyElement) {
     if (['DottedHorizontalLine', 'HorizontalLine'].includes(element.type)) {
         return element.option.borderWidth + 2
     }
     return element.height
 }
 
-export function aspectRatioHeight(element: CpElement) {
+export function aspectRatioHeight(element: MyElement) {
     if (element.option.aspectRatio!) {
         return element.width / element.option.aspectRatio
     }
     return element.height
 }
 
-export function handleAspectRatioHeight(element: CpElement) {
+export function handleAspectRatioHeight(element: MyElement) {
     if (element.option.aspectRatio!) {
         element.height = element.width / element.option.aspectRatio
     }
@@ -96,7 +96,7 @@ export function clearPanel(panel?: Panel) {
     panel!.elementList = []
 }
 
-export function none(element?: CpElement) {
+export function none(element?: MyElement) {
     if (element == null) {
         return
     }
@@ -156,7 +156,7 @@ export function computeDrag(element: Container): boolean {
     return true
 }
 
-export function computeTranslate(_element: CpElement) {
+export function computeTranslate(_element: MyElement) {
     // complete 更改位置
     // if (_element.translateX != null) {
     //     _element.x = numberUtil.sum(_element.x, _element.translateX)
@@ -169,13 +169,13 @@ export function computeTranslate(_element: CpElement) {
     // }
 }
 
-export function recursionForElement(container: Panel, callback: (element: CpElement) => void) {
+export function recursionForElement(container: Panel, callback: (element: MyElement) => void) {
     recursionElement(container, callback)
     recursionElement(container.pageFooter!, callback)
     recursionElement(container.pageHeader!, callback)
 }
 
-export function recursionElement(container: Container, callback: (element: CpElement) => void) {
+export function recursionElement(container: Container, callback: (element: MyElement) => void) {
     if (container?.elementList?.length! > 0) {
         // console.log(container)
         for (let elementTmp of container!.elementList!) {
@@ -185,12 +185,12 @@ export function recursionElement(container: Container, callback: (element: CpEle
     }
 }
 
-export function innerElementIs(point: Point, element: CpElement) {
+export function innerElementIs(point: Point, element: MyElement) {
     return point.x >= element.runtimeOption.x && point.x <= element.runtimeOption.x + element.runtimeOption.width
         && point.y >= element.runtimeOption.y && point.y <= element.runtimeOption.y + element.runtimeOption.height
 }
 
-export function disableHandleList(element: CpElement) {
+export function disableHandleList(element: MyElement) {
     switch (element.type) {
         case 'Text':
             // console.log(element.contentType)
@@ -213,7 +213,7 @@ export function disableHandleList(element: CpElement) {
     return null
 }
 
-export function parentInitElement(parent: Container, element: CpElement, index: number) {
+export function parentInitElement(parent: Container, element: MyElement, index: number) {
     initElement(element, index)
     installParentElement(parent, element)
     if (element.elementList?.length > 0) {
@@ -224,7 +224,7 @@ export function parentInitElement(parent: Container, element: CpElement, index: 
     }
 }
 
-export function initElement(element: CpElement, index: number) {
+export function initElement(element: MyElement, index: number) {
     if (element == null) {
         return
     }
@@ -268,7 +268,7 @@ export function initElement(element: CpElement, index: number) {
                             enable: true,
                             formatter: '{{autoIncrement}}',
                         }
-                    } as CpElement;
+                    } as MyElement;
                     indexView.field = 'autoIncrement'
                     indexView.width = 10
                     indexView.label = '序号'
@@ -278,7 +278,7 @@ export function initElement(element: CpElement, index: number) {
                         height: indexView.height,
                         data: "1",
                         option: {...indexView.option}
-                    } as CpElement
+                    } as MyElement
 
                     element.headList.unshift(indexView)
 
@@ -291,7 +291,7 @@ export function initElement(element: CpElement, index: number) {
                                 data: column.data,
                                 type: "Text",
                                 option: column.option
-                            } as CpElement
+                            } as MyElement
                         }
                         if (column.columnBody.type == null) {
                             column.columnBody.type = 'Text'
@@ -455,7 +455,7 @@ export function initElement(element: CpElement, index: number) {
     }
 }
 
-export function elementGroup(htmlElementList: Array<CpHtmlElement>) {
+export function elementGroup(htmlElementList: Array<MyHtmlElement>) {
     const panel = getCurrentPanel()
     const idList = flatIdList(htmlElementList)
     const index = findGroup(idList)
@@ -481,7 +481,7 @@ export function groupListToMap(groupList: string[][]) {
     return map
 }
 
-export function elementUngroup(htmlElementList: Array<CpHtmlElement>) {
+export function elementUngroup(htmlElementList: Array<MyHtmlElement>) {
     // console.log(htmlElementList)
     const panel = getCurrentPanel()
     const idList = flatIdList(htmlElementList)
@@ -498,21 +498,21 @@ export function elementUngroup(htmlElementList: Array<CpHtmlElement>) {
     }
 }
 
-export function elementDown(elementList: CpElement[], layer: number) {
+export function elementDown(elementList: MyElement[], layer: number) {
     elementList.sort(function (a, b) {
         return a.runtimeOption.index - b.runtimeOption.index
     })
 
-    for (let cpElement of elementList) {
-        let newLayer = cpElement.runtimeOption.index - layer
-        const parentElementList = cpElement.runtimeOption.parent!.elementList!
+    for (let myElement of elementList) {
+        let newLayer = myElement.runtimeOption.index - layer
+        const parentElementList = myElement.runtimeOption.parent!.elementList!
         if (newLayer < 0) {
             newLayer = 0
         }
 
-        const tmp = parentElementList[cpElement.runtimeOption.index]
+        const tmp = parentElementList[myElement.runtimeOption.index]
 
-        for (let i = cpElement.runtimeOption.index; i > newLayer; i--) {
+        for (let i = myElement.runtimeOption.index; i > newLayer; i--) {
             console.log(i)
             parentElementList[i] = parentElementList[i - 1]
             parentElementList[i].runtimeOption.index = i
@@ -523,22 +523,22 @@ export function elementDown(elementList: CpElement[], layer: number) {
     updatePanel(elementList)
 }
 
-export function elementUp(elementList: CpElement[], layer: number) {
+export function elementUp(elementList: MyElement[], layer: number) {
     elementList.sort(function (a, b) {
         return a.runtimeOption.index - b.runtimeOption.index
     })
 
-    for (let cpElement of elementList) {
-        let newLayer = cpElement.runtimeOption.index + layer
-        const parentElementList = cpElement.runtimeOption.parent!.elementList!
+    for (let myElement of elementList) {
+        let newLayer = myElement.runtimeOption.index + layer
+        const parentElementList = myElement.runtimeOption.parent!.elementList!
         if (newLayer > parentElementList.length - 1) {
             newLayer = parentElementList.length - 1
         }
         console.log('123,', newLayer)
 
-        const tmp = parentElementList[cpElement.runtimeOption.index]
+        const tmp = parentElementList[myElement.runtimeOption.index]
 
-        for (let i = cpElement.runtimeOption.index; i < newLayer; i++) {
+        for (let i = myElement.runtimeOption.index; i < newLayer; i++) {
             // console.log(i)
             parentElementList[i] = parentElementList[i + 1]
             parentElementList[i].runtimeOption.index = i
@@ -549,7 +549,7 @@ export function elementUp(elementList: CpElement[], layer: number) {
     updatePanel(elementList)
 }
 
-function flatIdList(htmlElementList: Array<CpHtmlElement | CpHtmlElement[]>) {
+function flatIdList(htmlElementList: Array<MyHtmlElement | MyHtmlElement[]>) {
     const idList: string[] = []
     for (let htmlElementListElement of htmlElementList) {
         if (Array.isArray(htmlElementListElement)) {
@@ -582,24 +582,23 @@ export function clearPanelParent(panel: Panel) {
     clearListParent(panel.elementList)
 }
 
-export function copyElementRefValueId(element: CpElement) {
+export function copyElementRefValueId(element: MyElement) {
     const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList'), reactive({}) as PreviewWrapper)
-    // element = to(element, reactive({}) as CpElement)
     previewWrapper.id = crypto.randomUUID()
     previewWrapper.heightIs = true
 
     if (element.elementList != null && element.elementList.length > 0) {
         // const pList: PreviewWrapper[] = []
         previewWrapper.previewWrapperList = []
-        for (let cpElement of element.elementList) {
-            previewWrapper.previewWrapperList.push(copyElementRefValueId(cpElement))
+        for (let myElement of element.elementList) {
+            previewWrapper.previewWrapperList.push(copyElementRefValueId(myElement))
         }
     }
     return previewWrapper
 }
 
 
-export function clearListParent(elementList?: Array<CpElement>) {
+export function clearListParent(elementList?: Array<MyElement>) {
     for (let element of elementList!) {
         clearParent(element)
         if (element.elementList != null) {
@@ -614,7 +613,7 @@ export function installPanelParentElement(panel: Panel) {
     installListParentElement(panel, panel.elementList)
 }
 
-export function installListParentElement(parent: Container, elementList?: Array<CpElement>) {
+export function installListParentElement(parent: Container, elementList?: Array<MyElement>) {
     for (let element of elementList!) {
         installParentElement(parent, element)
         if (element.elementList != null) {
@@ -624,21 +623,21 @@ export function installListParentElement(parent: Container, elementList?: Array<
 
 }
 
-export function installParentElement(parent?: Container, element?: CpElement) {
+export function installParentElement(parent?: Container, element?: MyElement) {
     if (!element) {
         return
     }
     element.runtimeOption.parent = parent
 }
 
-export function clearParent(element: CpElement) {
+export function clearParent(element: MyElement) {
     if (element.runtimeOption == null || element.runtimeOption.parent == undefined) {
         return
     }
     element.runtimeOption.parent = undefined
 }
 
-export function addElement(parent: Container, element: CpElement) {
+export function addElement(parent: Container, element: MyElement) {
     if (parent.elementList == null) {
         parent.elementList = []
     }
@@ -647,7 +646,7 @@ export function addElement(parent: Container, element: CpElement) {
     installParentElement(parent, element)
 }
 
-export function removeElement(element: CpElement) {
+export function removeElement(element: MyElement) {
     if (element.runtimeOption.parent == null) {
         return
     }
@@ -662,7 +661,7 @@ export function removeElement(element: CpElement) {
             (element.runtimeOption.parent as Panel).pageFooter = undefined
         )
         .handle('PrivateDragRectElement', () => {
-                const elementList: Array<CpElement> = []
+                const elementList: Array<MyElement> = []
 
                 for (let valueElement of getCurrentPanel().elementList!) {
                     if ('SELECT' == valueElement.runtimeOption.status) {
@@ -716,7 +715,7 @@ export function handleElementType(element: Container) {
     return handlers;
 }
 
-export function elementCommonPositionStyle(element: CpElement): CSSProperties {
+export function elementCommonPositionStyle(element: MyElement): CSSProperties {
     return {
         // width: element.runtimeOption.width + 'px',
         // left: element.runtimeOption.x + 'px',
@@ -729,7 +728,7 @@ export function elementCommonPositionStyle(element: CpElement): CSSProperties {
     } as CSSProperties
 }
 
-export function elementCommonStyle(element: CpElement, cssStyle?: CSSProperties): CSSProperties {
+export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties): CSSProperties {
     if (cssStyle == null) {
         cssStyle = elementCommonPositionStyle(element)
     }
@@ -822,7 +821,7 @@ export function isPanel(element: Container) {
     return element.type == 'Panel'
 }
 
-export function formatter(element: CpElement, variable: FormatterVariable = {}): string {
+export function formatter(element: MyElement, variable: FormatterVariable = {}): string {
     if (element.option!.formatter) {
         let contentData = ''
         if (element.type == 'TextTime') {
@@ -889,7 +888,7 @@ export function replaceVariables(str: string, params: { [key: string]: any }): s
     return result;
 }
 
-export function selectedElementBatchOperation(callback: (element: CpElement) => void) {
+export function selectedElementBatchOperation(callback: (element: MyElement) => void) {
     for (let valueElement of getCurrentPanel().elementList!) {
         if (canMoveStatusList.includes(valueElement.runtimeOption.status)) {
             callback(valueElement)
@@ -943,7 +942,7 @@ export function changePageUnit() {
     appStore().lastPageUnit = panel.pageUnit
 }
 
-function computedChangePageUnit(pageUnit: PageUnit, element: CpElement) {
+function computedChangePageUnit(pageUnit: PageUnit, element: MyElement) {
     element.x = unit2unit(appStore().lastPageUnit, pageUnit, element.x)
     element.y = unit2unit(appStore().lastPageUnit, pageUnit, element.y)
     element.width = unit2unit(appStore().lastPageUnit, pageUnit, element.width)
@@ -953,8 +952,8 @@ function computedChangePageUnit(pageUnit: PageUnit, element: CpElement) {
     }
 
     if (element.elementList) {
-        for (let cpElement of element.elementList) {
-            computedChangePageUnit(pageUnit, cpElement)
+        for (let myElement of element.elementList) {
+            computedChangePageUnit(pageUnit, myElement)
         }
     }
 }
@@ -981,7 +980,7 @@ export function computedShapeBound(points: Array<PointLabel>): Container {
     } as Container
 }
 
-export function setElementWidthHeightPx(width: number, height: number, element: CpElement) {
+export function setElementWidthHeightPx(width: number, height: number, element: MyElement) {
     element.runtimeOption.width = width
     element.runtimeOption.height = height
     element.runtimeOption.init.width = width
@@ -1040,18 +1039,18 @@ function setNestedPropertyValue(obj: any, propertyPath: any, value: any) {
 export function multipleElementSetValue(props: string, val: any) {
     // console.log(val)
     // console.log(appStore().currentElement)
-    for (let currentElementElement of appStore().currentElement as CpElement[]) {
+    for (let currentElementElement of appStore().currentElement as MyElement[]) {
 
         setNestedPropertyValue(currentElementElement, props, val)
 
         if (currentElementElement.type == 'DataTable') {
-            for (let cpElement of currentElementElement.headList) {
-                setNestedPropertyValue(cpElement, props, val)
+            for (let myElement of currentElementElement.headList) {
+                setNestedPropertyValue(myElement, props, val)
             }
             // console.log(currentElementElement.bodyList)
             for (let bodyRowList of currentElementElement.bodyList) {
-                for (let cpElement of bodyRowList) {
-                    setNestedPropertyValue(cpElement, props, val)
+                for (let myElement of bodyRowList) {
+                    setNestedPropertyValue(myElement, props, val)
                 }
             }
         }

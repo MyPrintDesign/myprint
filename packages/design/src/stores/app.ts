@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
-import {DisplayModel, PageUnit, Panel} from "@cp-print/design/types/entity";
-import {defaultElement} from "@cp-print/design/constants/common";
+import {DisplayModel, PageUnit, Panel} from "@myprint/design/types/entity";
+import {defaultElement} from "@myprint/design/constants/common";
 import i18n from '../locales'
 
 export const useAppStoreHook = defineStore('app', {

@@ -8,18 +8,18 @@
 </template>
 
 <script setup lang="ts">
-import {CpElement} from "@cp-print/design/types/entity";
+import {MyElement} from "@myprint/design/types/entity";
 import {nextTick, ref, watch} from "vue";
-import {unit2px} from "@cp-print/design/utils/devicePixelRatio";
+import {unit2px} from "@myprint/design/utils/devicePixelRatio";
 import QRCode from 'qrcode'
-import {heightValueUnit, widthValueUnit} from "@cp-print/design/utils/elementUtil";
-import {updateMoveableRect} from "@cp-print/design/components/moveable/moveable";
+import {heightValueUnit, widthValueUnit} from "@myprint/design/utils/elementUtil";
+import {updateMoveableRect} from "@myprint/design/plugins/moveable/moveable";
 import _ from 'lodash'
 
 const props = withDefaults(defineProps<{
-  element?: CpElement
+  element?: MyElement
 }>(), {
-  element: () => ({} as CpElement)
+  element: () => ({} as MyElement)
 })
 
 const qrCode = ref()

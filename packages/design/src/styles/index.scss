@@ -3,15 +3,6 @@
 //src: url('../assets/fonts/iconfont.woff2?t=1696741414919') format('woff2');
 @use './commStyle.scss';
 // component styles
-@use './cp-button.scss';
-@use './cp-collapse.scss';
-@use './cp-colorPicker.scss';
-@use './cp-icon.scss';
-@use './cp-image.scss';
-@use './cp-input-group.scss';
-@use './cp-other.scss';
-@use './cp-popover.scss';
-@use './cp-tabs.scss';
 @use './design.scss';
 @use './element-plus-ui-cover.scss';
 @use './font.scss';
@@ -19,6 +10,15 @@
 @use './iconfont.css';
 @use './iconfont-color.css';
 @use './moveable.scss';
+@use './my-button.scss';
+@use './my-collapse.scss';
+@use './my-colorPicker.scss';
+@use './my-icon.scss';
+@use './my-image.scss';
+@use './my-input-group.scss';
+@use './my-other.scss';
+@use './my-popover.scss';
+@use './my-tabs.scss';
 @use './options.scss';
 @use './panel.scss';
 @use './preview.scss';

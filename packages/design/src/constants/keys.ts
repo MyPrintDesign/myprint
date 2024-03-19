@@ -1,6 +1,6 @@
 import {InjectionKey, Ref} from "vue";
-import {CpElement, Panel, Provider} from "@cp-print/design/types/entity";
-import {EventTypes} from "@cp-print/design/types/eventType";
+import {MyElement, Panel, Provider} from "@myprint/design/types/entity";
+import {EventTypes} from "@myprint/design/types/eventType";
 
 // @ts-ignore
 import {Emitter} from 'mitt'
@@ -19,5 +19,5 @@ export const previewDataKey: InjectionKey<Ref<any>> =
 export const messageFun: InjectionKey<Ref<Function>> =
     Symbol('messageFunKey')
 
-export const selectElementKey: InjectionKey<Ref<CpElement>> =
+export const selectElementKey: InjectionKey<Ref<MyElement>> =
     Symbol('selectElementKey')

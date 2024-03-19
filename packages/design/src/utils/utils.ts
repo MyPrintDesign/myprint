@@ -1,23 +1,23 @@
 import {clearEventBubble} from "./event"
-import {CpElement, Panel} from "@cp-print/design/types/entity";
-import {displayRatio, unit2px} from "@cp-print/design/utils/devicePixelRatio";
-// import {arrayIndexOf, arrayRemove} from "@cp-print/design/utils/arrays";
+import {MyElement, Panel} from "@myprint/design/types/entity";
+import {displayRatio, unit2px} from "@myprint/design/utils/devicePixelRatio";
+// import {arrayIndexOf, arrayRemove} from "@myprint/design/utils/arrays";
 // @ts-ignore
 import * as mittInit from 'mitt'
-import {fontList} from "@cp-print/design/constants/common";
+import {fontList} from "@myprint/design/constants/common";
 
 let collapsePanelZIndex = 1000
 
 export const mitt = mittInit.default()
 
-export function sortColumn(cpElement: CpElement, sourceIndex: any, targetIndex: any) {
+export function sortColumn(myElement: MyElement, sourceIndex: any, targetIndex: any) {
     // console.log(sourceIndex, targetIndex)
-    const source = cpElement.headList[sourceIndex]
-    cpElement.headList.splice(sourceIndex, 1)
+    const source = myElement.headList[sourceIndex]
+    myElement.headList.splice(sourceIndex, 1)
 
-    cpElement.headList.splice(targetIndex, 0, source)
+    myElement.headList.splice(targetIndex, 0, source)
 
-    for (let bodyRowList of cpElement.bodyList) {
+    for (let bodyRowList of myElement.bodyList) {
 
         const source = bodyRowList[sourceIndex]
         bodyRowList.splice(sourceIndex, 1)
@@ -104,7 +104,7 @@ canvas.height = 200;
 const context = canvas.getContext('2d')!
 let image: any
 
-export function dragImg(panel: Panel, element: CpElement, event: DragEvent) {
+export function dragImg(panel: Panel, element: MyElement, event: DragEvent) {
     // 创建一个新的canvas元素
     context.clearRect(0, 0, canvas.width, canvas.height);
     canvas.width = unit2px(_width(element));
@@ -208,7 +208,7 @@ export function printCssStyle() {
         for (let j = 0; j < cssRules.length; j++) {
             let cssRule = cssRules[j]
             let selectorText = (cssRule as CSSStyleRule).selectorText
-            if (selectorText && selectorText.startsWith('.cp-print-')) {
+            if (selectorText && selectorText.startsWith('.my-print-')) {
                 // console.log(cssRule.cssText)
                 cssRuleList = cssRuleList + cssRule.cssText;
             }
@@ -229,14 +229,14 @@ export function download(blob: Blob, fileName: string) {
 }
 
 
-export function _width(element: CpElement) {
+export function _width(element: MyElement) {
     if (['DottedVerticalLine', 'VerticalLine'].includes(element.type)) {
         return element.option.borderWidth + 0.6
     }
     return element.width
 }
 
-export function _height(element: CpElement) {
+export function _height(element: MyElement) {
     if (['DottedHorizontalLine', 'HorizontalLine'].includes(element.type)) {
         return element.option.borderWidth + 2
     }

@@ -1,3 +1,3 @@
-import CpText from './text.vue'
+import MyText from './text.vue'
 
-export default CpText
+export default MyText

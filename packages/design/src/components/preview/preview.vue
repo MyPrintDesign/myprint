@@ -1,25 +1,25 @@
 <template>
-  <div class="cp-print-preview-wrap"
+  <div class="my-print-preview-wrap"
        ref="previewWrapRef"
        :style="style">
     <element-view :element="preview"/>
-    <TableView v-if="preview!.type === 'DataTable'" :element="preview"/>
+    <DataTable v-if="preview!.type === 'DataTable'" :element="preview"/>
     <!--    <preview-container v-if="element.type === 'PageHeader'" :element="element"/>-->
     <!--    <preview-container v-if="element.type === 'PageFooter'" :element="element"/>-->
-    <cp-container v-else-if="preview.type === 'Container'" :element="preview">
+    <my-container v-else-if="preview.type === 'Container'" :element="preview">
       <Preview v-for="(item, index) in preview.previewWrapperList" :preview="item" :key="index"/>
-    </cp-container>
+    </my-container>
   </div>
 </template>
 
 <script setup lang="ts">
 
 import {computed, CSSProperties} from "vue";
-import ElementView from "@cp-print/design/components/design/element.vue";
-import {PreviewWrapper} from "@cp-print/design/types/entity";
-import {valueUnit} from "@cp-print/design/utils/elementUtil";
-import TableView from "@cp-print/design/components/design/table/tableView.vue";
-import {CpContainer} from "@cp-print/design/components/design/container";
+import ElementView from "@myprint/design/components/design/element.vue";
+import {PreviewWrapper} from "@myprint/design/types/entity";
+import {valueUnit} from "@myprint/design/utils/elementUtil";
+import DataTable from "@myprint/design/components/design/data-table/data-table.vue";
+import {MyContainer} from "@myprint/design/components/design/container";
 
 const style = computed(() => {
   const _style = {

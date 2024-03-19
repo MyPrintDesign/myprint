@@ -1,0 +1,33 @@
+.my-button {
+  font-size: 12px;
+  border-radius: 3px;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  height: 24px;
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--drag-h-color);
+  text-align: center;
+  box-sizing: border-box;
+  outline: 0;
+  transition: .1s;
+  font-weight: 500;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -webkit-appearance: none;
+  //background-color: var(--el-button-bg-color);
+  border: var(--el-border);
+  border-color: var(--el-button-border-color);
+  padding: 5px 11px;
+
+  &:hover {
+    background-color: var(--bg-highlight-color);
+
+  }
+}

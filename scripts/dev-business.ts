@@ -52,7 +52,7 @@ import vue from '@vitejs/plugin-vue'
         resolve: {
           alias: {
             '@': fileURLToPath(new URL('../packages/business/src', import.meta.url)),
-            '@cp-print/design': fileURLToPath(new URL('../packages/design/src', import.meta.url)),
+            '@myprint/design': fileURLToPath(new URL('../packages/design/src', import.meta.url)),
           }
         }
       }

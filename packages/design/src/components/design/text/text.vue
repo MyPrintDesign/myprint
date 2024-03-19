@@ -1,9 +1,9 @@
 <template>
-  <cp-barcode v-if="element.contentType === 'Barcode'" :element="element"/>
-  <cp-qrcode v-else-if="element.contentType === 'QrCode'" :element="element"/>
+  <my-barcode v-if="element.contentType === 'Barcode'" :element="element"/>
+  <my-qrcode v-else-if="element.contentType === 'QrCode'" :element="element"/>
   <div
       v-else
-      class="cp-print-text_container"
+      class="my-print-text_container"
       ref="contentRef"
       :contentEditable="elementHandleEditStatusList.includes(element.runtimeOption.status)"
       v-html="data.content"
@@ -13,21 +13,21 @@
 <script setup lang="ts">
 
 import {computed, onMounted, watch, ref, reactive} from "vue";
-import {CpElement} from "@cp-print/design/types/entity";
-import CpBarcode from "@cp-print/design/components/design/barcode";
-import CpQrcode from "@cp-print/design/components/design/qrcode";
+import {MyElement} from "@myprint/design/types/entity";
+import MyBarcode from "@myprint/design/components/design/barcode";
+import MyQrcode from "@myprint/design/components/design/qrcode";
 
 import {
   elementCommonStyle,
   formatter
-} from "@cp-print/design/utils/elementUtil";
-import {checkInput} from "@cp-print/design/components/moveable/moveable";
-import {elementHandleEditStatusList} from "@cp-print/design/constants/common";
+} from "@myprint/design/utils/elementUtil";
+import {checkInput} from "@myprint/design/plugins/moveable/moveable";
+import {elementHandleEditStatusList} from "@myprint/design/constants/common";
 
 const props = withDefaults(defineProps<{
-  element: CpElement
+  element: MyElement
 }>(), {
-  element: () => ({} as CpElement)
+  element: () => ({} as MyElement)
 })
 const contentRef = ref()
 const data = reactive({

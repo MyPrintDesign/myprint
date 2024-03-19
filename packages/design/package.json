@@ -1,5 +1,5 @@
 {
-  "name": "@cp-print/design",
+  "name": "@myprint/design",
   "version": "0.0.227",
   "main": "dist/lib/index.js",
   "module": "dist/es/index.mjs",

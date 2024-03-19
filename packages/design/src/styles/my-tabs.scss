@@ -1,0 +1,20 @@
+.my_tab {
+  width: 100%;
+
+  .my_tab-tab {
+    display: flex;
+    width: 100%;
+
+    .my_tab-title {
+      font: inherit;
+      text-align: center;
+      font-size: 14px;
+      color: #2b2b2b;
+      width: 80px;
+    }
+
+    .active {
+      font-weight: 600;
+    }
+  }
+}

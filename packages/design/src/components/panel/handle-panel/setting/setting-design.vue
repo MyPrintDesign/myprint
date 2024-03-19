@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
 // import { ElForm, ElFormItem, ElSwitch } from 'element-plus'
-import {useConfigStore} from "@cp-print/design/stores/config";
+import {useConfigStore} from "@myprint/design/stores/config";
 
 const configStore = useConfigStore()
 

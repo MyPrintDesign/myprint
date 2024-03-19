@@ -32,8 +32,8 @@
 
     </div>
     <div class="option-bottom">
-<!--      <img class="cp-logo" src="../../../assets/cprint-logo.png" alt="cp-logo"/>-->
-      <div class="cp-version">v1.0.0</div>
+<!--      <img class="my-logo" src="../../../assets/myprint-logo.png" alt="my-logo"/>-->
+      <div class="my-version">v1.0.0</div>
     </div>
   
   </div>
@@ -45,9 +45,9 @@
 import OptionView from './index.vue'
 import basic from './basic.vue'
 import {inject, ref} from "vue";
-import {providerKey} from "@cp-print/design/constants/keys";
-import {customProvider} from "@cp-print/design/constants/provider/custom";
-import {auxiliaryProvider} from "@cp-print/design/constants/provider/auxiliary";
+import {providerKey} from "@myprint/design/constants/keys";
+import {customProvider} from "@myprint/design/constants/provider/custom";
+import {auxiliaryProvider} from "@myprint/design/constants/provider/auxiliary";
 import {ArrowLeft} from "@element-plus/icons-vue";
 
 const provider = inject(providerKey)!

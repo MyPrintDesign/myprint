@@ -37,7 +37,7 @@ export default defineConfig({
     resolve: {
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url)),
-            '@cp-print/design': fileURLToPath(new URL('../design/src', import.meta.url)),
+            '@myprint/design': fileURLToPath(new URL('../design/src', import.meta.url)),
         }
     }
 })
