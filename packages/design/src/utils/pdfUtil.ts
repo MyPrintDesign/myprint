@@ -14,30 +14,30 @@ let defaultOptions = {
     width: a4Width,
     height: a4Height,
     allowTaint: true
-}
+};
 
 /**
  * 单页打印
  * @param pageDomList
  * @param options
  */
-export async function toPdf(pageDomList:any, options:any) {
+export async function toPdf(pageDomList: any, options: any) {
     let doc = new JsPDF(undefined, 'px', [options.width, options.height]);
     // options = Object.assign(defaultOptions, options);
     // console.log(pageDomList)
-    console.log(options)
-    defaultOptions.width = options.width
-    defaultOptions.height = options.height
+    console.log(options);
+    defaultOptions.width = options.width;
+    defaultOptions.height = options.height;
     for (let i = 0; i < pageDomList.length; i++) {
-        let pageDom = pageDomList[i]
+        let pageDom = pageDomList[i];
         // console.log(pageDom)
-      const  canvas = await html2canvas(pageDom, defaultOptions);
+        const canvas = await html2canvas(pageDom, defaultOptions);
         // 生成的画布元素宽高（需要收缩回原比例大小）
         // console.log(canvas.width,  canvas.height)
         // console.log(options.scale)
         let canvasWidth = canvas.width / defaultOptions.scale;
         let canvasHeight = canvas.height / defaultOptions.scale;
-        console.log(canvasWidth, canvasHeight)
+        console.log(canvasWidth, canvasHeight);
 
         // 页面等比例缩放后宽高
         // let pageWidth = a4Width;
@@ -64,11 +64,11 @@ export async function toPdf(pageDomList:any, options:any) {
         // doc.save(options.name + '.pdf');
 
         if (i + 1 < pageDomList.length) {
-            doc.addPage()
+            doc.addPage();
         }
     }
 
-    const blob = doc.output("blob")
+    const blob = doc.output('blob');
     window.open(URL.createObjectURL(blob));
 
 }

@@ -36,15 +36,14 @@
     display: none;
   }
 
-  .el-dialog__body {
-    padding: 0 !important;
-  }
+}
+
+.setting-dialog {
+  padding: 0 !important;
 }
 
 .preview-dialog {
-  .el-dialog__body {
-    padding: 0;
-  }
+  padding: 0 !important;
 
   .el-dialog__header {
     display: none;

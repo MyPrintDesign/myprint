@@ -5,11 +5,11 @@ import {
     ElementOption, elementStatus,
     elementType,
     RuntimeElementOption
-} from "@myprint/design/types/entity";
-import {PropType, reactive} from "vue";
-import {i18n} from "@myprint/design/locales";
+} from '@myprint/design/types/entity';
+import { PropType, reactive } from 'vue';
+import { i18n } from '@myprint/design/locales';
 
-export const defaultElement: MyElement[] = []
+export const defaultElement: MyElement[] = [];
 
 export const defaultDragRectElement = reactive({
     type: 'PrivateDragRectElement',
@@ -19,77 +19,77 @@ export const defaultDragRectElement = reactive({
         margin: {}
     } as ElementOption,
     runtimeOption: {} as RuntimeElementOption
-} as MyElement)
+} as MyElement);
 
 
-export const canMoveStatusList = ['SELECT', 'HANDLE']
+export const canMoveStatusList = ['SELECT', 'HANDLE'];
 
 export const fontList: DownList[][] = [
     [{
         label: i18n('font.default'),
-        value: 'default',
+        value: 'default'
     },
         {
             label: '等线',
-            value: 'heiti',
+            value: 'heiti'
         },
         {
             label: '宋体',
-            value: "'zh question mark','Times New Roman','Songti SC',STSong,NSimSun,SimSun,FangSong,'Nanum Myeongjo',NanumMyeongjo,Batang,serif",
+            value: '\'zh question mark\',\'Times New Roman\',\'Songti SC\',STSong,NSimSun,SimSun,FangSong,\'Nanum Myeongjo\',NanumMyeongjo,Batang,serif'
         },
         {
             label: '楷体',
-            value: "'zh question mark','Times New Roman','Kaiti SC',STKaiti,KaiTi,serif",
+            value: '\'zh question mark\',\'Times New Roman\',\'Kaiti SC\',STKaiti,KaiTi,serif'
         },
         {
             label: '黑体',
-            value: "'Microsoft YaHei', sans-serif",
+            value: '\'Microsoft YaHei\', sans-serif'
         },
         {
             label: '方圆体',
-            value: 'AlimamaFangYuanTiVF-Thin',
+            value: 'AlimamaFangYuanTiVF-Thin'
         },
         {
             label: '数黑体',
-            value: 'AlimamaShuHeiTi-Boldr',
+            value: 'AlimamaShuHeiTi-Boldr'
         }]
-]
+];
 
 export const fontSizeList: DownList[][] = [
     [
         {
-            label: "8",
+            label: '8',
             value: 8
         },
         {
-            label: "9",
+            label: '9',
             value: 9
         },
         {
-            label: "10",
+            label: '10',
             value: 10
         },
         {
-            label: "18",
+            label: '18',
             value: 18
         }
     ]
-]
+];
 
 
-export const definePropType = <T>(val: any): PropType<T> => val
+export const definePropType = <T>(val: any): PropType<T> => val;
 type elementSettingType = keyof ElementOption | (keyof Container) | 'contentType' | 'data' | 'label' | 'common'
 // "x", 'y', "width", 'height', "font", 'fontSize', "color", 'hiddenLabel', 'opacity', "aspectRatio", "rotate"
-const commonElementSetting: Array<elementSettingType> = ["x", 'y', "width", 'height', 'opacity', "aspectRatio", "rotate"]
-const styleElementSetting: Array<elementSettingType> = ['textAlign', "verticalAlign", 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'fontFamily', 'fontSize']
+const commonElementSetting: Array<elementSettingType> = ['x', 'y', 'width', 'height', 'opacity', 'aspectRatio', 'rotate'];
+const styleElementSetting: Array<elementSettingType> = ['textAlign', 'verticalAlign', 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'fontFamily', 'fontSize'];
 const elementSetting: Record<elementType, Array<elementSettingType>> =
     {
         Image: [...commonElementSetting, 'common'],
-        Text: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', 'contentType', 'padding', "margin", 'data', 'label', 'common'],
-        TextTime: [...commonElementSetting, ...styleElementSetting, "fontFamily", 'fontSize', "color", 'hiddenLabel', "formatter", 'padding', "margin", 'label', 'common'],
+        Text: [...commonElementSetting, ...styleElementSetting, 'fontFamily', 'fontSize', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'common'],
+        TextTime: [...commonElementSetting, ...styleElementSetting, 'fontFamily', 'fontSize', 'color', 'hiddenLabel', 'formatter', 'padding', 'margin', 'label', 'common'],
         Panel: [...commonElementSetting, 'common'],
-        DataTable: [...(commonElementSetting.filter(item => item !== "rotate")), ...styleElementSetting, 'common'],
-        FREETable: [...(commonElementSetting.filter(item => item !== "rotate")), ...styleElementSetting, 'common'],
+        DataTable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
+        FREETable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
         Rect: [...commonElementSetting, 'color', 'background', 'common'],
         HorizontalLine: [...commonElementSetting, 'color', 'lineHeight', 'lineWidth', 'common'],
         DottedHorizontalLine: [...commonElementSetting, 'color', 'lineHeight', 'dottedStyle', 'lineWidth', 'common'],
@@ -98,31 +98,48 @@ const elementSetting: Record<elementType, Array<elementSettingType>> =
         Container: [...commonElementSetting, 'common'],
         PageHeader: [...commonElementSetting, 'common'],
         PageFooter: [...commonElementSetting, 'common'],
-        PageNum: [...commonElementSetting, ...styleElementSetting, "formatter", 'common'],
+        PageNum: [...commonElementSetting, ...styleElementSetting, 'formatter', 'common'],
         PrivateDragRectElement: [],
-        SvgPolygonLine: ['color', 'background', 'common'],
-        SvgCircle: ['color', 'background', 'common'],
-        SvgEllipse: ['color', 'background', 'common'],
-        SvgLine: ['color', 'background', 'common'],
-        SvgBezierCurve: ['color', 'background', 'common'],
-        SvgBezierCurveThree: ['color', 'background', 'common'],
-        DrawPanel: ['color', 'background', 'borderAll', 'common'],
-    }
+        SvgPolygonLine: ['color', 'background', 'common', 'x', 'y', 'opacity'],
+        SvgCircle: ['color', 'background', 'common', 'x', 'y', 'opacity'],
+        SvgEllipse: ['color', 'background', 'common', 'x', 'y', 'opacity'],
+        SvgLine: ['color', 'background', 'common', 'x', 'y', 'opacity'],
+        SvgBezierCurve: ['color', 'background', 'common', 'x', 'y', 'opacity'],
+        SvgBezierCurveThree: ['color', 'background', 'common', 'x', 'y', 'opacity'],
+        DrawPanel: ['color', 'background', 'borderAll', 'common', 'x', 'y', 'opacity']
+    };
 
 export function getElementSetting(type: elementType) {
-    const settingList = elementSetting[type]
+    const settingList = elementSetting[type];
     if (settingList) {
-        return settingList
+        return settingList;
     }
-    return []
+    return [];
 }
 
 export function hasStyle(type: elementType, style: elementSettingType) {
-    const ele = elementSetting[type]
+    const ele = elementSetting[type];
     if (ele) {
-        return ele.includes(style)
+        return ele.includes(style);
     }
-    return false
+    return false;
+}
+
+export function hasStyleByTypeList(typeList: elementType[], style: elementSettingType) {
+    if (typeList == undefined || typeList.length == 0) {
+        return false;
+    }
+
+    for (let typeListElement of typeList) {
+        const ele = elementSetting[typeListElement];
+        if (!ele) {
+            return false;
+        }
+        if (!ele.includes(style)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 export const textContentTypes = [
@@ -138,7 +155,7 @@ export const textContentTypes = [
         'label': '二维码',
         'value': 'QrCode'
     }
-]
+];
 
 export const barcodeTypes = [
     {
@@ -228,42 +245,42 @@ export const barcodeTypes = [
         'value': 'pharmacode',
         'eg': i18n('pharmacode')
     }
-]
+];
 
 export const handleConstants = {
-    tl: {id: 'tl', index: 0, class: 'bg-none l t', x: null, y: null, width: 0, height: 0} as any,
-    tm: {id: 'tm', index: 1, class: 't center-h', x: null, y: null, width: 0, height: 0} as any,
-    tr: {id: 'tr', index: 2, class: 'bg-none r t', x: null, y: null, width: 0, height: 0} as any,
-    rm: {id: 'rm', index: 3, class: 'r', x: null, y: null, width: 0, height: 0} as any,
-    br: {id: 'br', index: 4, class: 'bg-none r b', x: null, y: null, width: 0, height: 0} as any,
-    bm: {id: 'bm', index: 5, class: 'b', x: null, y: null, width: 0, height: 0} as any,
-    bl: {id: 'bl', index: 6, class: 'bg-none l b', x: null, y: null, width: 0, height: 0} as any,
-    lm: {id: 'lm', index: 7, class: 'l', x: null, y: null, width: 0, height: 0} as any,
-    rot: {id: 'rot', index: 8, class: 'l', x: null, y: null, width: 0, height: 0} as any
-} as any
+    tl: { id: 'tl', index: 0, class: 'bg-none l t', x: null, y: null, width: 0, height: 0 } as any,
+    tm: { id: 'tm', index: 1, class: 't center-h', x: null, y: null, width: 0, height: 0 } as any,
+    tr: { id: 'tr', index: 2, class: 'bg-none r t', x: null, y: null, width: 0, height: 0 } as any,
+    rm: { id: 'rm', index: 3, class: 'r', x: null, y: null, width: 0, height: 0 } as any,
+    br: { id: 'br', index: 4, class: 'bg-none r b', x: null, y: null, width: 0, height: 0 } as any,
+    bm: { id: 'bm', index: 5, class: 'b', x: null, y: null, width: 0, height: 0 } as any,
+    bl: { id: 'bl', index: 6, class: 'bg-none l b', x: null, y: null, width: 0, height: 0 } as any,
+    lm: { id: 'lm', index: 7, class: 'l', x: null, y: null, width: 0, height: 0 } as any,
+    rot: { id: 'rot', index: 8, class: 'l', x: null, y: null, width: 0, height: 0 } as any
+} as any;
 
 export type handleConstantsType = keyof typeof handleConstants
 
 export const cursorStyleArray = [
-    "nwse-resize",
-    "ns-resize",
-    "nesw-resize",
-    "ew-resize",
-    "nwse-resize",
-    "ns-resize",
-    "nesw-resize",
-    "ew-resize"
+    'nwse-resize',
+    'ns-resize',
+    'nesw-resize',
+    'ew-resize',
+    'nwse-resize',
+    'ns-resize',
+    'nesw-resize',
+    'ew-resize'
 ];
 
-export const elementTypeLineList: Array<elementType> = ['HorizontalLine', 'DottedHorizontalLine', 'VerticalLine', 'DottedVerticalLine']
-export const elementTypeContainerList: Array<elementType> = ['PageHeader', 'PageFooter', 'Container']
-export const elementHandleEditStatusList: Array<elementStatus> = ['HANDLE_ED', 'HANDLE_EDIT_ING']
-export const elementHandleHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED']
-export const elementHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED', 'HANDLE_EDIT_ING']
+export const elementTypeLineList: Array<elementType> = ['HorizontalLine', 'DottedHorizontalLine', 'VerticalLine', 'DottedVerticalLine'];
+export const elementTypeContainerList: Array<elementType> = ['PageHeader', 'PageFooter', 'Container'];
+export const elementHandleEditStatusList: Array<elementStatus> = ['HANDLE_ED', 'HANDLE_EDIT_ING'];
+export const elementHandleHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED'];
+export const elementHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED', 'HANDLE_EDIT_ING'];
 
 export const pageUnitList = [
     'px', 'mm', 'cm'
-]
+];
 
 export const clientProtocolList = {
     myprint: {
@@ -277,8 +294,8 @@ export const clientProtocolList = {
     hiprint: {
         protocol: 'hiprint',
         clientUrl: 'ws://127.0.0.1:8888'
-    },
-}
+    }
+};
 
 export const pageSizeList = [
     {
@@ -291,84 +308,84 @@ export const pageSizeList = [
         'label': 'A0',
         'value': 'A0',
         'width': 841.0,
-        'height': 1189.0,
+        'height': 1189.0
     },
     {
         'label': 'A1',
         'value': 'A1',
         'width': 594.0,
-        'height': 841.0,
+        'height': 841.0
     },
     {
         'label': 'A2',
         'value': 'A2',
         'width': 420.0,
-        'height': 594.0,
+        'height': 594.0
     },
     {
         'label': 'A3',
         'value': 'A3',
         'width': 297.0,
-        'height': 420.0,
+        'height': 420.0
     },
     {
         'label': 'A4',
         'value': 'A4',
         'width': 210.0,
-        'height': 297.0,
+        'height': 297.0
     },
     {
         'label': 'A5',
         'value': 'A5',
         'width': 148.0,
-        'height': 210.0,
+        'height': 210.0
     },
     {
         'label': 'A6',
         'value': 'A6',
         'width': 105.0,
-        'height': 148.0,
+        'height': 148.0
     }, {
         'label': 'A7',
         'value': 'A7',
         'width': 74.0,
-        'height': 105.0,
+        'height': 105.0
     }, {
         'label': 'A8',
         'value': 'A8',
         'width': 52.0,
-        'height': 74.0,
+        'height': 74.0
     }, {
         'label': 'B5',
         'value': 'B5',
         'width': 176.0,
-        'height': 250.0,
+        'height': 250.0
     }, {
         'label': 'B6',
         'value': 'B6',
         'width': 125.0,
-        'height': 176.0,
+        'height': 176.0
     }, {
         'label': 'B7',
         'value': 'B7',
         'width': 88.0,
-        'height': 125.0,
+        'height': 125.0
     }, {
         'label': 'C5',
         'value': 'C5',
         'width': 162.0,
-        'height': 229.0,
+        'height': 229.0
     }, {
         'label': 'C6',
         'value': 'C6',
         'width': 114.0,
-        'height': 162.0,
+        'height': 162.0
     }, {
         'label': 'C7',
         'value': 'C7',
         'width': 81.0,
-        'height': 114.0,
-    }]
+        'height': 114.0
+    }];
 
 export const dottedStyleList = [
     {
@@ -379,4 +396,4 @@ export const dottedStyleList = [
         'label': '线',
         'value': 'dashed'
     }
-]
+];

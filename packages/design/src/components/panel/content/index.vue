@@ -1,39 +1,39 @@
 <template>
-  <div class="design-panel-container" v-show="useAppStoreHook().displayModel == 'design'">
-    <Toolbar/>
-    <div class="display-flex design-panel-container-height">
-      <my-panel/>
-      <div style="background: white;" class="display-flex-column width-20">
-        <div v-for="(value, key) in handlePanelElementList"
-             @click="clickHandlePanelIcon(key)"
-             :class="['my-icon handle-panel-icon iconfont',{'handle-panel-icon-active': configStore.settingPanel[key].visible}, value.icon]"
-             :key="key"/>
-        <history-panel/>
-        <operation-panel/>
-        <setting-panel/>
-      </div>
-      <minimap-panel/>
+    <div class="design-panel-container" v-show="useAppStoreHook().displayModel == 'design'">
+        <Toolbar />
+        <div class="display-flex design-panel-container-height">
+            <my-panel />
+            <div style="background: white;" class="display-flex-column width-20">
+                <div v-for="(value, key) in handlePanelElementList"
+                     @click="clickHandlePanelIcon(key)"
+                     :class="['my-icon handle-panel-icon iconfont',{'handle-panel-icon-active': configStore.settingPanel[key].visible}, value.icon]"
+                     :key="key" />
+                <history-panel />
+                <operation-panel />
+                <setting-panel />
+            </div>
+            <minimap-panel />
+        </div>
     </div>
-  </div>
-  <preview-panel/>
+    <preview-panel />
 </template>
 
 <script setup lang="ts">
 import Toolbar from '../toolbar/toolbar.vue'
-import PreviewPanel from "../../preview/preview-panel.vue";
-import MyPanel from "./my-panel.vue";
-import {handlePanelElementList} from "@myprint/design/constants/settingPanel";
-import HistoryPanel from "../handle-panel/history-panel.vue";
-import OperationPanel from "../handle-panel/operation-panel.vue";
-import SettingPanel from "../handle-panel/setting/setting-panel.vue";
-import {useConfigStore} from "@myprint/design/stores/config";
-import MinimapPanel from "@myprint/design/components/panel/handle-panel/minimap-panel.vue";
-import {useAppStoreHook} from "@myprint/design/stores/app";
+import PreviewPanel from '../../preview/preview-panel.vue'
+import MyPanel from './my-panel.vue'
+import { handlePanelElementList } from '@myprint/design/constants/settingPanel'
+import HistoryPanel from '../handle-panel/history-panel.vue'
+import OperationPanel from '../handle-panel/operation-panel/index.vue'
+import SettingPanel from '../handle-panel/setting/setting-panel.vue'
+import { useConfigStore } from '@myprint/design/stores/config'
+import MinimapPanel from '@myprint/design/components/panel/handle-panel/minimap-panel.vue'
+import { useAppStoreHook } from '@myprint/design/stores/app'
 
 const configStore = useConfigStore()
 
 function clickHandlePanelIcon(key: any) {
-  configStore.settingPanel[key].visible = !configStore.settingPanel[key].visible
+    configStore.settingPanel[key].visible = !configStore.settingPanel[key].visible
 }
 
 </script>

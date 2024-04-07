@@ -16,7 +16,6 @@
     "element-plus": "^2.4.2",
     "element-resize-detector": "^1.2.4",
     "pinia": "^2.1.4",
-    "pinia-plugin-persist": "^1.0.0",
     "vue": "^3.3.8",
     "vue-i18n": "^9.3.0",
     "vue-router": "^4.0.0-0"

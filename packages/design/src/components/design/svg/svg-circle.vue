@@ -21,7 +21,6 @@ const props = withDefaults(defineProps<{
 }>(), {
   element: () => ({} as MyElement)
 })
-let ellipse
 
 const svgOptions = reactive({
   width: 0,

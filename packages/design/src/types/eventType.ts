@@ -24,4 +24,6 @@ export type EventTypes = {
     minimapViewportScroll: Container;
 
     changePageSize: any;
+
+    changeElement: any;
 }

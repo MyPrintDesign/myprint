@@ -1,13 +1,13 @@
-import {selectAllElement, selectedElementBatchOperation} from "./elementUtil";
-import {px2unit} from "./devicePixelRatio";
+import { selectedElementBatchOperation } from './elementUtil';
+import { px2unit } from './devicePixelRatio';
 
 const keyConvert = {
     Ctrl: ['Meta', 'Ctrl']
-} as Record<string, Array<string>>
+} as Record<string, Array<string>>;
 
 interface keyListener {
     keys: Array<string | ((event: KeyboardEvent) => boolean)>;
-    callback: () => void
+    callback: () => void;
 }
 
 const eventListeners: Array<keyListener> = [];
@@ -22,8 +22,8 @@ export function mountedKeyboardEvent() {
             // console.log('isCtrl+z 撤销')
         })
         .subscribe([isCtrl, 'a'], () => {
-            // console.log('isCtrl+a 全选')
-            selectAllElement()
+            console.log('isCtrl+a 全选');
+            // selectAllElement();
         })
         .subscribe([isCtrl, 'c'], () => {
             // console.log('isCtrl+c 复制')
@@ -45,103 +45,107 @@ export function mountedKeyboardEvent() {
         .subscribe(['Tab'], () => {
             // console.log('Tab切换')
         })
+        .subscribe(['ArrowUp'], () => {
+            console.log('ArrowUp');
+            selectedElementBatchOperation(element => element.height = element.height - px2unit(1));
+        })
 
         .subscribe([isCtrl, 'ArrowUp'], () => {
-            // console.log('isCtrl+ArrowUp')
-            selectedElementBatchOperation(element => element.height = element.height - px2unit(1))
+            console.log('isCtrl+ArrowUp');
+            selectedElementBatchOperation(element => element.height = element.height - px2unit(1));
         })
         .subscribe([isCtrl, 'ArrowDown'], () => {
             // console.log('isCtrl+ArrowRight')
-            selectedElementBatchOperation(element => element.height = element.height + px2unit(1))
+            selectedElementBatchOperation(element => element.height = element.height + px2unit(1));
         })
         .subscribe([isCtrl, 'ArrowLeft'], () => {
             // console.log('isCtrl+ArrowRight')
-            selectedElementBatchOperation(element => element.width = element.width - px2unit(1))
+            selectedElementBatchOperation(element => element.width = element.width - px2unit(1));
         })
         .subscribe([isCtrl, 'ArrowRight'], () => {
             // console.log('isCtrl+ArrowRight')
-            selectedElementBatchOperation(element => element.width = element.width + px2unit(1))
+            selectedElementBatchOperation(element => element.width = element.width + px2unit(1));
         })
 
         .subscribe([isShift, 'ArrowUp'], () => {
             // console.log('ArrowUp')
-            selectedElementBatchOperation(element => element.y = element.y! - px2unit(10))
+            selectedElementBatchOperation(element => element.y = element.y! - px2unit(10));
         })
         .subscribe([isShift, 'ArrowDown'], () => {
             // console.log('ArrowDown')
-            selectedElementBatchOperation(element => element.y = element.y! + px2unit(10))
+            selectedElementBatchOperation(element => element.y = element.y! + px2unit(10));
         })
         .subscribe([isShift, 'ArrowLeft'], () => {
             // console.log('ArrowLeft')
-            selectedElementBatchOperation(element => element.x = element.x! - px2unit(10))
+            selectedElementBatchOperation(element => element.x = element.x! - px2unit(10));
         })
         .subscribe([isShift, 'ArrowRight'], () => {
             // console.log('ArrowRight')
-            selectedElementBatchOperation(element => element.x = element.x! + px2unit(10))
+            selectedElementBatchOperation(element => element.x = element.x! + px2unit(10));
         })
 
 
         .subscribe(['ArrowUp'], () => {
             // console.log('ArrowUp')
-            selectedElementBatchOperation(element => element.y = element.y! - px2unit(1))
+            selectedElementBatchOperation(element => element.y = element.y! - px2unit(1));
         })
         .subscribe(['ArrowDown'], () => {
             // console.log('ArrowDown')
-            selectedElementBatchOperation(element => element.y = element.y! + px2unit(1))
+            selectedElementBatchOperation(element => element.y = element.y! + px2unit(1));
         })
         .subscribe(['ArrowLeft'], () => {
             // console.log('ArrowLeft')
-            selectedElementBatchOperation(element => element.x = element.x! - px2unit(1))
+            selectedElementBatchOperation(element => element.x = element.x! - px2unit(1));
         })
         .subscribe(['ArrowRight'], () => {
             // console.log('ArrowRight')
-            selectedElementBatchOperation(element => element.x = element.x! + px2unit(1))
+            selectedElementBatchOperation(element => element.x = element.x! + px2unit(1));
         })
 
         .subscribe([isDelete], () => {
             // console.log('ArrowRight')
-        })
+        });
 }
 
 export function unMountedKeyboardEvent() {
-    removeKeyboardEvent()
+    removeKeyboardEvent();
 }
 
 export function addKeyboardEvent() {
-    document.addEventListener('keydown', keyDown)
-    document.addEventListener('keyup', keyUp)
+    document.addEventListener('keydown', keyDown);
+    document.addEventListener('keyup', keyUp);
 
     const handlers = {
         subscribe(keys: Array<string | ((event: KeyboardEvent) => boolean)>, callback: () => void) {
             eventListeners.push({
                 keys,
                 callback
-            })
+            });
             return handlers;
         }
     };
-    return handlers
+    return handlers;
 }
 
 export function removeKeyboardEvent() {
-    document.removeEventListener('keydown', keyDown)
-    document.removeEventListener('keyup', keyUp)
+    document.removeEventListener('keydown', keyDown);
+    document.removeEventListener('keyup', keyUp);
 }
 
 function keyUp(event: KeyboardEvent) {
     // console.log('up' + convertKey(event.key))
-    delete downKeyList[convertKey(event.key)]
+    delete downKeyList[convertKey(event.key)];
     // console.log(downKeyList)
 }
 
 function convertKey(key: string) {
     for (let keyConvertKey in keyConvert) {
-        let convertList = keyConvert[keyConvertKey]
+        let convertList = keyConvert[keyConvertKey];
         if (convertList.includes(key)) {
-            return keyConvertKey
+            return keyConvertKey;
         }
     }
-    return key
+    return key;
 }
 
 function keyDown(event: KeyboardEvent) {
@@ -151,23 +155,23 @@ function keyDown(event: KeyboardEvent) {
     // console.log(event.key)
     if ((event.target as HTMLElement).tagName === 'INPUT' || (event.target as HTMLElement).tagName === 'TEXTAREA') {
         // console.log('This event is triggered by an input or textarea!');
-        return
+        return;
     }
 
     for (let eventListener of eventListeners) {
-        const {keys, callback} = eventListener
-        let isTrigger = true
+        const { keys, callback } = eventListener;
+        let isTrigger = true;
         for (let key of keys) {
             // console.log(key, event.key)
             if (key instanceof Function) {
                 if (!key(event)) {
-                    isTrigger = false
-                    break
+                    isTrigger = false;
+                    break;
                 }
             } else {
                 if (key != event.key) {
-                    isTrigger = false
-                    break
+                    isTrigger = false;
+                    break;
                 }
             }
 
@@ -178,10 +182,10 @@ function keyDown(event: KeyboardEvent) {
         }
         // console.log(isTrigger)
         if (isTrigger) {
-            callback()
-            event.preventDefault()
-            event.stopPropagation()
-            break
+            callback();
+            event.preventDefault();
+            event.stopPropagation();
+            break;
         }
     }
 
@@ -200,18 +204,18 @@ function keyDown(event: KeyboardEvent) {
 }
 
 export function isCtrl(event: KeyboardEvent) {
-    return event.ctrlKey || event.metaKey
+    return event.ctrlKey || event.metaKey;
 }
 
 export function isShift(event: KeyboardEvent) {
-    return event.shiftKey
+    return event.shiftKey;
 }
 
 export function isCtrlShift(event: KeyboardEvent) {
     // console.log(event)
-    return (event.ctrlKey || event.metaKey) && event.shiftKey
+    return (event.ctrlKey || event.metaKey) && event.shiftKey;
 }
 
 export function isDelete(event: KeyboardEvent) {
-    return event.key == 'Backspace'
+    return event.key == 'Backspace';
 }

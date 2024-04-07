@@ -1,19 +1,21 @@
-import {App, ref} from 'vue'
+import { App, ref } from 'vue';
 
-import "vue3-colorpicker/style.css";
+import 'vue3-colorpicker/style.css';
 
-import {messageFun, mittKey} from "./constants/keys";
+import { messageFun, mittKey } from './constants/keys';
 
 
-import {createPinia} from "pinia";
+import { createPinia } from 'pinia';
+import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 // @ts-ignore
 // import piniaPersist from 'pinia-plugin-persist';
-import Vue3ColorPicker from "vue3-colorpicker";
+import Vue3ColorPicker from 'vue3-colorpicker';
 import VueCropper from 'vue-cropper';
-import 'vue-cropper/dist/index.css'
+import 'vue-cropper/dist/index.css';
 // import i18n from "./locales";
-import {useSocket} from "./stores/socket";
-import {mitt} from "@myprint/design/utils/utils";
+import { useSocket } from './stores/socket';
+import { mitt } from '@myprint/design/utils/utils';
+import { useConfigStore } from '@myprint/design/stores/config';
 // import 'element-plus/es/components/button/style/index'
 // import 'element-plus/es/components/scrollbar/style/index'
 // import 'element-plus/es/components/switch/style/index'
@@ -25,7 +27,7 @@ import {mitt} from "@myprint/design/utils/utils";
 
 // import {ElButton, ElSelect, ElOption, ElIcon, ElScrollbar, ElPopover,ElTooltip,ElInput,ElInputNumber,
 //     ElContainer, ElAside, ElMain, ElRow,ElCol,ElForm,ElFormItem,ElDivider,ElSwitch} from 'element-plus'
-const onSocketMessage = ref<Function>()
+const onSocketMessage = ref<Function>();
 
 const install = {
     install(app: App<any>): any {
@@ -33,14 +35,15 @@ const install = {
         // comps.map((component:any)=>{
         //     Vue.component(component.__name as string, component);
         // })
-        console.log("~~~MyPrint 初始化~~~")
+        console.log('~~~MyPrint 初始化~~~');
         // console.log(app)
+
         if (app.config.globalProperties.$pinia) {
             // Pinia 插件已安装
         } else {
-            const pinia = createPinia()
-            // pinia.use(piniaPersist)
-            app.use(pinia)
+            const pinia = createPinia();
+            pinia.use(piniaPluginPersistedstate);
+            app.use(pinia);
         }
         app
             // .use(ElButton)
@@ -63,15 +66,17 @@ const install = {
             // .use(ElSwitch)
             // .use(i18n)
             .use(VueCropper)
-            .use(Vue3ColorPicker)
-        app.provide(messageFun, onSocketMessage)
+            .use(Vue3ColorPicker);
+        app.provide(messageFun, onSocketMessage);
         //@ts-ignore
-        app.provide(mittKey, mitt)
+        app.provide(mittKey, mitt);
 
-        useSocket().INIT_SOCKET(onSocketMessage)
+        useSocket().INIT_SOCKET(onSocketMessage);
+
+        useConfigStore().initConfig()
     }
-}
-export {install}
+};
+export { install };
 
 
 // export * from './index'

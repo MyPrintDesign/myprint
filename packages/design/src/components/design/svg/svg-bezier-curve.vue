@@ -10,17 +10,16 @@
 </template>
 
 <script setup lang="ts">
-import {reactive} from 'vue'
+import { reactive } from "vue";
 
 import * as d3Path from "d3-path";
-import {Path} from "d3-path";
-import {MyElement, Line, Point, PointLabel} from "@myprint/design/types/entity";
-import {unit2px} from "@myprint/design/utils/devicePixelRatio";
-import {moveableDragResize} from "@myprint/design/plugins/moveable/moveable";
+import { Path } from "d3-path";
+import { Line, MyElement, Point, PointLabel } from "@myprint/design/types/entity";
+import { unit2px } from "@myprint/design/utils/devicePixelRatio";
+import { moveableDragOffsetResize } from "@myprint/design/plugins/moveable/moveable";
 import SvgBase from "@myprint/design/components/design/svg/svg-base.vue";
-import {computedShapeBound} from "@myprint/design/utils/elementUtil";
-import {bezier2} from "@myprint/design/utils/bezierUtil";
-import {stringify} from "@myprint/design/utils/utils";
+import { bezier2 } from "@myprint/design/utils/bezierUtil";
+import { stringify } from "@myprint/design/utils/utils";
 
 const props = withDefaults(defineProps<{
   element?: MyElement
@@ -87,12 +86,12 @@ function dragEnd() {
   // console.log("Bezier curve height: " + bezierProperties.height);
   // console.log("Lowest point on Bezier curve: " + bezierProperties.minY);
   // console.log("Highest point on Bezier curve: " + bezierProperties.maxY);
-  const rect = computedShapeBound(svgOptions.linePoints)
-  // console.log(rect)
-  moveableDragResize(rect.x + unit2px(props.element.x), rect.y + unit2px(props.element.y), rect.width, rect.height, props.element)
+  // const rect = computedShapeBound(svgOptions.linePoints)
+  console.log(bezierProperties)
+  moveableDragOffsetResize(bezierProperties.x, bezierProperties.y, bezierProperties.width, bezierProperties.height, props.element)
   
-  svgOptions.width = rect.width
-  svgOptions.height = rect.height
+  svgOptions.width = bezierProperties.width
+  svgOptions.height = bezierProperties.height
   // props.element.width = rect.width
   // 偏移svg
   for (let allPointElement of svgOptions.allPoint) {

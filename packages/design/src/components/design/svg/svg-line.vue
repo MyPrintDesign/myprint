@@ -1,33 +1,33 @@
 <template>
   <svg-base
-      :element="element"
-      :svgOptions="svgOptions"
-      :draw="draw"
-      :dragIng="dragIng"
-      :dragEnd="dragEnd"
+    :element="element"
+    :svgOptions="svgOptions"
+    :draw="draw"
+    :dragIng="dragIng"
+    :dragEnd="dragEnd"
   />
 </template>
 
 <script setup lang="ts">
-import {reactive} from 'vue'
+import { reactive } from "vue";
 
 import * as d3Path from "d3-path";
-import {Path} from "d3-path";
-import {MyElement, PointLabel} from "@myprint/design/types/entity";
-import {unit2px} from "@myprint/design/utils/devicePixelRatio";
-import {moveableDragResize} from "@myprint/design/plugins/moveable/moveable";
+import { Path } from "d3-path";
+import { MyElement, PointLabel } from "@myprint/design/types/entity";
+import { unit2px } from "@myprint/design/utils/devicePixelRatio";
+import { moveableDragOffsetResize } from "@myprint/design/plugins/moveable/moveable";
 import SvgBase from "@myprint/design/components/design/svg/svg-base.vue";
-import {computedShapeBound} from "@myprint/design/utils/elementUtil";
-import {D3DragEvent} from "@myprint/design/types/d3Type";
-import {stringify} from "@myprint/design/utils/utils";
+import { computedShapeBound } from "@myprint/design/utils/elementUtil";
+import { D3DragEvent } from "@myprint/design/types/d3Type";
+import { stringify } from "@myprint/design/utils/utils";
 
 const props = withDefaults(defineProps<{
   element?: MyElement
 }>(), {
   element: () => ({} as MyElement)
-})
+});
 
-let path: Path
+let path: Path;
 
 const svgOptions = reactive({
   width: 0,
@@ -37,20 +37,20 @@ const svgOptions = reactive({
   linePoints: [] as Array<PointLabel>,
   allPoint: [] as Array<PointLabel>,
   drawAuxiliary: false
-})
+});
 
-svgOptions.width = unit2px(props.element.width)
-svgOptions.height = unit2px(props.element.height)
+svgOptions.width = unit2px(props.element.width);
+svgOptions.height = unit2px(props.element.height);
 
-initPoint()
+initPoint();
 
 function draw() {
-  path = d3Path.path() as Path
+  path = d3Path.path() as Path;
   if (svgOptions.linePoints.length > 1) {
-    path.moveTo(svgOptions.linePoints[0].x, svgOptions.linePoints[0].y)
-    path.lineTo(svgOptions.linePoints[1].x, svgOptions.linePoints[1].y)
+    path.moveTo(svgOptions.linePoints[0].x, svgOptions.linePoints[0].y);
+    path.lineTo(svgOptions.linePoints[1].x, svgOptions.linePoints[1].y);
   }
-  return path
+  return path;
 }
 
 function initPoint() {
@@ -58,7 +58,13 @@ function initPoint() {
     const data = JSON.parse(props.element.data);
     svgOptions.linePoints = data.points;
   }
-  svgOptions.allPoint = [...svgOptions.linePoints]
+  
+  // svgOptions.controlPointEndDragStart = {...svgOptions.controlPointEnd}
+  
+  // svgOptions.controlLineStart = {x: svgOptions.width / 2, y: svgOptions.height / 2} as PointLabel
+  // svgOptions.controlPointEnd = {x: svgOptions.width / 2, y: -20, type: 'control'} as PointLabel
+  
+  svgOptions.allPoint = [...svgOptions.linePoints];
 }
 
 function dragIng(subject: PointLabel, event: D3DragEvent, dx: number, dy: number) {
@@ -67,20 +73,20 @@ function dragIng(subject: PointLabel, event: D3DragEvent, dx: number, dy: number
 }
 
 function dragEnd() {
-  const rect = computedShapeBound(svgOptions.linePoints)
+  const rect = computedShapeBound(svgOptions.linePoints);
   
-  moveableDragResize(rect.x + unit2px(props.element.x), rect.y + unit2px(props.element.y), rect.width, rect.height, props.element)
+  moveableDragOffsetResize(rect.x, rect.y, rect.width, rect.height, props.element);
   
-  svgOptions.width = rect.width
-  svgOptions.height = rect.height
+  svgOptions.width = rect.width;
+  svgOptions.height = rect.height;
   // props.element.width = rect.width
   // 偏移svg
   for (let allPointElement of svgOptions.allPoint) {
-    allPointElement.x -= rect.x
-    allPointElement.y -= rect.y
+    allPointElement.x -= rect.x;
+    allPointElement.y -= rect.y;
   }
   
-  props.element.data = stringify({points: svgOptions.linePoints})
+  props.element.data = stringify({ points: svgOptions.linePoints });
 }
 
 </script>

@@ -1,54 +1,43 @@
-import {defineStore} from 'pinia'
+import { defineStore } from 'pinia';
 
-export const useConfigStore = defineStore('config', {
+export const useConfigStore = defineStore({
+    id: 'config',
     state: () => {
         return {
-            collapsePanelZIndex: 1000,
             // cursor: null,
-            showHistory: false,
+            init: false,
             printer: null,
             defaultPrinter: null,
             clientProtocol: 'myprint',
             clientUrl: 'ws://127.0.0.1:9898',
             autoConnect: true,
             settingPanel: {
-                setting: {visible: false},
-                operation: {visible: true},
-                history: {visible: false},
-                elementList: {visible: false},
-                miniMap: {visible: false}
+                setting: { visible: false, x: 20, y: 70, width: 800, height: 500 },
+                operation: { visible: false, x: 20, y: 70, width: 260, height: 600 },
+                history: { visible: false, x: 20, y: 560, width: 200, height: 200 },
+                elementList: { visible: false },
+                miniMap: { visible: false, x: 20, y: 660, width: 200, height: 200 }
             } as any,
             settingDesign: {
                 autoAlign: false
             }
-        }
+        };
     },
     // 也可以这样定义
     // state: () => ({ count: 0 })
     actions: {
         initConfig() {
-
+            this.init = true;
         },
         updateConfig(key: string, value: string) {
-            let self = this as any
-            self[key] = value
-            this.postConfig()
+            let self = this as any;
+            self[key] = value;
+            this.postConfig();
         },
         postConfig() {
 
-        },
-        changeCursor(_cursor: any) {
-            // if (this.data.cursor) {
-            //     document.body.classList.remove(this.data.cursor)
-            // }
-            // if (cursor) {
-            //     document.body.classList.add(cursor)
-            // }
-            // this.cursor = cursor
         }
     },
-    // persist: {
-    //     // 需要持久化的状态
-    //     enabled: true,
-    // },
-})
+
+    persist: true
+});

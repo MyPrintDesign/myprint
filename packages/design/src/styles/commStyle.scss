@@ -124,6 +124,10 @@
   cursor: col-resize !important;
 }
 
+.cursor-resize[data-rotation="ns-resize"] {
+  cursor: ns-resize !important;
+}
+
 .cursor-move {
   cursor: move;
 }

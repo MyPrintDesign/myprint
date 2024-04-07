@@ -1,28 +1,30 @@
-import {clearEventBubble} from "./event"
-import {MyElement, Panel} from "@myprint/design/types/entity";
-import {displayRatio, unit2px} from "@myprint/design/utils/devicePixelRatio";
+import { clearEventBubble } from './event';
+import { MyElement, Panel } from '@myprint/design/types/entity';
+import { displayRatio, unit2px } from '@myprint/design/utils/devicePixelRatio';
 // import {arrayIndexOf, arrayRemove} from "@myprint/design/utils/arrays";
 // @ts-ignore
-import * as mittInit from 'mitt'
-import {fontList} from "@myprint/design/constants/common";
+import * as mittInit from 'mitt';
+import { fontList } from '@myprint/design/constants/common';
+import { Emitter } from 'mitt';
+import { EventTypes } from '@myprint/design/types/eventType';
 
-let collapsePanelZIndex = 1000
+let collapsePanelZIndex = 1000;
 
-export const mitt = mittInit.default()
+export const mitt = mittInit.default() as Emitter<EventTypes>;
 
 export function sortColumn(myElement: MyElement, sourceIndex: any, targetIndex: any) {
     // console.log(sourceIndex, targetIndex)
-    const source = myElement.headList[sourceIndex]
-    myElement.headList.splice(sourceIndex, 1)
+    const source = myElement.headList[sourceIndex];
+    myElement.headList.splice(sourceIndex, 1);
 
-    myElement.headList.splice(targetIndex, 0, source)
+    myElement.headList.splice(targetIndex, 0, source);
 
     for (let bodyRowList of myElement.bodyList) {
 
-        const source = bodyRowList[sourceIndex]
-        bodyRowList.splice(sourceIndex, 1)
+        const source = bodyRowList[sourceIndex];
+        bodyRowList.splice(sourceIndex, 1);
 
-        bodyRowList.splice(targetIndex, 0, source)
+        bodyRowList.splice(targetIndex, 0, source);
     }
 
     // for (let i = 0; i < arr.length; i++) {
@@ -32,12 +34,12 @@ export function sortColumn(myElement: MyElement, sourceIndex: any, targetIndex: 
 }
 
 export function click(ev: any, realFun: () => void) {
-    clearEventBubble(ev)
-    realFun()
+    clearEventBubble(ev);
+    realFun();
 }
 
 export function parse<T>(str: string, target: T): T {
-    let targetObj: any = JSON.parse(str)
+    let targetObj: any = JSON.parse(str);
     return to(targetObj, target);
 }
 
@@ -88,11 +90,11 @@ export function to<T>(source: any, target: T): T {
 // }
 
 export function trend0(num: number) {
-    return num < 0 ? 0 : num
+    return num < 0 ? 0 : num;
 }
 
 export function trend1(num: number) {
-    return num < 1 ? 1 : num
+    return num < 1 ? 1 : num;
 }
 
 // console.log(window.devicePixelRatio)
@@ -101,8 +103,8 @@ export const canvas = document.createElement('canvas');
 canvas.width = 200;
 canvas.height = 200;
 // 获取绘图上下文
-const context = canvas.getContext('2d')!
-let image: any
+const context = canvas.getContext('2d')!;
+let image: any;
 
 export function dragImg(panel: Panel, element: MyElement, event: DragEvent) {
     // 创建一个新的canvas元素
@@ -116,7 +118,7 @@ export function dragImg(panel: Panel, element: MyElement, event: DragEvent) {
 // 设置填充颜色
     context.fillStyle = '#f0f2f5';
     // 计算图片相对于鼠标和元素的位置
-    const target = event.target as HTMLDivElement
+    const target = event.target as HTMLDivElement;
     const offsetX = event.clientX - target.getBoundingClientRect().left;
     const offsetY = event.clientY - target.getBoundingClientRect().top;
 
@@ -133,25 +135,25 @@ export function dragImg(panel: Panel, element: MyElement, event: DragEvent) {
     image = new Image();
 
 // 当Image对象加载完成后
-    image.onload = function () {
+    image.onload = function() {
         // 在页面上显示绘制的纯色图像
         // 将canvas的数据URL赋值给Image对象的src属性
     };
-    image.style.position = 'absolute'
-    image.style.left = '-1000px'
-    image.style.top = '0'
+    image.style.position = 'absolute';
+    image.style.left = '-1000px';
+    image.style.top = '0';
     image.src = canvas.toDataURL();
     document.body.appendChild(image);
 
-    event.dataTransfer!.setDragImage(image, offsetX, offsetY)
+    event.dataTransfer!.setDragImage(image, offsetX, offsetY);
 }
 
 export function removeDragImg() {
-    document.body.removeChild(image)
+    document.body.removeChild(image);
 }
 
 export function getRatio() {
-    return displayRatio
+    return displayRatio;
 }
 
 export function mm2pxNoScale(mm: number) {
@@ -162,20 +164,20 @@ export function mm2pxNoScale(mm: number) {
 
 export function stringify(obj: any, ...ignore: any[]) {
     return JSON.stringify(obj, (key, value) => {
-        if (ignore.includes(key)) return undefined
-        return value
-    })
+        if (ignore.includes(key)) return undefined;
+        return value;
+    });
 }
 
 export function getCollapsePanelZIndex(zIndex: number) {
     if (zIndex == collapsePanelZIndex) {
-        return zIndex
+        return zIndex;
     }
-    return ++collapsePanelZIndex
+    return ++collapsePanelZIndex;
 }
 
 export function rgbaToHex(rgba: string) {
-    const rgbaValues = rgba.match(/\d+/g)!
+    const rgbaValues = rgba.match(/\d+/g)!;
     const r = Math.round(parseInt(rgbaValues[0]));
     const g = Math.round(parseInt(rgbaValues[1]));
     const b = Math.round(parseInt(rgbaValues[2]));
@@ -183,7 +185,7 @@ export function rgbaToHex(rgba: string) {
     const hexR = r.toString(16).padStart(2, '0');
     const hexG = g.toString(16).padStart(2, '0');
     const hexB = b.toString(16).padStart(2, '0');
-    let hexA = ''
+    let hexA = '';
     if (rgbaValues[3]) {
         hexA = parseFloat(rgbaValues[3]).toString(16).padStart(2, '0');
     }
@@ -191,14 +193,22 @@ export function rgbaToHex(rgba: string) {
     return '#' + hexR + hexG + hexB + hexA;
 }
 
-let printCssStyleCache: any = undefined
+let printCssStyleCache: any = undefined;
 
 export function printCssStyle() {
     if (printCssStyleCache) {
-        return printCssStyleCache
+        return printCssStyleCache;
     }
 
-    let cssRuleList = ''
+    let cssRuleList =
+        `
+    @media print {
+        body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    }
+`;
     let styleSheets = document.styleSheets;
     // console.log(styleSheets)
     for (let i = 0; i < styleSheets.length; i++) {
@@ -206,14 +216,14 @@ export function printCssStyle() {
         let cssRules = styleSheet.cssRules || styleSheet.rules;
         // let isCss = false
         for (let j = 0; j < cssRules.length; j++) {
-            let cssRule = cssRules[j]
-            let selectorText = (cssRule as CSSStyleRule).selectorText
+            let cssRule = cssRules[j];
+            let selectorText = (cssRule as CSSStyleRule).selectorText;
             if (selectorText && selectorText.startsWith('.my-print-')) {
                 // console.log(cssRule.cssText)
                 cssRuleList = cssRuleList + cssRule.cssText;
             }
         }
-        return printCssStyleCache = cssRuleList
+        return printCssStyleCache = cssRuleList;
     }
 }
 
@@ -231,16 +241,16 @@ export function download(blob: Blob, fileName: string) {
 
 export function _width(element: MyElement) {
     if (['DottedVerticalLine', 'VerticalLine'].includes(element.type)) {
-        return element.option.borderWidth + 0.6
+        return element.option.borderWidth + 0.6;
     }
-    return element.width
+    return element.width;
 }
 
 export function _height(element: MyElement) {
     if (['DottedHorizontalLine', 'HorizontalLine'].includes(element.type)) {
-        return element.option.borderWidth + 2
+        return element.option.borderWidth + 2;
     }
-    return element.height
+    return element.height;
 }
 
 
@@ -248,12 +258,12 @@ export function getFontFamilyName(val: string) {
     for (let fontListElement of fontList) {
         for (let downList of fontListElement) {
             if (val == downList.value) {
-                return downList.label
+                return downList.label;
             }
         }
     }
 
-    return "默认"
+    return '默认';
 }
 
 
@@ -324,6 +334,6 @@ function perpendicularDistance(point, lineStart, lineEnd) {
 }
 
 // 函数类型
-export function isFunction(func:any) {
-    return typeof func === "function" || Object.prototype.toString.call(func) === "[object Function]";
+export function isFunction(func: any) {
+    return typeof func === 'function' || Object.prototype.toString.call(func) === '[object Function]';
 }

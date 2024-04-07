@@ -1,5 +1,5 @@
-import {reactive} from "vue";
-import {Container} from "@myprint/design/types/entity";
+import { reactive } from 'vue';
+import { Container } from '@myprint/design/types/entity';
 
 export const mouseTips = {
     data: reactive({
@@ -11,22 +11,22 @@ export const mouseTips = {
     } as Container & { visible: boolean, data: string }),
 
     move(x: number, y: number, data?: string) {
-        this.data.x = x
-        this.data.y = y
+        this.data.x = x;
+        this.data.y = y;
         if (data) {
-            this.data.data = data
+            this.data.data = data;
         }
     },
 
     visible() {
-        this.data.visible = true
+        this.data.visible = true;
     },
     hidden() {
-        this.data.visible = false
+        this.data.visible = false;
     },
 
     setData(data: string) {
-        this.data.data = data
-    },
+        this.data.data = data;
+    }
 
-}
+};

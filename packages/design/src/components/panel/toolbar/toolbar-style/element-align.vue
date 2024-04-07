@@ -6,10 +6,10 @@
            v-for="(elementAlign) in elementAlignChildList"
            @click="click(elementAlign)">
         
-        <div v-if="showSelectedStatus"
-             class="align-down-list-panel__item__select"
+        <my-icon v-if="showSelectedStatus"
+             class="align-down-list-panel__item__select iconfont icon-duihao"
              :class="{'my-hidden': modelValue != elementAlign.value}">
-        </div>
+        </my-icon>
         
         <i class="align-down-list-panel__item__icon" v-if="elementAlign.icon"
            :class="elementAlign.icon"/>
@@ -28,6 +28,7 @@
 
 <script setup lang="ts">
 import {DownList} from "@myprint/design/types/entity";
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue'
 
 const emit = defineEmits(['update:modelValue', 'click'])
 

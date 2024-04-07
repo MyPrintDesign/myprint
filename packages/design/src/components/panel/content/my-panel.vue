@@ -33,20 +33,20 @@
 </template>
 
 <script setup lang="ts">
-import Rule from "@myprint/design/components/my/rule/rule.vue";
-import {scaleUtil} from "@myprint/design/utils/scaleUtil";
-import {inject, nextTick, onMounted, onUnmounted, reactive, ref} from "vue";
-import {Container, ContentScaleVo, MyElement} from "@myprint/design/types/entity";
-import {mittKey, panelKey} from "@myprint/design/constants/keys";
-import {canMoveStatusList, defaultDragRectElement} from "@myprint/design/constants/common";
-import {record, Snapshot} from "@myprint/design/utils/historyUtil";
-import {computeTranslate, handle, none, removeElement, valueUnit} from "@myprint/design/utils/elementUtil";
-import {useAppStoreHook as useAppStore} from "@myprint/design/stores/app";
-import ElementList from "@myprint/design/components/design/elementList.vue";
-import {unMountedKeyboardEvent} from "@myprint/design/utils/keyboardUtil";
-import {initMoveable, updatePanel} from "@myprint/design/plugins/moveable/moveable";
-import Design from "@myprint/design/components/design/design.vue";
-import {initSelecto, selecto} from "@myprint/design/plugins/moveable/selecto";
+import Rule from '@myprint/design/components/my/rule/rule.vue';
+import { scaleUtil } from '@myprint/design/utils/scaleUtil';
+import { inject, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { Container, ContentScaleVo, MyElement } from '@myprint/design/types/entity';
+import { mittKey, panelKey } from '@myprint/design/constants/keys';
+import { canMoveStatusList } from '@myprint/design/constants/common';
+import { record, Snapshot } from '@myprint/design/utils/historyUtil';
+import { handle, none, removeElement, valueUnit } from '@myprint/design/utils/elementUtil';
+import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
+import ElementList from '@myprint/design/components/design/elementList.vue';
+import { mountedKeyboardEvent, unMountedKeyboardEvent } from '@myprint/design/utils/keyboardUtil';
+import { initMoveable, updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import Design from '@myprint/design/components/design/design.vue';
+import { initSelecto, selecto } from '@myprint/design/plugins/moveable/selecto';
 
 const panel = inject(panelKey)!
 const mitt = inject(mittKey)!
@@ -78,7 +78,7 @@ const designScrollRef = ref<HTMLElement>()!
 mitt.on('elementClick', elementClick)
 // mitt.on('elementMove', elementMove)
 mitt.on('elementUp', elementUp)
-mitt.on('elementRemove', elementRemove)
+// mitt.on('elementRemove', elementRemove)
 mitt.on("scaleEvent", scaleEvent)
 mitt.on("panelSnapshot", panelSnapshot)
 mitt.on('updatePanel', updatePanel)
@@ -87,7 +87,7 @@ mitt.on('scaleMove', scaleMove)
 
 onMounted(() => {
   // 挂载键盘事件
-  // mountedKeyboardEvent()
+  mountedKeyboardEvent()
   initSelecto()
   // updatePanel()
   initMoveable(selecto.value, highlightRule
@@ -188,14 +188,14 @@ function elementUp() {
       elementList.push(valueElement)
     }
   }
+  //
+  // for (let valueElement of elementList) {
+  //   computeTranslate(valueElement)
+  //
+  //   // rotatedPoint(valueElement)
+  // }
   
-  for (let valueElement of elementList) {
-    computeTranslate(valueElement)
-    
-    // rotatedPoint(valueElement)
-  }
-  
-  computeTranslate(defaultDragRectElement as MyElement)
+  // computeTranslate(defaultDragRectElement as MyElement)
   
   // let action = ActionEnum.MOVE
   // if (elementList.length > 1) {

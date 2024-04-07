@@ -6,6 +6,7 @@ import {
     installPanelParentElement
 } from "./elementUtil";
 import {useAppStoreHook as appStore} from "@myprint/design/stores/app";
+import { updatePanel } from '@myprint/design/plugins/moveable/moveable'
 
 export enum ActionEnum {
     INIT = '加载',
@@ -17,6 +18,7 @@ export enum ActionEnum {
     MOVE = '移动<{element}>',
     BATCH_MOVE = '移动<多个元素>',
     UPDATE_STYLE = '修改<{element}>的[{content}]',
+    BATCH_UPDATE_STYLE = '修改<多个元素>的[{content}]',
 }
 
 let max = 50
@@ -118,6 +120,7 @@ function undoPanel() {
     const panel = getCurrentPanel()
     panel.elementList = (historyRecord.value.panel as Panel).elementList
     installPanelParentElement(panel)
+    updatePanel()
     // console.log(redoStack)
     // copyBasicType(historyRecord.value.target, panel)
     // if (!snapshot) {
@@ -139,6 +142,7 @@ function redoPanel() {
     redo()
     panel.elementList = (historyRecord.value.panel as Panel).elementList
     installPanelParentElement(panel)
+    updatePanel()
     // copyBasicType(historyRecord.value.target, panel)
 }
 
