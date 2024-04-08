@@ -1,6 +1,6 @@
 import numberUtil from '@myprint/design/utils/numberUtil';
 import { PageUnit } from '@myprint/design/types/entity';
-import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
+import { getCurrentPanelUnit } from '@myprint/design/utils/elementUtil';
 
 let mmDiv = document.createElement('div');
 let body = document.querySelector('body')!;
@@ -15,11 +15,11 @@ body.removeChild(mmDiv);
 
 export const displayRatio = numberUtil.ceil(mmDivRect.width);
 
-console.log(displayRatio)
+console.log(displayRatio);
 
 export function px2unit(val: number): number {
     // 获取每毫米的像素值
-    return unit2unit('px', appStore().lastPageUnit, val);
+    return unit2unit('px', getCurrentPanelUnit(), val);
 }
 
 export function unit2px(val: number | undefined) {
@@ -27,7 +27,7 @@ export function unit2px(val: number | undefined) {
         return 0;
     }
     // 获取每毫米的像素值
-    return unit2unit(appStore().lastPageUnit, 'px', val);
+    return unit2unit(getCurrentPanelUnit(), 'px', val);
 }
 
 export function unit2unit(oldUnit: PageUnit, newUnit: PageUnit, val: number | undefined): number {

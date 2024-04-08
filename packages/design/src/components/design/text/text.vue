@@ -22,7 +22,7 @@ import {
     elementCommonStyle,
     formatter
 } from '@myprint/design/utils/elementUtil';
-import { checkInput } from '@myprint/design/plugins/moveable/moveable';
+import { checkInput, freshMoveableOption } from '@myprint/design/plugins/moveable/moveable';
 import { elementHandleEditStatusList } from '@myprint/design/constants/common';
 
 const props = withDefaults(defineProps<{
@@ -103,8 +103,11 @@ watch(() => props.element.data, (_n, _o) => {
 
 watch(() => props.element.contentType, (n, _o) => {
     if (n != 'QrCode') {
-        // props.element.option.aspectRatio = null
+        props.element.option.keepRatio = undefined!;
+    } else {
+        props.element.option.keepRatio = true;
     }
+    freshMoveableOption(props.element);
 });
 // watch(() => props.element.option.formatter, (_n, _o) => {
 //   const data = formatter(props.element)

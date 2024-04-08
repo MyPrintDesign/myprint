@@ -4,7 +4,7 @@ import MyDottedHorizontalLine from './components/design/auxiliary/line/dottedHor
 import MyDottedVerticalLine from './components/design/auxiliary/line/dottedVerticalLine';
 import MyHorizontalLine from './components/design/auxiliary/line/horizontalLine';
 import MyVerticalLine from './components/design/auxiliary/line/verticalLine';
-import MyPanel from './components/panel';
+import MyPanel from './components/content';
 
 
 export * from './components/design/auxiliary';

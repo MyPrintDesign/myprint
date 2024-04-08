@@ -19,21 +19,21 @@
 </template>
 
 <script setup lang="ts">
-import Toolbar from '../toolbar/toolbar.vue'
-import PreviewPanel from '../../preview/preview-panel.vue'
-import MyPanel from './my-panel.vue'
-import { handlePanelElementList } from '@myprint/design/constants/settingPanel'
-import HistoryPanel from '../handle-panel/history-panel.vue'
-import OperationPanel from '../handle-panel/operation-panel/index.vue'
-import SettingPanel from '../handle-panel/setting/setting-panel.vue'
-import { useConfigStore } from '@myprint/design/stores/config'
-import MinimapPanel from '@myprint/design/components/panel/handle-panel/minimap-panel.vue'
-import { useAppStoreHook } from '@myprint/design/stores/app'
+import Toolbar from '../toolbar/toolbar.vue';
+import PreviewPanel from '../../preview/preview-panel.vue';
+import MyPanel from './my-panel.vue';
+import { handlePanelElementList } from '@myprint/design/constants/settingPanel';
+import HistoryPanel from '../handle-panel/history-panel.vue';
+import OperationPanel from '../handle-panel/operation-panel/index.vue';
+import SettingPanel from '../handle-panel/setting/setting-panel.vue';
+import { useConfigStore } from '@myprint/design/stores/config';
+import MinimapPanel from '@myprint/design/components/content/handle-panel/minimap-panel.vue';
+import { useAppStoreHook } from '@myprint/design/stores/app';
 
-const configStore = useConfigStore()
+const configStore = useConfigStore();
 
 function clickHandlePanelIcon(key: any) {
-    configStore.settingPanel[key].visible = !configStore.settingPanel[key].visible
+    configStore.settingPanel[key].visible = !configStore.settingPanel[key].visible;
 }
 
 </script>

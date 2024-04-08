@@ -102,7 +102,8 @@
                     <my-icon class="setting-wh-lock iconfont "
                              :class="[multipleElementGetValue('option.keepRatio')? 'icon-wh-lock': 'icon-wh-unlock']"
                              :model-value="multipleElementGetValue('option.keepRatio')"
-                             @update:model-value="(val:any)=>multipleElementSetValue('option.keepRatio', val)" />
+                             @update:model-value="(val:any)=>multipleElementSetValue('option.keepRatio', val)"
+                             @click="changeElementKeepRatio" />
                 </my-group>
             </el-form-item>
             
@@ -304,65 +305,71 @@
 </template>
 <script setup lang="ts">
 // import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
-import { computed, inject } from 'vue'
+import { computed, inject } from 'vue';
 
-import { barcodeTypes, dottedStyleList, getElementSetting, textContentTypes } from '@myprint/design/constants/common'
-import { mittKey } from '@myprint/design/constants/keys'
-import { ActionEnum, Snapshot } from '@myprint/design/utils/historyUtil'
-import { QuestionFilled } from '@element-plus/icons-vue'
-import MyGroup from '@myprint/design/components/my/group/my-group.vue'
-import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input'
-import { useAppStoreHook } from '@myprint/design/stores/app'
-import { unit2px } from '@myprint/design/utils/devicePixelRatio'
-import { freshMoveableOption, moveableResize } from '@myprint/design/plugins/moveable/moveable'
-import { MyElement } from '@myprint/design/types/entity'
-import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil'
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue'
-import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue'
-import MyDivider from '@myprint/design/components/my/divider/my-divider.vue'
+import { barcodeTypes, dottedStyleList, getElementSetting, textContentTypes } from '@myprint/design/constants/common';
+import { mittKey } from '@myprint/design/constants/keys';
+import { ActionEnum, Snapshot } from '@myprint/design/utils/historyUtil';
+import { QuestionFilled } from '@element-plus/icons-vue';
+import MyGroup from '@myprint/design/components/my/group/my-group.vue';
+import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+import { freshMoveableOption, moveableResize } from '@myprint/design/plugins/moveable/moveable';
+import { MyElement } from '@myprint/design/types/entity';
+import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
+import MyDivider from '@myprint/design/components/my/divider/my-divider.vue';
 
-const mitt = inject(mittKey)!
+const mitt = inject(mittKey)!;
 
-const appStore = useAppStoreHook()
+const appStore = useAppStoreHook();
 
 
 const currentBarCodeEg = computed(() => {
     if (element.value.option && element.value.option.barCodeType) {
-        return changeBarCodeType(element.value.option.barCodeType)
+        return changeBarCodeType(element.value.option.barCodeType);
     }
-})
+});
 
 const element = computed(() => {
     if (appStore.currentElement.length > 0) {
-        return appStore.currentElement[0] as MyElement
+        return appStore.currentElement[0] as MyElement;
     } else {
-        return {} as MyElement
+        return {} as MyElement;
     }
-})
+});
 
 function changeLock() {
-    freshMoveableOption(element.value)
+    freshMoveableOption(element.value);
 }
 
 function rotatedPoint(rotate) {
-    console.log(rotate)
+    console.log(rotate);
     // freshMoveableOption(appStore.currentElement)
 }
 
 function changeLocation(_val: any) {
     // record()
-    mitt.emit('panelSnapshot', { action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement } as Snapshot)
+    // console.log(_val);
+    // mitt.emit('panelSnapshot', { action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement } as Snapshot)
     // console.log('change', val)
 }
 
-function changeElementWidth(val) {
+function changeElementWidth(_val) {
     // console.log(val)
-    moveableResize(unit2px(element.value.width), unit2px(element.value.height))
+    moveableResize(unit2px(element.value.width), unit2px(element.value.height));
+}
+
+function changeElementKeepRatio() {
+    // console.log(val)
+    freshMoveableOption(element.value);
 }
 
 function changeBarCodeType(val: any) {
     // record()
     // console.log('change', val)
-    return barcodeTypes.find(v => v.value == val)!.eg
+    return barcodeTypes.find(v => v.value == val)!.eg;
 }
 </script>

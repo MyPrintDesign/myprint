@@ -16,7 +16,7 @@ import {
     SvgData
 } from '@myprint/design/types/entity';
 import { canMoveStatusList, defaultDragRectElement, elementTypeLineList } from '@myprint/design/constants/common';
-import { mitt, parse, stringify } from './utils';
+import { _defaultVal, mitt, parse, stringify } from './utils';
 import { CSSProperties, reactive } from 'vue';
 import { formatDate } from './timeUtil';
 import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
@@ -43,6 +43,10 @@ export function setCurrentPanel(panel: Panel) {
 
 export function getCurrentPanel(): Panel {
     return appStore().currentPanel as Panel;
+}
+
+export function getCurrentPanelUnit(): PageUnit {
+    return _defaultVal(appStore().currentPanel.pageUnit, 'px');
 }
 
 export function setCurrentElement(element: MyElement[]) {

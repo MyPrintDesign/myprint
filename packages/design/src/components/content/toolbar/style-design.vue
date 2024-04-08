@@ -148,11 +148,11 @@ import {
 } from '@myprint/design/utils/elementUtil';
 import { computed, reactive } from 'vue';
 import ToolIconPopover from '@myprint/design/components/my/icon/tool-icon-popover.vue';
-import ElementAlign from '@myprint/design/components/panel/toolbar/toolbar-style/element-align.vue';
+import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-style/element-align.vue';
 //@ts-ignore
 import { DownList, elementType } from '@myprint/design/types/entity';
-import FontSize from '@myprint/design/components/panel/toolbar/toolbar-style/font-size.vue';
-import FontFamily from '@myprint/design/components/panel/toolbar/toolbar-style/font-family.vue';
+import FontSize from '@myprint/design/components/content/toolbar/toolbar-style/font-size.vue';
+import FontFamily from '@myprint/design/components/content/toolbar/toolbar-style/font-family.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 
 const elementAlignList = reactive([

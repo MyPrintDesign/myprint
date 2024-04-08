@@ -28,9 +28,9 @@ import { computed } from 'vue';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyDataTableSetting
-    from '@myprint/design/components/panel/handle-panel/operation-panel/my-data-table-setting.vue';
+    from '@myprint/design/components/content/handle-panel/operation-panel/my-data-table-setting.vue';
 import MyDataTableColumnSetting
-    from '@myprint/design/components/panel/handle-panel/operation-panel/my-data-table-column-setting.vue';
+    from '@myprint/design/components/content/handle-panel/operation-panel/my-data-table-column-setting.vue';
 
 const appStore = useAppStoreHook();
 const configStore = useConfigStore();

@@ -6,6 +6,7 @@ export interface Option {
 export interface Provider {
     width: number;
     height: number;
+    pageUnit: PageUnit;
     elementList: MyElement[];
 }
 
@@ -201,9 +202,10 @@ export interface RuntimeElementOption extends Position {
     parent?: Container;
     target?: any;
     rotate: number;
+    // 组件实时位置
     init: Container;
     status: elementStatus;
-    cutIngIs: boolean
+    cutIngIs: boolean;
 
     /**
      * 工作环境，如果是在表格中，填充满整个cell

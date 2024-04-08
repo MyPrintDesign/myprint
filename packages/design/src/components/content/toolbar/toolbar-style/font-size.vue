@@ -40,7 +40,7 @@ import { fontSizeList } from "@myprint/design/constants/common";
 import MyIcon from "@myprint/design/components/my/icon/my-icon.vue";
 import { computed, onMounted, reactive, ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
-import ElementAlign from "@myprint/design/components/panel/toolbar/toolbar-style/element-align.vue";
+import ElementAlign from "@myprint/design/components/content/toolbar/toolbar-style/element-align.vue";
 import ToolIconPopover from "@myprint/design/components/my/icon/tool-icon-popover.vue";
 
 // const appStore = useAppStoreHook()

@@ -337,3 +337,7 @@ function perpendicularDistance(point, lineStart, lineEnd) {
 export function isFunction(func: any) {
     return typeof func === 'function' || Object.prototype.toString.call(func) === '[object Function]';
 }
+
+export function _defaultVal(val, _default) {
+    return val ? val : _default;
+}

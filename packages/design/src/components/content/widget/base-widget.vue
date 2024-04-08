@@ -1,22 +1,17 @@
 <template>
-    <div class="options">
-        <div :class="(data as any).iconClass" class="icon"
-             draggable="true"
-             @mousedown="dragStart($event)" />
-        
-        <div class="icon-tip">{{ elementTypeFormat[data.type] }}</div>
-        <Teleport v-if="isDrop" to=".design-content">
-            <design :element="tmpElement" ref="designRef" />
-        </Teleport>
-        <Teleport v-if="dragWrapper.visible" to="body">
-            <drag-wrapper :data="dragWrapper" />
-        </Teleport>
+    <div @mousedown="dragStart($event)">
+        <slot />
     </div>
+    <Teleport v-if="isDrop" to=".design-content">
+        <design :element="tmpElement" ref="designRef" />
+    </Teleport>
+    <Teleport v-if="dragWrapper.visible" to="body">
+        <drag-wrapper :data="dragWrapper" />
+    </Teleport>
 </template>
 <script setup lang="ts">
-
 import { inject, nextTick, reactive, ref } from 'vue';
-import { Container, MyElement, elementTypeFormat, Point, SvgData } from '@myprint/design/types/entity';
+import { Container, MyElement, PageUnit, Point, SvgData } from '@myprint/design/types/entity';
 import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { panelKey } from '@myprint/design/constants/keys';
 import Design from '@myprint/design/components/design/design.vue';
@@ -30,7 +25,7 @@ import {
 import { clearEventBubble } from '@myprint/design/utils/event';
 import { dragNewElement, dragNewElementCancel, updatePanel } from '@myprint/design/plugins/moveable/moveable';
 import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
-import DragWrapper from '@myprint/design/components/panel/options/dragWrapper.vue';
+import DragWrapper from '@myprint/design/components/content/widget/dragWrapper.vue';
 import { mouseTips } from '@myprint/design/utils/mouseTips';
 import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
 
@@ -51,7 +46,8 @@ const dragWrapper = reactive({
 } as Container & { visible: boolean, opacity: number, transitionAnime: boolean });
 
 const props = withDefaults(defineProps<{
-    data?: MyElement
+    data?: MyElement,
+    pageUnit: PageUnit,
 }>(), {
     data: () => ({} as MyElement)
 });
@@ -71,36 +67,54 @@ function dragStart(ev: MouseEvent) {
     }
     mouseTips.move(ev.clientX, ev.clientY, '松开取消');
     
-    element.width = unit2unit('mm', panel.pageUnit, tmpElement.value.width);
-    element.height = unit2unit('mm', panel.pageUnit, tmpElement.value.height);
-    if (element.type.startsWith('Svg') && element.data) {
-        const data = JSON.parse(element.data) as SvgData;
-        const points = data.points as Point[];
-        const controlPoints = data.controlPoints as Point[];
-        const dataJson = {} as SvgData;
-        if (points) {
-            for (let point of points) {
-                point.x = unit2unit('mm', panel.pageUnit, point.x);
-                point.y = unit2unit('mm', panel.pageUnit, point.y);
+    if (props.pageUnit != panel.pageUnit) {
+        console.log(props.pageUnit);
+        element.width = unit2unit(props.pageUnit, panel.pageUnit, tmpElement.value.width);
+        element.height = unit2unit(props.pageUnit, panel.pageUnit, tmpElement.value.height);
+        
+        if (element.type == 'DataTable') {
+            // 转表格行
+            for (let i = 0; i < element.headList.length; i++) {
+                const column = element.headList[i];
+                column.height = unit2unit(props.pageUnit, panel.pageUnit, column.height);
+                column.width = unit2unit(props.pageUnit, panel.pageUnit, column.width);
+                if (column.columnBody) {
+                    column.columnBody.height = unit2unit(props.pageUnit, panel.pageUnit, column.columnBody.height);
+                    column.columnBody.width = unit2unit(props.pageUnit, panel.pageUnit, column.columnBody.width);
+                }
             }
-            dataJson.points = points;
         }
         
-        if (controlPoints) {
-            for (let point of controlPoints) {
-                point.x = unit2unit('mm', panel.pageUnit, point.x);
-                point.y = unit2unit('mm', panel.pageUnit, point.y);
+        if (element.type.startsWith('Svg') && element.data) {
+            const data = JSON.parse(element.data) as SvgData;
+            const points = data.points as Point[];
+            const controlPoints = data.controlPoints as Point[];
+            const dataJson = {} as SvgData;
+            if (points) {
+                for (let point of points) {
+                    point.x = unit2unit(props.pageUnit, panel.pageUnit, point.x);
+                    point.y = unit2unit(props.pageUnit, panel.pageUnit, point.y);
+                }
+                dataJson.points = points;
             }
-            dataJson.controlPoints = controlPoints;
+            
+            if (controlPoints) {
+                for (let point of controlPoints) {
+                    point.x = unit2unit(props.pageUnit, panel.pageUnit, point.x);
+                    point.y = unit2unit(props.pageUnit, panel.pageUnit, point.y);
+                }
+                dataJson.controlPoints = controlPoints;
+            }
+            element.data = JSON.stringify(dataJson);
         }
-        element.data = JSON.stringify(dataJson);
     }
     
     initElement(element, 0);
     
-    let halfWidth = unit2unit('mm', 'px', tmpElement.value.width) / 2;
-    let halfHeight = unit2unit('mm', 'px', tmpElement.value.height) / 2;
-    
+    console.log(element.height);
+    let halfWidth = unit2px(tmpElement.value.width) / 2;
+    let halfHeight = unit2px(tmpElement.value.height) / 2;
+    // console.log(halfWidth);
     startX = ev.clientX - halfWidth;
     startY = ev.clientY - halfHeight;
     
@@ -164,8 +178,6 @@ function dragStart(ev: MouseEvent) {
         mouseTips.move(dragWrapper.x + halfWidth, dragWrapper.y + halfHeight);
         
         if (diffXNum == 0 && diffYNum == 0) {
-            // dragWrapper.visible = false
-            // console.log('进入')
             mouseTips.setData('松开放置');
             
             // 判断有没有进入容器/页眉/页脚
@@ -177,7 +189,6 @@ function dragStart(ev: MouseEvent) {
                     parentElement.runtimeOption.dragInIs = false;
                     parentElement = undefined!;
                 }
-                // console.log('ff')
                 if (panel.pageHeader && innerElementIs(point, panel.pageHeader)) {
                     panel.pageHeader.runtimeOption.dragInIs = true;
                     parentElement = panel.pageHeader;
@@ -205,19 +216,12 @@ function dragStart(ev: MouseEvent) {
             mouseTips.setData('松开取消');
             
             panel.runtimeOption.dragInIs = false;
-            // dragWrapper.visible = true
-            // console.log('离开')
         }
-        
-        // dragWrapper.x = evMove.clientX - halfWidth
-        // dragWrapper.y = evMove.clientY - halfHeight
-        // console.log(element.runtimeOption.x)
-        
     }
     
-    function mouseup(_ev: MouseEvent) {
+    function mouseup(mouseupEvent: MouseEvent) {
         mouseTips.hidden();
-        _ev['tmpElement'] = true;
+        mouseupEvent['tmpElement'] = true;
         if (dragWrapper.opacity > 0) {
             // 放回原处
             dragWrapper.opacity = 1;
@@ -273,11 +277,6 @@ function dragStart(ev: MouseEvent) {
                             installParentElement(panel, element);
                         }
                     ).end(() => {
-                    // if (element.type == 'Table') {
-                    //   for (let i = 0; i < element.headList!.length; i++) {
-                    //     initElement(element.headList![i], i)
-                    //   }
-                    // }
                     addElement(panel, element);
                 });
                 // console.log(panel)
@@ -291,7 +290,6 @@ function dragStart(ev: MouseEvent) {
             });
             
             nextTick(() => {
-                // setSelectedTargets()
                 updatePanel([element]);
                 setTimeout(() => {
                     isDrop.value = false;
@@ -301,21 +299,8 @@ function dragStart(ev: MouseEvent) {
         
         document.removeEventListener('mousemove', mouseMove);
         document.removeEventListener('mouseup', mouseup);
-        
-        
-        // console.log(false)
-        // dragDataValueStore.data.dragIng = false
     }
     
-    // isDrop.value = true
-    // dragDataValueStore.data.dragIng = true
-    // const tmpElement = JSON.parse(JSON.stringify(props.data))
-    //
-    // tmpElement.width = unit2unit('mm', panel.pageUnit, tmpElement.width)
-    // tmpElement.height = unit2unit('mm', panel.pageUnit, tmpElement.height)
-    // dragDataValueStore.set('element', tmpElement)
-    // mitt.emit('optionsDragStart', ev)
-    // dragImg(panel, tmpElement, ev)
 }
 
 </script>
