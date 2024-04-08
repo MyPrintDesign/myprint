@@ -1,5 +1,12 @@
-import { selectedElementBatchOperation } from './elementUtil';
-import { px2unit } from './devicePixelRatio';
+import {
+    moveableMoveOffset,
+    removeSelectElement,
+    selectAllElement,
+    selectTabNext
+} from '@myprint/design/plugins/moveable/moveable';
+import { redoPanel, undoPanel } from '@myprint/design/utils/historyUtil';
+import { mitt } from '@myprint/design/utils/utils';
+import { memoryClipboardUtil } from '@myprint/design/utils/memoryClipboardUtil';
 
 const keyConvert = {
     Ctrl: ['Meta', 'Ctrl']
@@ -15,95 +22,86 @@ const downKeyList = {} as any;
 
 export function mountedKeyboardEvent() {
     addKeyboardEvent()
+        // macos
         .subscribe([isCtrlShift, 'z'], () => {
             // console.log('isCtrl+Shift+z 重做')
+            redoPanel();
+        })
+        // win
+        .subscribe([isCtrlShift, 'y'], () => {
+            // console.log('isCtrl+y 重做')
+            redoPanel();
         })
         .subscribe([isCtrl, 'z'], () => {
             // console.log('isCtrl+z 撤销')
+            undoPanel();
         })
         .subscribe([isCtrl, 'a'], () => {
-            console.log('isCtrl+a 全选');
-            // selectAllElement();
+            // console.log('isCtrl+a 全选');
+            selectAllElement();
         })
         .subscribe([isCtrl, 'c'], () => {
             // console.log('isCtrl+c 复制')
+            memoryClipboardUtil.copy()
         })
         .subscribe([isCtrl, 'x'], () => {
             // console.log('isCtrl+c 剪切')
+            memoryClipboardUtil.cut()
         })
         .subscribe([isCtrl, 'v'], () => {
             // console.log('isCtrl+v 粘贴')
+            memoryClipboardUtil.paste()
         })
         .subscribe([isCtrl, 'd'], () => {
             // console.log('isCtrl+d 副本')
         })
         .subscribe([isCtrl, 's'], () => {
             // console.log('isCtrl+s 保存')
-            // mitt.emit('saveTemplate')
+            mitt.emit('saveTemplate', {} as any)
         })
 
         .subscribe(['Tab'], () => {
             // console.log('Tab切换')
-        })
-        .subscribe(['ArrowUp'], () => {
-            console.log('ArrowUp');
-            selectedElementBatchOperation(element => element.height = element.height - px2unit(1));
-        })
-
-        .subscribe([isCtrl, 'ArrowUp'], () => {
-            console.log('isCtrl+ArrowUp');
-            selectedElementBatchOperation(element => element.height = element.height - px2unit(1));
-        })
-        .subscribe([isCtrl, 'ArrowDown'], () => {
-            // console.log('isCtrl+ArrowRight')
-            selectedElementBatchOperation(element => element.height = element.height + px2unit(1));
-        })
-        .subscribe([isCtrl, 'ArrowLeft'], () => {
-            // console.log('isCtrl+ArrowRight')
-            selectedElementBatchOperation(element => element.width = element.width - px2unit(1));
-        })
-        .subscribe([isCtrl, 'ArrowRight'], () => {
-            // console.log('isCtrl+ArrowRight')
-            selectedElementBatchOperation(element => element.width = element.width + px2unit(1));
+            selectTabNext()
         })
 
         .subscribe([isShift, 'ArrowUp'], () => {
             // console.log('ArrowUp')
-            selectedElementBatchOperation(element => element.y = element.y! - px2unit(10));
+            moveableMoveOffset(0, -10)
         })
         .subscribe([isShift, 'ArrowDown'], () => {
             // console.log('ArrowDown')
-            selectedElementBatchOperation(element => element.y = element.y! + px2unit(10));
+            moveableMoveOffset(0, 10)
         })
         .subscribe([isShift, 'ArrowLeft'], () => {
             // console.log('ArrowLeft')
-            selectedElementBatchOperation(element => element.x = element.x! - px2unit(10));
+            moveableMoveOffset(-10, 0)
         })
         .subscribe([isShift, 'ArrowRight'], () => {
             // console.log('ArrowRight')
-            selectedElementBatchOperation(element => element.x = element.x! + px2unit(10));
+            moveableMoveOffset(10, 0)
         })
-
 
         .subscribe(['ArrowUp'], () => {
             // console.log('ArrowUp')
-            selectedElementBatchOperation(element => element.y = element.y! - px2unit(1));
+            moveableMoveOffset(0, -1)
         })
         .subscribe(['ArrowDown'], () => {
             // console.log('ArrowDown')
-            selectedElementBatchOperation(element => element.y = element.y! + px2unit(1));
+            moveableMoveOffset(0, 1)
         })
         .subscribe(['ArrowLeft'], () => {
-            // console.log('ArrowLeft')
-            selectedElementBatchOperation(element => element.x = element.x! - px2unit(1));
+            console.log('ArrowLeft')
+            moveableMoveOffset(-1, 0)
         })
         .subscribe(['ArrowRight'], () => {
             // console.log('ArrowRight')
-            selectedElementBatchOperation(element => element.x = element.x! + px2unit(1));
+            moveableMoveOffset(1, 0)
         })
 
         .subscribe([isDelete], () => {
             // console.log('ArrowRight')
+            removeSelectElement()
         });
 }
 
@@ -203,6 +201,7 @@ function keyDown(event: KeyboardEvent) {
     // }
 }
 
+// 兼容macos & win
 export function isCtrl(event: KeyboardEvent) {
     return event.ctrlKey || event.metaKey;
 }

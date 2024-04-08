@@ -15,7 +15,7 @@ body.removeChild(mmDiv);
 
 export const displayRatio = numberUtil.ceil(mmDivRect.width);
 
-// console.log(displayRatio)
+console.log(displayRatio)
 
 export function px2unit(val: number): number {
     // 获取每毫米的像素值

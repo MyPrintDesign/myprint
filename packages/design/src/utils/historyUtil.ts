@@ -14,6 +14,8 @@ export enum ActionEnum {
     RESIZE = '修改<{element}>尺寸',
     ROTATE = '旋转<{element}>',
     REMOVE = '删除<{element}>',
+    PASTE = '粘贴<{element}>',
+    CUT = '剪切<{element}>',
     CLEAR = '清空面板',
     MOVE = '移动<{element}>',
     BATCH_MOVE = '移动<多个元素>',

@@ -203,6 +203,7 @@ export interface RuntimeElementOption extends Position {
     rotate: number;
     init: Container;
     status: elementStatus;
+    cutIngIs: boolean
 
     /**
      * 工作环境，如果是在表格中，填充满整个cell

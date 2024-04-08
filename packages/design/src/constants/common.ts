@@ -277,6 +277,7 @@ export const elementTypeContainerList: Array<elementType> = ['PageHeader', 'Page
 export const elementHandleEditStatusList: Array<elementStatus> = ['HANDLE_ED', 'HANDLE_EDIT_ING'];
 export const elementHandleHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED'];
 export const elementHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED', 'HANDLE_EDIT_ING'];
+export const noCopyElementTypeList: Array<elementType> = ['PageHeader', 'PageFooter'];
 
 export const pageUnitList = [
     'px', 'mm', 'cm'

@@ -3,6 +3,7 @@
          :style="style"
          :class="{
          'dropInIs': element.runtimeOption.dragInIs,
+         'design-activate-cut-ing': element.runtimeOption.cutIngIs,
          'design-inactive': !elementHandleStatusList.includes(element.runtimeOption.status) && !elementTypeLineList.includes(element.type),
          'design-activate': elementHandleHandleStatusList.includes(element.runtimeOption.status),
          'design-activate-edit': element.runtimeOption.status == 'HANDLE_EDIT_ING',
