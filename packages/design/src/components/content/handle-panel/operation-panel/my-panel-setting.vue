@@ -112,7 +112,7 @@ import { i18n } from '@myprint/design/locales';
 
 import { pageSizeList, pageUnitList } from '@myprint/design/constants/common';
 import { panelKey } from '@myprint/design/constants/keys';
-import { MyUnit, MyHistoryInput, MyHistorySelect, MyHistoryInputNumber } from '@myprint/design/components/my/input';
+import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
 import MyGroup from '@myprint/design/components/my/group/my-group.vue';
 import { changePageSize, changePageUnit } from '@myprint/design/utils/elementUtil';
 

@@ -7,7 +7,11 @@
 </template>
 <script setup lang="ts">
 import baseWidget from '@myprint/design/components/content/widget/base-widget.vue';
-import { MyElement, PageUnit } from '@myprint/design/types/entity';
+import {
+    MyElement,
+// @ts-ignore
+    PageUnit
+} from '@myprint/design/types/entity';
 
 withDefaults(defineProps<{
     data?: MyElement,

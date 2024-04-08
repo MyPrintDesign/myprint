@@ -8,8 +8,11 @@
 
 </template>
 <script setup lang="ts">
-
-import { elementTypeFormat, MyElement, PageUnit } from '@myprint/design/types/entity';
+import {
+    elementTypeFormat, MyElement,
+// @ts-ignore
+    PageUnit
+} from '@myprint/design/types/entity';
 import baseWidget from '@myprint/design/components/content/widget/base-widget.vue';
 
 withDefaults(defineProps<{

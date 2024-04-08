@@ -11,7 +11,11 @@
 </template>
 <script setup lang="ts">
 import { inject, nextTick, reactive, ref } from 'vue';
-import { Container, MyElement, PageUnit, Point, SvgData } from '@myprint/design/types/entity';
+import {
+    Container, MyElement,
+// @ts-ignore
+    PageUnit, Point, SvgData
+} from '@myprint/design/types/entity';
 import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { panelKey } from '@myprint/design/constants/keys';
 import Design from '@myprint/design/components/design/design.vue';

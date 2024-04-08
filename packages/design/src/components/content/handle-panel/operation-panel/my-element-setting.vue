@@ -305,11 +305,9 @@
 </template>
 <script setup lang="ts">
 // import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
-import { computed, inject } from 'vue';
+import { computed } from 'vue';
 
 import { barcodeTypes, dottedStyleList, getElementSetting, textContentTypes } from '@myprint/design/constants/common';
-import { mittKey } from '@myprint/design/constants/keys';
-import { ActionEnum, Snapshot } from '@myprint/design/utils/historyUtil';
 import { QuestionFilled } from '@element-plus/icons-vue';
 import MyGroup from '@myprint/design/components/my/group/my-group.vue';
 import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
@@ -322,7 +320,7 @@ import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
 import MyDivider from '@myprint/design/components/my/divider/my-divider.vue';
 
-const mitt = inject(mittKey)!;
+// const mitt = inject(mittKey)!;
 
 const appStore = useAppStoreHook();
 
