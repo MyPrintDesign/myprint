@@ -79,8 +79,8 @@ export const fontSizeList: DownList[][] = [
 
 export const definePropType = <T>(val: any): PropType<T> => val;
 type elementSettingType = keyof ElementOption | (keyof Container) | 'contentType' | 'data' | 'label' | 'common'
-// "x", 'y', "width", 'height', "font", 'fontSize', "color", 'hiddenLabel', 'opacity', "aspectRatio", "rotate"
-const commonElementSetting: Array<elementSettingType> = ['x', 'y', 'width', 'height', 'opacity', 'aspectRatio', 'rotate'];
+// "x", 'y', "width", 'height', "font", 'fontSize', "color", 'hiddenLabel', 'opacity', "rotate"
+const commonElementSetting: Array<elementSettingType> = ['x', 'y', 'width', 'height', 'opacity', 'rotate'];
 const styleElementSetting: Array<elementSettingType> = ['textAlign', 'verticalAlign', 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'fontFamily', 'fontSize'];
 const elementSetting: Record<elementType, Array<elementSettingType>> =
     {

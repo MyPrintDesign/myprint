@@ -72,7 +72,6 @@ function dragStart(ev: MouseEvent) {
     mouseTips.move(ev.clientX, ev.clientY, '松开取消');
     
     if (props.pageUnit != panel.pageUnit) {
-        console.log(props.pageUnit);
         element.width = unit2unit(props.pageUnit, panel.pageUnit, tmpElement.value.width);
         element.height = unit2unit(props.pageUnit, panel.pageUnit, tmpElement.value.height);
         
@@ -83,8 +82,12 @@ function dragStart(ev: MouseEvent) {
                 column.height = unit2unit(props.pageUnit, panel.pageUnit, column.height);
                 column.width = unit2unit(props.pageUnit, panel.pageUnit, column.width);
                 if (column.columnBody) {
-                    column.columnBody.height = unit2unit(props.pageUnit, panel.pageUnit, column.columnBody.height);
-                    column.columnBody.width = unit2unit(props.pageUnit, panel.pageUnit, column.columnBody.width);
+                    if (column.columnBody.height) {
+                        column.columnBody.height = unit2unit(props.pageUnit, panel.pageUnit, column.columnBody.height);
+                    }
+                    if (column.columnBody.width) {
+                        column.columnBody.width = unit2unit(props.pageUnit, panel.pageUnit, column.columnBody.width);
+                    }
                 }
             }
         }

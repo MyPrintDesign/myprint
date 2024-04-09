@@ -81,19 +81,6 @@ export function height(element: MyElement) {
     return element.height;
 }
 
-export function aspectRatioHeight(element: MyElement) {
-    if (element.option.aspectRatio!) {
-        return element.width / element.option.aspectRatio;
-    }
-    return element.height;
-}
-
-export function handleAspectRatioHeight(element: MyElement) {
-    if (element.option.aspectRatio!) {
-        element.height = element.width / element.option.aspectRatio;
-    }
-}
-
 export function clearPanel(panel?: Panel) {
     panel!.pageHeader = undefined;
     panel!.pageFooter = undefined;
@@ -295,7 +282,7 @@ export function initElement(element: MyElement, index: number) {
                         if (column.columnBody.data == null) {
                             column.columnBody.data = column.data;
                         }
-                        if (column.columnBody.height == null) {
+                        if (!column.columnBody.height) {
                             column.columnBody.height = column.height;
                         }
                         column.type = 'Text';

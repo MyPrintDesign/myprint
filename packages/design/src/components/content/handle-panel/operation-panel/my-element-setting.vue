@@ -74,12 +74,13 @@
                                              :disabled="multipleElementGetValue('lock')"
                                              :model-value="multipleElementGetValue('x')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('x', val)"
-                                             @change="changeLocation"
+                                             @change="changeLocationX"
                                              historyLabel="位置" />
                     <my-history-input-number class="width-60"
                                              :disabled="multipleElementGetValue('lock')"
                                              :model-value="multipleElementGetValue('y')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('y', val)"
+                                             @change="changeLocationY"
                                              historyLabel="位置" />
                     <my-unit />
                 </my-group>
@@ -97,6 +98,7 @@
                                              :disabled="multipleElementGetValue('lock')"
                                              :model-value="multipleElementGetValue('height')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('height', val)"
+                                             @change="changeElementWidth"
                                              historyLabel="尺寸" />
                     <my-unit />
                     <my-icon class="setting-wh-lock iconfont "
@@ -175,6 +177,17 @@
                         <QuestionFilled />
                     </el-icon>
                 </el-tooltip>
+            </el-form-item>
+            <el-form-item label="条码值"
+                          v-if="multipleElementGetValue('contentType') == 'Barcode'">
+                <el-switch
+                    :model-value="multipleElementGetValue('option.barCodeDisplayValIs')"
+                    @update:model-value="(val:any)=>multipleElementSetValue('option.barCodeDisplayValIs', val)"
+                    class="ml-2"
+                    inline-prompt
+                    style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
+                    active-text="显示"
+                    inactive-text="隐藏" />
             </el-form-item>
             <!--    errorCorrectionLevel-->
             <!--      <el-form-item label="换行策略" prop="region">-->
@@ -288,6 +301,7 @@
                 <el-switch
                     :model-value="multipleElementGetValue('option.fixed')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.fixed', val)"
+                    @change="changeOptionFixed"
                     class="ml-2"
                     inline-prompt
                     style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
@@ -296,8 +310,24 @@
             </el-form-item>
         </my-divider>
         
+        <my-divider>
+            <template #divider>
+                打印策略
+            </template>
+            
+            <el-form-item label="显示策略" prop="region"
+                          v-if="multipleElementGetValue('option.fixed') == true">
+                <my-history-select :model-value="multipleElementGetValue('option.displayStrategy')"
+                                   @update:model-value="(val:any)=>multipleElementSetValue('option.displayStrategy', val)"
+                                   placeholder="Activity zone"
+                                   historyLabel="显示策略">
+                    <el-option v-for="(item, index) in displayStrategyFormat" :key="index"
+                               :label="displayStrategyFormat[item]"
+                               :value="item" />
+                </my-history-select>
+            </el-form-item>
         
-        <!--            打印策略-->
+        </my-divider>
     
     
     </el-form>
@@ -305,7 +335,7 @@
 </template>
 <script setup lang="ts">
 // import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
-import { computed } from 'vue';
+import { computed, inject } from 'vue';
 
 import { barcodeTypes, dottedStyleList, getElementSetting, textContentTypes } from '@myprint/design/constants/common';
 import { QuestionFilled } from '@element-plus/icons-vue';
@@ -313,14 +343,20 @@ import MyGroup from '@myprint/design/components/my/group/my-group.vue';
 import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { freshMoveableOption, moveableResize } from '@myprint/design/plugins/moveable/moveable';
-import { MyElement } from '@myprint/design/types/entity';
+import {
+    freshMoveableOption,
+    moveableMove,
+    moveableMoveOffset, moveableMoveX, moveableMoveY,
+    moveableResize
+} from '@myprint/design/plugins/moveable/moveable';
+import { displayStrategyFormat, MyElement } from '@myprint/design/types/entity';
 import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
 import MyDivider from '@myprint/design/components/my/divider/my-divider.vue';
+import { mittKey } from '@myprint/design/constants/keys';
 
-// const mitt = inject(mittKey)!;
+const mitt = inject(mittKey)!;
 
 const appStore = useAppStoreHook();
 
@@ -339,6 +375,10 @@ const element = computed(() => {
     }
 });
 
+function changeOptionFixed() {
+    mitt.emit('changeElement');
+}
+
 function changeLock() {
     freshMoveableOption(element.value);
 }
@@ -348,16 +388,16 @@ function rotatedPoint(rotate) {
     // freshMoveableOption(appStore.currentElement)
 }
 
-function changeLocation(_val: any) {
-    // record()
-    // console.log(_val);
-    // mitt.emit('panelSnapshot', { action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement } as Snapshot)
-    // console.log('change', val)
+function changeLocationX(_val: any) {
+    moveableMoveX(unit2px(element.value.x));
+}
+function changeLocationY(_val: any) {
+    moveableMoveY(unit2px(element.value.y));
 }
 
 function changeElementWidth(_val) {
     // console.log(val)
-    moveableResize(unit2px(element.value.width), unit2px(element.value.height));
+    moveableResize(unit2px(element.value.width), unit2px(element.value.height), element.value.option.keepRatio);
 }
 
 function changeElementKeepRatio() {

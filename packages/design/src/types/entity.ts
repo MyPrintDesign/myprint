@@ -124,6 +124,16 @@ export const elementTypeFormat = {
     PrivateDragRectElement: '内置框选'
 };
 
+export const displayStrategyFormat = {
+    'none': '不显示',
+    'firstPage': '首页',
+    'lastPage': '尾页',
+    'oddPage': '奇数',
+    'evenPage': '偶数'
+};
+
+export type displayStrategy = keyof typeof displayStrategyFormat
+
 export const tableTrTypeFormat = {
     Head: '',
     Body: ''
@@ -222,7 +232,8 @@ export interface RuntimeElementOption extends Position {
 
 export interface ElementOption {
     barCodeType: string;
-    aspectRatio: number;
+    barCodeDisplayValIs: boolean;
+    // aspectRatio: number;
     keepRatio: boolean;
     // 固定位置打印
     fixed: boolean;
@@ -239,7 +250,7 @@ export interface ElementOption {
     borderWidth: number;
     lineWidth: number;
     rotate: number;
-    textType: string;
+    // textType: string;
     textAlign: textAlign;
     verticalAlign: textAlign;
     lineBreak: boolean;
@@ -254,6 +265,9 @@ export interface ElementOption {
     padding: Position;
     margin: Position;
     formatter?: string;
+
+    // 显示策略
+    displayStrategy?: displayStrategy;
 
     tableHeightType: 'FIXED' | 'AUTO';
 }

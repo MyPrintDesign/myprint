@@ -1,5 +1,5 @@
 import {
-    moveableMoveOffset,
+    moveableMoveOffset, moveableResizeOffset,
     removeSelectElement,
     selectAllElement,
     selectTabNext
@@ -7,6 +7,7 @@ import {
 import { redoPanel, undoPanel } from '@myprint/design/utils/historyUtil';
 import { mitt } from '@myprint/design/utils/utils';
 import { memoryClipboardUtil } from '@myprint/design/utils/memoryClipboardUtil';
+
 
 const keyConvert = {
     Ctrl: ['Meta', 'Ctrl']
@@ -65,6 +66,23 @@ export function mountedKeyboardEvent() {
             selectTabNext()
         })
 
+        .subscribe([isCtrlShift, 'ArrowUp'], () => {
+            // console.log('ArrowUp')
+            moveableResizeOffset(0, -10)
+        })
+        .subscribe([isCtrlShift, 'ArrowDown'], () => {
+            // console.log('ArrowDown')
+            moveableResizeOffset(0, 10)
+        })
+        .subscribe([isCtrlShift, 'ArrowLeft'], () => {
+            // console.log('ArrowLeft')
+            moveableResizeOffset(-10, 0)
+        })
+        .subscribe([isCtrlShift, 'ArrowRight'], () => {
+            // console.log('ArrowRight')
+            moveableResizeOffset(10, 0)
+        })
+
         .subscribe([isShift, 'ArrowUp'], () => {
             // console.log('ArrowUp')
             moveableMoveOffset(0, -10)
@@ -80,6 +98,23 @@ export function mountedKeyboardEvent() {
         .subscribe([isShift, 'ArrowRight'], () => {
             // console.log('ArrowRight')
             moveableMoveOffset(10, 0)
+        })
+
+        .subscribe([isCtrl, 'ArrowUp'], () => {
+            // console.log('ArrowUp')
+            moveableResizeOffset(0, -1)
+        })
+        .subscribe([isCtrl, 'ArrowDown'], () => {
+            // console.log('ArrowDown')
+            moveableResizeOffset(0, 1)
+        })
+        .subscribe([isCtrl, 'ArrowLeft'], () => {
+            // console.log('ArrowLeft')
+            moveableResizeOffset(-1, 0)
+        })
+        .subscribe([isCtrl, 'ArrowRight'], () => {
+            // console.log('ArrowRight')
+            moveableResizeOffset(1, 0)
         })
 
         .subscribe(['ArrowUp'], () => {
@@ -156,9 +191,15 @@ function keyDown(event: KeyboardEvent) {
         return;
     }
 
+    // const length = Object.getOwnPropertyNames(downKeyList).length
     for (let eventListener of eventListeners) {
         const { keys, callback } = eventListener;
         let isTrigger = true;
+
+        // if (length !== keys.length) {
+        //     continue
+        // }
+
         for (let key of keys) {
             // console.log(key, event.key)
             if (key instanceof Function) {

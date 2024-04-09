@@ -89,7 +89,7 @@ const MathCalc = {
      ** 调用：mul(arg1,arg2)
      ** 返回值：arg1 乘以 arg2 的精确结果
      **/
-    mul(arg1: number, arg2: number) {
+    mul(arg1: number, arg2: number, scale = 2) {
         let m = 0;
         const s1 = arg1.toString();
         const s2 = arg2.toString();
@@ -103,9 +103,9 @@ const MathCalc = {
         } catch (e) {
             // console.log('🚀90 行 e ➡️', e)
         }
-        return ((Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) /
+        return this.toFixed(((Number(s1.replace('.', '')) * Number(s2.replace('.', ''))) /
             Math.pow(10, m)
-        );
+        ), scale);
     },
     /**
      ** 除法函数，用来得到精确的除法结果
@@ -113,7 +113,7 @@ const MathCalc = {
      ** 调用：div(arg1,arg2)
      ** 返回值：arg1 除以 arg2 的精确结果
      **/
-    div(arg1: number, arg2: number) {
+    div(arg1: number, arg2: number, scale = 2) {
         let t1 = 0,
             t2 = 0;
         try {
@@ -128,7 +128,7 @@ const MathCalc = {
         }
         const r1 = Number(arg1.toString().replace('.', ''));
         const r2 = Number(arg2.toString().replace('.', ''));
-        return (r1 / r2) * Math.pow(10, t2 - t1);
+        return this.toFixed((r1 / r2) * Math.pow(10, t2 - t1), scale);
     },
 
     limitMin(val: number, min: number) {

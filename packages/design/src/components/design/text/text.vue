@@ -22,7 +22,7 @@ import {
     elementCommonStyle,
     formatter
 } from '@myprint/design/utils/elementUtil';
-import { checkInput, freshMoveableOption } from '@myprint/design/plugins/moveable/moveable';
+import { checkInput, freshMoveableOption, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
 import { elementHandleEditStatusList } from '@myprint/design/constants/common';
 
 const props = withDefaults(defineProps<{
@@ -57,6 +57,8 @@ function click(event: MouseEvent) {
     props.element.runtimeOption.status = 'HANDLE_EDIT_ING';
     
     checkInput();
+    
+    moveableEditing()
     
     const x = event.clientX;
     const y = event.clientY;

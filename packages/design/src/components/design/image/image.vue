@@ -121,7 +121,7 @@ import {VueCropper} from "vue-cropper";
 import {onMounted, reactive, ref} from "vue";
 import {MyElement, DownList} from "@myprint/design/types/entity";
 // import {useBase64} from "@vueuse/core";
-import {displayModelDesign, handleAspectRatioHeight, valueUnit} from "@myprint/design/utils/elementUtil";
+import {displayModelDesign, valueUnit} from "@myprint/design/utils/elementUtil";
 import {Check, CloseBold, Crop, Plus, RefreshLeft, RefreshRight, ZoomIn, ZoomOut} from "@element-plus/icons-vue";
 import {unit2px} from "@myprint/design/utils/devicePixelRatio";
 import {elementHandleStatusList} from "@myprint/design/constants/common";
@@ -286,8 +286,7 @@ onMounted(() => {
 
 function loadImg() {
   const ratioTmp = imgRef.value!.width / imgRef.value!.height
-  props.element.option.aspectRatio = ratioTmp
-  handleAspectRatioHeight(props.element)
+  // props.element.option.keepRatio = ratioTmp
   return ratioTmp
 }
 </script>

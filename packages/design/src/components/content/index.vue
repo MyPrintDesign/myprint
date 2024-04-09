@@ -95,7 +95,7 @@ watch(() => props.template.id, (n, _o) => {
         
         provider.value = JSON.parse(data.template.module.provider!);
         // console.log(provider.value.elementList)
-        console.log(provider.value.pageUnit);
+        // console.log(provider.value.pageUnit);
         if (provider.value.pageUnit == undefined) {
             provider.value.pageUnit = 'px';
         }

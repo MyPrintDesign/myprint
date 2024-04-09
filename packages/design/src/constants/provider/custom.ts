@@ -182,7 +182,8 @@ export const customProvider = {
             option: {
                 formatter: '第{{pageIndex:1}}页/共{{pageSize:1}}页',
                 textAlign: 'end',
-                verticalAlign: 'center'
+                verticalAlign: 'center',
+                fixed: true
             } as ElementOption,
 
             width: 30,
