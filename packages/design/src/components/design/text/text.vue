@@ -24,6 +24,7 @@ import {
 } from '@myprint/design/utils/elementUtil';
 import { checkInput, freshMoveableOption, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
 import { elementHandleEditStatusList } from '@myprint/design/constants/common';
+import { br2n, n2br } from '@myprint/design/utils/utils';
 
 const props = withDefaults(defineProps<{
     element: MyElement
@@ -36,19 +37,27 @@ const data = reactive({
     innerContent: ''
 });
 onMounted(() => {
-    data.content = props.element.data;
-    data.innerContent = props.element.data;
+    data.content = n2br(props.element.data);
+    data.innerContent = data.content;
     if (props.element.data == null) {
         const elementData = formatter(props.element);
         if (elementData != null) {
             props.element.data = elementData;
-            data.content = elementData;
+            // console.log(props.element.data);
+            data.content = n2br(elementData);
             data.innerContent = elementData;
         }
     }
 });
 
 function handleKeydown(event: KeyboardEvent) {
+    if (event.code === 'Enter') {
+        // &zwnj;
+        document.execCommand('insertHTML', false, '<br>&zwnj;');
+        
+        event.preventDefault();
+        
+    }
     event.stopPropagation();
 }
 
@@ -58,7 +67,7 @@ function click(event: MouseEvent) {
     
     checkInput();
     
-    moveableEditing()
+    moveableEditing();
     
     const x = event.clientX;
     const y = event.clientY;
@@ -76,8 +85,12 @@ function click(event: MouseEvent) {
 
 function handleInput(event) {
     // 处理输入事件，更新 content
-    props.element.data = event.target.innerHTML;
-    data.innerContent = event.target.innerHTML;
+    // console.log(event.target.innerHTML);
+    
+    props.element.data = br2n(event.target.innerHTML);
+    data.innerContent = props.element.data;
+    // console.log(props.element.data);
+    
 }
 
 const style = computed(() => {
@@ -98,8 +111,9 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
 
 watch(() => props.element.data, (_n, _o) => {
     if (data.innerContent !== props.element.data) {
-        data.content = props.element.data;
-        data.innerContent = props.element.data;
+        data.content = n2br(props.element.data);
+        data.innerContent = data.content;
+        // console.log(data.content);
     }
 });
 
@@ -111,6 +125,7 @@ watch(() => props.element.contentType, (n, _o) => {
     }
     freshMoveableOption(props.element);
 });
+
 // watch(() => props.element.option.formatter, (_n, _o) => {
 //   const data = formatter(props.element)
 //   console.log(props.element)
@@ -121,3 +136,11 @@ watch(() => props.element.contentType, (n, _o) => {
 //   }
 // })
 </script>
+
+<style lang="scss" scoped>
+
+//.read-write-plaintext-only { //纯文本
+//    -webkit-user-modify: read-write-plaintext-only;
+//
+//}
+</style>

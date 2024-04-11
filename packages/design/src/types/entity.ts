@@ -14,6 +14,9 @@ export interface Design {
     scale: number;
 }
 
+/**
+ * 节点关系
+ */
 export interface ElementRelation {
     elementList: MyElement[];
 }
@@ -77,11 +80,16 @@ export interface Panel extends Container {
 }
 
 
-export interface PreviewWrapper extends MyElement {
+export interface PreviewWrapper extends MyElement, PreviewContainerWrapper {
     offsetLastElementTop: number;
     heightIs: boolean;
     tableRowIndex: number;
     previewWrapperList: PreviewWrapper[];
+}
+
+
+export interface PreviewContainerWrapper extends MyElement {
+    offsetTop: number;
 }
 
 export interface DragWrapper {
@@ -210,7 +218,7 @@ export interface RuntimeElementOption extends Position {
     translate: Point;
     bounds: Position;
     parent?: Container;
-    target?: any;
+    target: any;
     rotate: number;
     // 组件实时位置
     init: Container;
@@ -293,8 +301,8 @@ export interface ContentScaleVo {
 
 
 export interface FormatterVariable {
-    pageIndex?: number,
-    pageSize?: number,
+    pageIndex: number,
+    pageSize: number,
     nowDate?: Date
 }
 

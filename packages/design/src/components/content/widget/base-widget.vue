@@ -67,8 +67,10 @@ function dragStart(ev: MouseEvent) {
     let startX = 0, startY = 0;
     
     if (element.type == 'PageHeader' || element.type == 'PageFooter') {
-        element.width = panel.width;
+        element.width = unit2unit(panel.pageUnit, props.pageUnit, panel.width);
     }
+    // console.log(element.width);
+    // console.log(panel.pageUnit);
     mouseTips.move(ev.clientX, ev.clientY, '松开取消');
     
     if (props.pageUnit != panel.pageUnit) {
@@ -118,7 +120,8 @@ function dragStart(ev: MouseEvent) {
     
     initElement(element, 0);
     
-    console.log(element.height);
+    // console.log(element.width);
+    // console.log(element.height);
     let halfWidth = unit2px(tmpElement.value.width) / 2;
     let halfHeight = unit2px(tmpElement.value.height) / 2;
     // console.log(halfWidth);
@@ -191,20 +194,20 @@ function dragStart(ev: MouseEvent) {
             
             const point = { x: element.runtimeOption.x + halfWidth, y: element.runtimeOption.y + halfHeight };
             
-            if (!parentElement || !innerElementIs(point, parentElement)) {
+            if (!parentElement || !innerElementIs(point, element, parentElement)) {
                 if (parentElement) {
                     parentElement.runtimeOption.dragInIs = false;
                     parentElement = undefined!;
                 }
-                if (panel.pageHeader && innerElementIs(point, panel.pageHeader)) {
+                if (panel.pageHeader && innerElementIs(point, element, panel.pageHeader)) {
                     panel.pageHeader.runtimeOption.dragInIs = true;
                     parentElement = panel.pageHeader;
-                } else if (panel.pageFooter && innerElementIs(point, panel.pageFooter)) {
+                } else if (panel.pageFooter && innerElementIs(point, element, panel.pageFooter)) {
                     panel.pageFooter.runtimeOption.dragInIs = true;
                     parentElement = panel.pageFooter;
                 } else {
                     for (let elementOf of panel.elementList!) {
-                        if (elementOf.type == 'Container' && innerElementIs(point, elementOf)) {
+                        if (elementOf.type == 'Container' && innerElementIs(point, element, elementOf)) {
                             elementOf.runtimeOption.dragInIs = true;
                             parentElement = elementOf;
                             break;

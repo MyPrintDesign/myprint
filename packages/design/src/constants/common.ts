@@ -4,7 +4,7 @@ import {
     DownList,
     ElementOption, elementStatus,
     elementType,
-    RuntimeElementOption
+    RuntimeElementOption, displayStrategyFormat
 } from '@myprint/design/types/entity';
 import { PropType, reactive } from 'vue';
 import { i18n } from '@myprint/design/locales';
@@ -278,6 +278,12 @@ export const elementHandleEditStatusList: Array<elementStatus> = ['HANDLE_ED', '
 export const elementHandleHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED'];
 export const elementHandleStatusList: Array<elementStatus> = ['HANDLE', 'HANDLE_ED', 'HANDLE_EDIT_ING'];
 export const noCopyElementTypeList: Array<elementType> = ['PageHeader', 'PageFooter'];
+export const displayStrategyList: any[] = Object.keys(displayStrategyFormat).map(key => {
+    return {
+        label: displayStrategyFormat[key],
+        value: key
+    };
+});
 
 export const pageUnitList = [
     'px', 'mm', 'cm'

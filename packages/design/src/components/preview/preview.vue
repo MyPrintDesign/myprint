@@ -4,9 +4,13 @@
          :style="style">
         <element-view :element="preview" />
         <DataTable v-if="preview!.type === 'DataTable'" :element="preview" />
-        <!--    <preview-container v-if="element.type === 'PageHeader'" :element="element"/>-->
-        <!--    <preview-container v-if="element.type === 'PageFooter'" :element="element"/>-->
-        <my-container v-else-if="preview.type === 'Container'" :element="preview">
+        <my-container v-else-if="preview.type === 'PageHeader'">
+            <Preview v-for="(item, index) in preview.previewWrapperList" :preview="item" :key="index" />
+        </my-container>
+        <my-container v-else-if="preview.type === 'PageFooter'">
+            <Preview v-for="(item, index) in preview.previewWrapperList" :preview="item" :key="index" />
+        </my-container>
+        <my-container v-else-if="preview.type === 'Container'">
             <Preview v-for="(item, index) in preview.previewWrapperList" :preview="item" :key="index" />
         </my-container>
     </div>
@@ -14,12 +18,12 @@
 
 <script setup lang="ts">
 
-import { computed, CSSProperties } from 'vue'
-import ElementView from '@myprint/design/components/design/element.vue'
-import { PreviewWrapper } from '@myprint/design/types/entity'
-import { valueUnit } from '@myprint/design/utils/elementUtil'
-import DataTable from '@myprint/design/components/design/data-table/data-table.vue'
-import { MyContainer } from '@myprint/design/components/design/container'
+import { computed, CSSProperties, onMounted, ref } from 'vue';
+import ElementView from '@myprint/design/components/design/element.vue';
+import { PreviewWrapper } from '@myprint/design/types/entity';
+import { valueUnit } from '@myprint/design/utils/elementUtil';
+import DataTable from '@myprint/design/components/design/data-table/data-table.vue';
+import { MyContainer } from '@myprint/design/components/design/container';
 
 const style = computed(() => {
     const _style = {
@@ -27,19 +31,25 @@ const style = computed(() => {
         left: valueUnit(props.preview.x),
         top: valueUnit(props.preview.y),
         zIndex: props.preview.runtimeOption.index
-    } as CSSProperties
+    } as CSSProperties;
     if (props.preview.heightIs) {
-        _style.height = valueUnit(props.preview.height)
+        _style.height = valueUnit(props.preview.height);
     }
     // console.log('change', element.value.previewRuntimeOption.heightIs)
     // _style.transform = getTranslate(element.value!)
-    return _style
-})
+    return _style;
+});
 const props = withDefaults(defineProps<{
     preview: PreviewWrapper
 }>(), {
     preview: () => ({} as PreviewWrapper)
-})
+});
+const previewWrapRef = ref();
+
+onMounted(() => {
+    props.preview.runtimeOption.target = previewWrapRef.value;
+    // previewWrapRef.value.element = props.element;
+});
 // console.log(props.preview)
 
 // const element = computed(() => props.preview.element)

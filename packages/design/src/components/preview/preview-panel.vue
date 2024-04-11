@@ -144,7 +144,7 @@ function previewPanel() {
     data.dialogVisible = true
     // console.log(itemRefs)
     // console.log(previewData)
-    autoPage(data.pageList, previewContent, itemRefs, previewData)
+    autoPage(data.pageList, previewContent, previewData)
 }
 
 function closePreviewPanel() {

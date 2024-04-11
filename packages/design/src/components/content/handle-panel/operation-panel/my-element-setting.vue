@@ -134,7 +134,7 @@
                            :model-value="multipleElementGetValue('option.rotate')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.rotate', val)"
                            :max="359" :min="0" :step="1"
-                           @change="rotatedPoint(appStore.currentElement)"
+                           @input="rotatedPoint(appStore.currentElement)"
                            :show-tooltip="false" size="small" />
                 <div style="margin-left: 20px">{{ multipleElementGetValue('option.rotate') }}</div>
             </el-form-item>
@@ -321,9 +321,9 @@
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.displayStrategy', val)"
                                    placeholder="Activity zone"
                                    historyLabel="显示策略">
-                    <el-option v-for="(item, index) in displayStrategyFormat" :key="index"
-                               :label="displayStrategyFormat[item]"
-                               :value="item" />
+                    <el-option v-for="(item, index) in displayStrategyList" :key="index"
+                               :label="item.label"
+                               :value="item.value" />
                 </my-history-select>
             </el-form-item>
         
@@ -337,7 +337,13 @@
 // import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
 import { computed, inject } from 'vue';
 
-import { barcodeTypes, dottedStyleList, getElementSetting, textContentTypes } from '@myprint/design/constants/common';
+import {
+    barcodeTypes,
+    displayStrategyList,
+    dottedStyleList,
+    getElementSetting,
+    textContentTypes
+} from '@myprint/design/constants/common';
 import { QuestionFilled } from '@element-plus/icons-vue';
 import MyGroup from '@myprint/design/components/my/group/my-group.vue';
 import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
@@ -345,11 +351,12 @@ import { useAppStoreHook } from '@myprint/design/stores/app';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import {
     freshMoveableOption,
-    moveableMove,
-    moveableMoveOffset, moveableMoveX, moveableMoveY,
-    moveableResize
+    moveableMoveX,
+    moveableMoveY,
+    moveableResize,
+    moveableRotate
 } from '@myprint/design/plugins/moveable/moveable';
-import { displayStrategyFormat, MyElement } from '@myprint/design/types/entity';
+import { MyElement } from '@myprint/design/types/entity';
 import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
@@ -383,14 +390,16 @@ function changeLock() {
     freshMoveableOption(element.value);
 }
 
-function rotatedPoint(rotate) {
-    console.log(rotate);
+function rotatedPoint(_rotate: any) {
+    // console.log(rotate);
+    moveableRotate(element.value.option.rotate);
     // freshMoveableOption(appStore.currentElement)
 }
 
 function changeLocationX(_val: any) {
     moveableMoveX(unit2px(element.value.x));
 }
+
 function changeLocationY(_val: any) {
     moveableMoveY(unit2px(element.value.y));
 }

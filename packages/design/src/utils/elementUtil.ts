@@ -15,7 +15,12 @@ import {
     RuntimeElementOption,
     SvgData
 } from '@myprint/design/types/entity';
-import { canMoveStatusList, defaultDragRectElement, elementTypeLineList } from '@myprint/design/constants/common';
+import {
+    canMoveStatusList,
+    defaultDragRectElement,
+    elementTypeContainerList,
+    elementTypeLineList
+} from '@myprint/design/constants/common';
 import { _defaultVal, mitt, parse, stringify } from './utils';
 import { CSSProperties, reactive } from 'vue';
 import { formatDate } from './timeUtil';
@@ -168,9 +173,10 @@ export function recursionElement(container: Container, callback: (element: MyEle
     }
 }
 
-export function innerElementIs(point: Point, element: MyElement) {
-    return point.x >= element.runtimeOption.x && point.x <= element.runtimeOption.x + element.runtimeOption.width
-        && point.y >= element.runtimeOption.y && point.y <= element.runtimeOption.y + element.runtimeOption.height;
+export function innerElementIs(point: Point, element: MyElement, parentElement: MyElement) {
+    return (!elementTypeContainerList.includes(element.type)  /*容器目前不支持嵌套*/
+            && !elementTypeContainerList.includes(parentElement.type)) && point.x >= parentElement.runtimeOption.x && point.x <= parentElement.runtimeOption.x + parentElement.runtimeOption.width
+        && point.y >= parentElement.runtimeOption.y && point.y <= parentElement.runtimeOption.y + parentElement.runtimeOption.height;
 }
 
 // export function disableHandleList(element: MyElement) {
@@ -793,8 +799,8 @@ export function isPageFooter(element: Container) {
     return element != null && element.type == 'PageFooter';
 }
 
-export function formatter(element: MyElement, variable: FormatterVariable = {}): string {
-    if (element.option!.formatter) {
+export function formatter(element: MyElement, variable: FormatterVariable = {} as FormatterVariable): string {
+    if (element.option.formatter) {
         let contentData = '';
         if (element.type == 'TextTime') {
             const variableNames = extractVariableNames(element.option.formatter);
@@ -1032,6 +1038,7 @@ function setNestedPropertyValue(obj: any, propertyPath: any, value: any) {
 
 
 export function multipleElementSetValue(props: string, val: any) {
+    // console.log(val);
     // 修改属性
     record(<Snapshot>{
         type: 'Element',
