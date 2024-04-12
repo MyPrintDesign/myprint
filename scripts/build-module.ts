@@ -97,7 +97,7 @@ const build = async (pkgDirName: string) => {
             // }),
             esbuild({
                 sourceMap: true,
-                target: 'es2015',
+                target: 'es2021',
                 loaders: {
                     '.vue': 'ts'
                 }

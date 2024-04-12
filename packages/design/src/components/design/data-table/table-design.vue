@@ -8,6 +8,9 @@
         <div class="my-table-resize" v-for="(item, index) in data.resizeControlList"
              :style="{left: item.x + 'px'}" @mousedown="resizeMouseDown($event, index)" />
         
+        <div class="my-table-row-resize" v-for="(item, index) in data.rowResizeControlList"
+             :style="{left: item.x + 'px'}" @mousedown="resizeMouseDown($event, index)" />
+        
         <!--        <div class="my-table-tool"/>-->
         
         <div class="my-table-highlight-sort"
@@ -29,8 +32,15 @@
              :style="{left: item.x + 'px'}"
              @mousedown="controlPointMouseDown($event, index)">
         </div>
+        
+        <div class="my-table-control-head-col-point iconfont icon-sigedian"
+             v-for="(item, index) in data.rowControlPointList"
+             :class="{'my-table-control-head-point-active': data.row == index && data.status != 'RESIZE'}"
+             :style="{top: item.y + 'px'}"
+             @mousedown="controlPointMouseDown($event, index)">
+            <div style="color: black">{{data.row}}</div>
+        </div>
     </template>
-
 
 </template>
 <script setup lang="ts">
@@ -45,6 +55,8 @@ import { freshMoveableOption, updateMoveableRect } from '@myprint/design/plugins
 import _ from 'lodash';
 import { setCurrentElement, setElementHeightPx } from '@myprint/design/utils/elementUtil';
 import { px2unit } from '@myprint/design/utils/devicePixelRatio';
+
+type MyRow = Record<number, Record<number, null>>
 
 const props = withDefaults(defineProps<{
     element: MyElement
@@ -65,8 +77,7 @@ const data = reactive({
         visibility: 'hidden'
     } as Container,
     highlightColumn: {
-        row: -1,
-        col: -1,
+        rowList: {} as MyRow,
         type: 'NONE',
         x: 0,
         y: 0,
@@ -75,10 +86,11 @@ const data = reactive({
         visibility: 'hidden'
     },
     controlPointList: [] as any[],
-    resizeControlList: [] as any[]
+    resizeControlList: [] as any[],
+    rowControlPointList: [] as any[],
+    rowResizeControlList: [] as any[]
 });
 const tableRef = ref();
-// const tableDesignRef = ref()
 const useApp = useAppStoreHook();
 const bodyList = props.element.bodyList[0];
 let resizeObserver: ResizeObserver;
@@ -126,6 +138,7 @@ onMounted(() => {
         }
     });
     
+    computeColumnHeight()
 });
 
 onUnmounted(() => {
@@ -149,6 +162,7 @@ function controlPointMouseDown(ev: MouseEvent, col: number) {
     
     let column: MyElement = props.element.headList[data.col];
     let clientStartX = ev.clientX;
+    let clientStartY = ev.clientY;
     
     tableColClone.show(columnLeft, columnTop, column.runtimeOption.width, column.runtimeOption.parent?.runtimeOption.height,
         tableRef.value.$el.rows, data.col);
@@ -200,17 +214,39 @@ function controlPointMouseDown(ev: MouseEvent, col: number) {
         }
     }
     
-    function controlPointMouseUp(_ev: MouseEvent) {
-        if (targetIndex != undefined) {
-            // console.log(targetIndex)
-            if (targetIndex > data.col) {
-                targetIndex--;
-            }
-            sortColumn(props.element, data.col, targetIndex);
-            if (data.highlightColumn.col == data.col) {
-                data.highlightColumn.col = targetIndex;
+    function controlPointMouseUp(evUp: MouseEvent) {
+        
+        let clientEndX = evUp.clientX;
+        let clientEndY = evUp.clientY;
+        let bodyElement: MyElement = bodyList[data.col];
+        
+        if (clientStartX == clientEndX && clientEndY == clientStartY) {
+            
+            data.highlightColumn.rowList = {};
+            data.highlightColumn.width = column.runtimeOption.width;
+            data.highlightColumn.x = column.runtimeOption.x;
+            data.highlightColumn.rowList[0] = { [data.col]: null };
+            data.highlightColumn.rowList[1] = { [data.col]: null };
+            data.highlightColumn.y = 0;
+            data.highlightColumn.height = column.runtimeOption.height + bodyElement.runtimeOption.height;
+            setCurrentElement([column, bodyElement]);
+            
+            data.highlightColumn.visibility = 'visible';
+        } else {
+            if (targetIndex != undefined) {
+                // console.log(targetIndex)
+                if (targetIndex > data.col) {
+                    targetIndex--;
+                }
+                sortColumn(props.element, data.col, targetIndex);
+                // if (data.highlightColumn.rowList[data.row] == data.col) {
+                //     data.highlightColumn.col = targetIndex;
+                // }
+                data.highlightColumn.visibility = 'hidden';
+                data.highlightColumn.rowList = {};
             }
         }
+        
         document.removeEventListener('mousemove', controlPointMouseMove);
         document.removeEventListener('mouseup', controlPointMouseUp);
         // console.log('up')
@@ -228,7 +264,6 @@ function controlPointMouseDown(ev: MouseEvent, col: number) {
     
     useApp.dataRotation = 'move';
     ev.stopPropagation();
-    // console.log('down')
     document.addEventListener('mousemove', controlPointMouseMove);
     document.addEventListener('mouseup', controlPointMouseUp);
 }
@@ -268,8 +303,6 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
     document.addEventListener('mouseup', resizeMouseUp);
 }
 
-//重新计算高
-
 function tableMouseDown(ev: MouseEvent) {
     let column: MyElement = props.element.headList[data.col];
     let bodyElement: MyElement = bodyList[data.col];
@@ -277,8 +310,10 @@ function tableMouseDown(ev: MouseEvent) {
     
     data.highlightColumn.width = column.runtimeOption.width;
     data.highlightColumn.x = column.runtimeOption.x;
-    data.highlightColumn.row = data.row;
-    data.highlightColumn.col = data.col;
+    // data.highlightColumn.row = data.row;
+    data.highlightColumn.rowList = {};
+    data.highlightColumn.rowList[data.row] = { [data.col]: null };
+    // data.highlightColumn.col = data.col;
     if (data.row == 0) {
         data.highlightColumn.y = 0;
         data.highlightColumn.height = column.runtimeOption.height;
@@ -320,6 +355,7 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
     } else {
         tableRef.value.$el.removeEventListener('mousedown', tableMouseDown);
         data.highlightColumn.visibility = 'hidden';
+        data.highlightColumn.rowList = {};
         setCurrentElement(defaultElement);
     }
 });
@@ -349,43 +385,87 @@ const computeColumn = _.throttle(() => {
         });
     }
     
-    if (data.highlightColumn.col != -1) {
-        const columnElement = props.element.headList[data.highlightColumn.col];
-        const bodyElement = bodyList[data.highlightColumn.col];
-        data.highlightColumn.width = columnElement.runtimeOption.width;
-        data.highlightColumn.x = columnElement.runtimeOption.x;
-        
-        if (data.highlightColumn.y != 0) {
-            data.highlightColumn.y = columnElement.runtimeOption.height;
-            data.highlightColumn.height = bodyElement.runtimeOption.height;
-        } else {
-            data.highlightColumn.height = columnElement.runtimeOption.height;
+    const keys = Object.keys(data.highlightColumn.rowList);
+    console.log(keys);
+    if (keys.length > 0) {
+        const colKeys = Object.keys(data.highlightColumn.rowList[keys[0]]);
+        let width = 0;
+        let minIndex = 99999;
+        // console.log(data.highlightColumn.rowList);
+        for (let colKey of colKeys) {
+            console.log(colKey);
+            const columnElement = props.element.headList[colKey];
+            // const bodyElement = bodyList[colKey];
+            if (minIndex > Number.parseInt(colKey)) {
+                minIndex = Number.parseInt(colKey);
+            }
+            width = width + columnElement.runtimeOption.width;
         }
         
+        data.highlightColumn.width = width;
+        data.highlightColumn.x = props.element.headList[minIndex].runtimeOption.x;
+        
+        // if (data.highlightColumn.y != 0) {
+        //     data.highlightColumn.y = columnElement.runtimeOption.height;
+        //     data.highlightColumn.height = bodyElement.runtimeOption.height;
+        // } else {
+        //     data.highlightColumn.height = columnElement.runtimeOption.height;
+        // }
     }
 }, 10);
 
-function changeColumn() {
-    // const columnList = props.element.columnList
-    // let columnTotalWidth = 0;
-    // for (let i = 0; i < columnList!.length; i++) {
-    //   columnTotalWidth += columnList![i].width
+const computeColumnHeight = _.throttle(() => {
+    // console.log('---')
+    data.rowControlPointList.length = 0;
+    data.rowResizeControlList.length = 0;
+    let height = 0;
+    
+    for (let i = 0; i < props.element.bodyList.length; i++) {
+        const rowList = props.element.bodyList[i];
+        const firstColumn = rowList[0]
+        firstColumn.y = height;
+        height = height + firstColumn.runtimeOption.height;
+        
+        data.rowControlPointList.push({
+            x: 0,
+            y: firstColumn.y + firstColumn.runtimeOption.height / 2 - 10
+        });
+    }
+    
+    // console.log(props.element.bodyList);
+    // console.log(data.rowControlPointList);
+    // data.rowResizeControlList.push({
+    //     x: 0,
+    //     y: column.runtimeOption.y + column.runtimeOption.height - 5
+    // });
+    
+    // const keys = Object.keys(data.highlightColumn.rowList);
+    // console.log(keys);
+    // if (keys.length > 0) {
+    //     const colKeys = Object.keys(data.highlightColumn.rowList[keys[0]]);
+    //     let width = 0;
+    //     let minIndex = 99999;
+    //     console.log(data.highlightColumn.rowList);
+    //     for (let colKey of colKeys) {
+    //         console.log(colKey);
+    //         const columnElement = props.element.headList[colKey];
+    //         // const bodyElement = bodyList[colKey];
+    //         if (minIndex > Number.parseInt(colKey)) {
+    //             minIndex = Number.parseInt(colKey);
+    //         }
+    //         width = width + columnElement.runtimeOption.width;
+    //     }
+    //
+    //     data.highlightColumn.width = width;
+    //     data.highlightColumn.x = props.element.headList[minIndex].runtimeOption.x;
+    //
+    //     // if (data.highlightColumn.y != 0) {
+    //     //     data.highlightColumn.y = columnElement.runtimeOption.height;
+    //     //     data.highlightColumn.height = bodyElement.runtimeOption.height;
+    //     // } else {
+    //     //     data.highlightColumn.height = columnElement.runtimeOption.height;
+    //     // }
     // }
-    // props.element.width = columnTotalWidth
-    // tableRef.value.computedWidth()
-}
+}, 10);
 
 </script>
-<style lang="scss" scoped>
-
-.addColumn {
-    background: white;
-    margin-left: 10px;
-    border-radius: 15px;
-}
-
-.columnCard {
-    background: white;
-    
-}
-</style>

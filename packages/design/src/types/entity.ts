@@ -84,6 +84,7 @@ export interface PreviewWrapper extends MyElement, PreviewContainerWrapper {
     offsetLastElementTop: number;
     heightIs: boolean;
     tableRowIndex: number;
+    target: any;
     previewWrapperList: PreviewWrapper[];
 }
 
@@ -173,6 +174,11 @@ export interface HandlePanelPosition extends Container {
     right: number;
 }
 
+export interface DataTableRow {
+    type: 'HEAD' | 'DATA' | 'STATS';
+    columnList: MyElement[];
+}
+
 export interface MyElement extends Container {
     contentType?: textContentType;
     field?: string;
@@ -182,6 +188,7 @@ export interface MyElement extends Container {
 
     headList: MyElement[];
     bodyList: MyElement[][];
+    rowList: DataTableRow[];
     columnBody: MyElement;
     option: ElementOption;
     svgOption: ElementSvgOption;

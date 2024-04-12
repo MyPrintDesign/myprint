@@ -4,7 +4,6 @@
         :style="headStyle">
         <my-text :element="element" />
     </td>
-    <!--  删除按钮-->
 </template>
 <script setup lang="ts">
 

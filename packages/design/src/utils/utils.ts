@@ -342,11 +342,11 @@ export function _defaultVal(val, _default) {
     return val ? val : _default;
 }
 
-export function n2br(val) {
-    return val.replaceAll('\n', '<br>');
+export function n2br(val: any) {
+    return typeof val === 'string' ? val.replaceAll('\n', '<br>') : val;
 }
 
 
-export function br2n(val) {
-    return val.replaceAll('<br>', '\n');
+export function br2n(val: any) {
+    return typeof val === 'string' ? val.replaceAll('<br>', '\n') : val;
 }

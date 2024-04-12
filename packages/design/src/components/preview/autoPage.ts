@@ -40,7 +40,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
     let offsetLastElementTop = 0;
     const fixedPreviewElementList: PreviewWrapper[] = [];
     const previewElementList: PreviewWrapper[] = [];
-    const pageNumElementList: PreviewWrapper[] = [];
+    // const pageNumElementList: PreviewWrapper[] = [];
 
     let previewContext = {
         currentPreview: undefined!,
@@ -65,19 +65,17 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         handleElement(previewContext.panel.pageFooter);
     }
 
-    console.log(previewContext.panel.pageFooter);
-
     function handleElement(myElement: MyElement) {
         const previewElement = element2PreviewWrapper(myElement);
         if (previewElement.previewWrapperList != null && previewElement.previewWrapperList.length > 0) {
             for (let i = previewElement.previewWrapperList.length - 1; i >= 0; i--) {
                 const pageNumPreviewElement = previewElement.previewWrapperList[i];
                 // 处理嵌套 pageNum
-                if (pageNumPreviewElement.type == 'PageNum') {
+                if (pageNumPreviewElement.option.fixed) {
                     pageNumPreviewElement.x = pageNumPreviewElement.x + previewElement.x;
                     pageNumPreviewElement.y = pageNumPreviewElement.y + previewElement.y;
 
-                    pageNumElementList.push(pageNumPreviewElement);
+                    fixedPreviewElementList.push(pageNumPreviewElement);
                     previewElement.previewWrapperList.splice(i, 1);
                 }
             }
@@ -86,9 +84,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
             previewElement.elementList = [];
         }
 
-        if (previewElement.type == 'PageNum') {
-            pageNumElementList.push(previewElement);
-        } else if (previewElement.option.fixed) {
+        if (previewElement.option.fixed) {
             fixedPreviewElementList.push(previewElement);
         } else {
             previewElementList.push(previewElement);
@@ -116,14 +112,14 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
 
     previewContext.autoPageIs = false;
     // 组装固定元素
-    await installPreviewElement(fixedPreviewElementList);
+    // await installPreviewElement(fixedPreviewElementList);
 
     variable.pageSize = pageList.length;
     // 每页设置页码
     for (let i = 0; i < pageList.length; i++) {
         previewContext.currentPage = pageList[i];
         variable.pageIndex = i + 1;
-        await installPreviewElement(pageNumElementList);
+        await installPreviewElement(fixedPreviewElementList);
     }
 
     async function installPreviewElement(previewElementList: PreviewWrapper[]) {
@@ -144,14 +140,17 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
                 }
 
                 // 判断需不需要分页
-                if (previewContext.currentPage.elementList.length > 0 && (await isNeedNewPage(previewWrapper.y, previewContext.bottom) || await isNeedNewPage(previewWrapper.y + previewWrapper.height, previewContext.bottom))) {
+                // console.log(await isNeedNewPage(previewWrapper.y, previewContext.bottom));
+                // console.log(await isNeedNewPage(previewWrapper.y + previewWrapper.height, previewContext.bottom));
+                if (previewWrapper.type != 'PageFooter'
+                    && previewContext.currentPage.elementList.length > 0
+                    && (await isNeedNewPage(previewWrapper.y, previewContext.bottom) || await isNeedNewPage(previewWrapper.y + previewWrapper.height, previewContext.bottom))) {
                     previewWrapper.y = 1;
                     previewContext.currentPage!.offsetTop = 1;
                 }
             }
 
             if (previewWrapper.option.fixed && previewWrapper.option.displayStrategy != undefined) {
-                // debugger
                 switch (previewWrapper.option.displayStrategy) {
                     case 'firstPage':
                         if (variable.pageIndex != 1) {
@@ -246,6 +245,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
                 previewContext.currentPage = tmpPage;
             } else if (previewWrapper.type == 'PageFooter') {
                 previewContext.currentPage.elementList.push(previewWrapper);
+                console.log(previewWrapper);
                 const tmpPage = previewContext.currentPage;
                 previewContext.currentPage = previewWrapper;
                 await installPreviewElement(previewWrapper.previewWrapperList);
@@ -271,7 +271,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         previewWrapper.heightIs = false;
         previewContext.currentPage.elementList.push(previewWrapper);
         await nextTick();
-        const height = previewWrapper.runtimeOption.target.clientHeight;
+        const height = previewWrapper.target.clientHeight;
 
         if (first && height < previewWrapper.runtimeOption.height) {
             previewWrapper.heightIs = true;
@@ -319,7 +319,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         previewContext.currentPage.elementList.push(previewWrapper);
         // let previewWrapper = previewWrapper
         await nextTick();
-        const table = previewWrapper.runtimeOption.target as any;
+        const table = previewWrapper.target;
         // console.log(table)
         if (!table) {
             return false;
@@ -391,6 +391,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
             return false;
         }
 
+        // 为啥+1
         if (y! > bottom! + 1) {
             if (callback) {
                 callback();
@@ -403,10 +404,10 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
 
     async function newPage() {
 
-        if (previewContext.currentPage != undefined) {
-            previewContext.autoPageIs = false;
-            await installPreviewElement(fixedPreviewElementList);
-        }
+        // if (previewContext.currentPage != undefined) {
+        //     previewContext.autoPageIs = false;
+        //     await installPreviewElement(fixedPreviewElementList);
+        // }
 
         previewContext.currentPage = reactive({
             id: crypto.randomUUID(),
@@ -437,20 +438,20 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
 
     async function computeBottom(previewWrapper: PreviewWrapper) {
         await nextTick();
-        if (!previewWrapper.runtimeOption.target) {
+        if (!previewWrapper.target) {
             return;
         }
-        const div = previewWrapper.runtimeOption.target;
+        const div = previewWrapper.target;
         // debugger
         return numberUtil.toFixed(px2unit(numberUtil.sumScale(div.offsetTop, div.offsetHeight)));
     }
 
     async function computeTop(previewWrapper: PreviewWrapper) {
         await nextTick();
-        if (!previewWrapper.runtimeOption.target) {
+        if (!previewWrapper.target) {
             return;
         }
-        const div = previewWrapper.runtimeOption.target;
+        const div = previewWrapper.target;
         console.log(div.offsetTop);
         return numberUtil.toFixed(px2unit(div.offsetTop));
     }
@@ -458,13 +459,13 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
     async function computeTextHeight(previewWrapper: PreviewWrapper, previewDataTmp: any) {
         previewWrapper.data = previewDataTmp;
         await nextTick();
-        const itemRef = previewWrapper.runtimeOption.target;
+        const itemRef = previewWrapper.target;
         // console.log(div)
         if (!itemRef) {
             // debugger
             return;
         }
-        const height = previewWrapper.runtimeOption.target.clientHeight;
+        const height = previewWrapper.target.clientHeight;
         return previewWrapper.y! + px2unit(height) < previewContext.bottom;
     }
 

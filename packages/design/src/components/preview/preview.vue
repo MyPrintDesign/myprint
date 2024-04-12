@@ -18,7 +18,7 @@
 
 <script setup lang="ts">
 
-import { computed, CSSProperties, onMounted, ref } from 'vue';
+import { computed, CSSProperties, onMounted, onUnmounted, ref } from 'vue';
 import ElementView from '@myprint/design/components/design/element.vue';
 import { PreviewWrapper } from '@myprint/design/types/entity';
 import { valueUnit } from '@myprint/design/utils/elementUtil';
@@ -47,8 +47,11 @@ const props = withDefaults(defineProps<{
 const previewWrapRef = ref();
 
 onMounted(() => {
-    props.preview.runtimeOption.target = previewWrapRef.value;
+    props.preview.target = previewWrapRef.value;
     // previewWrapRef.value.element = props.element;
+});
+onUnmounted(() => {
+    props.preview.target = undefined;
 });
 // console.log(props.preview)
 

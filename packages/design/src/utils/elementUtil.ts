@@ -174,8 +174,8 @@ export function recursionElement(container: Container, callback: (element: MyEle
 }
 
 export function innerElementIs(point: Point, element: MyElement, parentElement: MyElement) {
-    return (!elementTypeContainerList.includes(element.type)  /*容器目前不支持嵌套*/
-            && !elementTypeContainerList.includes(parentElement.type)) && point.x >= parentElement.runtimeOption.x && point.x <= parentElement.runtimeOption.x + parentElement.runtimeOption.width
+    return (!(elementTypeContainerList.includes(element.type)  /*容器目前不支持嵌套*/
+            && elementTypeContainerList.includes(parentElement.type))) && point.x >= parentElement.runtimeOption.x && point.x <= parentElement.runtimeOption.x + parentElement.runtimeOption.width
         && point.y >= parentElement.runtimeOption.y && point.y <= parentElement.runtimeOption.y + parentElement.runtimeOption.height;
 }
 

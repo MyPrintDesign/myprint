@@ -116,6 +116,29 @@
   }
 }
 
+.my-table-row-resize {
+  width: 100%;
+  height: 9px;
+  position: absolute;
+  left: 0;
+  cursor: col-resize;
+
+  &:before {
+    position: absolute;
+    left: inherit;
+    top: 4px;
+    background: transparent !important;
+    content: ' ';
+    width: 100%;
+    height: 1px;
+  }
+
+  &:hover::before {
+    box-shadow: -1px 0 0 0 red, 1px 0 0 0 red !important;
+    background-color: red !important;
+  }
+}
+
 .my-table-highlight-column {
   position: absolute;
   top: 0;
@@ -145,6 +168,22 @@
   font-size: 14px !important;
   height: 15px;
   line-height: 15px;
+  text-align: center;
+  visibility: hidden;
+  border-radius: 3px;
+  border: 1px black dashed;
+  background: white !important;
+  z-index: 999999;
+}
+
+.my-table-control-head-col-point {
+  position: absolute;
+  cursor: move;
+  left: -10px;
+  width: 15px;
+  font-size: 14px !important;
+  height: 20px;
+  line-height: 20px;
   text-align: center;
   visibility: hidden;
   border-radius: 3px;
