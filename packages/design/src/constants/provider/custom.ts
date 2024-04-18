@@ -7,7 +7,7 @@ export const customProvider = {
             'type': 'Text',
             iconClass: 'iconfont icon-text',
             'label': '文本',
-            'data': '自定义文本',
+            'data': '滚滚长江东逝水',
             'width': 50,
             'height': 10
         } as any,

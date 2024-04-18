@@ -28,7 +28,6 @@ import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRa
 import { arrayRemove } from '@myprint/design/utils/arrays';
 import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
 import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
-import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
 
 export function displayModel(displayModel?: DisplayModel) {
     if (displayModel) {
@@ -1040,11 +1039,11 @@ function setNestedPropertyValue(obj: any, propertyPath: any, value: any) {
 export function multipleElementSetValue(props: string, val: any) {
     // console.log(val);
     // 修改属性
-    record(<Snapshot>{
-        type: 'Element',
-        action: ActionEnum.UPDATE_STYLE,
-        elementList: appStore().currentElement
-    });
+    // record(<Snapshot>{
+    //     type: 'Element',
+    //     action: ActionEnum.UPDATE_STYLE,
+    //     elementList: appStore().currentElement
+    // });
     for (let currentElementElement of appStore().currentElement as MyElement[]) {
 
         setNestedPropertyValue(currentElementElement, props, val);

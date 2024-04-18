@@ -3,13 +3,32 @@
 
   .currentHistory {
     color: white;
+    //width: 100%;
     padding-left: 3px;
     background: var(--drag-h-color);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 
   .history-list-item {
     color: rgb(128, 128, 128);
+    //width: 100%;
     padding-left: 3px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .history-line-wrapper {
+    display: flex; // 限定为弹性盒子，否则溢出
+    flex: 1; // 限定弹性比例，否则宽度为0
+    .prefix {
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      margin-left: -3px;
+    }
   }
 }
 

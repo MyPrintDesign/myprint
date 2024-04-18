@@ -13,15 +13,15 @@
             </div>
         </template>
         <div class="history-list">
-            <div v-for="(item, index) in redoStack.slice().reverse()" :key="index"
+            <div v-for="(item, index) in redoStack.slice().reverse()" :key="item.timestamp"
                  class="history-list-item">
-                {{ item.snapshot.action }}
+                <history-line-text :content="item.snapshot.action" />
             </div>
-            <div v-for="(item, index) in history"
-                 :class="[{'currentHistory': index == 0, 'history-list-item': index != 0}]"
-                 :key="index">
-                {{ item.snapshot.action }}
-            </div>
+            <history-line-text
+                v-for="(item, index) in history"
+                :class="[{'currentHistory': index == 0, 'history-list-item': index != 0}]"
+                :key="item.timestamp"
+                :content="item.snapshot.action" />
         </div>
     </my-collapse>
 </template>
@@ -31,7 +31,9 @@ import { redoStack, undoPanel, redoPanel, history, canRedo, canUndo } from '@myp
 import { handlePanelElementList } from '@myprint/design/constants/settingPanel';
 import MyCollapse from '@myprint/design/components/my/collapse/my-collapse.vue';
 import { useConfigStore } from '@myprint/design/stores/config';
+import HistoryLineText from '@myprint/design/components/content/handle-panel/history-line-text.vue';
 
+console.log(history);
 const configStore = useConfigStore();
 
 </script>

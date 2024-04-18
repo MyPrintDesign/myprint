@@ -46,7 +46,7 @@
                             />
                         </el-select>
                     </div>
-                    <el-button style="margin-left: 0" :disabled="!configStore.printer" @click="print">{{
+                    <el-button style="margin-left: 0" :disabled="!data.printer" @click="print">{{
                             i18n('toolbar.print')
                         }}
                     </el-button>
@@ -64,120 +64,122 @@
 
 <script setup lang="ts">
 // import { ElDialog, ElScrollbar, ElButton, ElSelect, ElOption } from 'element-plus'
-import { inject, onMounted, reactive, ref } from 'vue'
-import { toPdf } from '@myprint/design/utils/pdfUtil'
-import { download, printCssStyle } from '@myprint/design/utils/utils'
-import { unit2px } from '@myprint/design/utils/devicePixelRatio'
-import Preview from './preview.vue'
-import { MyElement, Panel } from '@myprint/design/types/entity'
-import { messageFun, mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys'
-import { useSocket } from '@myprint/design/stores/socket'
-import { i18n } from '@myprint/design/locales'
-import { displayModel, valueUnit } from '@myprint/design/utils/elementUtil'
-import { useConfigStore } from '@myprint/design/stores/config'
-import { autoPage } from './autoPage'
+import { inject, onMounted, reactive, ref } from 'vue';
+import { toPdf } from '@myprint/design/utils/pdfUtil';
+import { download, printCssStyle } from '@myprint/design/utils/utils';
+import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
+import Preview from './preview.vue';
+import { MyElement, Panel } from '@myprint/design/types/entity';
+import { messageFun, mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
+import { useSocket } from '@myprint/design/stores/socket';
+import { i18n } from '@myprint/design/locales';
+import { displayModel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
+import { useConfigStore } from '@myprint/design/stores/config';
+import { autoPage } from './autoPage';
 
-const { SEND: socketSend, printerList, connect } = useSocket()
-const configStore = useConfigStore()
+const { SEND: socketSend, printerList, connect } = useSocket();
+const configStore = useConfigStore();
 const data = reactive({
     dialogVisible: false,
     printer: configStore.defaultPrinter,
     pageList: [] as any
-})
-const previewContent = ref<HTMLDivElement[]>()!
-const mitt = inject(mittKey)!
-const panel = inject(panelKey)! as Panel
-const onMessage = inject(messageFun)!
-const previewData = inject(previewDataKey)!
-let itemRefs = {} as any
+});
+const previewContent = ref<HTMLDivElement[]>()!;
+const mitt = inject(mittKey)!;
+const panel = inject(panelKey)! as Panel;
+const onMessage = inject(messageFun)!;
+const previewData = inject(previewDataKey)!;
+let itemRefs = {} as any;
 
-mitt.on('previewPanel', previewPanel)
+mitt.on('previewPanel', previewPanel);
 
 function print() {
-    let html = ''
+    let html = '';
     for (let i = 0; i < previewContent.value!.length; i++) {
-        html += previewContent.value![i].outerHTML
+        html += previewContent.value![i].outerHTML;
     }
     socketSend(JSON.stringify({
             content: { html, printer: data.printer },
             cmd: 'print',
-            width: panel.width, height: panel.height
+            width: unit2unit(getCurrentPanelUnit(), 'mm', panel.width),
+            height: unit2unit(getCurrentPanelUnit(), 'mm', panel.height)
         })
-    )
+    );
 }
 
 function downloadPdf() {
     // console.log(previewContent.value)
     if (connect) {
-        let html = ''
+        let html = '';
         for (let i = 0; i < previewContent.value!.length; i++) {
-            html += previewContent.value![i].outerHTML
+            html += previewContent.value![i].outerHTML;
         }
         socketSend(JSON.stringify({
                 content: { html },
                 cmd: 'generatePdf',
-                width: panel.width, height: panel.height
+            width: unit2unit(getCurrentPanelUnit(), 'mm', panel.width),
+            height: unit2unit(getCurrentPanelUnit(), 'mm', panel.height)
             })
-        )
+        );
     } else {
         toPdf(previewContent.value, {
             width: unit2px(panel.width), height: unit2px(panel.height)
-        })
+        });
     }
 }
 
 function printChromePdf() {
-    printArea()
+    printArea();
 }
 
 onMounted(() => {
 
-})
+});
 
 function setItemRef(el: any, item: MyElement) {
     // console.log('setItemRef', item.label)
     // console.log('setItemRef')
-    itemRefs[item.id] = el
+    itemRefs[item.id] = el;
 }
 
 function previewPanel() {
-    data.dialogVisible = true
+    data.dialogVisible = true;
     // console.log(itemRefs)
     // console.log(previewData)
-    autoPage(data.pageList, previewContent, previewData)
+    autoPage(data.pageList, previewContent, previewData);
 }
 
 function closePreviewPanel() {
-    displayModel('design')
-    data.pageList = []
+    displayModel('design');
+    data.pageList = [];
 }
 
 function printArea() {
-    let html = '<div style="  --tcolor: black;">'
+    let html = '<div style="  --tcolor: black;">';
     // let html = '<div>'
     for (let i = 0; i < previewContent.value!.length; i++) {
-        html += previewContent.value![i].outerHTML
+        html += previewContent.value![i].outerHTML;
     }
-    html += '</div>'
+    html += '</div>';
     // 创建iframe
-    let iframe = document.createElement('iframe')
+    let iframe = document.createElement('iframe');
     // 设置iframe样式
-    iframe.setAttribute('id', 'print-box')
+    iframe.setAttribute('id', 'print-box');
     iframe.setAttribute(
         'style',
         `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; position: absolute; left : 100px; top: 0;border: 0;
       z-index: 10000;`
-    )
+    );
     // 在页面插入iframe
-    document.body.appendChild(iframe)
+    document.body.appendChild(iframe);
     // 获取iframe内的html
-    let iframeDocument = iframe.contentWindow!.document
+    let iframeDocument = iframe.contentWindow!.document;
     // 经需要打印的DOM插入iframe
     
-    const linkElement = iframeDocument.createElement('style')
-    linkElement.type = 'text/css'
-    linkElement.textContent = printCssStyle() // 根据实际文件路径修改
-    iframeDocument.body.innerHTML = html
+    const linkElement = iframeDocument.createElement('style');
+    linkElement.type = 'text/css';
+    linkElement.textContent = printCssStyle(); // 根据实际文件路径修改
+    iframeDocument.body.innerHTML = html;
     
     // 设置iframe内的header，添加样式文件
     iframeDocument.getElementsByTagName('head')[0].innerHTML = `
@@ -190,32 +192,32 @@ function printArea() {
       }
     }
   </style>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">`
-    iframeDocument.head.appendChild(linkElement)
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">`;
+    iframeDocument.head.appendChild(linkElement);
     
     // 关闭iframe
-    iframeDocument.close()
+    iframeDocument.close();
     // 使iframe失去焦点
-    iframe.contentWindow!.focus()
+    iframe.contentWindow!.focus();
     // 调用iframe的打印方法
-    iframe.contentWindow!.print()
+    iframe.contentWindow!.print();
     // 移除iframe
     setTimeout(function() {
-        document.body.removeChild(iframe)
-    }, 100)
+        document.body.removeChild(iframe);
+    }, 100);
     
 }
 
 onMessage.value = (msg: any) => {
-    console.log(msg)
-    let pdf = msg.pdf
+    console.log(msg);
+    let pdf = msg.pdf;
     // console.log(pdf)
     if (pdf != null) {
         // 将Buffer对象转换为Uint8Array数组
-        const uint8Array = new Uint8Array(pdf.data)
+        const uint8Array = new Uint8Array(pdf.data);
         // 将Uint8Array数组转换为Blob对象
-        const blob = new Blob([uint8Array], { type: 'application/octet-stream' })
-        download(blob, panel.name)
+        const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
+        download(blob, panel.name);
     }
-}
+};
 </script>
