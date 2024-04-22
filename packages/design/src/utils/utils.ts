@@ -1,5 +1,5 @@
 import { clearEventBubble } from './event';
-import { MyElement, Panel } from '@myprint/design/types/entity';
+import { MyElement, Panel, TableCellElement } from '@myprint/design/types/entity';
 import { displayRatio, unit2px } from '@myprint/design/utils/devicePixelRatio';
 // import {arrayIndexOf, arrayRemove} from "@myprint/design/utils/arrays";
 // @ts-ignore
@@ -7,30 +7,68 @@ import * as mittInit from 'mitt';
 import { fontList } from '@myprint/design/constants/common';
 import { Emitter } from 'mitt';
 import { EventTypes } from '@myprint/design/types/eventType';
+import { findFromLeftCell } from '@myprint/design/utils/table/dataTable';
 
 let collapsePanelZIndex = 1000;
 
 export const mitt = mittInit.default() as Emitter<EventTypes>;
 
-export function sortColumn(myElement: MyElement, sourceIndex: any, targetIndex: any) {
-    // console.log(sourceIndex, targetIndex)
-    const source = myElement.headList[sourceIndex];
-    myElement.headList.splice(sourceIndex, 1);
+export function sortColumn(myElement: MyElement, baseColIndex: number, row: number, sourceIndex: number, targetIndex: number) {
+    const col = baseColIndex;
+    const diffCol = targetIndex - sourceIndex;
+    // console.log(col, targetCol);
+    // console.log(myElement.tableHeadList, baseColIndex, row, col, targetCol);
+    // const source = myElement.tableHeadList[sourceIndex];
+    // 删除原来的
+    // console.log(myElement.tableHeadList[row]);
+    // console.log(row, col, diffCol);
+    const baseCell = myElement.tableHeadList[row][col];
+    const { cell: targetCell, col: targetCol } = findFromLeftCell(myElement.tableHeadList, row, baseColIndex, diffCol)!;
+    // console.log(targetCell, targetCol);
+    // console.log(baseCell, targetColTmp);
+    const colspan = baseCell.colspan;
+    const targetColspan = targetCell.colspan;
+    // console.log(myElement.tableHeadList);
+    changeTableList(myElement.tableHeadList, row, col, targetCol, colspan, targetColspan);
+    changeTableList(myElement.tableBodyList, 0, col, targetCol, colspan, targetColspan);
+    // console.log(myElement.tableHeadList);
 
-    myElement.headList.splice(targetIndex, 0, source);
+    // myElement.headList.splice(targetIndex, 0, source);
 
-    for (let bodyRowList of myElement.bodyList) {
-
-        const source = bodyRowList[sourceIndex];
-        bodyRowList.splice(sourceIndex, 1);
-
-        bodyRowList.splice(targetIndex, 0, source);
-    }
+    // for (let bodyRowList of myElement.bodyList) {
+    //
+    //     const source = bodyRowList[sourceIndex];
+    //     bodyRowList.splice(sourceIndex, 1);
+    //
+    //     bodyRowList.splice(targetIndex, 0, source);
+    // }
 
     // for (let i = 0; i < arr.length; i++) {
     //     console.log(arr[i])
     //     arr[i].option.sort = i;
     // }
+}
+
+function changeTableList(list: any[][], row: number, col: number, targetCol: number, colspan: number, targetColspan: number) {
+
+    const cacheSourceCellList: TableCellElement[][] = [];
+    for (let i = row; i < list.length; i++) {
+        const rowList = list[i];
+        const cacheSourceCellListTmp: TableCellElement[] = [];
+        for (let j = 0; j < colspan; j++) {
+            cacheSourceCellListTmp.push(rowList[col]);
+            rowList.splice(col, 1);
+        }
+        cacheSourceCellList.push(cacheSourceCellListTmp);
+    }
+    // 新位置插入
+    for (let i = row; i < list.length; i++) {
+        const rowList = list[i];
+        for (let j = 0; j < colspan; j++) {
+            const skipColSpan = targetCol < col ? 0 : (targetColspan - 1);
+            rowList.splice(targetCol + skipColSpan + j, 0, cacheSourceCellList[i - row][j]);
+        }
+    }
 }
 
 export function click(ev: any, realFun: () => void) {

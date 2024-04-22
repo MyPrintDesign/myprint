@@ -26,6 +26,11 @@ export interface Point {
     y: number;
 }
 
+export interface Rect extends Point {
+    width: number;
+    height: number;
+}
+
 export interface SvgData {
     points: Point[];
     controlPoints: Point[];
@@ -46,11 +51,9 @@ export interface Line {
     end: Point;
 }
 
-export interface Container extends Point, ElementRelation {
+export interface Container extends Rect, ElementRelation {
     id: string;
     // status: string;
-    width: number;
-    height: number;
     minWidth: number;
     minHeight: number;
     type: elementType;
@@ -80,10 +83,10 @@ export interface Panel extends Container {
 }
 
 
-export interface PreviewWrapper extends MyElement, PreviewContainerWrapper {
+export interface PreviewWrapper extends MyElement, TableCellElement, PreviewContainerWrapper {
     offsetLastElementTop: number;
     heightIs: boolean;
-    tableRowIndex: number;
+    previewTableRowIndex: number;
     target: any;
     previewWrapperList: PreviewWrapper[];
 }
@@ -186,15 +189,25 @@ export interface MyElement extends Container {
     label?: string;
     data?: any;
 
-    headList: MyElement[];
-    bodyList: MyElement[][];
-    rowList: DataTableRow[];
-    columnBody: MyElement;
     option: ElementOption;
     svgOption: ElementSvgOption;
 
-    columnOption: ElementSvgOption;
-    bodyOption: ElementSvgOption;
+    /* data-table - start*/
+    columnBody: TableCellElement;
+    columnList: TableHeadProviderCellElement[];
+    tableHeadList: TableCellElement[][];
+    tableBodyList: TableCellElement[][];
+    // 数据行合并单元格-预留
+    // 统计行
+    statisticsList: TableStatisticsCellElement[][];
+    /* data-table - end*/
+
+    /* custom-table - start*/
+    rowList: TableCellElement[][];
+    /* custom-table - end*/
+
+    // columnOption: ElementSvgOption;
+    // bodyOption: ElementSvgOption;
     // previewRuntimeOption: {
     //     heightIs: boolean
     // }
@@ -207,6 +220,35 @@ export interface MyElement extends Container {
      * 是否组合
      */
     groupIs?: boolean;
+}
+
+export interface TableHeadProviderCellElement {
+    type?: elementType;
+    contentType?: textContentType;
+    field?: string;
+    width: number;
+    height: number;
+    enable?: number;
+    label?: string;
+    data?: any;
+
+    columnBody: TableCellElement;
+
+    option: ElementOption;
+
+    rowspan: number;
+    colspan: number;
+
+    childList: Array<TableHeadProviderCellElement>;
+}
+
+export interface TableCellElement extends MyElement {
+    rowspan: number;
+    colspan: number;
+}
+
+export interface TableStatisticsCellElement extends TableCellElement {
+
 }
 
 export interface TextElement extends MyElement {
@@ -225,6 +267,7 @@ export interface RuntimeElementOption extends Position {
     translate: Point;
     bounds: Position;
     parent?: Container;
+    cellParent: TableCellElement;
     target: any;
     rotate: number;
     // 组件实时位置

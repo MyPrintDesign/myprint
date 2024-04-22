@@ -1,4 +1,5 @@
 import { isFunction } from './utils';
+import { TableCellElement } from '@myprint/design/types/entity';
 
 export const mouseEventType = {
     MOVE: 'mousemove',
@@ -74,7 +75,7 @@ export const tableColClone = {
         this.clonedTable.classList.add('my-table-clone-drag');
     },
 
-    show(columnLeft: number, columnTop: number, width: number, height: number | undefined, rows: any, colIndex: number) {
+    show(columnLeft: number, columnTop: number, width: number, rows: TableCellElement[][]) {
         if (this.showIs) {
             return;
         }
@@ -82,14 +83,30 @@ export const tableColClone = {
         this.clonedTable.style.left = columnLeft - 0.5 + 'px';
         this.clonedTable.style.top = (columnTop - 0.5) + 'px';
         this.clonedTable.style.width = width + 1 + 'px';
-        this.clonedTable.style.height = (height! - 1) + 'px';
-        this.clonedTable.style.opacity = '0.5';
+        // this.clonedTable.style.opacity = '0.5';
 
         // 复制选中列的所有单元格并添加到新的表格中
+
+        let tableHeight = 0;
         for (let i = 0; i < rows.length; i++) {
-            const clonedCell = rows[i].cells[colIndex].cloneNode(true);
-            this.clonedTable.appendChild(document.createElement('tr')).appendChild(clonedCell);
+            const row = rows[i];
+            if (row.length == 0) {
+                continue;
+            }
+            const tr = document.createElement('tr');
+            this.clonedTable.appendChild(tr);
+            for (let j = 0; j < row.length; j++) {
+                // console.log(row[j].runtimeOption.target);
+                const clonedCell = row[j].runtimeOption.target.cloneNode(true);
+                if (row.length == 1) {
+                    // console.log(111);
+                    clonedCell.rowSpan = 1;
+                }
+                tr.appendChild(clonedCell);
+            }
+            tableHeight = tableHeight + row[row.length - 1].runtimeOption.height;
         }
+        this.clonedTable.style.height = (tableHeight! - 1) + 'px';
         document.body.appendChild(this.clonedTable);
     },
     move(columnLeft: number) {

@@ -16,11 +16,11 @@ export const customProvider = {
             iconClass: 'iconfont icon-text',
             'type': 'DataTable',
             'label': '用户列表',
-            'headList': [
+            'columnList': [
                 {
                     'field': 'username',
                     'type': 'Text',
-                    'label': '账号',
+                    'label': '用户',
                     'data': 'UN001',
                     'position': '',
                     'width': 20.25,
@@ -37,23 +37,100 @@ export const customProvider = {
                     }
                 },
                 {
-                    'field': 'nickname',
+                    'field': 'userInfo',
                     'type': 'Text',
-                    'label': '昵称',
-                    'data': '张三',
-                    'position': '',
+                    'label': '用户信息',
                     'width': 14.25,
                     'height': 7,
                     'fontSize': 14.25,
                     'option': {
                         'sort': 1,
                         'disableSort': false
-                    },
-                    'columnBody': {
-                        'option': {
-                            'fontSize': 14.25
-                        }
                     }
+                    , childList: [
+                        {
+                            'field': 'username',
+                            'type': 'Text',
+                            'label': '姓名',
+                            'data': '张三',
+                            'width': 14.25,
+                            'height': 7,
+                            'fontSize': 14.25,
+                            'option': {
+                                'sort': 1,
+                                'disableSort': false
+                            },
+                            'columnBody': {
+                                'option': {
+                                    'fontSize': 14.25
+                                }
+                            }
+                        },
+                        {
+                            'field': 'username',
+                            'type': 'Text',
+                            'label': '用户属性',
+                            'width': 14.25,
+                            'height': 7,
+                            'fontSize': 14.25,
+                            'option': {
+                                'sort': 1,
+                                'disableSort': false
+                            }
+                            , childList: [{
+                                'field': 'username',
+                                'type': 'Text',
+                                'label': '身高',
+                                'data': '175',
+                                'width': 14.25,
+                                'height': 7,
+                                'fontSize': 14.25,
+                                'option': {
+                                    'sort': 1,
+                                    'disableSort': false
+                                },
+                                'columnBody': {
+                                    'option': {
+                                        'fontSize': 14.25
+                                    }
+                                }
+                            }, {
+                                'field': 'username',
+                                'type': 'Text',
+                                'label': '体重',
+                                'data': '45KG',
+                                'width': 14.25,
+                                'height': 7,
+                                'fontSize': 14.25,
+                                'option': {
+                                    'sort': 1,
+                                    'disableSort': false
+                                },
+                                'columnBody': {
+                                    'option': {
+                                        'fontSize': 14.25
+                                    }
+                                }
+                            }, {
+                                'field': 'username',
+                                'type': 'Text',
+                                'label': '年龄',
+                                'data': '18',
+                                'width': 14.25,
+                                'height': 7,
+                                'fontSize': 14.25,
+                                'option': {
+                                    'sort': 1,
+                                    'disableSort': false
+                                },
+                                'columnBody': {
+                                    'option': {
+                                        'fontSize': 14.25
+                                    }
+                                }
+                            }]
+                        }
+                    ]
                 },
                 {
                     'field': 'sexFormat',

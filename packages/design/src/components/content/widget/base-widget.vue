@@ -32,6 +32,7 @@ import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
 import DragWrapper from '@myprint/design/components/content/widget/dragWrapper.vue';
 import { mouseTips } from '@myprint/design/utils/mouseTips';
 import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
+import { recursionForTableCell } from '@myprint/design/utils/table/dataTable';
 
 const panel = inject(panelKey)!;
 const appStore = useAppStore();
@@ -69,8 +70,6 @@ function dragStart(ev: MouseEvent) {
     if (element.type == 'PageHeader' || element.type == 'PageFooter') {
         element.width = unit2unit(panel.pageUnit, props.pageUnit, panel.width);
     }
-    // console.log(element.width);
-    // console.log(panel.pageUnit);
     mouseTips.move(ev.clientX, ev.clientY, '松开取消');
     
     if (props.pageUnit != panel.pageUnit) {
@@ -79,19 +78,25 @@ function dragStart(ev: MouseEvent) {
         
         if (element.type == 'DataTable') {
             // 转表格行
-            for (let i = 0; i < element.headList.length; i++) {
-                const column = element.headList[i];
-                column.height = unit2unit(props.pageUnit, panel.pageUnit, column.height);
-                column.width = unit2unit(props.pageUnit, panel.pageUnit, column.width);
-                if (column.columnBody) {
-                    if (column.columnBody.height) {
-                        column.columnBody.height = unit2unit(props.pageUnit, panel.pageUnit, column.columnBody.height);
+            recursionForTableCell(element.columnList, providerCell => {
+                const columnCell = providerCell;
+                if (columnCell.height == null) {
+                    columnCell.height = 7;
+                }
+                if (!columnCell.data) {
+                    columnCell.data = columnCell.label;
+                }
+                columnCell.height = unit2unit(props.pageUnit, panel.pageUnit, columnCell.height);
+                columnCell.width = unit2unit(props.pageUnit, panel.pageUnit, columnCell.width);
+                if (columnCell.columnBody) {
+                    if (columnCell.columnBody.height) {
+                        columnCell.columnBody.height = unit2unit(props.pageUnit, panel.pageUnit, columnCell.columnBody.height);
                     }
-                    if (column.columnBody.width) {
-                        column.columnBody.width = unit2unit(props.pageUnit, panel.pageUnit, column.columnBody.width);
+                    if (columnCell.columnBody.width) {
+                        columnCell.columnBody.width = unit2unit(props.pageUnit, panel.pageUnit, columnCell.columnBody.width);
                     }
                 }
-            }
+            });
         }
         
         if (element.type.startsWith('Svg') && element.data) {

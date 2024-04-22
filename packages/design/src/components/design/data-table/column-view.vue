@@ -1,41 +1,54 @@
 <template>
     <td ref="columnRef"
+        v-if="column != undefined"
         class="my-print-columnHead"
+        :colspan="column.colspan"
+        :rowspan="column.rowspan"
         :style="headStyle">
-        <my-text :element="element" />
+        <my-text :element="column" />
     </td>
 </template>
 <script setup lang="ts">
 
-import { computed, CSSProperties, ref } from 'vue'
-import { MyElement } from '@myprint/design/types/entity'
-import MyText from '@myprint/design/components/design/text'
+import { computed, CSSProperties, onMounted, ref } from 'vue';
+import { TableCellElement } from '@myprint/design/types/entity';
+import MyText from '@myprint/design/components/design/text';
 
 const props = withDefaults(defineProps<{
-    element?: MyElement
+    column?: TableCellElement
 }>(), {
-    element: () => ({} as MyElement)
-})
-const columnRef = ref()
+    column: () => (undefined! as TableCellElement)
+});
+const columnRef = ref();
+
+onMounted(() => {
+    props.column.runtimeOption.target = columnRef.value;
+});
 
 const headStyle = computed(() => {
+    // console.log(props.column);
+    // console.log(props.column);
+    if (props.column == null) {
+        return;
+    }
     const style = {
         //       nowrap="nowrap"
-        maxWidth: props.element.runtimeOption.width + 'px',
-        width: props.element.runtimeOption.width + 'px',
-        height: props.element.runtimeOption.init.height + 'px',
-        maxHeight: props.element.runtimeOption.init.height + 'px'
-    } as CSSProperties
+        maxWidth: props.column.runtimeOption.width + 'px',
+        width: props.column.runtimeOption.width + 'px',
+        height: props.column.runtimeOption.init.height + 'px',
+        maxHeight: props.column.runtimeOption.init.height + 'px'
+    } as CSSProperties;
     
-    if (props.element.option.borderAll) {
-        style['border'] = '1px solid var(--tcolor)'
+    if (props.column.option.borderAll) {
+        style['border'] = '1px solid var(--tcolor)';
     } else {
+        style['border'] = '1px solid transparent';
     }
-    if (props.element.contentType == 'QrCode' || props.element.type == 'Image') {
-        style.lineHeight = 0
+    if (props.column.contentType == 'QrCode' || props.column.type == 'Image') {
+        style.lineHeight = 0;
     }
-    return style
-})
+    return style;
+});
 
 </script>
 //outline: 1px solid black; border: 1px solid #000;

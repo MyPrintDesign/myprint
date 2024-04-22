@@ -13,7 +13,9 @@ import {
     Position,
     PreviewWrapper,
     RuntimeElementOption,
-    SvgData
+    SvgData,
+    TableCellElement,
+    TableHeadProviderCellElement
 } from '@myprint/design/types/entity';
 import {
     canMoveStatusList,
@@ -28,6 +30,13 @@ import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRa
 import { arrayRemove } from '@myprint/design/utils/arrays';
 import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
 import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import {
+    findTableHeadDeep,
+    findUpperCell,
+    handleTableCellInitHeight,
+    recursionHandleTableHead
+} from '@myprint/design/utils/table/dataTable';
+import numberUtil from '@myprint/design/utils/numberUtil';
 
 export function displayModel(displayModel?: DisplayModel) {
     if (displayModel) {
@@ -245,64 +254,89 @@ export function initElement(element: MyElement, index: number) {
                     // element.option.tableHeightType = "FIXED"
                 }
 
-                if (element.bodyList == undefined) {
-                    element.bodyList = [[]];
+                if (element.tableBodyList == undefined) {
+
 
                     let indexView = {
                         type: 'Text',
+                        field: 'autoIncrement',
+                        width: unit2unit('mm', getCurrentPanelUnit(), 10),
+                        label: '序号',
+                        height: element.columnList[0].height,
                         option: <ElementOption>{
                             disableSort: true,
                             disableEnable: false,
                             enable: true,
                             formatter: '{{autoIncrement}}'
                         }
-                    } as MyElement;
-                    indexView.field = 'autoIncrement';
-                    indexView.width = 10;
-                    indexView.label = '序号';
-                    indexView.height = element.headList[0].height;
+                    } as TableHeadProviderCellElement;
+
                     indexView.columnBody = {
                         type: 'Text',
                         height: indexView.height,
                         data: '1',
                         option: { ...indexView.option }
-                    } as MyElement;
+                    } as TableCellElement;
 
-                    element.headList.unshift(indexView);
+                    element.columnList.unshift(indexView);
 
+                    const deep = findTableHeadDeep(element.columnList, 0) + 1;
+                    // console.log(deep);
+                    const tableHeadListList: TableCellElement[][] = [...Array.from({ length: deep }, (_) => [])];
+                    recursionHandleTableHead(tableHeadListList, element.columnList, 0);
+
+                    handleTableCellInitHeight(tableHeadListList);
+                    // console.log(tableHeadListList);
+                    element.tableHeadList = tableHeadListList;
+                    element.tableBodyList = [[]];
+
+                    const floorHeaderList = tableHeadListList[deep - 1];
                     let maxHeadHeight = -1, maxBodyHeight = -1;
-                    for (let i = 0; i < element.headList.length; i++) {
-                        const column = element.headList[i];
-                        if (column.columnBody == undefined) {
-                            column.columnBody = {
-                                height: column.height,
-                                data: column.data,
+                    // let tableWidth = 0;
+
+                    for (let i = 0; i < floorHeaderList.length; i++) {
+                        let tableHeadCellElement = floorHeaderList[i];
+                        if (tableHeadCellElement == null) {
+                            tableHeadCellElement = findUpperCell(tableHeadListList, i, deep - 1)!;
+                        }
+                        if (tableHeadCellElement == null) {
+                            continue;
+                        }
+
+                        if (tableHeadCellElement.columnBody == undefined) {
+                            tableHeadCellElement.columnBody = {
+                                height: numberUtil.div(tableHeadCellElement.height, tableHeadCellElement.rowspan),
+                                data: tableHeadCellElement.data,
                                 type: 'Text',
-                                option: column.option
-                            } as MyElement;
+                                option: tableHeadCellElement.option
+                            } as TableCellElement;
                         }
-                        if (column.columnBody.type == null) {
-                            column.columnBody.type = 'Text';
+                        if (tableHeadCellElement.columnBody.type == null) {
+                            tableHeadCellElement.columnBody.type = 'Text';
                         }
-                        if (column.columnBody.data == null) {
-                            column.columnBody.data = column.data;
+                        if (tableHeadCellElement.columnBody.data == null) {
+                            tableHeadCellElement.columnBody.data = tableHeadCellElement.data;
                         }
-                        if (!column.columnBody.height) {
-                            column.columnBody.height = column.height;
+                        if (!tableHeadCellElement.columnBody.height) {
+                            tableHeadCellElement.columnBody.height = numberUtil.div(tableHeadCellElement.height, tableHeadCellElement.rowspan);
                         }
-                        column.type = 'Text';
-                        column.data = column.label;
+                        // console.log(tableHeadCellElement.columnBody.width);
+                        tableHeadCellElement.columnBody.width = tableHeadCellElement.width;
+                        tableHeadCellElement.type = 'Text';
+                        tableHeadCellElement.data = tableHeadCellElement.label;
+                        tableHeadCellElement.columnBody.rowspan = 1;
+                        tableHeadCellElement.columnBody.colspan = 1;
 
-                        element.bodyList[0].push(column.columnBody);
+                        element.tableBodyList[0].push(tableHeadCellElement.columnBody as TableCellElement);
 
-                        if (maxHeadHeight < column.height) {
-                            maxHeadHeight = column.height;
+                        if (maxHeadHeight < tableHeadCellElement.height) {
+                            maxHeadHeight = tableHeadCellElement.height;
                         }
-                        if (maxBodyHeight < column.columnBody.height) {
-                            maxBodyHeight = column.columnBody.height;
+                        if (maxBodyHeight < tableHeadCellElement.columnBody.height) {
+                            maxBodyHeight = tableHeadCellElement.columnBody.height;
                         }
 
-                        column.columnBody = undefined!;
+                        tableHeadCellElement.columnBody = undefined!;
                     }
 
                     if (element.option.tableHeightType == 'AUTO') {
@@ -370,14 +404,21 @@ export function initElement(element: MyElement, index: number) {
     }
 
     if (element.type == 'DataTable') {
-        for (let i = 0; i < element.headList.length; i++) {
-            const column = element.headList[i];
-            parentInitElement(element, column, i);
-            column.runtimeOption.workEnvironment = 'DataTable';
-            for (let j = 0; j < element.bodyList.length; j++) {
-                parentInitElement(element, element.bodyList[j][i], element.headList.length + i);
-                element.bodyList[j][i].runtimeOption.workEnvironment = 'DataTable';
+        for (let i = 0; i < element.tableHeadList.length; i++) {
+            const headList = element.tableHeadList[i];
+            for (let j = 0; j < headList.length; j++) {
+                const column = headList[j];
+                if (column) {
+                    parentInitElement(element, column, i);
+                    column.runtimeOption.workEnvironment = 'DataTable';
+                }
             }
+        }
+
+        const bodyList = element.tableBodyList[0];
+        for (let j = 0; j < bodyList.length; j++) {
+            parentInitElement(element, bodyList[j], element.tableHeadList.length);
+            bodyList[j].runtimeOption.workEnvironment = 'DataTable';
         }
     }
 
@@ -424,6 +465,7 @@ export function initElement(element: MyElement, index: number) {
     if (element.option.padding == null) {
         element.option.padding = {} as Position;
     }
+
     element.runtimeOption.init = {} as Container;
     element.runtimeOption.init.runtimeOption = {} as RuntimeElementOption;
     element.runtimeOption.width = unit2px(element.width);
@@ -431,13 +473,12 @@ export function initElement(element: MyElement, index: number) {
     element.runtimeOption.x = unit2px(element.x);
     element.runtimeOption.y = unit2px(element.y);
     element.runtimeOption.rotate = element.option.rotate;
-
     element.runtimeOption.init.x = element.runtimeOption.x;
     element.runtimeOption.init.y = element.runtimeOption.y;
     element.runtimeOption.init.width = element.runtimeOption.width;
     element.runtimeOption.init.height = element.runtimeOption.height;
     element.runtimeOption.init.runtimeOption.rotate = element.runtimeOption.rotate;
-    element.runtimeOption.translate = { x: 0, y: 0 };
+    // element.runtimeOption.translate = { x: 0, y: 0 };
     if (element.option.margin == null) {
         element.option.margin = {} as Position;
     }
@@ -976,6 +1017,23 @@ export function setElementHeightPx(height: number, element: MyElement) {
     element.height = px2unit(height);
 }
 
+export function recursionUpdateCellParentWidth(columnElement: TableCellElement, offsetX: number) {
+    columnElement.runtimeOption.width = columnElement.runtimeOption.init.width + offsetX;
+    columnElement.width = px2unit(columnElement.runtimeOption.width);
+    // console.log(columnElement.runtimeOption.cellParent);
+    if (columnElement.runtimeOption.cellParent != null) {
+        recursionUpdateCellParentWidth(columnElement.runtimeOption.cellParent, offsetX);
+    }
+}
+
+export function recursionUpdateCellParentInitWidth(columnElement: TableCellElement) {
+    columnElement.runtimeOption.init.width = columnElement.runtimeOption.width;
+
+    if (columnElement.runtimeOption.cellParent != null) {
+        recursionUpdateCellParentInitWidth(columnElement.runtimeOption.cellParent);
+    }
+}
+
 export function multipleElementGetValueList(props: string) {
     const elementList = appStore().currentElement;
     const valueList = new Set();
@@ -1049,11 +1107,16 @@ export function multipleElementSetValue(props: string, val: any) {
         setNestedPropertyValue(currentElementElement, props, val);
 
         if (currentElementElement.type == 'DataTable') {
-            for (let myElement of currentElementElement.headList) {
-                setNestedPropertyValue(myElement, props, val);
+            for (let myElement of currentElementElement.tableHeadList) {
+                for (let tableCellElement of myElement) {
+                    if (tableCellElement != null) {
+                        setNestedPropertyValue(tableCellElement, props, val);
+                    }
+
+                }
             }
             // console.log(currentElementElement.bodyList)
-            for (let bodyRowList of currentElementElement.bodyList) {
+            for (let bodyRowList of currentElementElement.tableBodyList) {
                 for (let myElement of bodyRowList) {
                     setNestedPropertyValue(myElement, props, val);
                 }

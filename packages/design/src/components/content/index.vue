@@ -7,7 +7,6 @@
             <DesignContent />
         </el-main>
     </el-container>
-    
     <my-mouse-tips />
 
 </template>
@@ -15,15 +14,16 @@
 <script setup lang="ts">
 import widget from '@myprint/design/components/content/widget/index.vue';
 import DesignContent from '@myprint/design/components/content/panel/index.vue';
-import { inject, onMounted, provide, reactive, Ref, ref, watch } from 'vue';
+import { inject, provide, reactive, Ref, ref, watch } from 'vue';
 import { Container, Panel, Provider } from '@myprint/design/types/entity';
 import { to } from '@myprint/design/utils/utils';
 import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
 import { init } from '@myprint/design/utils/historyUtil';
-import { parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
+// import { parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { Template } from '@myprint/design/types/R';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
+import { parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
 
 const appStore = useAppStoreHook();
 
@@ -99,38 +99,12 @@ watch(() => props.template.id, (n, _o) => {
         if (provider.value.pageUnit == undefined) {
             provider.value.pageUnit = 'px';
         }
-        if (provider.value.elementList) {
-            for (let elementListElement of provider.value.elementList) {
-                if (elementListElement.type == 'DataTable') {
-                    let width = 0, height = 0;
-                    // console.log(elementListElement)
-                    for (let columnListElement of elementListElement.headList) {
-                        width += columnListElement.width;
-                        height = Math.max(height, columnListElement.height);
-                    }
-                    elementListElement.width = width + 30;
-                    elementListElement.height = height * 2;
-                }
-            }
-        }
-//   templateDetail(Number(templateId))
-//       .then(res => {
-//         // const panel = reactive(<Panel>JSON.parse(res.data.content))
-//         // console.log(panel)
-//
-//         // provide(panelKey, panel)
-//
-//       })
         
         mitt.emit('updatePanel');
         mitt.emit('changePageSize');
         
     }
 }, { immediate: true });
-
-onMounted(() => {
-
-});
 
 function saveTemplate() {
     // console.log(panel)

@@ -92,6 +92,7 @@ function record(snapshot: Snapshot) {
     historyRecord.value = JSON.parse(JSON.stringify(snapshot, (key, value) => {
         if ("parent" == key) return undefined
         if ("target" == key) return undefined
+        if ("runtimeOption" == key) return undefined
         return value
     }))
     commit()

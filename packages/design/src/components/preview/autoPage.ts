@@ -7,7 +7,7 @@ import {
     Panel,
     PreviewContainerWrapper,
     PreviewWrapper,
-    RuntimeElementOption
+    RuntimeElementOption, TableCellElement
 } from '@myprint/design/types/entity';
 import {
     copyPreviewWrapper,
@@ -17,6 +17,7 @@ import {
 } from '@myprint/design/utils/elementUtil';
 import numberUtil from '@myprint/design/utils/numberUtil';
 import { elementTypeContainerList } from '@myprint/design/constants/common';
+import { lastHeadList } from '@myprint/design/utils/table/dataTable';
 
 interface PreviewContext {
     autoPageIs: boolean,
@@ -220,15 +221,15 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
             } else if (previewWrapper.type == 'DataTable') {
                 let tableRowIndex = 0;
                 // debugger
-                if (previewWrapper.tableRowIndex != undefined) {
-                    tableRowIndex = previewWrapper.tableRowIndex;
+                if (previewWrapper.previewTableRowIndex != undefined) {
+                    tableRowIndex = previewWrapper.previewTableRowIndex;
 
                     previewWrapper = copyPreviewWrapper(previewWrapper);
                     previewContext.currentPreview = previewWrapper;
                     previewElementList[i] = previewWrapper;
 
-                    previewWrapper.bodyList.length = 1;
-                    previewWrapper.tableRowIndex = undefined!;
+                    previewWrapper.tableBodyList.length = 1;
+                    previewWrapper.previewTableRowIndex = undefined!;
                 }
                 await autoTableRow(previewContext, previewDataTmp, tableRowIndex);
             } else if (previewWrapper.type == 'Container') {
@@ -325,8 +326,8 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
             return false;
         }
 
-        const bodyList = previewWrapper.bodyList[0];
-        previewWrapper.bodyList.length = 0;
+        const bodyList = previewWrapper.tableBodyList[0];
+        previewWrapper.tableBodyList.length = 0;
 
         for (let i = index; i < previewData.length; i++) {
             const datum = previewData[i];
@@ -335,15 +336,16 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
                 datum['autoIncrement'] = i + 1;
                 // console.log(i + 1)
             }
-            const rowList: MyElement[] = [];
-            for (let j = 0; j < previewWrapper.headList.length; j++) {
+            const rowList: TableCellElement[] = [];
+            const headList = lastHeadList(previewWrapper.tableHeadList);
+            for (let j = 0; j < headList.length; j++) {
                 // initElement(previewWrapper.headList[j], j)
-                const head = previewWrapper.headList[j];
+                const head = headList[j];
                 // console.log(datum)
                 bodyList[j].data = datum[head.field!];
                 rowList.push(element2PreviewWrapper(bodyList[j]));
             }
-            previewWrapper.bodyList.push(rowList);
+            previewWrapper.tableBodyList.push(rowList);
             await nextTick();
             // console.log(table.height())
 
@@ -354,11 +356,11 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
                     // debugger
                     // console.log(i)
                     if (i == index) {
-                        previewWrapper.tableRowIndex = i + 1;
+                        previewWrapper.previewTableRowIndex = i + 1;
                         previewContext.pagingRepetition = true;
                     } else {
-                        previewWrapper.bodyList.pop();
-                        previewWrapper.tableRowIndex = i;
+                        previewWrapper.tableBodyList.pop();
+                        previewWrapper.previewTableRowIndex = i;
                         previewContext.pagingRepetition = true;
                     }
                     break;
@@ -368,11 +370,11 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
             if (await isNeedNewPage(unit2px(previewWrapper.y) + table.clientHeight, unit2px(previewContext.bottom))) {
                 // 删除刚才创建的
                 // console.log(previewWrapper.runtimeOption.rowList)
-                previewWrapper.bodyList.pop();
+                previewWrapper.tableBodyList.pop();
                 previewContext.currentPreview = element2PreviewWrapper(previewWrapper);
                 previewWrapper = previewContext.currentPreview;
                 previewWrapper.runtimeOption = parse(stringify(previewWrapper.runtimeOption, 'parent'), {} as RuntimeElementOption);
-                previewWrapper.bodyList = [bodyList];
+                previewWrapper.tableBodyList = [bodyList];
                 previewWrapper.y = previewContext.top + 1;
                 await autoTableRow(previewContext, previewData, i);
                 // data.currentPage.offsetTop = await computeBottom({previewWrapper: previewWrapper} as PreviewWrapper)

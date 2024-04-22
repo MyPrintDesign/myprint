@@ -40,7 +40,7 @@ import { Container, ContentScaleVo, MyElement } from '@myprint/design/types/enti
 import { mittKey, panelKey } from '@myprint/design/constants/keys';
 import { canMoveStatusList } from '@myprint/design/constants/common';
 import { record, Snapshot } from '@myprint/design/utils/historyUtil';
-import { handle, none, removeElement, valueUnit } from '@myprint/design/utils/elementUtil';
+import { handle, none, valueUnit } from '@myprint/design/utils/elementUtil';
 import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
 import ElementList from '@myprint/design/components/design/elementList.vue';
 import { mountedKeyboardEvent, unMountedKeyboardEvent } from '@myprint/design/utils/keyboardUtil';
@@ -218,13 +218,6 @@ function scaleEvent() {
     designContentRef.value.removeChild(mmDiv)
     // scrollbarRef.value.update()
   })
-}
-
-function elementRemove(element: MyElement) {
-  // console.log(element)
-  removeElement(element)
-  
-  // record(<Snapshot>{elementList: element, action: ActionEnum.REMOVE})
 }
 
 function elementListNone() {
