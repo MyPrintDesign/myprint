@@ -197,6 +197,14 @@
   //background: green !important;
 }
 
+.my-table-statistics-row-remove {
+  width: 20px;
+  height: 20px;
+  right: -30px;
+  position: absolute;
+  z-index: 999999;
+}
+
 .image-crop-dialog {
   user-select: none;
 }

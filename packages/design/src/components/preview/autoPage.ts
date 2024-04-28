@@ -7,7 +7,8 @@ import {
     Panel,
     PreviewContainerWrapper,
     PreviewWrapper,
-    RuntimeElementOption, TableCellElement
+    RuntimeElementOption,
+    TableCellElement
 } from '@myprint/design/types/entity';
 import {
     copyPreviewWrapper,
@@ -17,7 +18,12 @@ import {
 } from '@myprint/design/utils/elementUtil';
 import numberUtil from '@myprint/design/utils/numberUtil';
 import { elementTypeContainerList } from '@myprint/design/constants/common';
-import { lastHeadList } from '@myprint/design/utils/table/dataTable';
+import {
+    lastHeadList,
+    previewRowStatisticsList,
+    previewTableStatisticsList,
+    statisticsData
+} from '@myprint/design/utils/table/dataTable';
 
 interface PreviewContext {
     autoPageIs: boolean,
@@ -53,7 +59,6 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         bottom: getCurrentPanel().height, // 单位 mm
         pagingRepetition: true
     } as PreviewContext;
-
     // 处理elementWrapper
     for (let myElement of previewContext.panel.elementList) {
         handleElement(myElement);
@@ -221,16 +226,16 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
             } else if (previewWrapper.type == 'DataTable') {
                 let tableRowIndex = 0;
                 // debugger
-                if (previewWrapper.previewTableRowIndex != undefined) {
-                    tableRowIndex = previewWrapper.previewTableRowIndex;
-
-                    previewWrapper = copyPreviewWrapper(previewWrapper);
-                    previewContext.currentPreview = previewWrapper;
-                    previewElementList[i] = previewWrapper;
-
-                    previewWrapper.tableBodyList.length = 1;
-                    previewWrapper.previewTableRowIndex = undefined!;
-                }
+                // if (previewWrapper.previewTableRowIndex != undefined) {
+                //     tableRowIndex = previewWrapper.previewTableRowIndex;
+                //
+                //     previewWrapper = copyPreviewWrapper(previewWrapper);
+                //     previewContext.currentPreview = previewWrapper;
+                //     previewElementList[i] = previewWrapper;
+                //
+                //     previewWrapper.tableBodyList.length = 1;
+                //     previewWrapper.previewTableRowIndex = undefined!;
+                // }
                 await autoTableRow(previewContext, previewDataTmp, tableRowIndex);
             } else if (previewWrapper.type == 'Container') {
                 previewContext.currentPage.elementList.push(previewWrapper);
@@ -310,7 +315,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         return false;
     }
 
-    async function autoTableRow(previewContext: PreviewContext, previewData: Array<any>, index: number) {
+    async function autoTableRow(previewContext: PreviewContext, previewDataList: Array<any>, index: number) {
         let previewWrapper = previewContext.currentPreview;
         // console.log(previewWrapper.option.tableHeightType)
         if (previewWrapper.option.tableHeightType == 'AUTO') {
@@ -318,70 +323,116 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         }
 
         previewContext.currentPage.elementList.push(previewWrapper);
-        // let previewWrapper = previewWrapper
         await nextTick();
         const table = previewWrapper.target;
         // console.log(table)
         if (!table) {
             return false;
         }
-
+        const tableHeadList = [...previewWrapper.tableHeadList];
+        const headList = lastHeadList(tableHeadList);
         const bodyList = previewWrapper.tableBodyList[0];
+        if (previewWrapper.statisticsList == null) {
+            previewWrapper.statisticsList = [];
+        }
+        const tableStatisticsList = [...previewWrapper.statisticsList];
+        const tableStatisticsSize = tableStatisticsList.length;
+        let statisticsListWrapper: Record<number, any[]> = {};
+        let tableStaticsListWrapper: Record<number, any[]> = {};
+        if (previewWrapper.tableHeadHiddenIs) {
+            previewWrapper.tableHeadList.length = 0;
+            for (let j = 0; j < bodyList.length; j++) {
+                bodyList[j].runtimeOption.width = headList[j].runtimeOption.width;
+            }
+        }
         previewWrapper.tableBodyList.length = 0;
-
-        for (let i = index; i < previewData.length; i++) {
-            const datum = previewData[i];
-            // console.log(previewData, i, datum)
-            if (!datum['autoIncrement']) {
-                datum['autoIncrement'] = i + 1;
-                // console.log(i + 1)
-            }
+        previewWrapper.statisticsList.length = 0;
+        if (index < previewDataList.length) {
+            previewTableStatisticsList(tableStatisticsList, previewWrapper.statisticsList, statisticsListWrapper, headList);
+        }
+        const previewDataTmpList: any[] = [];
+        let i = index;
+        for (; i < previewDataList.length + tableStatisticsSize; i++) {
             const rowList: TableCellElement[] = [];
-            const headList = lastHeadList(previewWrapper.tableHeadList);
-            for (let j = 0; j < headList.length; j++) {
-                // initElement(previewWrapper.headList[j], j)
-                const head = headList[j];
-                // console.log(datum)
-                bodyList[j].data = datum[head.field!];
-                rowList.push(element2PreviewWrapper(bodyList[j]));
+            if (i < previewDataList.length) {
+                const previewData = previewDataList[i];
+                previewDataTmpList.push(previewData);
+                // 序号
+                if (!previewData['autoIncrement']) {
+                    previewData['autoIncrement'] = i + 1;
+                }
+                for (let j = 0; j < headList.length; j++) {
+                    const head = headList[j];
+                    bodyList[j].data = previewData[head.field!];
+                    rowList.push(element2PreviewWrapper(bodyList[j]));
+                }
+
+                previewWrapper.tableBodyList.push(rowList);
+            } else {
+                // debugger
+                // 计算
+                const tableStatisticsIndex = i - previewDataList.length;
+                const rowList = [...tableStatisticsList[tableStatisticsIndex]];
+                let hasCell = previewRowStatisticsList(rowList, tableStaticsListWrapper, headList, 'tableStatisticsIs');
+                if (hasCell) {
+                    previewWrapper.statisticsList.push(rowList);
+                }
             }
-            previewWrapper.tableBodyList.push(rowList);
+
             await nextTick();
             // console.log(table.height())
 
             if (previewWrapper.option.tableHeightType == 'FIXED') {
                 // 固定高度
-                // debugger
                 if (table.childNodes[1].clientHeight > unit2px(previewWrapper.height)) {
-                    // debugger
-                    // console.log(i)
                     if (i == index) {
                         previewWrapper.previewTableRowIndex = i + 1;
                         previewContext.pagingRepetition = true;
                     } else {
                         previewWrapper.tableBodyList.pop();
+                        previewDataTmpList.pop();
                         previewWrapper.previewTableRowIndex = i;
                         previewContext.pagingRepetition = true;
                     }
+                    statisticsData(previewDataTmpList, statisticsListWrapper);
+                    if (i >= previewDataList.length) {
+                        statisticsData(previewDataList, tableStaticsListWrapper);
+                    }
+                    previewDataTmpList.pop();
                     break;
                 }
             }
 
             if (await isNeedNewPage(unit2px(previewWrapper.y) + table.clientHeight, unit2px(previewContext.bottom))) {
                 // 删除刚才创建的
-                // console.log(previewWrapper.runtimeOption.rowList)
                 previewWrapper.tableBodyList.pop();
+                previewDataTmpList.pop();
+                // 统计
+                statisticsData(previewDataTmpList, statisticsListWrapper);
+                // if (i >= previewDataList.length) {
+                //     statisticsData(previewDataList, tableStaticsListWrapper);
+                // }
                 previewContext.currentPreview = element2PreviewWrapper(previewWrapper);
                 previewWrapper = previewContext.currentPreview;
+                if (!previewWrapper.tablePageHeadIs) {
+                    previewWrapper.tableHeadHiddenIs = true;
+                }
+                previewWrapper.tableHeadList = [...tableHeadList];
+                previewWrapper.statisticsList = [...tableStatisticsList];
                 previewWrapper.runtimeOption = parse(stringify(previewWrapper.runtimeOption, 'parent'), {} as RuntimeElementOption);
                 previewWrapper.tableBodyList = [bodyList];
                 previewWrapper.y = previewContext.top + 1;
-                await autoTableRow(previewContext, previewData, i);
+                await autoTableRow(previewContext, previewDataList, i);
                 // data.currentPage.offsetTop = await computeBottom({previewWrapper: previewWrapper} as PreviewWrapper)
                 break;
             }
         }
 
+        if (i >= previewDataList.length) {
+            // console.log('sss', previewDataTmpList, statisticsListWrapper);
+            statisticsData(previewDataTmpList, statisticsListWrapper);
+        }
+        statisticsData(previewDataList, tableStaticsListWrapper);
     }
 
     /**

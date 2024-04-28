@@ -25,7 +25,7 @@
         height: (data.highlightColumn.height + 3)+'px',
            }"
         />
-
+        
         <template v-for="(rowList, row) in data.controlPointList">
             <div class="my-table-control-head-point iconfont icon-sigedian" v-for="(item, col) in rowList"
                  :style="{left: item.x + 'px', top: (item.y - 10) + 'px'}"
@@ -34,13 +34,20 @@
             </div>
         </template>
         
-        <div class="my-table-control-head-col-point iconfont icon-sigedian"
-             v-for="(item, index) in data.rowControlPointList"
-             :class="{'my-table-control-head-point-active': data.row == index && data.status != 'RESIZE'}"
-             :style="{top: item.y + 'px'}"
-             @mousedown="rowControlPointMouseDown($event, index)">
-            <div style="color: black">{{ data.row }}</div>
-        </div>
+        <!--        <div class="my-table-control-head-col-point iconfont icon-sigedian"-->
+        <!--             v-for="(item, index) in data.rowControlPointList"-->
+        <!--             :class="{'my-table-control-head-point-active': data.row == index && data.status != 'RESIZE'}"-->
+        <!--             :style="{top: item.y + 'px'}"-->
+        <!--             @mousedown="rowControlPointMouseDown($event, index)">-->
+        <!--            <div style="color: black">{{ data.row }}</div>-->
+        <!--        </div>-->
+        
+        <div class="my-table-statistics-row-remove user-select-none"
+             v-for="(item, index) in data.rowRemovePointList"
+             @click="removeStatisticsRow(item)"
+             :key="index"
+             style="background: white !important"
+             :style="{top: (item.y-1)+'px'}" />
     </template>
 
 </template>
@@ -62,10 +69,12 @@ import {
     setElementWidthPx
 } from '@myprint/design/utils/elementUtil';
 import {
-    computedCellRect,
-    computedTableCell, getChildByParent,
-    getTableCell, getTableCellDown,
-    lastHeadList
+    computedTableCell,
+    getChildByParent,
+    getTableCell,
+    getTableCellDown,
+    lastHeadList,
+    selectCell
 } from '@myprint/design/utils/table/dataTable';
 
 type MyRow = Record<number, number[]>
@@ -79,6 +88,7 @@ const data = reactive({
     status: 'NONE',
     td: undefined,
     row: -1,
+    logicRow: -1,
     col: -1,
     handleIng: false,
     controlPointMouseDownIs: false,
@@ -105,16 +115,23 @@ const data = reactive({
     controlPointList: [] as any[][],
     resizeControlList: [] as any[],
     rowControlPointList: [] as any[],
+    rowRemovePointList: [] as any[],
     rowResizeControlList: [] as any[]
 });
 const tableRef = ref();
 const useApp = useAppStoreHook();
+
 const bodyList = computed(() => {
-    const bodyList = [...props.element.tableHeadList, ...props.element.tableBodyList];
-    data.tableRowHeightList = computedTableCell(bodyList);
-    data.lastHeadList = lastHeadList(props.element.tableHeadList);
-    computeColumn();
+    const bodyList = [...props.element.tableHeadList, ...props.element.tableBodyList, ...props.element.statisticsList];
+    nextTick(() => {
+        data.tableRowHeightList = computedTableCell(tableRef.value.$el, bodyList);
+        data.lastHeadList = lastHeadList(props.element.tableHeadList);
+        computeColumn();
+        computeColumnHeight();
+    });
+    
     console.log('computed-bodyList');
+    // console.log(props.element.statisticsList);
     return bodyList;
 });
 let resizeObserver: ResizeObserver;
@@ -135,20 +152,22 @@ onMounted(() => {
     });
     resizeObserver.observe(tableRef.value.$el);
     
-    tableRef.value.$el.parentNode.addEventListener('mouseover', function(event: any) {
+    tableRef.value.$el.parentNode.addEventListener('mouseover', function(event: MouseEvent) {
         if (data.handleIng) {
             return;
         }
-        const target = event.target;
+        const target = event.target!;
+        // @ts-ignore
         const cell = target.closest('td');
         if (cell == undefined) {
             return;
         }
-        const rowIndex = cell.parentNode.rowIndex;
-        // console.log('123213', cell.cellIndex, rowIndex)
         data.td = cell;
-        data.row = rowIndex;
+        data.row = cell.parentNode.rowIndex;
+        // console.log(event.offsetY);
+        // data.logicRow = cell.parentNode.rowIndex;
         data.col = cell.cellIndex;
+        
         // console.log(rowIndex, cell.cellIndex);
         data.tableMouseEnterIs = true;
     });
@@ -166,8 +185,7 @@ onMounted(() => {
         data.row = -1;
         data.col = -1;
     });
-    
-    computeColumnHeight();
+    bodyList.value;
 });
 
 onUnmounted(() => {
@@ -256,37 +274,28 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
         
         let clientEndX = evUp.clientX;
         let clientEndY = evUp.clientY;
-        // console.log(bodyList.value[1]);
-        let bodyElement: MyElement = bodyList.value[data.row][0];
         data.handleIng = false;
         
         if (clientStartX == clientEndX && clientEndY == clientStartY) {
             // 选取整列
-            
-            // data.highlightColumn.rowList = {};
-            // data.highlightColumn.width = columnCell.runtimeOption.width;
-            // data.highlightColumn.x = columnCell.runtimeOption.x;
-            // data.highlightColumn.rowList[0] = [data.col];
-            // data.highlightColumn.rowList[1] = [data.col];
-            // data.highlightColumn.y = 0;
-            // data.highlightColumn.height = columnCell.runtimeOption.height + bodyElement.runtimeOption.height;
-            setCurrentElement([columnCell, bodyElement]);
-            
-            data.highlightColumn.visibility = 'visible';
+            console.log(data.row, data.col);
+            const { cellList } = getTableCellDown(bodyList.value, data.row, data.col);
+            data.cellList = cellList;
+            selectCell(data.highlightColumn, data.cellList);
         } else {
             if (targetIndex != undefined) {
-                console.log(col, targetIndex);
+                // console.log(col, targetIndex);
                 if (targetIndex > col) {
                     targetIndex--;
                 }
-                console.log(col, targetIndex);
+                // console.log(col, targetIndex);
                 sortColumn(props.element, colIndex, row, col, targetIndex);
                 // if (data.highlightColumn.rowList[data.row] == data.col) {
                 //     data.highlightColumn.col = targetIndex;
                 // }
                 
-                computedTableCell(bodyList.value);
-                computeColumn()
+                computedTableCell(props.element.runtimeOption.target, bodyList.value);
+                computeColumn();
                 // const rect = computedCellRect(data.cellList);
                 // data.highlightColumn.x = rect.x;
                 // data.highlightColumn.y = rect.y;
@@ -294,7 +303,7 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
                 // data.highlightColumn.height = rect.height;
                 
                 data.highlightColumn.visibility = 'hidden';
-                data.highlightColumn.rowList = {};
+                // data.highlightColumn.rowList = {};
             }
         }
         
@@ -390,13 +399,14 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
             computeColumn();
         }
         // 计算辅助位置
-        if (data.highlightColumn.visibility = 'visible') {
-            computedTableCell(bodyList.value);
-            const rect = computedCellRect(data.cellList);
-            data.highlightColumn.x = rect.x;
-            data.highlightColumn.y = rect.y;
-            data.highlightColumn.width = rect.width;
-            data.highlightColumn.height = rect.height;
+        if (data.highlightColumn.visibility == 'visible') {
+            computedTableCell(props.element.runtimeOption.target, bodyList.value);
+            selectCell(data.highlightColumn, data.cellList);
+            // const rect = computedCellRect(props.element.runtimeOption.target, data.cellList);
+            // data.highlightColumn.x = rect.x;
+            // data.highlightColumn.y = rect.y;
+            // data.highlightColumn.width = rect.width;
+            // data.highlightColumn.height = rect.height;
         }
     }
     
@@ -421,31 +431,39 @@ function tableMouseDown(ev: MouseEvent) {
     data.cellList = getTableCell(bodyList.value, data.row, data.col);
     // 选取范围
     // console.log(cellList);
-    const rect = computedCellRect(data.cellList);
+    // const rect = computedCellRect(props.element.runtimeOption.target, data.cellList);
     // console.log(rect);
     
     let clientStartX = ev.clientX, clientStartY = ev.clientY;
-    
     
     function tableMouseUp(ev: MouseEvent) {
         let clientEndX = ev.clientX, clientEndY = ev.clientY;
         
         if (clientEndX == clientStartX && clientEndY == clientStartY) {
             // click
-            data.highlightColumn.x = rect.x;
-            data.highlightColumn.y = rect.y;
-            data.highlightColumn.width = rect.width;
-            data.highlightColumn.height = rect.height;
-            data.highlightColumn.rowList = {};
-            data.highlightColumn.rowList[data.row] = [data.col];
-            data.highlightColumn.visibility = 'visible';
-            setCurrentElement(data.cellList);
+            selectCell(data.highlightColumn, data.cellList);
+            // data.highlightColumn.x = rect.x;
+            // data.highlightColumn.y = rect.y;
+            // data.highlightColumn.width = rect.width;
+            // data.highlightColumn.height = rect.height;
+            // data.highlightColumn.rowList = {};
+            // data.highlightColumn.rowList[data.row] = [data.col];
+            // data.highlightColumn.visibility = 'visible';
+            // setCurrentElement(data.cellList);
         }
         
         document.removeEventListener('mouseup', tableMouseUp);
     }
     
     document.addEventListener('mouseup', tableMouseUp);
+}
+
+function removeStatisticsRow(item: any) {
+    console.log('删除');
+    console.log(bodyList.value.length);
+    props.element.statisticsList.splice(item.row, 1);
+    // console.log(bodyList.value.length);
+    bodyList.value;
 }
 
 watch(() => props.element.option.tableHeightType, (n, _o) => {
@@ -465,7 +483,7 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
     } else {
         tableRef.value.$el.removeEventListener('mousedown', tableMouseDown);
         data.highlightColumn.visibility = 'hidden';
-        data.highlightColumn.rowList = {};
+        // data.highlightColumn.rowList = {};
         setCurrentElement(defaultElement);
     }
 });
@@ -503,12 +521,19 @@ const computeColumnHeight = _.throttle(() => {
     // console.log('---')
     data.rowControlPointList.length = 0;
     data.rowResizeControlList.length = 0;
+    data.rowRemovePointList.length = 0;
     let height = 0;
     
     for (let i = 0; i < bodyList.value.length; i++) {
         const rowList = bodyList.value[i];
         // console.log(rowList);
-        const firstColumn = rowList[0];
+        let firstColumn = rowList[0];
+        for (let rowListElement of rowList) {
+            if (rowListElement != null && rowListElement.rowspan == 1) {
+                firstColumn = rowListElement;
+                break;
+            }
+        }
         if (firstColumn == null) {
             continue;
         }
@@ -520,6 +545,16 @@ const computeColumnHeight = _.throttle(() => {
             y: firstColumn.runtimeOption.y + firstColumn.runtimeOption.height / 2 - 10
         });
     }
+    
+    for (let i = 0; i < props.element.statisticsList.length; i++) {
+        let firstColumn = props.element.statisticsList[i][0];
+        data.rowRemovePointList.push({
+            row: i,
+            y: firstColumn.runtimeOption.y + firstColumn.runtimeOption.height / 2 - 10
+        });
+    }
+    
+    console.log(data.rowRemovePointList);
     
     // console.log(props.element.bodyList);
     // console.log(data.rowControlPointList);

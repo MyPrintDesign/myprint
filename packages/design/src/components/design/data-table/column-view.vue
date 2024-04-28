@@ -42,7 +42,7 @@ const headStyle = computed(() => {
     if (props.column.option.borderAll) {
         style['border'] = '1px solid var(--tcolor)';
     } else {
-        style['border'] = '1px solid transparent';
+        // style['border'] = '1px solid transparent';
     }
     if (props.column.contentType == 'QrCode' || props.column.type == 'Image') {
         style.lineHeight = 0;

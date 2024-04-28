@@ -49,7 +49,7 @@ export const customProvider = {
                     }
                     , childList: [
                         {
-                            'field': 'username',
+                            'field': 'nickname',
                             'type': 'Text',
                             'label': '姓名',
                             'data': '张三',
@@ -67,7 +67,7 @@ export const customProvider = {
                             }
                         },
                         {
-                            'field': 'username',
+                            'field': 'userAttr',
                             'type': 'Text',
                             'label': '用户属性',
                             'width': 14.25,
@@ -78,7 +78,7 @@ export const customProvider = {
                                 'disableSort': false
                             }
                             , childList: [{
-                                'field': 'username',
+                                'field': 'height',
                                 'type': 'Text',
                                 'label': '身高',
                                 'data': '175',
@@ -95,7 +95,7 @@ export const customProvider = {
                                     }
                                 }
                             }, {
-                                'field': 'username',
+                                'field': 'weight',
                                 'type': 'Text',
                                 'label': '体重',
                                 'data': '45KG',
@@ -112,7 +112,7 @@ export const customProvider = {
                                     }
                                 }
                             }, {
-                                'field': 'username',
+                                'field': 'age',
                                 'type': 'Text',
                                 'label': '年龄',
                                 'data': '18',

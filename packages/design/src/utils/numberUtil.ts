@@ -133,6 +133,9 @@ const MathCalc = {
 
     limitMin(val: number, min: number) {
         return val < min ? min : val;
+    },
+    isNumber(value: any) {
+        return !isNaN(value);
     }
 };
 export default MathCalc;

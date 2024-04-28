@@ -4,7 +4,7 @@ import {
     DownList,
     ElementOption, elementStatus,
     elementType,
-    RuntimeElementOption, displayStrategyFormat
+    RuntimeElementOption, displayStrategyFormat, statisticsTypeFormat
 } from '@myprint/design/types/entity';
 import { PropType, reactive } from 'vue';
 import { i18n } from '@myprint/design/locales';
@@ -284,6 +284,14 @@ export const displayStrategyList: any[] = Object.keys(displayStrategyFormat).map
         value: key
     };
 });
+
+export const statisticsTypeList: any[] = Object.keys(statisticsTypeFormat).map(key => {
+    return {
+        label: statisticsTypeFormat[key],
+        value: key
+    };
+});
+
 
 export const pageUnitList = [
     'px', 'mm', 'cm'

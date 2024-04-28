@@ -1,11 +1,16 @@
 // 找到层的深度
 import {
+    MyElement,
     Rect,
     RuntimeElementOption,
     TableCellElement,
-    TableHeadProviderCellElement
+    TableHeadProviderCellElement,
+    TableStatisticsCellElement
 } from '@myprint/design/types/entity';
 import numberUtil from '@myprint/design/utils/numberUtil';
+import { parse, stringify } from '@myprint/design/utils/utils';
+import { reactive } from 'vue';
+import { installParentElement, setCurrentElement } from '@myprint/design/utils/elementUtil';
 
 
 export function recursionForTableCell(tableHeadList: TableHeadProviderCellElement[], callback: (providerCell: TableHeadProviderCellElement) => void) {
@@ -30,6 +35,7 @@ export function findTableHeadDeep(tableHeadList: TableHeadProviderCellElement[],
 // 根据位置获取对应的cell，级下面所有行
 export function getTableCellDown(tableHeadList: TableCellElement[][], row: number, col: number) {
     const rowCellList: TableCellElement[][] = [];
+    const cellList: TableCellElement[] = [];
     let rowStart = 0;
     let colIndex = -1;
     let baseCell: TableCellElement = undefined!;
@@ -59,19 +65,21 @@ export function getTableCellDown(tableHeadList: TableCellElement[][], row: numbe
     if (colIndex >= 0) {
         for (let i = row; i < tableHeadList.length; i++) {
             const rowList = tableHeadList[i];
-            const cellList: TableCellElement[] = [];
+            const cellListTmp: TableCellElement[] = [];
             for (let j = 0; j < baseCell.colspan; j++) {
-                if (rowList[colIndex + j])
+                if (rowList[colIndex + j]) {
+                    cellListTmp.push(rowList[colIndex + j]);
                     cellList.push(rowList[colIndex + j]);
+                }
             }
-            rowCellList.push(cellList);
+            rowCellList.push(cellListTmp);
 
         }
 
     }
 
     // console.log(rowCellList);
-    return { rowCellList, colIndex };
+    return { cellList, rowCellList, colIndex };
 }
 
 // 根据位置获取对应的cell
@@ -147,7 +155,10 @@ export function getChildByParent(tableHeadList: TableCellElement[][], row: numbe
         if (baseCell.runtimeOption.cellParent == null) {
             childByParentList.push(cell);
         } else {
-            if (cell.runtimeOption.cellParent.id == baseCell.runtimeOption.cellParent.id) {
+            if (cell.runtimeOption.cellParent == null) {
+                console.log(cell);
+            }
+            if (cell.runtimeOption.cellParent!.id == baseCell.runtimeOption.cellParent.id) {
                 childByParentList.push(cell);
             }
         }
@@ -155,6 +166,17 @@ export function getChildByParent(tableHeadList: TableCellElement[][], row: numbe
     return childByParentList;
 }
 
+export function selectCell(highlightColumn: any, cellList: TableCellElement[]) {
+    const rect = computedCellRect(cellList);
+    highlightColumn.x = rect.x;
+    highlightColumn.y = rect.y;
+    highlightColumn.width = rect.width;
+    highlightColumn.height = rect.height;
+    // data.highlightColumn.rowList = {};
+    // data.highlightColumn.rowList[data.row] = [data.col];
+    highlightColumn.visibility = 'visible';
+    setCurrentElement(cellList);
+}
 
 export function computedCellRect(cellList: TableCellElement[]) {
     const rect = {
@@ -174,15 +196,19 @@ export function computedCellRect(cellList: TableCellElement[]) {
         if (rect.y > cell.runtimeOption.y) {
             rect.y = cell.runtimeOption.y;
         }
+        const width = cell.runtimeOption.x - rect.x + cell.runtimeOption.width;
+        const height = cell.runtimeOption.y - rect.y + cell.runtimeOption.height;
 
-        if (rect.width < cell.width) {
-            rect.width = cell.width;
+        if (rect.width < width) {
+            rect.width = width;
         }
 
-        if (rect.height < cell.height) {
-            rect.height = cell.height;
+        if (rect.height < height) {
+            rect.height = height;
         }
     }
+    rect.y = rect.y - 1;
+    rect.height = rect.height - 1;
 
     return rect;
 }
@@ -199,6 +225,7 @@ export function findUpperCell(floorHeaderList: TableCellElement[][], col: number
 export function findFromLeftCell(floorHeaderList: TableCellElement[][], row: number, col: number, deep: number) {
     // debugger
     const rowList = floorHeaderList[row];
+    // debugger
     if (deep > 0) {
         // 往后找
         for (let i = col + 1; i < rowList.length; i++) {
@@ -208,7 +235,9 @@ export function findFromLeftCell(floorHeaderList: TableCellElement[][], row: num
                     // debugger
                     return { cell: rowList[i], col: i };
                 }
-                i = i + cell.colspan;
+                if (cell.colspan > 1) {
+                    i = i + cell.colspan - 1;
+                }
             }
         }
     }
@@ -240,24 +269,33 @@ export function lastHeadList(tableHeadListList: TableCellElement[][]) {
     return lastHeadList;
 }
 
-export function computedTableCell(tableHeadListList: TableCellElement[][]) {
+export function computedTableCell(target: HTMLElement, tableHeadListList: TableCellElement[][]) {
+    const tableRect = target.getBoundingClientRect() as DOMRect;
+
     const rowHeightList: number[] = [];
-    let y = 0;
+    // let y = 0;
     for (let row = 0; row < tableHeadListList.length; row++) {
         let height = 0;
-        let x = 0;
+        // let x = 0;
         const tableHeadListListElement = tableHeadListList[row];
         for (let col = 0; col < tableHeadListListElement.length; col++) {
             const tableCellElement = tableHeadListListElement[col];
             if (tableCellElement == null) {
 
-                const tableCellElementTmp = findUpperCell(tableHeadListList, col, row)!;
-                if (tableCellElementTmp == null) {
-                    continue;
-                }
-                x = x + tableCellElementTmp.runtimeOption.width;
+                // const tableCellElementTmp = findUpperCell(tableHeadListList, col, row)!;
+                // if (tableCellElementTmp == null) {
+                //     continue;
+                // }
+                // x = x + tableCellElementTmp.runtimeOption.width;
                 continue;
             }
+
+            const target = tableCellElement.runtimeOption.target as HTMLElement;
+            const tdRect = target.getBoundingClientRect();
+
+            const tdY = tdRect.y - tableRect.y;
+            const tdX = tdRect.x - tableRect.x;
+
 
             if (tableCellElement.colspan > 1) {
                 if (row + 1 < tableHeadListList.length) {
@@ -265,25 +303,28 @@ export function computedTableCell(tableHeadListList: TableCellElement[][]) {
                     for (let childCol = col; childCol < childList.length; childCol++) {
                         const child = childList[childCol];
                         if (child == null) {
-                            break;
+                            continue;
                         }
                         if (child.runtimeOption == null) {
                             child.runtimeOption = {} as RuntimeElementOption;
                         }
+                        // console.log(child);
                         child.runtimeOption.cellParent = tableCellElement;
                     }
                 }
             }
 
-            tableCellElement.runtimeOption.y = y;
-            tableCellElement.runtimeOption.x = x;
+            tableCellElement.runtimeOption.x = tdX;
+            tableCellElement.runtimeOption.y = tdY;
+            tableCellElement.runtimeOption.width = tdRect.width;
+            tableCellElement.runtimeOption.height = tdRect.height;
 
             height = numberUtil.div(tableCellElement.runtimeOption.height, tableCellElement.rowspan);
 
-            x = x + tableCellElement.runtimeOption.width;
+            // x = x + tableCellElement.runtimeOption.width;
         }
 
-        y = y + height;
+        // y = y + height;
         rowHeightList.push(height);
     }
 
@@ -347,5 +388,132 @@ export function recursionHandleTableHead(tableHeadListList: TableCellElement[][]
             }
         }
 
+    }
+}
+
+export function addStatisticsRow(tableElement: MyElement) {
+    const statisticsRowList: TableStatisticsCellElement[] = [];
+    tableElement.tableBodyList[0].map((v) => {
+        const element = parse(stringify(v, 'parent', 'target', 'elementList'), reactive({}) as TableStatisticsCellElement);
+        element.id = undefined!;
+        element.data = undefined!;
+        element.option.formatter = undefined!;
+        element.runtimeOption.cellType = 'Statistics';
+        installParentElement(tableElement, element);
+        statisticsRowList.push(element);
+    });
+    tableElement.statisticsList.push(statisticsRowList);
+}
+
+// preview
+export function previewTableStatisticsList(tableStatisticsTmpList: TableStatisticsCellElement[][], tableStatisticsList: TableStatisticsCellElement[][],
+                                           statisticsListWrapper: Record<number, any[]>,
+                                           headList: TableCellElement[]) {
+
+    for (let i = 0; i < tableStatisticsTmpList.length; i++) {
+        const rowList = [...tableStatisticsTmpList[i]];
+        let hasCell = previewRowStatisticsList(rowList, statisticsListWrapper, headList, 'everyPageStatisticsIs');
+        if (hasCell) {
+            tableStatisticsList.push(rowList);
+        }
+    }
+}
+
+export function previewRowStatisticsList(rowList: TableStatisticsCellElement[], statisticsList: Record<number, any[]>, headList: TableCellElement[], statisticsDisplayType: string) {
+    let hasCell = false;
+    for (let col = 0; col < rowList.length; col++) {
+        const head = rowList[col];
+        if (head == null || !head[statisticsDisplayType]) {
+            continue;
+        }
+        const statisticsCell = parse(stringify(head, 'parent'), reactive({}) as TableStatisticsCellElement);
+        // console.log(statisticsCell);
+        statisticsCell.runtimeOption.parent = head.runtimeOption.parent;
+        rowList[col] = statisticsCell;
+
+        hasCell = true;
+        let statisticsWrapper = statisticsList[col];
+        if (statisticsWrapper == undefined) {
+            statisticsWrapper = [];
+            statisticsList[col] = statisticsWrapper;
+        }
+        const column = headList[col];
+        const cellWrapper = {
+            head: column,
+            value: 0,
+            count: 0,
+            setCount: {},
+            cell: statisticsCell
+        };
+        if (statisticsCell.statisticsType == 'Min') {
+            cellWrapper.value = Number.MAX_VALUE;
+        }
+        if (statisticsCell.statisticsType == 'Max') {
+            cellWrapper.value = Number.MIN_VALUE;
+        }
+        statisticsWrapper.push(cellWrapper);
+    }
+
+    return hasCell;
+}
+
+export function statisticsData(previewDataList: any[], statisticsListWrapper: Record<number, any[]>) {
+    // console.log(previewDataList, statisticsListWrapper);
+    // const rowList = previewDataList[0];
+    const colList = Object.keys(statisticsListWrapper);
+
+    if (colList.length == 0) {
+        return;
+    }
+
+    for (let previewData of previewDataList) {
+        for (let col of colList) {
+            const statisticsWrapperList = statisticsListWrapper[col];
+            for (let statisticsWrapper of statisticsWrapperList) {
+                const cell = statisticsWrapper.cell as TableStatisticsCellElement;
+                const head = statisticsWrapper.head as TableCellElement;
+                const data = previewData[head.field];
+                // console.log(col, cell, head, previewData[head.field]);
+
+                if (numberUtil.isNumber(data)) {
+                    if (cell.statisticsType == 'Sum' || cell.statisticsType == 'Avg') {
+                        statisticsWrapper.value = statisticsWrapper.value + data;
+
+                        if (cell.statisticsType == 'Avg') {
+                            statisticsWrapper.count++;
+                        }
+                    } else if (cell.statisticsType == 'Max') {
+                        if (statisticsWrapper.value < data) {
+                            statisticsWrapper.value = data;
+                        }
+                    } else if (cell.statisticsType == 'Min') {
+                        if (statisticsWrapper.value > data) {
+                            statisticsWrapper.value = data;
+                        }
+                    }
+                }
+                if (cell.statisticsType == 'Count') {
+                    statisticsWrapper.count++;
+                }
+                if (cell.statisticsType == 'DistinctCount') {
+                    statisticsWrapper.setCount[data] = null;
+                }
+            }
+        }
+    }
+
+    for (let col of colList) {
+        for (let statisticsWrapper of statisticsListWrapper[col]) {
+            const cell = statisticsWrapper.cell as TableStatisticsCellElement;
+            if (cell.statisticsType == 'Sum' || cell.statisticsType == 'Max' || cell.statisticsType == 'Min') {
+                cell.data = statisticsWrapper.value;
+            } else if (cell.statisticsType == 'Avg') {
+                cell.data = numberUtil.div(statisticsWrapper.value, statisticsWrapper.count);
+            } else if (cell.statisticsType == 'Count') {
+                cell.data = statisticsWrapper.count;
+            } else if (cell.statisticsType == 'DistinctCount') {
+                cell.data = Object.keys(statisticsWrapper.setCount).length;
+            }
+        }
     }
 }

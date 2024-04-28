@@ -17,7 +17,7 @@
                  class="history-list-item">
                 <history-line-text :content="item.snapshot.action" />
             </div>
-            <div
+            <history-line-text
                 v-for="(item, index) in history"
                 :class="[{'currentHistory': index == 0, 'history-list-item': index != 0}]"
                 :key="item.timestamp"
@@ -28,16 +28,12 @@
 
 <script setup lang="ts">
 
-import { redoStack, undoPanel, redoPanel,
-    // @ts-ignore
-    history,
-    canRedo, canUndo } from '@myprint/design/utils/historyUtil';
+import { redoStack, undoPanel, redoPanel, history, canRedo, canUndo } from '@myprint/design/utils/historyUtil';
 import { handlePanelElementList } from '@myprint/design/constants/settingPanel';
 import MyCollapse from '@myprint/design/components/my/collapse/my-collapse.vue';
 import { useConfigStore } from '@myprint/design/stores/config';
 import HistoryLineText from '@myprint/design/components/content/handle-panel/history-line-text.vue';
 
-// console.log(history);
 const configStore = useConfigStore();
 
 </script>

@@ -411,14 +411,30 @@ export function initElement(element: MyElement, index: number) {
                 if (column) {
                     parentInitElement(element, column, i);
                     column.runtimeOption.workEnvironment = 'DataTable';
+                    column.runtimeOption.cellType = 'Head';
                 }
             }
         }
 
-        const bodyList = element.tableBodyList[0];
-        for (let j = 0; j < bodyList.length; j++) {
-            parentInitElement(element, bodyList[j], element.tableHeadList.length);
-            bodyList[j].runtimeOption.workEnvironment = 'DataTable';
+        for (let i = 0; i < element.tableBodyList.length; i++) {
+            const bodyList = element.tableBodyList[i];
+            for (let j = 0; j < bodyList.length; j++) {
+                parentInitElement(element, bodyList[j], element.tableHeadList.length);
+                bodyList[j].runtimeOption.workEnvironment = 'DataTable';
+                bodyList[j].runtimeOption.cellType = 'Body';
+            }
+        }
+
+        if (!element.statisticsList) {
+            element.statisticsList = [];
+        }
+        for (let i = 0; i < element.statisticsList.length; i++) {
+            const statisticsList = element.statisticsList[i];
+            for (let j = 0; j < statisticsList.length; j++) {
+                parentInitElement(element, statisticsList[j], element.tableHeadList.length);
+                statisticsList[j].runtimeOption.workEnvironment = 'DataTable';
+                statisticsList[j].runtimeOption.cellType = 'Statistics';
+            }
         }
     }
 
@@ -609,6 +625,7 @@ export function element2PreviewWrapper(element: MyElement): PreviewWrapper {
     const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList'), reactive({}) as PreviewWrapper);
     previewWrapper.id = crypto.randomUUID();
     previewWrapper.heightIs = true;
+    previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
 
     if (element.elementList != null && element.elementList.length > 0) {
         // const pList: PreviewWrapper[] = []
@@ -617,6 +634,45 @@ export function element2PreviewWrapper(element: MyElement): PreviewWrapper {
             previewWrapper.previewWrapperList.push(element2PreviewWrapper(myElement));
         }
     }
+    if (element.tableHeadList != null && element.tableHeadList.length > 0) {
+        // const pList: PreviewWrapper[] = []
+        for (let i = 0; i < element.tableHeadList.length; i++) {
+            const rowList = element.tableHeadList[i];
+            for (let j = 0; j < rowList.length; j++) {
+                if (rowList[j] == null) {
+                    continue;
+                }
+                previewWrapper.tableHeadList[i][j].runtimeOption.parent = rowList[j].runtimeOption.parent;
+            }
+        }
+    }
+
+    if (element.tableBodyList != null && element.tableBodyList.length > 0) {
+        // const pList: PreviewWrapper[] = []
+        for (let i = 0; i < element.tableBodyList.length; i++) {
+            const rowList = element.tableBodyList[i];
+            for (let j = 0; j < rowList.length; j++) {
+                if (rowList[j] == null) {
+                    continue;
+                }
+                previewWrapper.tableBodyList[i][j].runtimeOption.parent = rowList[j].runtimeOption.parent;
+            }
+        }
+    }
+
+    if (element.statisticsList != null && element.statisticsList.length > 0) {
+        // const pList: PreviewWrapper[] = []
+        for (let i = 0; i < element.statisticsList.length; i++) {
+            const rowList = element.statisticsList[i];
+            for (let j = 0; j < rowList.length; j++) {
+                if (rowList[j] == null) {
+                    continue;
+                }
+                previewWrapper.statisticsList[i][j].runtimeOption.parent = rowList[j].runtimeOption.parent;
+            }
+        }
+    }
+
     return previewWrapper;
 }
 
@@ -624,7 +680,8 @@ export function copyPreviewWrapper(element: PreviewWrapper): PreviewWrapper {
     const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList'), reactive({}) as PreviewWrapper);
     previewWrapper.id = crypto.randomUUID();
     previewWrapper.heightIs = true;
-
+    // console.log(element.runtimeOption.parent);
+    previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
     if (element.previewWrapperList != null && element.previewWrapperList.length > 0) {
         // const pList: PreviewWrapper[] = []
         previewWrapper.previewWrapperList = [];
@@ -789,8 +846,18 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
             cssStyle.boxSizing = 'border-box';
         }
     } else {
-        cssStyle.height = element.runtimeOption.init.height + 'px';
-        cssStyle.maxHeight = element.runtimeOption.init.height + 'px';
+        let extHeight = 0;
+        if (element.runtimeOption.parent == null) {
+            console.log(element);
+        }
+        if ((element.runtimeOption.parent as MyElement).option.borderAll) {
+            // 加上边框高度
+            if ((element as TableCellElement).rowspan > 1) {
+                extHeight = (element as TableCellElement).rowspan - 1;
+            }
+        }
+        cssStyle.height = (element.runtimeOption.init.height + extHeight) + 'px';
+        cssStyle.maxHeight = (element.runtimeOption.init.height + extHeight) + 'px';
         cssStyle.overflow = 'hidden';
     }
 
@@ -841,7 +908,7 @@ export function isPageFooter(element: Container) {
 
 export function formatter(element: MyElement, variable: FormatterVariable = {} as FormatterVariable): string {
     if (element.option.formatter) {
-        let contentData = '';
+        let contentData: any;
         if (element.type == 'TextTime') {
             const variableNames = extractVariableNames(element.option.formatter);
             if (variableNames == null || variableNames.length == 0) {
@@ -863,7 +930,7 @@ export function formatter(element: MyElement, variable: FormatterVariable = {} a
 }
 
 export function extractVariableNames(template: string): string[] {
-    const regex = /\{\{(.+?)\}\}/g;
+    const regex = /\{\{(.+?)}}/g;
     const matches = template.match(regex);
     if (!matches) {
         return [];
@@ -873,7 +940,7 @@ export function extractVariableNames(template: string): string[] {
 }
 
 function parseVariables(str: string): { name: string, defaultValue: string }[] {
-    const regex = /\{\{(.*?)\}\}/g; // 匹配 {{ 及其内部内容 }}
+    const regex = /\{\{(.*?)}}/g; // 匹配 {{ 及其内部内容 }}
     const matches = str.match(regex); // 匹配结果数组
 
     if (!matches) {
@@ -1117,6 +1184,11 @@ export function multipleElementSetValue(props: string, val: any) {
             }
             // console.log(currentElementElement.bodyList)
             for (let bodyRowList of currentElementElement.tableBodyList) {
+                for (let myElement of bodyRowList) {
+                    setNestedPropertyValue(myElement, props, val);
+                }
+            }
+            for (let bodyRowList of currentElementElement.statisticsList) {
                 for (let myElement of bodyRowList) {
                     setNestedPropertyValue(myElement, props, val);
                 }

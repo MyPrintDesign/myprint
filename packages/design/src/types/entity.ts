@@ -86,6 +86,7 @@ export interface Panel extends Container {
 export interface PreviewWrapper extends MyElement, TableCellElement, PreviewContainerWrapper {
     offsetLastElementTop: number;
     heightIs: boolean;
+    tableHeadHiddenIs: boolean;
     previewTableRowIndex: number;
     target: any;
     previewWrapperList: PreviewWrapper[];
@@ -146,16 +147,28 @@ export const displayStrategyFormat = {
 
 export type displayStrategy = keyof typeof displayStrategyFormat
 
-export const tableTrTypeFormat = {
-    Head: '',
-    Body: ''
+export const cellTypeFormat = {
+    Head: '表头',
+    Body: '表体',
+    Statistics: '统计行'
+};
+//统计类型
+export const statisticsTypeFormat = {
+    Sum: '求和',
+    Avg: '平均值',
+    Count: '计数',
+    DistinctCount: '去重计数',
+    Max: '最大值',
+    Min: '最小值',
+    CustomFormula: '自定义公式'
 };
 
 export type DisplayModel = 'design' | 'preview'
 export type PageUnit = 'px' | 'mm' | 'cm' | 'in'
 
 export type elementType = keyof typeof elementTypeFormat
-export type tableTrType = keyof typeof tableTrTypeFormat
+export type cellType = keyof typeof cellTypeFormat
+export type statisticsType = keyof typeof statisticsTypeFormat
 
 type textContentType =
     'Text'
@@ -184,7 +197,7 @@ export interface DataTableRow {
 
 export interface MyElement extends Container {
     contentType?: textContentType;
-    field?: string;
+    field: string;
     enable?: number;
     label?: string;
     data?: any;
@@ -201,6 +214,8 @@ export interface MyElement extends Container {
     // 统计行
     statisticsList: TableStatisticsCellElement[][];
     /* data-table - end*/
+
+    tablePageHeadIs: boolean;
 
     /* custom-table - start*/
     rowList: TableCellElement[][];
@@ -222,12 +237,10 @@ export interface MyElement extends Container {
     groupIs?: boolean;
 }
 
-export interface TableHeadProviderCellElement {
-    type?: elementType;
+export interface TableHeadProviderCellElement extends Rect {
+    type: elementType;
     contentType?: textContentType;
     field?: string;
-    width: number;
-    height: number;
     enable?: number;
     label?: string;
     data?: any;
@@ -248,7 +261,12 @@ export interface TableCellElement extends MyElement {
 }
 
 export interface TableStatisticsCellElement extends TableCellElement {
+    statisticsType: statisticsType;
+    everyPageStatisticsIs: boolean;
+    tableStatisticsIs: boolean;
 
+    // 预留值
+    customFormula: string;
 }
 
 export interface TextElement extends MyElement {
@@ -279,7 +297,7 @@ export interface RuntimeElementOption extends Position {
      * 工作环境，如果是在表格中，填充满整个cell
      */
     workEnvironment: elementType;
-    tableTrType: tableTrType;
+    cellType: cellType;
 
     // 是否拖拽进入
     dragInIs: boolean;
@@ -328,6 +346,9 @@ export interface ElementOption {
     displayStrategy?: displayStrategy;
 
     tableHeightType: 'FIXED' | 'AUTO';
+
+    tableBodyBgStyleType: 'NONE' | 'COMMON' | 'CUSTOM';
+
 }
 
 export interface ElementSvgOption {

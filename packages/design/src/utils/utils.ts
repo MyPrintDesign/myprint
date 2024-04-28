@@ -21,7 +21,7 @@ export function sortColumn(myElement: MyElement, baseColIndex: number, row: numb
     // const source = myElement.tableHeadList[sourceIndex];
     // 删除原来的
     // console.log(myElement.tableHeadList[row]);
-    // console.log(row, col, diffCol);
+    console.log(row, col, diffCol);
     const baseCell = myElement.tableHeadList[row][col];
     const { cell: targetCell, col: targetCol } = findFromLeftCell(myElement.tableHeadList, row, baseColIndex, diffCol)!;
     // console.log(targetCell, targetCol);
@@ -62,10 +62,11 @@ function changeTableList(list: any[][], row: number, col: number, targetCol: num
         cacheSourceCellList.push(cacheSourceCellListTmp);
     }
     // 新位置插入
+    // debugger
     for (let i = row; i < list.length; i++) {
         const rowList = list[i];
         for (let j = 0; j < colspan; j++) {
-            const skipColSpan = targetCol < col ? 0 : (targetColspan - 1);
+            const skipColSpan = targetCol > col ? (targetColspan - 1) - (colspan - 1) : 0;
             rowList.splice(targetCol + skipColSpan + j, 0, cacheSourceCellList[i - row][j]);
         }
     }
@@ -261,8 +262,8 @@ export function printCssStyle() {
                 cssRuleList = cssRuleList + cssRule.cssText;
             }
         }
-        return printCssStyleCache = cssRuleList;
     }
+    return printCssStyleCache = cssRuleList;
 }
 
 export function download(blob: Blob, fileName: string) {

@@ -2,10 +2,11 @@
     <table class="my-print-table"
            ref="tableRef">
         <tbody>
-        <tr class="border-box" :key="index" v-for="(columnList, index) in props.element.tableHeadList">
-            <template v-for="(column, index) in columnList"
-                      :key="index">
+        <tr class="border-box" :key="'t-'+headRowIndex"
+            v-for="(columnList, headRowIndex) in props.element.tableHeadList">
+            <template v-for="(column) in columnList">
                 <column-view
+                    :key="'h'+column.id"
                     v-if="column != null"
                     :column="column"
                 />
@@ -13,8 +14,18 @@
         
         </tr>
         <tr class="border-box" :key="rowIndex" v-for="(bodyRowList, rowIndex) in props.element.tableBodyList">
-            <td class="my-print-table-column_body" v-for="(body, colIndex) in bodyRowList"
-                :key="rowIndex + '-' + colIndex"
+            <td class="my-print-table-column_body" v-for="(body) in bodyRowList"
+                :key="'b' + rowIndex + '-' + body.id"
+                :ref="(el)=>setItemRef(body, el)"
+                :style="bodyStyle(body)">
+                <TextView v-if="body.type === 'Text'" :element="body" />
+                <!--        <ImageView v-if="column.type === 'Image'" :element="convert(column, rowData, indexTr)"/>-->
+            </td>
+        </tr>
+        
+        <tr class="border-box" :key="rowIndex" v-for="(bodyRowList, rowIndex) in props.element.statisticsList">
+            <td class="my-print-table-column_body" v-for="(body) in bodyRowList"
+                :key="'s'+rowIndex + '-' + body.id"
                 :ref="(el)=>setItemRef(body, el)"
                 :style="bodyStyle(body)">
                 <TextView v-if="body.type === 'Text'" :element="body" />
@@ -42,8 +53,11 @@ const props = withDefaults(defineProps<{
 // console.log(props.element)
 // defineExpose({ computedWidth });
 const itemRefs: HTMLElement[] = [];
-const setItemRef = (element: MyElement, el) => {
-    // console.log(el);
+const setItemRef = (element: MyElement, el: any) => {
+    if (el == null) {
+        return;
+    }
+    // console.log(element, el);
     element.runtimeOption.target = el;
     itemRefs.push(el);
 };
@@ -52,7 +66,7 @@ const bodyStyle = (column: MyElement) => {
     // console.log(column)
     const style = {
         // maxWidth: column.runtimeOption.width + 'px',
-        // width: column.runtimeOption.width + 'px',
+        width: column.runtimeOption.width + 'px',
         // height: column.runtimeOption.init.height + 'px',
         // maxHeight: column.runtimeOption.init.height + 'px'
     } as CSSProperties;
@@ -60,7 +74,7 @@ const bodyStyle = (column: MyElement) => {
         // console.log(column.option.borderAll)
         style['border'] = '1px solid var(--tcolor)';
     } else {
-        style['border'] = '1px solid transparent';
+        // style['border'] = '1px solid transparent';
     }
     if (column.contentType == 'QrCode' || column.type == 'Image') {
         style.lineHeight = 0;
