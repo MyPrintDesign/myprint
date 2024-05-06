@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { DisplayModel, PageUnit, Panel } from '@myprint/design/types/entity';
+import { DisplayModel, MyAuxiliaryLine, PageUnit, Panel } from '@myprint/design/types/entity';
 import { defaultElement } from '@myprint/design/constants/common';
 import i18n from '../locales';
 
@@ -20,6 +20,7 @@ export const useAppStoreHook = defineStore('app', {
             currentPanel: {} as Panel,
             lastPageUnit: 'px' as PageUnit,
             currentElement: defaultElement,
+            auxiliaryLineTmp: {} as MyAuxiliaryLine,
             dataRotation: -1 as number | 'rotate' | 'move' | 'none' | 'col-resize' | 'ns-resize'
         };
     },

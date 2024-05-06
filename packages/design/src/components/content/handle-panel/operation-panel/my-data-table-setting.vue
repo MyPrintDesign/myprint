@@ -62,13 +62,6 @@
             属性
         </el-divider>
         
-        <!--    errorCorrectionLevel-->
-        <!--      <el-form-item label="换行策略" prop="region">-->
-        <!--      <my-history-select v-model="form.region" placeholder="Activity zone">-->
-        <!--        <el-option label="Zone one" value="shanghai"/>-->
-        <!--      </my-history-select>-->
-        <!--      </el-form-item>-->
-        
         <el-form-item label="行高">
             <el-radio-group v-model="table.option.tableBodyHeightType" size="small">
                 <el-radio-button label="AUTO" value="AUTO">自动</el-radio-button>
@@ -139,20 +132,11 @@ import { addStatisticsRow } from '@myprint/design/utils/table/dataTable';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 
 const mitt = inject(mittKey)!;
-// const data = reactive({
-//   currentBarCodeEg: null
-// })
 const appStore = useAppStoreHook();
 
 const table = appStore.currentElement[0];
 
-function rotatedPoint(rotate) {
-    console.log(rotate);
-    // freshMoveableOption(appStore.currentElement)
-}
-
 function changeTableBodyHeight(val: number) {
-    // console.log(val);
     multipleElementSetValue('option.tableBodyHeight', val);
     for (let tableBodyListElement of table.tableBodyList) {
         for (let tableBodyListElementElement of tableBodyListElement) {
@@ -169,9 +153,7 @@ function changeLock() {
 }
 
 function change(_val: any) {
-    // record()
     mitt.emit('panelSnapshot', { action: ActionEnum.UPDATE_STYLE, elementList: appStore.currentElement } as Snapshot);
-    // console.log('change', val)
 }
 
 function handleAddStatisticsRow() {

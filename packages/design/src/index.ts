@@ -1,13 +1,13 @@
 import MyText from './components/design/text';
 import MyImage from './components/design/image';
-import MyDottedHorizontalLine from './components/design/auxiliary/line/dottedHorizontalLine';
-import MyDottedVerticalLine from './components/design/auxiliary/line/dottedVerticalLine';
-import MyHorizontalLine from './components/design/auxiliary/line/horizontalLine';
-import MyVerticalLine from './components/design/auxiliary/line/verticalLine';
-import MyPanel from './components/content';
+import MyDottedHorizontalLine from '@myprint/design/components/design/shape/line/dottedHorizontalLine';
+import MyDottedVerticalLine from '@myprint/design/components/design/shape/line/dottedVerticalLine';
+import MyHorizontalLine from '@myprint/design/components/design/shape/line/horizontalLine';
+import MyVerticalLine from '@myprint/design/components/design/shape/line/verticalLine';
+import DesignContent from './components/content';
 
 
-export * from './components/design/auxiliary';
+export * from './components/design/shape';
 
 import { install as createPrint } from './install';
 
@@ -18,7 +18,7 @@ export {
     MyDottedVerticalLine,
     MyHorizontalLine,
     MyVerticalLine,
-    MyPanel
+    DesignContent
 };
 
 export { createPrint };

@@ -12,7 +12,6 @@
                               size="small"
                               historyLabel="模版名称"
                               style="margin-right: 20px" />
-            <!--        <div contenteditable="true">33333</div>-->
         </el-form-item>
         
         <el-form-item label="单位" prop="region">

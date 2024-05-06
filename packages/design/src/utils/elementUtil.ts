@@ -94,10 +94,11 @@ export function height(element: MyElement) {
     return element.height;
 }
 
-export function clearPanel(panel?: Panel) {
-    panel!.pageHeader = undefined;
-    panel!.pageFooter = undefined;
-    panel!.elementList = [];
+export function clearPanel(panel: Panel) {
+    panel.pageHeader = undefined;
+    panel.pageFooter = undefined;
+    panel.elementList = [];
+    panel.auxiliaryLineList = [];
 }
 
 export function none(element?: MyElement) {
@@ -112,58 +113,9 @@ export function none(element?: MyElement) {
     }
 }
 
-// export function selectAllElement() {
-//     selectElementList(getCurrentPanel().elementList);
-// }
-
-
-// export function select(element?: Container) {
-//     element!.runtimeOption.status = 'SELECT';
-// }
-//
-// export function selectRemove(element: Container) {
-//     element.runtimeOption.status = 'SELECT_REMOVE';
-// }
-
 export function handle(element: Container) {
     element.runtimeOption.status = 'HANDLE';
 }
-
-// export function computedHandles(element: Container): Array<handleConstantsType> | undefined {
-//     if (element.type == 'PageHeader') {
-//         return ['bm'];
-//     }
-//     if (element.type == 'PageFooter') {
-//         return ['tm'];
-//     }
-//     if (element.type == 'DataTable') {
-//         return ['lm', 'rm'];
-//     }
-//     return undefined;
-// }
-
-// export function computeDrag(element: Container): boolean {
-//     if (element.type == 'PageHeader') {
-//         return false;
-//     }
-//     if (element.type == 'PageFooter') {
-//         return false;
-//     }
-//     return true;
-// }
-
-// export function computeTranslate(_element: MyElement) {
-//     // complete 更改位置
-//     // if (_element.translateX != null) {
-//     //     _element.x = numberUtil.sum(_element.x, _element.translateX)
-//     //     _element.translateX = undefined
-//     // }
-//     //
-//     // if (_element.translateY != null) {
-//     //     _element.y = numberUtil.sum(_element.y, _element.translateY)
-//     //     _element.translateY = undefined
-//     // }
-// }
 
 export function recursionForElement(container: Panel, callback: (element: MyElement) => void) {
     recursionElement(container, callback);
@@ -186,29 +138,6 @@ export function innerElementIs(point: Point, element: MyElement, parentElement: 
             && elementTypeContainerList.includes(parentElement.type))) && point.x >= parentElement.runtimeOption.x && point.x <= parentElement.runtimeOption.x + parentElement.runtimeOption.width
         && point.y >= parentElement.runtimeOption.y && point.y <= parentElement.runtimeOption.y + parentElement.runtimeOption.height;
 }
-
-// export function disableHandleList(element: MyElement) {
-//     switch (element.type) {
-//         case 'Text':
-//             // console.log(element.contentType)
-//             if (element.contentType == 'QrCode') {
-//                 return ['tm', 'bm', 'lm', 'rm'];
-//             }
-//             break;
-//         case 'Image':
-//             return ['tm', 'bm', 'lm', 'rm'];
-//         case 'DataTable':
-//             return ['tl', 'tm', 'tr', 'bl', 'bm', 'br'];
-//         case 'HorizontalLine':
-//         case 'DottedHorizontalLine':
-//             return ['tl', 'tm', 'tr', 'bl', 'bm', 'br'];
-//         case 'VerticalLine':
-//         case 'DottedVerticalLine':
-//             return ['tl', 'lm', 'tr', 'bl', 'rm', 'br'];
-//     }
-//
-//     return null;
-// }
 
 export function parentInitElement(parent: Container, element: MyElement, index: number) {
     initElement(element, index);
@@ -527,11 +456,8 @@ export function groupListToMap(groupList: string[][]) {
 }
 
 export function elementUngroup(htmlElementList: Array<MyHtmlElement>) {
-    // console.log(htmlElementList)
     const panel = getCurrentPanel();
     const idList = flatIdList(htmlElementList);
-    // console.log(idList)
-    // console.log(panel.groupList)
     const index = findGroup(idList);
 
     for (let htmlElementListElement of htmlElementList) {

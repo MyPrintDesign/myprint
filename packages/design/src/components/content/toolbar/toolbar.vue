@@ -54,7 +54,7 @@ function save() {
 }
 
 function clearPanelClick() {
-    clearPanel(panel)
+    clearPanel(panel!)
     updatePanel()
     record(<Snapshot>{
         action: ActionEnum.CLEAR

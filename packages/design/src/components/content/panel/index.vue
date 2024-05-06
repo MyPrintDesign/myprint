@@ -1,10 +1,5 @@
 <template>
-<!--
-
--->
-    <div class="design-panel-container"
-         v-show="useAppStoreHook().displayModel == 'design'"
-    >
+    <div class="design-panel-container" v-show="useAppStoreHook().displayModel == 'design'">
         <Toolbar />
         <div class="display-flex design-panel-container-height">
             <my-panel />

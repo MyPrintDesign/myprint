@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import MyText from './text'
 import MyImage from "./image";
-import {MyDottedHorizontalLine, MyDottedVerticalLine, MyHorizontalLine, MyVerticalLine, MyRect} from "./auxiliary";
+import {MyDottedHorizontalLine, MyDottedVerticalLine, MyHorizontalLine, MyVerticalLine, MyRect} from "./shape";
 
 import {MyElement} from "@myprint/design/types/entity";
 import SvgPolygonLine from "@myprint/design/components/design/svg/svg-polygon-line.vue";

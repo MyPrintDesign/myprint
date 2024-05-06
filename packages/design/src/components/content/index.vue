@@ -4,22 +4,20 @@
             <widget :module="data.template.module" />
         </el-aside>
         <el-main>
-            <DesignContent />
+            <PanelView />
         </el-main>
     </el-container>
     <my-mouse-tips />
-
 </template>
 
 <script setup lang="ts">
 import widget from '@myprint/design/components/content/widget/index.vue';
-import DesignContent from '@myprint/design/components/content/panel/index.vue';
+import PanelView from '@myprint/design/components/content/panel/index.vue';
 import { inject, provide, reactive, Ref, ref, watch } from 'vue';
 import { Container, Panel, Provider } from '@myprint/design/types/entity';
 import { to } from '@myprint/design/utils/utils';
 import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
 import { init } from '@myprint/design/utils/historyUtil';
-// import { parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { Template } from '@myprint/design/types/R';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
@@ -54,8 +52,6 @@ const data = reactive({
     template: {} as Template
 });
 
-// let template: Template
-
 watch(() => props.template.id, (n, _o) => {
     if (n != null) {
         data.template = props.template;
@@ -69,6 +65,9 @@ watch(() => props.template.id, (n, _o) => {
         if (!panel.groupList) {
             panel.groupList = [];
         }
+        if (!panel.auxiliaryLineList) {
+            panel.auxiliaryLineList = [];
+        }
         panel.runtimeOption = {} as any;
         
         // console.log(JSON.parse(JSON.stringify(panel.elementList[0])))
@@ -80,13 +79,7 @@ watch(() => props.template.id, (n, _o) => {
         // }
         for (let i = 0; i < panel.elementList.length; i++) {
             const element = panel.elementList[i];
-            // console.log(element)
             parentInitElement(panel as Container, element, i);
-            // if (element.type == 'Table') {
-            //   for (let i = 0; i < element.columnList.length; i++) {
-            //     initElement(element.columnList[i], i)
-            //   }
-            // }
         }
         panel.pageHeader && parentInitElement(panel, panel.pageHeader, 0);
         panel.pageFooter && parentInitElement(panel, panel.pageFooter, 0);
@@ -94,8 +87,6 @@ watch(() => props.template.id, (n, _o) => {
         init();
         
         provider.value = JSON.parse(data.template.module.provider!);
-        // console.log(provider.value.elementList)
-        // console.log(provider.value.pageUnit);
         if (provider.value.pageUnit == undefined) {
             provider.value.pageUnit = 'px';
         }

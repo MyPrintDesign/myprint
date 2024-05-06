@@ -21,6 +21,10 @@ export interface ElementRelation {
     elementList: MyElement[];
 }
 
+export interface Id {
+    id: string;
+}
+
 export interface Point {
     x: number;
     y: number;
@@ -46,14 +50,16 @@ export interface PointClick extends Point {
     clickTimestamp: number;
 }
 
+export interface MyAuxiliaryLine extends Point, Id {
+    direction: 'vertical' | 'horizontal';
+}
+
 export interface Line {
     start: Point;
     end: Point;
 }
 
-export interface Container extends Rect, ElementRelation {
-    id: string;
-    // status: string;
+export interface Container extends Rect, ElementRelation, Id {
     minWidth: number;
     minHeight: number;
     type: elementType;
@@ -80,6 +86,8 @@ export interface Panel extends Container {
     pageHeader?: MyElement;
     pageFooter?: MyElement;
     groupList: string[][];
+    // 辅助线列表
+    auxiliaryLineList: MyAuxiliaryLine[];
 }
 
 

@@ -280,5 +280,96 @@
       font-weight: 600;
     }
   }
+}
+
+%design-auxiliary-line {
+  position: absolute;
+  will-change: transform;
+  left: 0;
+  top: 0;
+
+  &:hover .design-auxiliary-line-remove {
+    visibility: visible;
+  }
+
+  .design-auxiliary-line-remove {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+    width: 15px;
+    height: 15px;
+    font-size: 15px;
+    line-height: 15px;
+    visibility: hidden;
+
+    &:hover {
+      visibility: visible;
+    }
+  }
+}
+
+@mixin mixin-design-auxiliary-line($direction) {
+  position: absolute;
+  @if $direction == vertical {
+    left: -4px;
+    top: 25px;
+    width: 7px;
+    height: 30px;
+  } @else {
+    left: 25px;
+    top: -4px;
+    width: 30px;
+    height: 7px;
+  }
+
+  &:before {
+    border-radius: 10px;
+    position: absolute;
+    content: ' ';
+    background: gold !important;
+
+    @if $direction == vertical {
+      left: 2px;
+      top: 0;
+      width: 3px;
+      height: 100%;
+    } @else {
+      top: 2px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+    }
+  }
+}
+
+.design-auxiliary-line-v {
+  @extend %design-auxiliary-line;
+  border-left: 1px black dashed;
+  height: 100%;
+
+  .design-auxiliary-line-control {
+    @include mixin-design-auxiliary-line(vertical)
+  }
+
+  .design-auxiliary-line-remove {
+    left: -8px;
+    top: 10px;
+  }
+}
+
+.design-auxiliary-line-h {
+  @extend %design-auxiliary-line;
+  border-top: 1px black dashed;
+  width: 100%;
+
+  .design-auxiliary-line-control {
+    @include mixin-design-auxiliary-line(horizontal)
+  }
+
+  .design-auxiliary-line-remove {
+    left: 10px;
+    top: -8px;
+  }
 
 }

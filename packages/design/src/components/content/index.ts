@@ -1,3 +1,3 @@
-import MyPanel from './index.vue'
+import DesignContent from './index.vue'
 
-export default MyPanel
+export default DesignContent

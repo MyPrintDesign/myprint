@@ -42,7 +42,7 @@ import ElementView from '@myprint/design/components/design/element.vue';
 import { MyElement } from '@myprint/design/types/entity';
 import { computed, CSSProperties, onMounted, ref } from 'vue';
 import { MyContainer } from './container';
-import ElementList from './elementList.vue';
+import ElementList from './element-list.vue';
 import {
     elementHandleHandleStatusList,
     elementHandleStatusList,

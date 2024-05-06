@@ -1,9 +1,9 @@
 <template>
-    <my-panel :template="data.template" @saveTemplate="saveTemplate" />
+    <design-content :template="data.template" @saveTemplate="saveTemplate" />
     <!--  <my-text :element="text"/>-->
 </template>
 <script setup lang="ts">
-import { MyPanel } from '@myprint/design/index';
+import { DesignContent } from '@myprint/design/index';
 import { templateDetail, templateUpdate } from '@/api/template';
 import { onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';

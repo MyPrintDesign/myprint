@@ -109,15 +109,6 @@
                 </my-group>
             </el-form-item>
             
-            <!--    <el-form-item label="宽高比例" v-if="getElementSetting(multipleElementGetValue('type')).includes('contentType')">-->
-            <!--      <group-input>-->
-            <!--        <my-history-input-number placeholder="例:1.25" class="width-60"-->
-            <!--                                 :model-value="multipleElementGetValue('option.aspectRatio')"-->
-            <!--                                 @update:model-value="(val:any)=>multipleElementSetValue('option.aspectRatio', val)"-->
-            <!--                                 historyLabel="宽高比例"/>-->
-            <!--      </group-input>-->
-            <!--    </el-form-item>-->
-            
             <el-form-item label="不透明度"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
                 <el-slider class="width-120"
@@ -129,7 +120,6 @@
                 <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
             </el-form-item>
             <el-form-item label="旋转角度" v-if="getElementSetting(multipleElementGetValue('type')).includes('rotate')">
-                <!--      <el-slider v-model="value1"/>-->
                 <el-slider class="width-120"
                            :model-value="multipleElementGetValue('option.rotate')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.rotate', val)"

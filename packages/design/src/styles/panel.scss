@@ -30,6 +30,7 @@
     background: #eef0f5;
 
     .design-content_inner {
+      overflow: hidden;
       height: calc(100% - 20px);
 
       .design-content-scroll {
