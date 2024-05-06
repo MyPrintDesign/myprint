@@ -215,8 +215,6 @@ export interface MyElement extends Container {
     statisticsList: TableStatisticsCellElement[][];
     /* data-table - end*/
 
-    tablePageHeadIs: boolean;
-
     /* custom-table - start*/
     rowList: TableCellElement[][];
     /* custom-table - end*/
@@ -329,7 +327,8 @@ export interface ElementOption {
     // textType: string;
     textAlign: textAlign;
     verticalAlign: textAlign;
-    lineBreak: boolean;
+    // 换行
+    lineBreak: number;
     lineHeight: number;
     dottedStyle: 'dotted' | 'dashed';
     sort: number;
@@ -349,6 +348,10 @@ export interface ElementOption {
 
     tableBodyBgStyleType: 'NONE' | 'COMMON' | 'CUSTOM';
 
+    tablePageHeadIs: boolean;
+
+    tableBodyHeightType: 'FIXED' | 'AUTO';
+    tableBodyHeight: number;
 }
 
 export interface ElementSvgOption {

@@ -701,6 +701,23 @@ export function installPanelParentElement(panel: Panel) {
 export function installListParentElement(parent: Container, elementList?: Array<MyElement>) {
     for (let element of elementList!) {
         installParentElement(parent, element);
+        if (element.type == 'DataTable') {
+            for (let tableHeadListElement of element.tableHeadList) {
+                for (let tableCellElement of tableHeadListElement) {
+                    installParentElement(element, tableCellElement);
+                }
+            }
+            for (let tableHeadListElement of element.tableBodyList) {
+                for (let tableCellElement of tableHeadListElement) {
+                    installParentElement(element, tableCellElement);
+                }
+            }
+            for (let tableHeadListElement of element.statisticsList) {
+                for (let tableCellElement of tableHeadListElement) {
+                    installParentElement(element, tableCellElement);
+                }
+            }
+        }
         if (element.elementList != null) {
             installListParentElement(element, element.elementList);
         }
@@ -836,29 +853,37 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
         cssStyle.justifyContent = option.textAlign;
     }
 
+    if (option.lineBreak == 0) {
+        cssStyle.whiteSpace = 'nowrap';
+    }
+
     if (option.verticalAlign) {
         cssStyle.alignItems = option.verticalAlign;
     }
 
-    if (element.runtimeOption.workEnvironment != 'DataTable') {
-        if (option.borderAll) {
-            cssStyle.border = '1px solid var(--tcolor)';
-            cssStyle.boxSizing = 'border-box';
-        }
-    } else {
+    if (element.runtimeOption.workEnvironment == 'DataTable') {
         let extHeight = 0;
-        if (element.runtimeOption.parent == null) {
+        const parent = (element.runtimeOption.parent as MyElement);
+        if (parent == null) {
             console.log(element);
         }
-        if ((element.runtimeOption.parent as MyElement).option.borderAll) {
+        if (parent.option.borderAll) {
             // 加上边框高度
             if ((element as TableCellElement).rowspan > 1) {
                 extHeight = (element as TableCellElement).rowspan - 1;
             }
         }
-        cssStyle.height = (element.runtimeOption.init.height + extHeight) + 'px';
-        cssStyle.maxHeight = (element.runtimeOption.init.height + extHeight) + 'px';
-        cssStyle.overflow = 'hidden';
+        if (parent.option.tableBodyHeightType == 'FIXED') {
+            cssStyle.height = (element.runtimeOption.init.height + extHeight) + 'px';
+            cssStyle.maxHeight = (element.runtimeOption.init.height + extHeight) + 'px';
+            cssStyle.overflow = 'hidden';
+        }
+        cssStyle.maxWidth = (element.runtimeOption.init.width - 1) + 'px';
+    } else {
+        if (option.borderAll) {
+            cssStyle.border = '1px solid var(--tcolor)';
+            cssStyle.boxSizing = 'border-box';
+        }
     }
 
     // console.log(option.padding)

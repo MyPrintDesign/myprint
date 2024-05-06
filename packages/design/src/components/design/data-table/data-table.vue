@@ -43,6 +43,7 @@ import ColumnView from './column-view.vue';
 import TextView from '../text/text.vue';
 import { CSSProperties, onMounted, watch } from 'vue';
 import { MyElement } from '@myprint/design/types/entity';
+import { useAppStoreHook } from '@myprint/design/stores/app';
 
 const props = withDefaults(defineProps<{
     element: MyElement
@@ -66,10 +67,15 @@ const bodyStyle = (column: MyElement) => {
     // console.log(column)
     const style = {
         // maxWidth: column.runtimeOption.width + 'px',
-        width: column.runtimeOption.width + 'px',
+        // width: column.runtimeOption.width + 'px',
         // height: column.runtimeOption.init.height + 'px',
         // maxHeight: column.runtimeOption.init.height + 'px'
     } as CSSProperties;
+    
+    if (useAppStoreHook().displayModel == 'preview') {
+        style.width = column.runtimeOption.width + 'px';
+    }
+    
     if (column.option.borderAll) {
         // console.log(column.option.borderAll)
         style['border'] = '1px solid var(--tcolor)';

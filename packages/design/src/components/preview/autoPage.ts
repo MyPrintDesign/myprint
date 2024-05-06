@@ -317,7 +317,6 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
 
     async function autoTableRow(previewContext: PreviewContext, previewDataList: Array<any>, index: number) {
         let previewWrapper = previewContext.currentPreview;
-        // console.log(previewWrapper.option.tableHeightType)
         if (previewWrapper.option.tableHeightType == 'AUTO') {
             previewWrapper.heightIs = false;
         }
@@ -325,7 +324,6 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         previewContext.currentPage.elementList.push(previewWrapper);
         await nextTick();
         const table = previewWrapper.target;
-        // console.log(table)
         if (!table) {
             return false;
         }
@@ -414,7 +412,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
                 // }
                 previewContext.currentPreview = element2PreviewWrapper(previewWrapper);
                 previewWrapper = previewContext.currentPreview;
-                if (!previewWrapper.tablePageHeadIs) {
+                if (!previewWrapper.option.tablePageHeadIs) {
                     previewWrapper.tableHeadHiddenIs = true;
                 }
                 previewWrapper.tableHeadList = [...tableHeadList];

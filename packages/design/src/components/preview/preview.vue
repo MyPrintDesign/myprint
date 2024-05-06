@@ -32,6 +32,9 @@ const style = computed(() => {
         top: valueUnit(props.preview.y),
         zIndex: props.preview.runtimeOption.index
     } as CSSProperties;
+    if (props.preview.option.rotate != null) {
+        _style.transform = `rotate(${props.preview.option.rotate}deg)`;
+    }
     if (props.preview.heightIs) {
         _style.height = valueUnit(props.preview.height);
     }

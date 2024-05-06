@@ -123,15 +123,13 @@ const useApp = useAppStoreHook();
 
 const bodyList = computed(() => {
     const bodyList = [...props.element.tableHeadList, ...props.element.tableBodyList, ...props.element.statisticsList];
+    console.log('computed-bodyList');
     nextTick(() => {
         data.tableRowHeightList = computedTableCell(tableRef.value.$el, bodyList);
         data.lastHeadList = lastHeadList(props.element.tableHeadList);
         computeColumn();
         computeColumnHeight();
     });
-    
-    console.log('computed-bodyList');
-    // console.log(props.element.statisticsList);
     return bodyList;
 });
 let resizeObserver: ResizeObserver;
@@ -140,13 +138,20 @@ onMounted(() => {
     resizeObserver = new ResizeObserver((entries) => {
         // entries 是 ResizeObserverEntry 对象的数组
         for (const entry of entries) {
-            // console.log(entry)
+            // console.log(entry);
+            if (entry.contentRect.height == 0 && entry.contentRect.width == 0 && entry.contentRect.x == 0) {
+                continue;
+            }
             // entry.contentRect 包含元素的新尺寸
             // console.log('元素尺寸改变:', entry.contentRect.width, entry.contentRect.height);
             setElementHeightPx(entry.contentRect.height + 1, props.element);
             setElementWidthPx(entry.contentRect.width + 1, props.element);
             nextTick(() => {
+                data.tableRowHeightList = computedTableCell(tableRef.value.$el, bodyList.value);
+                selectCell(data.highlightColumn, data.cellList);
                 updateMoveableRect();
+                computeColumn();
+                computeColumnHeight();
             });
         }
     });
@@ -328,52 +333,52 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
     document.addEventListener('mouseup', controlPointMouseUp);
 }
 
-function rowControlPointMouseDown(ev: MouseEvent, row: number) {
-    
-    data.row = row;
-    data.col = 0;
-    data.controlPointMouseDownIs = true;
-    
-    let clientStartX = ev.clientX;
-    let clientStartY = ev.clientY;
-    
-    function controlPointMouseUp(evUp: MouseEvent) {
-        
-        let clientEndX = evUp.clientX;
-        let clientEndY = evUp.clientY;
-        // console.log(bodyList.value[data.row]);
-        let bodyElement: MyElement = bodyList.value[data.row][0];
-        // console.log(bodyElement);
-        if (clientStartX == clientEndX && clientEndY == clientStartY) {
-            data.highlightColumn.rowList = {};
-            data.highlightColumn.width = props.element.runtimeOption.width;
-            data.highlightColumn.x = 0;
-            data.highlightColumn.rowList[data.row] = Array.from(bodyList.value[data.row], (_, i) => i + 1);
-            data.highlightColumn.y = bodyElement.runtimeOption.y;
-            data.highlightColumn.height = bodyElement.runtimeOption.height;
-            setCurrentElement(bodyList.value[data.row]);
-            
-            data.highlightColumn.visibility = 'visible';
-        } else {
-        
-        }
-        
-        document.removeEventListener('mouseup', controlPointMouseUp);
-        // console.log('up')
-        useApp.dataRotation = 'none';
-        
-        data.controlPointMouseDownIs = false;
-        
-        if (!data.tableMouseEnterIs) {
-            data.row = -1;
-            data.col = -1;
-        }
-    }
-    
-    useApp.dataRotation = 'move';
-    ev.stopPropagation();
-    document.addEventListener('mouseup', controlPointMouseUp);
-}
+// function rowControlPointMouseDown(ev: MouseEvent, row: number) {
+//
+//     data.row = row;
+//     data.col = 0;
+//     data.controlPointMouseDownIs = true;
+//
+//     let clientStartX = ev.clientX;
+//     let clientStartY = ev.clientY;
+//
+//     function controlPointMouseUp(evUp: MouseEvent) {
+//
+//         let clientEndX = evUp.clientX;
+//         let clientEndY = evUp.clientY;
+//         // console.log(bodyList.value[data.row]);
+//         let bodyElement: MyElement = bodyList.value[data.row][0];
+//         // console.log(bodyElement);
+//         if (clientStartX == clientEndX && clientEndY == clientStartY) {
+//             data.highlightColumn.rowList = {};
+//             data.highlightColumn.width = props.element.runtimeOption.width;
+//             data.highlightColumn.x = 0;
+//             data.highlightColumn.rowList[data.row] = Array.from(bodyList.value[data.row], (_, i) => i + 1);
+//             data.highlightColumn.y = bodyElement.runtimeOption.y;
+//             data.highlightColumn.height = bodyElement.runtimeOption.height;
+//             setCurrentElement(bodyList.value[data.row]);
+//
+//             data.highlightColumn.visibility = 'visible';
+//         } else {
+//
+//         }
+//
+//         document.removeEventListener('mouseup', controlPointMouseUp);
+//         // console.log('up')
+//         useApp.dataRotation = 'none';
+//
+//         data.controlPointMouseDownIs = false;
+//
+//         if (!data.tableMouseEnterIs) {
+//             data.row = -1;
+//             data.col = -1;
+//         }
+//     }
+//
+//     useApp.dataRotation = 'move';
+//     ev.stopPropagation();
+//     document.addEventListener('mouseup', controlPointMouseUp);
+// }
 
 function resizeMouseDown(ev: MouseEvent, col: number) {
     const clientStartX = ev.clientX;
@@ -388,6 +393,7 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
         const offsetX = ev.clientX - clientStartX;
         // console.log(offsetX, col)
         const newWidth = columnOldWidth + offsetX;
+        console.log(offsetX);
         if (newWidth > 20) {
             setElementWidthPx(tableOldWidth + offsetX, props.element);
             recursionUpdateCellParentWidth(columnElement, offsetX);
@@ -400,8 +406,11 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
         }
         // 计算辅助位置
         if (data.highlightColumn.visibility == 'visible') {
-            computedTableCell(props.element.runtimeOption.target, bodyList.value);
-            selectCell(data.highlightColumn, data.cellList);
+            nextTick(() => {
+                computedTableCell(props.element.runtimeOption.target, bodyList.value);
+                selectCell(data.highlightColumn, data.cellList);
+            });
+            
             // const rect = computedCellRect(props.element.runtimeOption.target, data.cellList);
             // data.highlightColumn.x = rect.x;
             // data.highlightColumn.y = rect.y;
@@ -460,6 +469,9 @@ function tableMouseDown(ev: MouseEvent) {
 
 function removeStatisticsRow(item: any) {
     console.log('删除');
+    data.cellList = [];
+    data.highlightColumn.visibility = 'hidden';
+    setCurrentElement([props.element]);
     console.log(bodyList.value.length);
     props.element.statisticsList.splice(item.row, 1);
     // console.log(bodyList.value.length);

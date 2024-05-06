@@ -74,23 +74,29 @@
                 </el-icon>
             </el-tooltip>
         </el-form-item>
-        <!--    errorCorrectionLevel-->
-        <!--      <el-form-item label="换行策略" prop="region">-->
-        <!--      <my-history-select v-model="form.region" placeholder="Activity zone">-->
-        <!--        <el-option label="Zone one" value="shanghai"/>-->
-        <!--      </my-history-select>-->
-        <!--      </el-form-item>-->
         
-        <el-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
-            <my-group>
-                <my-history-input-number class="num-2"
-                                         :min="0.01"
-                                         :model-value="multipleElementGetValue('option.lineHeight')"
-                                         @update:model-value="(val:any)=>multipleElementSetValue('option.lineHeight', val)"
-                                         historyLabel="行高" />
-                <my-unit />
-            </my-group>
+        <el-form-item label="换行"
+                      v-if="getElementSetting(multipleElementGetValue('type')).includes('lineBreak')">
+            <my-switch
+                :model-value="multipleElementGetValue('option.lineBreak')"
+                @update:model-value="(val:any)=>multipleElementSetValue('option.lineBreak', val)"
+                class="ml-2"
+                inline-prompt
+                style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
+                active-text="是"
+                inactive-text="否" />
         </el-form-item>
+        
+<!--        <el-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">-->
+<!--            <my-group>-->
+<!--                <my-history-input-number class="num-2"-->
+<!--                                         :min="0.01"-->
+<!--                                         :model-value="multipleElementGetValue('option.lineHeight')"-->
+<!--                                         @update:model-value="(val:any)=>multipleElementSetValue('option.lineHeight', val)"-->
+<!--                                         historyLabel="行高" />-->
+<!--                <my-unit />-->
+<!--            </my-group>-->
+<!--        </el-form-item>-->
         
         <el-form-item label="虚线样式" prop="region"
                       v-if="getElementSetting(multipleElementGetValue('type')).includes('dottedStyle')">
@@ -157,6 +163,7 @@ import { multipleElementGetValue, multipleElementSetValue } from '@myprint/desig
 import { computed } from 'vue';
 import { MyElement, statisticsType, statisticsTypeFormat } from '@myprint/design/types/entity';
 import { useAppStoreHook } from '@myprint/design/stores/app';
+import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
 //
 // const mitt = inject(mittKey)!
 // // const data = reactive({

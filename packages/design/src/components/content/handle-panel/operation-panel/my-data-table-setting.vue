@@ -69,32 +69,28 @@
         <!--      </my-history-select>-->
         <!--      </el-form-item>-->
         
-        <el-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
-            <my-group>
+        <el-form-item label="行高">
+            <el-radio-group v-model="table.option.tableBodyHeightType" size="small">
+                <el-radio-button label="AUTO" value="AUTO">自动</el-radio-button>
+                <el-radio-button label="FIXED" value="FIXED">固定</el-radio-button>
+            </el-radio-group>
+            <my-group style="margin-top: 10px"
+                      v-if="table.option.tableBodyHeightType == 'FIXED'">
+                
                 <my-history-input-number class="num-2"
                                          :min="0.01"
-                                         :model-value="multipleElementGetValue('option.lineHeight')"
-                                         @update:model-value="(val:any)=>multipleElementSetValue('option.lineHeight', val)"
+                                         :model-value="multipleElementGetValue('option.tableBodyHeight')"
+                                         @change="changeTableBodyHeight"
                                          historyLabel="行高" />
                 <my-unit />
             </my-group>
         </el-form-item>
         
-        <el-form-item label="虚线样式" prop="region"
-                      v-if="getElementSetting(multipleElementGetValue('type')).includes('dottedStyle')">
-            <my-history-select :model-value="multipleElementGetValue('option.dottedStyle')"
-                               @update:model-value="(val:any)=>multipleElementSetValue('option.dottedStyle', val)"
-                               placeholder="Activity zone"
-                               historyLabel="虚线样式">
-                <el-option v-for="(item, index) in dottedStyleList" :key="index" :label="item.label"
-                           :value="item.value" />
-            </my-history-select>
-        </el-form-item>
         
         <el-form-item label="分页表头">
             <el-switch
-                :model-value="multipleElementGetValue('tablePageHeadIs')"
-                @update:model-value="(val:any)=>multipleElementSetValue('tablePageHeadIs', val)"
+                :model-value="multipleElementGetValue('option.tablePageHeadIs')"
+                @update:model-value="(val:any)=>multipleElementSetValue('option.tablePageHeadIs', val)"
                 class="ml-2"
                 inline-prompt
                 style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
@@ -104,30 +100,19 @@
         
         <el-button @click="handleAddStatisticsRow">新增统计行</el-button>
         
-<!--        <el-divider>-->
-<!--            背景样式-->
-<!--        </el-divider>-->
-<!--        -->
-<!--        <el-radio-group v-model="table.option.tableBodyBgStyleType" size="small">-->
-<!--            <el-radio-button label="NONE" value="NONE">无</el-radio-button>-->
-<!--            <el-radio-button label="COMMON" value="COMMON">通用样式</el-radio-button>-->
-<!--            <el-radio-button label="CUSTOM" value="CUSTOM" disabled>自定义样式</el-radio-button>-->
-<!--        </el-radio-group>-->
-<!--        -->
-<!--        <div v-if="multipleElementGetValue('option.tableBodyBgStyleType') == 'COMMON'">-->
-<!--            123-->
-<!--        </div>-->
-        
-        <!--        <el-form-item label="分页表头">-->
-        <!--            <el-switch-->
-        <!--                :model-value="multipleElementGetValue('tablePageHeadIs')"-->
-        <!--                @update:model-value="(val:any)=>multipleElementSetValue('tablePageHeadIs', val)"-->
-        <!--                class="ml-2"-->
-        <!--                inline-prompt-->
-        <!--                style="&#45;&#45;el-switch-on-color: var(&#45;&#45;drag-h-color); &#45;&#45;el-switch-off-color: var(&#45;&#45;switch-off-color)"-->
-        <!--                active-text="是"-->
-        <!--                inactive-text="否" />-->
-        <!--        </el-form-item>-->
+        <!--        <el-divider>-->
+        <!--            背景样式-->
+        <!--        </el-divider>-->
+        <!--        -->
+        <!--        <el-radio-group v-model="table.option.tableBodyBgStyleType" size="small">-->
+        <!--            <el-radio-button label="NONE" value="NONE">无</el-radio-button>-->
+        <!--            <el-radio-button label="COMMON" value="COMMON">通用样式</el-radio-button>-->
+        <!--            <el-radio-button label="CUSTOM" value="CUSTOM" disabled>自定义样式</el-radio-button>-->
+        <!--        </el-radio-group>-->
+        <!--        -->
+        <!--        <div v-if="multipleElementGetValue('option.tableBodyBgStyleType') == 'COMMON'">-->
+        <!--            123-->
+        <!--        </div>-->
     
     
     </el-form>
@@ -137,16 +122,21 @@
 // import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
 import { inject } from 'vue';
 
-import { dottedStyleList, getElementSetting } from '@myprint/design/constants/common';
+import { getElementSetting } from '@myprint/design/constants/common';
 import { mittKey } from '@myprint/design/constants/keys';
 import { ActionEnum, Snapshot } from '@myprint/design/utils/historyUtil';
 import MyGroup from '@myprint/design/components/my/group/my-group.vue';
-import { MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
+import { MyHistoryInputNumber, MyUnit } from '@myprint/design/components/my/input';
 import { useAppStoreHook } from '@myprint/design/stores/app';
-import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
+import {
+    multipleElementGetValue,
+    multipleElementSetValue,
+    setElementHeightPx
+} from '@myprint/design/utils/elementUtil';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import { freshMoveableOption } from '@myprint/design/plugins/moveable/moveable';
 import { addStatisticsRow } from '@myprint/design/utils/table/dataTable';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 
 const mitt = inject(mittKey)!;
 // const data = reactive({
@@ -159,6 +149,19 @@ const table = appStore.currentElement[0];
 function rotatedPoint(rotate) {
     console.log(rotate);
     // freshMoveableOption(appStore.currentElement)
+}
+
+function changeTableBodyHeight(val: number) {
+    // console.log(val);
+    multipleElementSetValue('option.tableBodyHeight', val);
+    for (let tableBodyListElement of table.tableBodyList) {
+        for (let tableBodyListElementElement of tableBodyListElement) {
+            if (tableBodyListElementElement == null) {
+                continue;
+            }
+            setElementHeightPx(unit2px(val), tableBodyListElementElement);
+        }
+    }
 }
 
 function changeLock() {

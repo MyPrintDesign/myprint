@@ -10,6 +10,7 @@
         :style="style"
         @input="handleInput"
         @keydown="handleKeydown($event)" />
+
 </template>
 <script setup lang="ts">
 
@@ -36,7 +37,10 @@ const data = reactive({
     content: '',
     innerContent: ''
 });
+// console.log(props.element);
+
 onMounted(() => {
+    // console.log(props.element);
     data.content = n2br(props.element.data);
     data.innerContent = data.content;
     if (props.element.data == null) {
@@ -62,7 +66,6 @@ function handleKeydown(event: KeyboardEvent) {
 }
 
 function click(event: MouseEvent) {
-    // console.log('focus')
     props.element.runtimeOption.status = 'HANDLE_EDIT_ING';
     
     checkInput();
@@ -83,10 +86,8 @@ function click(event: MouseEvent) {
     contentRef.value.focus();
 }
 
-function handleInput(event) {
+function handleInput(event: any) {
     // 处理输入事件，更新 content
-    // console.log(event.target.innerHTML);
-    
     props.element.data = br2n(event.target.innerHTML);
     data.innerContent = props.element.data;
     // console.log(props.element.data);
@@ -97,15 +98,15 @@ const style = computed(() => {
     return elementCommonStyle(props.element);
 });
 
+
 watch(() => props.element.runtimeOption.status, (n, _o) => {
     if (contentRef.value == undefined) {
         return;
     }
     if (n == 'HANDLE_ED') {
-        // console.log('han')
-        contentRef.value.addEventListener('click', click);
+        contentRef.value.addEventListener('dblclick', click);
     } else {
-        contentRef.value.removeEventListener('click', click);
+        contentRef.value.removeEventListener('dblclick', click);
     }
 });
 

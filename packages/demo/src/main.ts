@@ -8,15 +8,16 @@ import App from './App.vue';
 import mitt from 'mitt';
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
-// import i18n from "@/locales";
-// import 'element-plus/dist/index.css'
+import 'element-plus/dist/index.css';
+
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 const app = createApp(App);
 app.use(pinia);
 
-// import ElementPlus from 'element-plus'
-// app.use(ElementPlus)
+import ElementPlus from 'element-plus';
+
+app.use(ElementPlus);
 
 app.use(createPrint);
 app.provide(mittKey, mitt());

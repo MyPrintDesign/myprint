@@ -189,14 +189,18 @@
                     active-text="显示"
                     inactive-text="隐藏" />
             </el-form-item>
-            <!--    errorCorrectionLevel-->
-            <!--      <el-form-item label="换行策略" prop="region">-->
-            <!--      <my-history-select v-model="form.region" placeholder="Activity zone">-->
-            <!--        <el-option label="Zone one" value="shanghai"/>-->
-            <!--      </my-history-select>-->
-            <!--      </el-form-item>-->
             
-            <!--    打印策略(单页打印)-->
+            <el-form-item label="换行"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('lineBreak')">
+                <my-switch
+                    :model-value="multipleElementGetValue('option.lineBreak')"
+                    @update:model-value="(val:any)=>multipleElementSetValue('option.lineBreak', val)"
+                    class="ml-2"
+                    inline-prompt
+                    style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
+                    active-text="是"
+                    inactive-text="否" />
+            </el-form-item>
             
             <el-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
                 <my-group>
@@ -362,6 +366,7 @@ import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
 import MyDivider from '@myprint/design/components/my/divider/my-divider.vue';
 import { mittKey } from '@myprint/design/constants/keys';
+import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
 
 const mitt = inject(mittKey)!;
 

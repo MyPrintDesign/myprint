@@ -1,3 +1,3 @@
 export type EventTypes = {
-    sortColumn: any;
+    // sortColumn: any;
 }

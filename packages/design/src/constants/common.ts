@@ -1,10 +1,13 @@
 import {
     Container,
-    MyElement,
+    displayStrategyFormat,
     DownList,
-    ElementOption, elementStatus,
+    ElementOption,
+    elementStatus,
     elementType,
-    RuntimeElementOption, displayStrategyFormat, statisticsTypeFormat
+    MyElement,
+    RuntimeElementOption,
+    statisticsTypeFormat
 } from '@myprint/design/types/entity';
 import { PropType, reactive } from 'vue';
 import { i18n } from '@myprint/design/locales';
@@ -85,28 +88,28 @@ const styleElementSetting: Array<elementSettingType> = ['textAlign', 'verticalAl
 const elementSetting: Record<elementType, Array<elementSettingType>> =
     {
         Image: [...commonElementSetting, 'common'],
-        Text: [...commonElementSetting, ...styleElementSetting, 'fontFamily', 'fontSize', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'common'],
-        TextTime: [...commonElementSetting, ...styleElementSetting, 'fontFamily', 'fontSize', 'color', 'hiddenLabel', 'formatter', 'padding', 'margin', 'label', 'common'],
+        Text: [...commonElementSetting, ...styleElementSetting, 'common', 'fontFamily', 'fontSize', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'lineBreak'],
+        TextTime: [...commonElementSetting, ...styleElementSetting, 'common', 'fontFamily', 'fontSize', 'color', 'hiddenLabel', 'formatter', 'padding', 'margin', 'label'],
         Panel: [...commonElementSetting, 'common'],
         DataTable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
         FREETable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
-        Rect: [...commonElementSetting, 'color', 'background', 'common'],
-        HorizontalLine: [...commonElementSetting, 'color', 'lineHeight', 'lineWidth', 'common'],
-        DottedHorizontalLine: [...commonElementSetting, 'color', 'lineHeight', 'dottedStyle', 'lineWidth', 'common'],
-        VerticalLine: [...commonElementSetting, 'color', 'lineHeight', 'lineWidth', 'common'],
-        DottedVerticalLine: [...commonElementSetting, 'color', 'lineHeight', 'dottedStyle', 'lineWidth', 'common'],
+        Rect: [...commonElementSetting, 'common', 'color', 'background'],
+        HorizontalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'lineWidth'],
+        DottedHorizontalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'dottedStyle', 'lineWidth'],
+        VerticalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'lineWidth'],
+        DottedVerticalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'dottedStyle', 'lineWidth'],
         Container: [...commonElementSetting, 'common'],
         PageHeader: [...commonElementSetting, 'common'],
         PageFooter: [...commonElementSetting, 'common'],
-        PageNum: [...commonElementSetting, ...styleElementSetting, 'formatter', 'common'],
+        PageNum: [...commonElementSetting, ...styleElementSetting, 'common', 'formatter'],
         PrivateDragRectElement: [],
-        SvgPolygonLine: ['color', 'background', 'common', 'x', 'y', 'opacity'],
-        SvgCircle: ['color', 'background', 'common', 'x', 'y', 'opacity'],
-        SvgEllipse: ['color', 'background', 'common', 'x', 'y', 'opacity'],
-        SvgLine: ['color', 'background', 'common', 'x', 'y', 'opacity'],
-        SvgBezierCurve: ['color', 'background', 'common', 'x', 'y', 'opacity'],
-        SvgBezierCurveThree: ['color', 'background', 'common', 'x', 'y', 'opacity'],
-        DrawPanel: ['color', 'background', 'borderAll', 'common', 'x', 'y', 'opacity']
+        SvgPolygonLine: ['common', 'color', 'background', 'x', 'y', 'opacity'],
+        SvgCircle: ['common', 'color', 'background', 'x', 'y', 'opacity'],
+        SvgEllipse: ['common', 'color', 'background', 'x', 'y', 'opacity'],
+        SvgLine: ['common', 'color', 'background', 'x', 'y', 'opacity'],
+        SvgBezierCurve: ['common', 'color', 'background', 'x', 'y', 'opacity'],
+        SvgBezierCurveThree: ['common', 'color', 'background', 'x', 'y', 'opacity'],
+        DrawPanel: ['common', 'color', 'background', 'borderAll', 'x', 'y', 'opacity']
     };
 
 export function getElementSetting(type: elementType) {

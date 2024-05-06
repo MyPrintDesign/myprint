@@ -1,15 +1,14 @@
 <template>
     <div class="my-switch"
-         :class="{'is-checked': modelValue == 1}"
+         :class="{'is-checked': modelValueComputed}"
          @click="click"
-         
          style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color);">
-        <span class="my-switch__core">
+        <div class="my-switch__core">
             <div class="my-switch__inner">
-            <span class="is-text" aria-hidden="false">{{ statusText }}</span>
+                <span class="is-text" aria-hidden="false">{{ statusText }}</span>
             </div>
-            <div class="my-switch__action"></div>
-        </span>
+            <div class="my-switch__action" />
+        </div>
     </div>
 </template>
 
@@ -22,18 +21,24 @@ const emit = defineEmits(['update:modelValue', 'click', 'change']);
 const props = withDefaults(defineProps<{
         enable?: boolean,
         modelValue?: number,
+        nullActive?: boolean,
         activeText?: string
         inactiveText?: string
     }>(),
     {
         enable: true,
-        modelValue: 0,
+        modelValue: undefined,
+        nullActive: true,
         activeText: '开',
         inactiveText: '关'
     });
 
+const modelValueComputed = computed(() => {
+    return props.modelValue == 1 || (props.modelValue == null && props.nullActive);
+});
+
 const statusText = computed(() => {
-    if (props.modelValue == 1) {
+    if (modelValueComputed.value) {
         return props.activeText;
     } else if (props.modelValue == 0) {
         return props.inactiveText;
@@ -44,7 +49,7 @@ function click() {
     if (!props.enable) {
         return;
     }
-    emit('update:modelValue', props.modelValue == 1 ? 0 : 1);
+    emit('update:modelValue', modelValueComputed.value ? 0 : 1);
     emit('click');
     emit('change');
 }

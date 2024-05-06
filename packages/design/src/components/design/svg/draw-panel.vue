@@ -10,11 +10,11 @@ import * as d3Selection from 'd3-selection';
 import * as d3Drag from 'd3-drag';
 import { DragBehavior, DraggedElementBaseType } from 'd3-drag';
 import { onMounted, reactive, ref, watch } from 'vue';
-import { MyElement } from '@myprint/design/types/entity';
+import { MyElement, PointClick } from '@myprint/design/types/entity';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { elementHandleStatusList } from '@myprint/design/constants/common';
 import { douglasPeucker } from '@myprint/design/utils/utils';
 import { useAppStoreHook } from '@myprint/design/stores/app';
+import { checkInput, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
 // import {watchImmediate} from "@vueuse/core";
 // import {updateSvg} from "@myprint/design/utils/svgUtil";
 
@@ -27,7 +27,8 @@ const data = reactive({
     imgSrc: '',
     // stroke: 'black',
     strokeWidth: 5,
-    dragFun: {} as DragBehavior<DraggedElementBaseType, any, any>
+    dragFun: {} as DragBehavior<DraggedElementBaseType, any, any>,
+    doubleClick: {} as DragBehavior<DraggedElementBaseType, any, any>
 } as any);
 
 const props = withDefaults(defineProps<{
@@ -37,12 +38,46 @@ const props = withDefaults(defineProps<{
 });
 
 watch(() => props.element.runtimeOption.status, (n, _o) => {
-    if (elementHandleStatusList.includes(n)) {
+    if (n == 'HANDLE_ED') {
+        // 监听双击事件
         d3Selection.select(data.context.canvas)
-            .call(data.dragFun);
+            .on('click', (event) => {
+                startX = event.x;
+                startY = event.y;
+                const timestamp = Date.now();
+                if (lastClickPoint == undefined) {
+                    lastClickPoint = {
+                        x: startX,
+                        y: startY,
+                        clickTimestamp: timestamp
+                    };
+                } else {
+                    if (startX == lastClickPoint.x && startY == lastClickPoint.y && timestamp - lastClickPoint.clickTimestamp < 350) {
+                        props.element.runtimeOption.status = 'HANDLE_EDIT_ING';
+                        
+                        checkInput();
+                        
+                        moveableEditing();
+                        
+                        console.log('double-click');
+                        lastClickPoint = undefined!;
+                    } else {
+                        lastClickPoint = {
+                            x: startX,
+                            y: startY,
+                            clickTimestamp: timestamp
+                        };
+                    }
+                }
+            });
+    } else if (n == 'HANDLE_EDIT_ING') {
+        d3Selection.select(data.context.canvas)
+            .call(data.dragFun)
+        ;
     } else {
         d3Selection.select(data.context.canvas)
-            .on('.drag', null);
+            .on('.drag', null)
+            .on('click', null);
     }
     render();
 });
@@ -65,9 +100,10 @@ if (props.element.data) {
         data.strokes.push(listElement.data);
     }
 }
+let startX, startY;
+let lastClickPoint: PointClick = undefined!;
 
 onMounted(() => {
-    
     data.context = canvasRef.value.getContext('2d');
     data.curve = d3Shape.curveBasis(data.context);
     
@@ -81,11 +117,11 @@ onMounted(() => {
         .on('end', darggend)
         .on('start.render drag.render', render);
     
+    
     canvasRef.value.width = props.element.runtimeOption.width * 2;
     canvasRef.value.height = props.element.runtimeOption.height * 2;
     
     render();
-    
 });
 
 function darggend() {

@@ -273,10 +273,8 @@ export function computedTableCell(target: HTMLElement, tableHeadListList: TableC
     const tableRect = target.getBoundingClientRect() as DOMRect;
 
     const rowHeightList: number[] = [];
-    // let y = 0;
     for (let row = 0; row < tableHeadListList.length; row++) {
         let height = 0;
-        // let x = 0;
         const tableHeadListListElement = tableHeadListList[row];
         for (let col = 0; col < tableHeadListListElement.length; col++) {
             const tableCellElement = tableHeadListListElement[col];
@@ -295,7 +293,6 @@ export function computedTableCell(target: HTMLElement, tableHeadListList: TableC
 
             const tdY = tdRect.y - tableRect.y;
             const tdX = tdRect.x - tableRect.x;
-
 
             if (tableCellElement.colspan > 1) {
                 if (row + 1 < tableHeadListList.length) {
@@ -321,10 +318,8 @@ export function computedTableCell(target: HTMLElement, tableHeadListList: TableC
 
             height = numberUtil.div(tableCellElement.runtimeOption.height, tableCellElement.rowspan);
 
-            // x = x + tableCellElement.runtimeOption.width;
         }
 
-        // y = y + height;
         rowHeightList.push(height);
     }
 

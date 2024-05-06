@@ -58,12 +58,11 @@
 </template>
 
 <script setup lang="ts">
-
-import {onMounted, reactive} from "vue";
-import {moduleCreate, modulePage} from "@/api/module";
-import {Module, PageParam, Template} from "@/types/R";
-import {useRouter} from "vue-router";
-import {templatePage} from "@/api/template";
+import { onMounted, reactive } from 'vue';
+import { modulePage } from '@/api/module';
+import { Module, PageParam, Template } from '@/types/R';
+import { useRouter } from 'vue-router';
+import { templatePage } from '@/api/template';
 
 const data = reactive({
   moduleList: [] as Array<Module>,
