@@ -14,7 +14,7 @@
 import widget from '@myprint/design/components/content/widget/index.vue';
 import PanelView from '@myprint/design/components/content/panel/index.vue';
 import { inject, provide, reactive, Ref, ref, watch } from 'vue';
-import { Container, Panel, Provider } from '@myprint/design/types/entity';
+import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
 import { to } from '@myprint/design/utils/utils';
 import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
 import { init } from '@myprint/design/utils/historyUtil';
@@ -68,6 +68,9 @@ watch(() => props.template.id, (n, _o) => {
         if (!panel.auxiliaryLineList) {
             panel.auxiliaryLineList = [];
         }
+        for (let myAuxiliaryLine of panel.auxiliaryLineList) {
+            myAuxiliaryLine.runtimeOption = { x: 0, y: 0, auxiliaryLineStatus: 'SHOW' } as RuntimeElementOption;
+        }
         panel.runtimeOption = {} as any;
         
         // console.log(JSON.parse(JSON.stringify(panel.elementList[0])))
@@ -102,8 +105,6 @@ function back() {
 }
 
 function saveTemplate() {
-    // console.log(panel)
-    // console.log(template)
     const template = {} as Template;
     template.name = panel.name;
     template.content = JSON.stringify(panel, (key, value) => {
@@ -111,10 +112,8 @@ function saveTemplate() {
         // 清除runtime参数
         // console.log(this)
         if ('runtimeOption' == key) return undefined;
-        if ('status' == key) return undefined;
         return value;
     });
-    console.log(JSON.parse(template.content));
     $emit('saveTemplate', template);
 }
 </script>

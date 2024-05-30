@@ -28,6 +28,7 @@ import { Container, MyAuxiliaryLine } from '@myprint/design/types/entity';
 import { Path } from 'd3-path';
 import * as d3Selection from 'd3-selection';
 import * as d3Path from 'd3-path';
+import { changeDragSnapIs } from '@myprint/design/plugins/moveable/moveable';
 
 const appStore = useAppStore();
 
@@ -35,6 +36,7 @@ const props = withDefaults(defineProps<{
     direction?: 'vertical' | string,
     highlight?: Container,
     length?: number
+    auxiliaryLineVisible: boolean
     scroll?: number,
 }>(), {
     direction: 'horizontal',
@@ -84,6 +86,7 @@ function mouseMove(event: MouseEvent) {
     appStore.auxiliaryLineTmp = {
         x: 0,
         y: 0,
+        runtimeOption: { x: 0, y: 0, auxiliaryLineStatus: 'SHOW' },
         direction: props.direction == 'vertical' ? 'horizontal' : 'vertical'
     } as MyAuxiliaryLine;
     
@@ -96,14 +99,18 @@ function mouseMove(event: MouseEvent) {
 }
 
 function mouseLeave() {
-    appStore.auxiliaryLineTmp = {} as MyAuxiliaryLine;
+    appStore.auxiliaryLineTmp = { runtimeOption: { x: 0, y: 0, auxiliaryLineStatus: 'SHOW' } } as MyAuxiliaryLine;
 }
 
 function mouseClick(event: MouseEvent) {
+    if (!props.auxiliaryLineVisible) {
+        return;
+    }
     const auxiliaryLine = {
         id: crypto.randomUUID(),
         x: 0,
         y: 0,
+        runtimeOption: { x: 0, y: 0, auxiliaryLineStatus: 'SHOW' },
         direction: props.direction == 'vertical' ? 'horizontal' : 'vertical'
     } as MyAuxiliaryLine;
     if (auxiliaryLine.direction == 'vertical') {
@@ -113,6 +120,9 @@ function mouseClick(event: MouseEvent) {
     }
     
     getCurrentPanel().auxiliaryLineList.push(auxiliaryLine);
+    nextTick(() => {
+        changeDragSnapIs();
+    });
 }
 
 // 可以直接侦听一个 ref

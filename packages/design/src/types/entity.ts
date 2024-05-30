@@ -58,6 +58,7 @@ export interface PointClick extends Point {
 
 export interface MyAuxiliaryLine extends Point, Id {
     direction: 'vertical' | 'horizontal';
+    runtimeOption: RuntimeElementOption;
 }
 
 export interface Line {
@@ -190,6 +191,7 @@ type textContentType =
 
 // 节点状态
 export type elementStatus = 'NONE' | 'SELECT' | 'SELECT_REMOVE' | 'HANDLE' | 'HANDLE_ED' | 'HANDLE_EDIT_ING'
+export type auxiliaryLineStatus = 'SHOW' | 'HIDDEN'
 
 type textAlign = 'start' | 'center' | 'end'
 
@@ -302,6 +304,7 @@ export interface RuntimeElementOption extends Position {
     // 组件实时位置
     init: Container;
     status: elementStatus;
+    auxiliaryLineStatus: auxiliaryLineStatus;
     cutIngIs: boolean;
 
     /**

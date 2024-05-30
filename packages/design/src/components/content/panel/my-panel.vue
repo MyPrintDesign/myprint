@@ -1,17 +1,19 @@
 <template>
     <div class="design-panel user-select-none">
         <div class="display-flex">
-            <div style="min-width: 20px; height: 20px" @click="auxiliaryLineVisible = !auxiliaryLineVisible"
+            <div style="min-width: 20px; height: 20px" @click="clickAuxiliaryLineVisible"
                  class="cursor-pointer"
                  :class="[auxiliaryLineVisible? 'eys' :'eye-close']" />
             <rule :direction="highlightRule.horizontal.direction"
                   :length="panel.width"
+                  :auxiliaryLineVisible="auxiliaryLineVisible"
                   :highlight="highlightRule.horizontal.highlight"
                   :scroll="highlightRule.horizontal.scroll" />
         </div>
         <div class="display-flex design-content_inner">
             <rule :direction="highlightRule.vertical.direction"
                   :length="panel.height"
+                  :auxiliaryLineVisible="auxiliaryLineVisible"
                   :highlight="highlightRule.vertical.highlight"
                   :scroll="highlightRule.vertical.scroll" />
             <div class="affix-container design-content-scroll " @scroll="scroll" @wheel="wheel"
@@ -30,8 +32,12 @@
                 </div>
             </div>
             
+            <auxiliary-line :element="item" :key="item.id"
+                            :scroll-x="highlightRule.horizontal.scroll"
+                            :scroll-y="highlightRule.vertical.scroll"
+                            v-for="(item) in panel.auxiliaryLineList" />
+            
             <template v-if="auxiliaryLineVisible">
-                <auxiliary-line :element="item" :key="item.id" v-for="(item) in panel.auxiliaryLineList" />
                 <auxiliary-line tmp :element="appStore.auxiliaryLineTmp" v-if="appStore.auxiliaryLineTmp.x != null" />
             </template>
         </div>
@@ -50,7 +56,7 @@ import { handle, none, valueUnit } from '@myprint/design/utils/elementUtil';
 import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
 import ElementList from '@myprint/design/components/design/element-list.vue';
 import { mountedKeyboardEvent, unMountedKeyboardEvent } from '@myprint/design/utils/keyboardUtil';
-import { initMoveable, updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import { changeDragSnapIs, initMoveable, updatePanel } from '@myprint/design/plugins/moveable/moveable';
 import Design from '@myprint/design/components/design/design.vue';
 import { initSelecto, selecto } from '@myprint/design/plugins/moveable/selecto';
 import AuxiliaryLine from '@myprint/design/components/design/auxiliary/auxiliary-line.vue';
@@ -116,6 +122,14 @@ onUnmounted(() => {
     resizeObserver.disconnect();
     unMountedKeyboardEvent();
 });
+
+function clickAuxiliaryLineVisible() {
+    auxiliaryLineVisible.value = !auxiliaryLineVisible.value;
+    for (let myAuxiliaryLine of panel.auxiliaryLineList) {
+        myAuxiliaryLine.runtimeOption.auxiliaryLineStatus = auxiliaryLineVisible.value ? 'SHOW' : 'HIDDEN';
+    }
+    changeDragSnapIs();
+}
 
 /**
  * 滑动事件

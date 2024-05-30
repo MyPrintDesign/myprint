@@ -343,6 +343,10 @@
   }
 }
 
+.design-auxiliary-line-hidden {
+  visibility: hidden;
+}
+
 .design-auxiliary-line-v {
   @extend %design-auxiliary-line;
   border-left: 1px black dashed;
