@@ -104,7 +104,7 @@
       </div>
       
       <div class="choose-image-url-panel display-flex" v-if="data.chooseImageType == 'url'">
-        <div class="choose-image-url-btn">上传本地图片</div>
+        <div class="choose-image-url-btn">上传网络图片</div>
       </div>
     </el-dialog>
     
@@ -124,7 +124,7 @@ import {MyElement, DownList} from "@myprint/design/types/entity";
 import {displayModelDesign, valueUnit} from "@myprint/design/utils/elementUtil";
 import {Check, CloseBold, Crop, Plus, RefreshLeft, RefreshRight, ZoomIn, ZoomOut} from "@element-plus/icons-vue";
 import {unit2px} from "@myprint/design/utils/devicePixelRatio";
-import {elementHandleStatusList} from "@myprint/design/constants/common";
+import { chooseImgTypeList, elementHandleStatusList } from '@myprint/design/constants/common';
 import MyTabs from "@myprint/design/components/my/tabs/my-tabs.vue";
 
 const props = withDefaults(defineProps<{
@@ -159,10 +159,7 @@ const option = reactive({
   enlarge: 1, //图片根据截图框输出比例倍数
   mode: '600px 600px' //图片默认渲染方式
 })
-const chooseImgTypeList = reactive([
-  {value: 'localFile', label: '本地上传'},
-  // {value: 'url', label: '图片链接'}
-]) as DownList[]
+
 // console.log(option)
 const data = reactive({
   cropVisible: false,

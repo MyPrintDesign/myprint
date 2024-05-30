@@ -6,7 +6,6 @@ import {
     elementStatus,
     elementType,
     MyElement,
-    RuntimeElementOption,
     statisticsTypeFormat
 } from '@myprint/design/types/entity';
 import { PropType, reactive } from 'vue';
@@ -14,18 +13,18 @@ import { i18n } from '@myprint/design/locales';
 
 export const defaultElement: MyElement[] = [];
 
-export const defaultDragRectElement = reactive({
-    type: 'PrivateDragRectElement',
-    label: '多个元素',
-    option: {
-        padding: {},
-        margin: {}
-    } as ElementOption,
-    runtimeOption: {} as RuntimeElementOption
-} as MyElement);
-
-
 export const canMoveStatusList = ['SELECT', 'HANDLE'];
+
+export const fontMap = {
+    default: 'default',
+    dengxian: 'default',
+    songti : '\'zh question mark\',\'Times New Roman\',\'Songti SC\',STSong,NSimSun,SimSun,FangSong,\'Nanum Myeongjo\',NanumMyeongjo,Batang,serif',
+    kaiti: '\'zh question mark\',\'Times New Roman\',\'Kaiti SC\',STKaiti,KaiTi,serif',
+    heiti: '\'Microsoft YaHei\', sans-serif',
+    fyt: 'AlimamaFangYuanTiVF-Thin',
+    sht: 'AlimamaShuHeiTi-Boldr'
+}
+
 
 export const fontList: DownList[][] = [
     [{
@@ -34,27 +33,27 @@ export const fontList: DownList[][] = [
     },
         {
             label: '等线',
-            value: 'heiti'
+            value: 'dengxian'
         },
         {
             label: '宋体',
-            value: '\'zh question mark\',\'Times New Roman\',\'Songti SC\',STSong,NSimSun,SimSun,FangSong,\'Nanum Myeongjo\',NanumMyeongjo,Batang,serif'
+            value: 'songti'
         },
         {
             label: '楷体',
-            value: '\'zh question mark\',\'Times New Roman\',\'Kaiti SC\',STKaiti,KaiTi,serif'
+            value: 'kaiti'
         },
         {
             label: '黑体',
-            value: '\'Microsoft YaHei\', sans-serif'
+            value: 'heiti'
         },
         {
             label: '方圆体',
-            value: 'AlimamaFangYuanTiVF-Thin'
+            value: 'fyt'
         },
         {
             label: '数黑体',
-            value: 'AlimamaShuHeiTi-Boldr'
+            value: 'sht'
         }]
 ];
 
@@ -102,7 +101,6 @@ const elementSetting: Record<elementType, Array<elementSettingType>> =
         PageHeader: [...commonElementSetting, 'common'],
         PageFooter: [...commonElementSetting, 'common'],
         PageNum: [...commonElementSetting, ...styleElementSetting, 'common', 'formatter'],
-        PrivateDragRectElement: [],
         SvgPolygonLine: ['common', 'color', 'background', 'x', 'y', 'opacity'],
         SvgCircle: ['common', 'color', 'background', 'x', 'y', 'opacity'],
         SvgEllipse: ['common', 'color', 'background', 'x', 'y', 'opacity'],
@@ -295,6 +293,10 @@ export const statisticsTypeList: any[] = Object.keys(statisticsTypeFormat).map(k
     };
 });
 
+export const chooseImgTypeList = reactive([
+    {value: 'localFile', label: '本地上传'},
+    {value: 'url', label: '图片链接'}
+]) as DownList[]
 
 export const pageUnitList = [
     'px', 'mm', 'cm'

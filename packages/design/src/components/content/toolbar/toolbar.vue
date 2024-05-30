@@ -29,35 +29,35 @@
 
 <script setup lang="ts">
 // import { ElIcon, ElButton } from 'element-plus'
-import { inject } from 'vue'
-import StyleDesign from './style-design.vue'
-import { mittKey, panelKey } from '@myprint/design/constants/keys'
-import { i18n } from '@myprint/design/locales'
-import { clearPanel, displayModel } from '@myprint/design/utils/elementUtil'
-import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil'
-import { updatePanel } from '@myprint/design/plugins/moveable/moveable'
+import { inject } from 'vue';
+import StyleDesign from './style-design.vue';
+import { mittKey, panelKey } from '@myprint/design/constants/keys';
+import { i18n } from '@myprint/design/locales';
+import { clearPanel, displayModel } from '@myprint/design/utils/elementUtil';
+import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
+import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
 
-const panel = inject(panelKey)
-const mitt = inject(mittKey)!
+const panel = inject(panelKey);
+const mitt = inject(mittKey)!;
 
 function preview() {
-    displayModel('preview')
-    mitt.emit('previewPanel', {} as any)
+    displayModel('preview');
+    mitt.emit('previewPanel', {} as any);
 }
 
 function refresh() {
-    window.location.reload()
+    window.location.reload();
 }
 
 function save() {
-    mitt.emit('saveTemplate', {} as any)
+    mitt.emit('saveTemplate', {} as any);
 }
 
 function clearPanelClick() {
-    clearPanel(panel!)
-    updatePanel()
+    clearPanel(panel!);
+    updatePanel();
     record(<Snapshot>{
         action: ActionEnum.CLEAR
-    })
+    });
 }
 </script>

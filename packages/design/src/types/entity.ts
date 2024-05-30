@@ -4,9 +4,15 @@ export interface Option {
 }
 
 export interface Provider {
+    name: string;
+    pageUnit: PageUnit;
+    pageSize: string;
     width: number;
     height: number;
-    pageUnit: PageUnit;
+    watermark: boolean;
+    watermarkContent: string;
+    dragSnapPanelIs: number;
+    dragSnapIs: number;
     elementList: MyElement[];
 }
 
@@ -138,11 +144,10 @@ export const elementTypeFormat = {
     SvgCircle: '圆',
     SvgEllipse: '椭圆',
 
-    DrawPanel: '画板',
+    DrawPanel: '画板'
 
 
     // 私有类型
-    PrivateDragRectElement: '内置框选'
 };
 
 export const displayStrategyFormat = {
@@ -198,10 +203,10 @@ export interface HandlePanelPosition extends Container {
     right: number;
 }
 
-export interface DataTableRow {
-    type: 'HEAD' | 'DATA' | 'STATS';
-    columnList: MyElement[];
-}
+// export interface DataTableRow {
+//     type: 'HEAD' | 'DATA' | 'STATS';
+//     columnList: MyElement[];
+// }
 
 export interface MyElement extends Container {
     contentType?: textContentType;
@@ -243,7 +248,7 @@ export interface MyElement extends Container {
     groupIs?: boolean;
 }
 
-export interface TableHeadProviderCellElement extends Rect {
+export interface TableHeadProviderCellElement extends Rect, Id {
     type: elementType;
     contentType?: textContentType;
     field?: string;
@@ -258,7 +263,7 @@ export interface TableHeadProviderCellElement extends Rect {
     rowspan: number;
     colspan: number;
 
-    childList: Array<TableHeadProviderCellElement>;
+    columnList: Array<TableHeadProviderCellElement>;
 }
 
 export interface TableCellElement extends MyElement {

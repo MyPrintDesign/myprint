@@ -168,9 +168,6 @@ function panelSnapshot(snapshot: Snapshot) {
 function elementClick(element: MyElement) {
     // console.log('elementClick')
     // console.log('鼠标点击', element)
-    if (element.type == 'PrivateDragRectElement') {
-        return;
-    }
     contentScale.openIs = true;
     none(panel.pageHeader);
     none(panel.pageFooter);

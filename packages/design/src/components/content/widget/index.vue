@@ -2,7 +2,7 @@
     <div class="option-container display-flex-column">
         <div class="header display-flex">
             <el-icon size="25" class="header-back-icon">
-                <ArrowLeft />
+                <ArrowLeft @click="back" />
             </el-icon>
             <div style="flex: 1;"> {{ moduleName }}</div>
         </div>
@@ -51,6 +51,8 @@ import { providerKey } from '@myprint/design/constants/keys';
 import { customProvider } from '@myprint/design/constants/provider/custom';
 import { ArrowLeft } from '@element-plus/icons-vue';
 
+const $emit = defineEmits(['back']);
+
 const provider = inject(providerKey)!;
 withDefaults(defineProps<{
     moduleName?: string
@@ -59,4 +61,7 @@ withDefaults(defineProps<{
 });
 const openPanel = ref(['1', '2', '3']);
 
+function back() {
+    $emit('back');
+}
 </script>

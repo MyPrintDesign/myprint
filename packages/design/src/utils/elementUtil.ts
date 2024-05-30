@@ -18,8 +18,6 @@ import {
     TableHeadProviderCellElement
 } from '@myprint/design/types/entity';
 import {
-    canMoveStatusList,
-    defaultDragRectElement,
     elementTypeContainerList,
     elementTypeLineList
 } from '@myprint/design/constants/common';
@@ -688,21 +686,21 @@ export function removeElement(element: MyElement) {
         .handle('PageFooter', () =>
             (element.runtimeOption.parent as Panel).pageFooter = undefined
         )
-        .handle('PrivateDragRectElement', () => {
-                const elementList: Array<MyElement> = [];
-
-                for (let valueElement of getCurrentPanel().elementList!) {
-                    if ('SELECT' == valueElement.runtimeOption.status) {
-                        elementList.push(valueElement);
-                    }
-                }
-
-                for (let valueElement of elementList) {
-                    arrayRemove(valueElement.runtimeOption.parent!.elementList, valueElement);
-                }
-                element.x = undefined!;
-            }
-        )
+        // .handle('PrivateDragRectElement', () => {
+        //         const elementList: Array<MyElement> = [];
+        //
+        //         for (let valueElement of getCurrentPanel().elementList!) {
+        //             if ('SELECT' == valueElement.runtimeOption.status) {
+        //                 elementList.push(valueElement);
+        //             }
+        //         }
+        //
+        //         for (let valueElement of elementList) {
+        //             arrayRemove(valueElement.runtimeOption.parent!.elementList, valueElement);
+        //         }
+        //         element.x = undefined!;
+        //     }
+        // )
         .end(() => {
             arrayRemove(element.runtimeOption.parent!.elementList, element);
         });
@@ -922,18 +920,6 @@ export function replaceVariables(str: string, params: { [key: string]: any }): s
     }
 
     return result;
-}
-
-export function selectedElementBatchOperation(callback: (element: MyElement) => void) {
-    for (let valueElement of getCurrentPanel().elementList!) {
-        if (canMoveStatusList.includes(valueElement.runtimeOption.status)) {
-            callback(valueElement);
-        }
-    }
-    if (defaultDragRectElement.x != null) {
-        callback(defaultDragRectElement);
-    }
-
 }
 
 export function changePageSize(val?: any) {

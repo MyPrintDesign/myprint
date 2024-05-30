@@ -1,9 +1,9 @@
 <template>
-    <el-container class="cursor-resize" :data-rotation="appStore.dataRotation">
+    <el-container class="design-container-root cursor-resize" :data-rotation="appStore.dataRotation">
         <el-aside width="180" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
-            <widget :module="data.template.module" />
+            <widget :module="data.template.module" @back="back" />
         </el-aside>
-        <el-main>
+        <el-main class="design-container-root_main">
             <PanelView />
         </el-main>
     </el-container>
@@ -25,7 +25,7 @@ import { parentInitElement, setCurrentPanel } from '@myprint/design/utils/elemen
 
 const appStore = useAppStoreHook();
 
-const $emit = defineEmits(['saveTemplate']);
+const $emit = defineEmits(['saveTemplate', 'back']);
 
 const provider = ref({}) as Ref<Provider>;
 const panel = reactive({
@@ -97,6 +97,10 @@ watch(() => props.template.id, (n, _o) => {
     }
 }, { immediate: true });
 
+function back() {
+    $emit('back');
+}
+
 function saveTemplate() {
     // console.log(panel)
     // console.log(template)
@@ -114,13 +118,3 @@ function saveTemplate() {
     $emit('saveTemplate', template);
 }
 </script>
-
-<style scoped lang="scss">
-//.el-container {
-//  height: 100%;
-//}
-//
-//.el-main {
-//  padding: 0;
-//}
-</style>

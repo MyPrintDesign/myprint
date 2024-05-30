@@ -1,4 +1,3 @@
-
 .group-container {
   display: flex;
 }
@@ -11,7 +10,8 @@
 .group-container > :not(:first-child) {
 }
 
-.group-container > :not(:last-child) .el-input__wrapper {
+.group-container > :not(:last-child) .el-input__wrapper,
+.group-container > :not(:last-child) .el-select__wrapper {
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
 }
@@ -25,7 +25,8 @@
   z-index: 2;
 }
 
-.group-container > :not(:first-child) .el-input__wrapper {
+.group-container > :not(:first-child) .el-input__wrapper,
+.group-container > :not(:first-child) .el-select__wrapper {
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
 }

@@ -1,4 +1,183 @@
 :root {
   //--drag-h-color: #646cff;
+}
+
+.demo-container {
+  height: 100%;
+}
+
+.filed-setting_wrapper {
+  height: 100%;
+
+  .filed-setting_content {
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: calc(100% - 30px);
+    height: calc(100% - 75px);
+
+    .filed-setting_content_table {
+      margin-left: 15px;
+      width: 100%;
+    }
+  }
+
+  .filed-setting_field_body {
+
+  }
+
+  .filed-setting_field_item {
+
+  }
+
+  .filed-setting_field_footer {
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    text-align: center;
+  }
+}
+
+.choose-image {
+  text-align: center;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--el-color-primary);
+  }
+}
+
+.display-image {
+  position: relative;
+  width: 100px;
+  height: 100px;
+
+  .display-image_img {
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .display-image_remove {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: white;
+    right: -6px;
+    top: -6px;
+    border-radius: 12px;
+  }
+}
+
+@mixin field-table {
+  .hidden-expand-icon {
+    .el-table__expand-icon {
+      visibility: hidden;
+    }
+  }
+}
+
+.field-table {
+  @include field-table;
+
+  .inner_table {
+    margin-left: 40px;
+    width: calc(100% - 40px);
+
+    @include field-table;
+
+  }
+}
+
+.module-right_main {
+  padding-bottom: 0 !important;
+}
+
+.module-header {
+  height: 40px;
+  //background: gray;
+  align-items: center;
+
+  .module-header_title {
+    flex: 1;
+  }
+
+  .el-button {
+    padding: 8px 8px !important;
+  }
 
 }
+
+.module-list-scrollbar {
+  height: calc(100% - 100px) !important;
+  width: calc(100% - 20px);
+  padding: 10px;
+
+  .module-list {
+    gap: 10px;
+
+    .module-item_card {
+      height: 170px;
+      width: 240px;
+      min-width: 240px;
+
+      .el-card__body {
+        padding: 0 !important;
+
+        .module-item_card_cover {
+          width: 100%;
+          height: 140px;
+        }
+
+        .module-item_card_tool {
+          width: 100%;
+          height: 30px;
+
+          .module-item_card_tool_template_title {
+            flex: 1;
+          }
+
+          .el-button {
+            padding: 8px 8px !important;
+          }
+
+        }
+      }
+    }
+  }
+}
+
+
+.module-page_wrapper {
+  height: 40px;
+  //background: gray;
+
+  .el-pagination__sizes {
+    margin-left: 6px;
+
+    .el-select--default {
+      width: 80px !important;
+
+      .el-select__wrapper {
+        padding: 4px 4px !important;
+      }
+    }
+  }
+
+  .el-pagination__jump {
+    margin-left: 6px;
+
+    .el-pagination__goto {
+      display: none;
+    }
+  }
+
+}
+

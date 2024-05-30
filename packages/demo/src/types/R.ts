@@ -22,6 +22,15 @@ export interface R<D = any> {
     msg?: any;
 }
 
+export interface ModuleGroup {
+    id?: number;
+    originId?: any;
+    userId?: any;
+    name?: string;
+
+    moduleList: Module[];
+}
+
 export interface Module {
     id?: number;
     originId?: any;
@@ -29,6 +38,7 @@ export interface Module {
     name?: string;
     provider?: string;
     previewData?: string;
+    previewDataByte?: any;
 }
 
 export interface Template {
@@ -38,5 +48,5 @@ export interface Template {
     name?: string;
     content?: any;
     coverImgUrl?: any;
-    module: Module
+    module: Module;
 }

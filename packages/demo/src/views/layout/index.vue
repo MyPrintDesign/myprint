@@ -1,31 +1,60 @@
 <template>
-    <el-container>
+    <el-container class="demo-container">
         <el-header>
-            <header :isCollapse="state.isCollapse" @changeIsCollapse="changeIsCollapse" />  <!-- header 头部 -->
+            <el-menu
+                ref="menuRef"
+                :default-active="activeIndex"
+                class="el-menu-demo"
+                mode="horizontal"
+                @select="handleSelect">
+                <!--                <el-menu-item index="/module">个人模版</el-menu-item>-->
+                <!--                <el-menu-item index="/templateCenter">模版中心</el-menu-item>-->
+                <!--                <el-menu-item index="/open-source">开源中心</el-menu-item>-->
+                <!--                <el-menu-item index="/doc">文档</el-menu-item>-->
+                <el-menu-item index="/module">--</el-menu-item>
+                <el-menu-item index="/templateCenter">--</el-menu-item>
+                <el-menu-item index="/open-source">--</el-menu-item>
+                <el-menu-item index="/doc">--</el-menu-item>
+            </el-menu>
         </el-header>
         <el-main>
-            <router-view />
+            <router-view v-slot="{ Component }">
+                <keep-alive :include="useKeepAliveStore.keepAliveComponents" :max="20">
+                    <component :is="Component" />
+                </keep-alive>
+            </router-view>
         </el-main>
     </el-container>
 </template>
 <script lang="ts" setup>
-import { reactive } from 'vue';
-import header from '@/views/layout/header.vue';
+import { ref } from 'vue';
+import router from '@/router';
+import { keepAliveStore } from '@/stores/keepAliveStore';
 
-const state = reactive({
-    isCollapse: false  // 控制菜单展开 收起
+defineOptions({
+    name: 'Layout'
 });
+const activeIndex = ref('/module');
+let lastIndex = '/module';
+const menuRef = ref();
+const useKeepAliveStore = keepAliveStore();
 
-const changeIsCollapse = (): void => {
-    state.isCollapse = !state.isCollapse;
+const handleSelect = (key: string, _keyPath: string[]) => {
+    activeIndex.value = key;
+    
+    if (key === '/open-source') {
+        ((((menuRef.value.$el) as HTMLElement).children[2]) as HTMLLIElement).blur();
+        // 打开外部链接
+        setTimeout(() => {
+            activeIndex.value = lastIndex;
+        }, 10);
+        
+        window.open('https://github.com');
+        return;
+    }
+    router.push({ path: key });
+    // return true;
+    lastIndex = key;
 };
-</script>
-<style>
-.el-container {
-    height: 100%;
-}
 
-.el-main {
-    padding: 0 !important;
-}
-</style>
+</script>

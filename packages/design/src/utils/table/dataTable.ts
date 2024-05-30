@@ -16,8 +16,8 @@ import { installParentElement, setCurrentElement } from '@myprint/design/utils/e
 export function recursionForTableCell(tableHeadList: TableHeadProviderCellElement[], callback: (providerCell: TableHeadProviderCellElement) => void) {
     for (let tableHeadCellElement of tableHeadList) {
         callback(tableHeadCellElement);
-        if (tableHeadCellElement.childList != null && tableHeadCellElement.childList.length > 0) {
-            recursionForTableCell(tableHeadCellElement.childList, callback);
+        if (tableHeadCellElement.columnList != null && tableHeadCellElement.columnList.length > 0) {
+            recursionForTableCell(tableHeadCellElement.columnList, callback);
         }
     }
 }
@@ -25,8 +25,8 @@ export function recursionForTableCell(tableHeadList: TableHeadProviderCellElemen
 // 表头深度
 export function findTableHeadDeep(tableHeadList: TableHeadProviderCellElement[], deep: number) {
     for (let tableHeadCellElement of tableHeadList) {
-        if (tableHeadCellElement.childList != null && tableHeadCellElement.childList.length > 0) {
-            return findTableHeadDeep(tableHeadCellElement.childList, deep + 1);
+        if (tableHeadCellElement.columnList != null && tableHeadCellElement.columnList.length > 0) {
+            return findTableHeadDeep(tableHeadCellElement.columnList, deep + 1);
         }
     }
     return deep;
@@ -352,8 +352,8 @@ export function recursionHandleTableHead(tableHeadListList: TableCellElement[][]
     const tableHeadListTmp = tableHeadListList[deep];
     for (let j = 0; j < tableHeadList.length; j++) {
         const tableHeadCell = tableHeadList[j];
-        const childList = tableHeadCell.childList;
-        tableHeadCell.childList = undefined!;
+        const childList = tableHeadCell.columnList;
+        tableHeadCell.columnList = undefined!;
         if (childList != null && childList.length > 0) {
             tableHeadCell.rowspan = 1;
 
