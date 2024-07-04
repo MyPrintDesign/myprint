@@ -1,6 +1,21 @@
-export interface Option {
-    type: string;
-    label: string;
+export interface PrintProps {
+    panel?: Panel | string,
+    // appointChannel?: 'SERVER' | 'CHROME' | 'CLIENT',
+    previewDataList: any[],
+    timeout?: number
+}
+
+export interface PrintResult {
+    status: 'SUCCESS' | 'ERROR' | 'TIMEOUT';
+    msg?: string,
+    type: 'CHROME_PRINT' | 'TIMEOUT' | 'CLIENT_PRINT' | 'CLIENT_GENERATE_PDF';
+}
+
+export interface ClientCmd {
+    taskId: string;
+    cmd: 'print' | 'generatePdf' | 'generatePdfResult' | 'printResult',
+    pdf?: Buffer,
+    content?: any
 }
 
 export interface Provider {

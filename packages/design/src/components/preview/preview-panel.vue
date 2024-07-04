@@ -35,11 +35,11 @@
                 <div>名称：{{ panel.name }}</div>
                 <div>打印份数：测试</div>
                 <div>客户端未连接，无法使用直接打印功能，去下载</div>
-                <template v-if="connect">
+                <template v-if="useSocket().connect">
                     <div>打印机：
                         <el-select v-model="data.printer" placeholder="请选择" size="large">
                             <el-option
-                                v-for="item in printerList"
+                                v-for="item in useSocket().printerList"
                                 :key="item.name"
                                 :label="item.displayName"
                                 :value="item.name"
@@ -69,67 +69,86 @@ import { toPdf } from '@myprint/design/utils/pdfUtil';
 import { download, printCssStyle } from '@myprint/design/utils/utils';
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import Preview from './preview.vue';
-import { MyElement, Panel } from '@myprint/design/types/entity';
-import { messageFun, mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
+import { ClientCmd, MyElement, Panel, PrintResult } from '@myprint/design/types/entity';
+import { messageFun } from '@myprint/design/constants/keys';
 import { useSocket } from '@myprint/design/stores/socket';
 import { i18n } from '@myprint/design/locales';
-import { displayModel, getCurrentPanel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
+import { displayModel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { autoPage } from './autoPage';
+import { PrintProps } from '@myprint/design/types/entity';
 
-const { SEND: socketSend, printerList, connect } = useSocket();
+defineExpose({ handlePreview });
+
 const configStore = useConfigStore();
 const data = reactive({
     dialogVisible: false,
     printer: configStore.defaultPrinter,
-    pageList: [] as any
+    pageList: [] as any,
+    resolveMap: {},
+    previewTimeOut: null! as any,
+    printTaskId: null as any
 });
 const previewContentRef = ref<HTMLDivElement[]>()!;
-const mitt = inject(mittKey)!;
-const panel = inject(panelKey)! as Panel;
+const panel = ref({} as Panel);
 const onMessage = inject(messageFun)!;
-const previewData = inject(previewDataKey)!;
 let itemRefs = {} as any;
-
-mitt.on('previewPanel', previewPanel);
 
 function print() {
     let html = '';
     for (let i = 0; i < previewContentRef.value!.length; i++) {
         html += previewContentRef.value![i].outerHTML;
     }
-    socketSend(JSON.stringify({
+    useSocket().SEND(JSON.stringify({
             content: { html, printer: data.printer },
             cmd: 'print',
-            width: unit2unit(getCurrentPanelUnit(), 'mm', panel.width),
-            height: unit2unit(getCurrentPanelUnit(), 'mm', panel.height)
+            taskId: data.printTaskId,
+            width: unit2unit(getCurrentPanelUnit(), 'mm', panel.value.width),
+            height: unit2unit(getCurrentPanelUnit(), 'mm', panel.value.height)
         })
     );
 }
 
 function downloadPdf() {
     // console.log(previewContent.value)
-    if (connect) {
+    if (useSocket().connect) {
         let html = '';
         for (let i = 0; i < previewContentRef.value!.length; i++) {
             html += previewContentRef.value![i].outerHTML;
         }
-        socketSend(JSON.stringify({
+        useSocket().SEND(JSON.stringify({
+                taskId: data.printTaskId,
                 content: { html },
                 cmd: 'generatePdf',
-                width: unit2unit(getCurrentPanelUnit(), 'mm', panel.width),
-                height: unit2unit(getCurrentPanelUnit(), 'mm', panel.height)
+                width: unit2unit(getCurrentPanelUnit(), 'mm', panel.value.width),
+                height: unit2unit(getCurrentPanelUnit(), 'mm', panel.value.height)
             })
         );
     } else {
         toPdf(previewContentRef.value, {
-            width: unit2px(panel.width), height: unit2px(panel.height)
+            width: unit2px(panel.value.width), height: unit2px(panel.value.height)
         });
     }
 }
 
 function printChromePdf() {
+    printResult(data.printTaskId, {
+        status: 'SUCCESS',
+        type: 'CHROME_PRINT'
+    });
     printArea();
+}
+
+function printResult(printTaskId: string, result: PrintResult) {
+    
+    if (data.previewTimeOut) {
+        clearTimeout(data.previewTimeOut);
+    }
+    
+    if (data.resolveMap[printTaskId]) {
+        data.resolveMap[printTaskId](result);
+        delete data.resolveMap[printTaskId];
+    }
 }
 
 function setItemRef(el: any, item: MyElement) {
@@ -138,10 +157,25 @@ function setItemRef(el: any, item: MyElement) {
     itemRefs[item.id] = el;
 }
 
-function previewPanel() {
+function handlePreview(printProps: PrintProps) {
     data.dialogVisible = true;
-    nextTick(() => {
-        autoPage(data.pageList, getCurrentPanel(), previewData.value);
+    panel.value = printProps.panel as Panel;
+    data.printTaskId = crypto.randomUUID();
+    
+    if (printProps.timeout! > 0) {
+        data.previewTimeOut = setTimeout(() => {
+            printResult(data.printTaskId, {
+                status: 'TIMEOUT',
+                type: 'TIMEOUT'
+            });
+        }, printProps.timeout);
+    }
+    
+    return new Promise((resolve, _reject) => {
+        data.resolveMap[data.printTaskId] = resolve;
+        nextTick(() => {
+            autoPage(data.pageList, panel.value, printProps.previewDataList);
+        });
     });
 }
 
@@ -162,7 +196,7 @@ function printArea() {
     iframe.setAttribute('id', 'print-box');
     iframe.setAttribute(
         'style',
-        `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; position: absolute; left : 100px; top: 0;border: 0;
+        `height: ${valueUnit(panel.value.height)}; width: ${valueUnit(panel.value.width)}; position: absolute; left : 100px; top: 0;border: 0;
       z-index: 10000;`
     );
     // 在页面插入iframe
@@ -182,7 +216,7 @@ function printArea() {
     *{ margin:0;padding:0; }
     @media print {
       @page {
-        size: ${valueUnit(panel.width)} ${valueUnit(panel.height)};
+        size: ${valueUnit(panel.value.width)} ${valueUnit(panel.value.height)};
         margin: 0;
       }
     }
@@ -203,16 +237,32 @@ function printArea() {
     
 }
 
-onMessage.value = (msg: any) => {
-    // console.log(msg);
-    let pdf = msg.pdf;
-    // console.log(pdf)
-    if (pdf != null) {
-        // 将Buffer对象转换为Uint8Array数组
-        const uint8Array = new Uint8Array(pdf.data);
-        // 将Uint8Array数组转换为Blob对象
-        const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
-        download(blob, panel.name);
+onMessage.value = (msg: ClientCmd) => {
+    if (msg.cmd == 'printResult') {
+        printResult(msg.taskId, {
+            status: msg.content.success? 'SUCCESS': 'ERROR',
+            msg: msg.content.failureReason,
+            type: 'CLIENT_PRINT'
+        })
     }
+    
+    if (msg.cmd == 'generatePdfResult') {
+        printResult(msg.taskId, {
+            status: 'SUCCESS',
+            msg: '',
+            type: 'CLIENT_GENERATE_PDF'
+        })
+        
+        let pdf = msg.pdf;
+        // console.log(pdf)
+        if (pdf != null) {
+            // 将Buffer对象转换为Uint8Array数组
+            const uint8Array = new Uint8Array(pdf.data);
+            // 将Uint8Array数组转换为Blob对象
+            const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
+            download(blob, panel.value.name);
+        }
+    }
+    
 };
 </script>

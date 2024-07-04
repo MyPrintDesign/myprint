@@ -16,7 +16,7 @@ export type EventTypes = {
     elementRemove: MyElement;
     printPanel: PrintProps;
     design2Img: PrintProps;
-    previewPanel: MyElement;
+    previewPanel: PrintProps;
     clearPanel: Panel;
     panelSnapshot: Snapshot;
     sortColumn: any;

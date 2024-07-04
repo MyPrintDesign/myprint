@@ -2,7 +2,7 @@
     <div class="toolbar-container">
         
         <div class="display-flex space-between width-100-p">
-                        <style-design />
+            <!--                        <style-design />-->
             
             <div class="display-flex-column toolbar-tool">
                 <div class="display-flex">
@@ -60,22 +60,7 @@ function serverDownloadPdf() {
     displayModel('print');
     MyPrinter.pdfServer({ previewDataList: previewData.value })
         .then(blob => {
-            // 创建一个 URL 对象
-            const blobUrl = URL.createObjectURL(blob);
-            
-            // 创建一个 <a> 元素用于下载
-            const a = document.createElement('a');
-            a.href = blobUrl;
-            a.download = "myprinter.pdf";
-            
-            // 将 <a> 元素添加到 DOM 并触发点击事件以下载文件
-            document.body.appendChild(a);
-            a.click();
-            
-            // 移除 <a> 元素并释放 URL 对象
-            document.body.removeChild(a);
-            URL.revokeObjectURL(blobUrl);
-            
+            download(blob, 'myprint.pdf');
         }).catch(e => {
         console.error(e);
         console.log('生成失败');
@@ -84,7 +69,10 @@ function serverDownloadPdf() {
 
 function preview() {
     displayModel('preview');
-    mitt.emit('previewPanel', {} as any);
+    MyPrinter.preview({ previewDataList: previewData.value })
+        .then(res => {
+            console.log(res);
+        });
 }
 
 function refresh() {

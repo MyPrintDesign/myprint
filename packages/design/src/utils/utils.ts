@@ -267,14 +267,20 @@ export function printCssStyle() {
 }
 
 export function download(blob: Blob, fileName: string) {
+    // 创建一个 URL 对象
+    const blobUrl = URL.createObjectURL(blob);
+
+    // 创建一个 <a> 元素用于下载
     const a = document.createElement('a');
-    a.href = window.URL.createObjectURL(blob);
-    a.download = fileName + '.pdf';
-    a.style.position = 'fixed';
-    a.target = '_blank';
+    a.href = blobUrl;
+    a.download = fileName;
+    // 将 <a> 元素添加到 DOM 并触发点击事件以下载文件
     document.body.appendChild(a);
     a.click();
+
+    // 移除 <a> 元素并释放 URL 对象
     document.body.removeChild(a);
+    URL.revokeObjectURL(blobUrl);
 }
 
 

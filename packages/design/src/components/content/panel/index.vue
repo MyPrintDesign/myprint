@@ -17,12 +17,12 @@
             <minimap-panel />
         </div>
     </div>
-    <preview-panel />
+<!--    <preview-panel />-->
 </template>
 
 <script setup lang="ts">
 import Toolbar from '../toolbar/toolbar.vue';
-import PreviewPanel from '../../preview/preview-panel.vue';
+// import PreviewPanel from '../../preview/preview-panel.vue';
 import MyPanel from './my-panel.vue';
 import { handlePanelElementList } from '@myprint/design/constants/settingPanel';
 import HistoryPanel from '../handle-panel/history-panel.vue';

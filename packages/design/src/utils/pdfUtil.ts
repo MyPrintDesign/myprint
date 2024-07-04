@@ -2,18 +2,14 @@ import html2canvas from 'html2canvas';
 import JsPDF from 'jspdf';
 import { unit2unit } from '@myprint/design/utils/devicePixelRatio';
 
-// a4
-let a4Width = 595.28;
-let a4Height = 841.89;
-
 let defaultOptions = {
     name: new Date().getTime(),
     scale: window.devicePixelRatio,
     padding: 0,
     logging: true,
     dpi: 144, // 设置dpi，会使图片高清一些
-    // width: a4Width,
-    // height: a4Height,
+    width: -1,
+    height: -1
     // allowTaint: true
 };
 
@@ -91,8 +87,8 @@ export async function toImg(imgListCallback: (imageList: ArrayBuffer[]) => void,
  * @param options
  */
 export async function toPdf(pageDomList: any, options: any) {
-    let w = unit2unit('px', 'cm', options.width)
-    let h = unit2unit('px', 'cm', options.height)
+    let w = unit2unit('px', 'cm', options.width);
+    let h = unit2unit('px', 'cm', options.height);
     let doc = new JsPDF(undefined, 'cm', [w, h]);
     defaultOptions.width = options.width;
     defaultOptions.height = options.height;
@@ -104,8 +100,8 @@ export async function toPdf(pageDomList: any, options: any) {
         // 生成的画布元素宽高（需要收缩回原比例大小）
         // console.log(canvas.width,  canvas.height)
         // console.log(options.scale)
-        let canvasWidth = canvas.width / defaultOptions.scale;
-        let canvasHeight = canvas.height / defaultOptions.scale;
+        // let canvasWidth = canvas.width / defaultOptions.scale;
+        // let canvasHeight = canvas.height / defaultOptions.scale;
         // console.log(canvasWidth, canvasHeight);
 
         // 页面等比例缩放后宽高

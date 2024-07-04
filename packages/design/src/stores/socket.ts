@@ -29,7 +29,6 @@ export const useSocket = defineStore('socket', {
             }
             const onMessage = (msgData: any) => {
                 // 遍历onMessage集合并触发
-                console.log(msgData)
                 if (onSocketMessage.value) {
                     onSocketMessage.value.call(null, msgData);
                 }
@@ -57,12 +56,12 @@ export const useSocket = defineStore('socket', {
                             stateThis.printerList = msgData.content
                             break
                         case 'printResult':
-                            console.log("打印结果" + msgData.content)
+                            onMessage(msgData)
+                            break
+                        case 'generatePdfResult':
+                            onMessage(msgData)
                             break
                         case 'pong':
-                            break
-                        case 'printPdf':
-                            onMessage(msgData)
                             break
                     }
                     heartCheck.reset().start();
