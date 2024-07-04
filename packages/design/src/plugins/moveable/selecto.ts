@@ -3,6 +3,10 @@ import { Ref, ref } from 'vue';
 
 export const selecto = ref() as Ref<Selecto>;
 
+export function newSelecto() {
+    selecto.value = null !;
+}
+
 export function initSelecto() {
     // console.log(selecto.value)
     if (!selecto.value) {

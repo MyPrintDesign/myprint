@@ -1,7 +1,7 @@
 <template>
     <el-container class="design-container-root cursor-resize" :data-rotation="appStore.dataRotation">
         <el-aside width="180" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
-            <widget :module="data.template.module" @back="back" />
+            <!--            <widget :module="props.module" @back="back" />-->
         </el-aside>
         <el-main class="design-container-root_main">
             <PanelView />
@@ -11,32 +11,35 @@
 </template>
 
 <script setup lang="ts">
-import widget from '@myprint/design/components/content/widget/index.vue';
 import PanelView from '@myprint/design/components/content/panel/index.vue';
 import { inject, provide, reactive, Ref, ref, watch } from 'vue';
 import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
 import { to } from '@myprint/design/utils/utils';
 import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
 import { init } from '@myprint/design/utils/historyUtil';
-import { Template } from '@myprint/design/types/R';
+//@ts-ignore
+import { Module, Template } from '@myprint/design/types/R';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
-import { parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
+import { displayModel, initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
+import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
+import { MyPrinter } from '@myprint/design/printer';
 
 const appStore = useAppStoreHook();
 
-const $emit = defineEmits(['saveTemplate', 'back']);
+const $emit = defineEmits(['saveTemplate', 'back', 'panelImg']);
 
 const provider = ref({}) as Ref<Provider>;
 const panel = reactive({
     runtimeOption: {
         dragInIs: false
     },
+    type: 'Panel',
     dragSnapPanelIs: 1,
     dragSnapIs: 1
 }) as Panel;
 const mitt = inject(mittKey)!;
-const previewData = ref<any>({} as any);
+const previewData = ref<any[]>([]);
 provide(panelKey, panel);
 provide(providerKey, provider);
 provide(previewDataKey, previewData);
@@ -44,21 +47,29 @@ provide(previewDataKey, previewData);
 mitt.on('saveTemplate', saveTemplate);
 
 const props = withDefaults(defineProps<{
-    template?: Template
+    template: Template
+    module: Module
 }>(), {
     template: () => ({} as Template)
 });
-const data = reactive({
-    template: {} as Template
+
+const moduleWatchStop = watch(() => props.module, (_n, _o) => {
+    if (props.module) {
+        provider.value = JSON.parse(props.module.provider!);
+        previewData.value = JSON.parse(props.module.previewData!);
+        initPanel(panel, provider);
+        setCurrentPanel(panel);
+        moduleWatchStop();
+    }
 });
 
-watch(() => props.template.id, (n, _o) => {
-    if (n != null) {
-        data.template = props.template;
+const templateWatchStop = watch(() => props.template, (_n, _o) => {
+    if (props.template) {
         to(JSON.parse(props.template.content), panel);
-        previewData.value = JSON.parse(props.template.module.previewData!);
         setCurrentPanel(panel);
-        panel.type = 'Panel';
+        
+        // initPanel();
+        
         if (!panel.watermarkContent) {
             panel.watermarkContent = 'my-print';
         }
@@ -89,7 +100,6 @@ watch(() => props.template.id, (n, _o) => {
         
         init();
         
-        provider.value = JSON.parse(data.template.module.provider!);
         if (provider.value.pageUnit == undefined) {
             provider.value.pageUnit = 'px';
         }
@@ -97,20 +107,26 @@ watch(() => props.template.id, (n, _o) => {
         mitt.emit('updatePanel');
         mitt.emit('changePageSize');
         
+        templateWatchStop();
     }
-}, { immediate: true });
+});
+
+newSelecto();
 
 function back() {
     $emit('back');
 }
 
 function saveTemplate() {
+    displayModel('print');
+    MyPrinter.print2Img({ previewDataList: [previewData.value[0]] })
+        .then(res => {
+            $emit('panelImg', res);
+        });
+    
     const template = {} as Template;
     template.name = panel.name;
     template.content = JSON.stringify(panel, (key, value) => {
-        // console.log(key)
-        // 清除runtime参数
-        // console.log(this)
         if ('runtimeOption' == key) return undefined;
         return value;
     });

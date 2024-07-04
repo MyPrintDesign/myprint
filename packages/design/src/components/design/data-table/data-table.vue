@@ -1,8 +1,8 @@
 <template>
     <table class="my-print-table"
-           ref="tableRef">
+           ref="tableRef" border="0" cellspacing="0">
         <tbody>
-        <tr class="border-box" :key="'t-'+headRowIndex"
+        <tr class="my-print-border-box" :key="'t-'+headRowIndex"
             v-for="(columnList, headRowIndex) in props.element.tableHeadList">
             <template v-for="(column) in columnList">
                 <column-view
@@ -13,7 +13,7 @@
             </template>
         
         </tr>
-        <tr class="border-box" :key="rowIndex" v-for="(bodyRowList, rowIndex) in props.element.tableBodyList">
+        <tr class="my-print-border-box" :key="rowIndex" v-for="(bodyRowList, rowIndex) in props.element.tableBodyList">
             <td class="my-print-table-column_body" v-for="(body) in bodyRowList"
                 :key="'b' + rowIndex + '-' + body.id"
                 :ref="(el)=>setItemRef(body, el)"
@@ -23,7 +23,7 @@
             </td>
         </tr>
         
-        <tr class="border-box" :key="rowIndex" v-for="(bodyRowList, rowIndex) in props.element.statisticsList">
+        <tr class="my-print-border-box" :key="rowIndex" v-for="(bodyRowList, rowIndex) in props.element.statisticsList">
             <td class="my-print-table-column_body" v-for="(body) in bodyRowList"
                 :key="'s'+rowIndex + '-' + body.id"
                 :ref="(el)=>setItemRef(body, el)"
@@ -39,7 +39,6 @@
 <script setup lang="ts">
 
 import ColumnView from './column-view.vue';
-// import ImageView from "../image/image.vue";
 import TextView from '../text/text.vue';
 import { CSSProperties, onMounted, watch } from 'vue';
 import { MyElement } from '@myprint/design/types/entity';
@@ -72,7 +71,7 @@ const bodyStyle = (column: MyElement) => {
         // maxHeight: column.runtimeOption.init.height + 'px'
     } as CSSProperties;
     
-    if (useAppStoreHook().displayModel == 'preview') {
+    if (useAppStoreHook().displayModel == 'preview' || useAppStoreHook().displayModel == 'print') {
         style.width = column.runtimeOption.width + 'px';
     }
     

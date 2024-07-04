@@ -47,6 +47,10 @@ export function displayModelDesign() {
     return appStore().displayModel == 'design';
 }
 
+export function displayModelPrint() {
+    return appStore().displayModel == 'print';
+}
+
 export function setCurrentPanel(panel: Panel) {
     appStore().currentPanel = panel;
     appStore().lastPageUnit = panel.pageUnit;
@@ -56,8 +60,8 @@ export function getCurrentPanel(): Panel {
     return appStore().currentPanel as Panel;
 }
 
-export function getCurrentPanelUnit(): PageUnit {
-    return _defaultVal(appStore().currentPanel.pageUnit, 'px');
+export function getCurrentPanelUnit(panel?: Panel): PageUnit {
+    return _defaultVal(panel != null ? panel.pageUnit : appStore().currentPanel.pageUnit, 'px');
 }
 
 export function setCurrentElement(element: MyElement[]) {
@@ -97,6 +101,19 @@ export function clearPanel(panel: Panel) {
     panel.pageFooter = undefined;
     panel.elementList = [];
     panel.auxiliaryLineList = [];
+}
+
+export function initPanel(panel, provider) {
+    panel.name == null && (panel.name = '新模版');
+    panel.width == null && (panel.width = provider.value.width);
+    panel.height == null && (panel.height = provider.value.height);
+    panel.pageSize == null && (panel.pageSize = provider.value.pageSize);
+    panel.pageUnit == null && (panel.pageUnit = provider.value.pageUnit);
+    panel.dragSnapPanelIs == null && (panel.dragSnapPanelIs = provider.value.dragSnapPanelIs);
+    panel.dragSnapIs == null && (panel.dragSnapIs = provider.value.dragSnapIs);
+    panel.elementList == undefined && (panel.elementList = []);
+    panel.groupList == null && (panel.groupList = []);
+    panel.auxiliaryLineList == null && (panel.auxiliaryLineList = []);
 }
 
 export function none(element?: MyElement) {
@@ -367,7 +384,7 @@ export function initElement(element: MyElement, index: number) {
 
     if (['Text', 'TextTime', 'PageNum', 'DataTable'].includes(element.type)) {
         if (!element.option.fontFamily) {
-            element.option.fontFamily = 'default';
+            element.option.fontFamily = 'heiti';
         }
         if (element.option.fontSize == null) {
             element.option.fontSize = 13;

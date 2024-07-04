@@ -53,13 +53,16 @@ const routes: Array<RouteRecordRaw> = [
         'name': 'design',
         'path': '/design',
         component: () => import('@/views/design/index.vue'),
+        meta: {
+            keepAlive: true
+        },
         'children': []
     },
     {
         'name': 'providerSetting',
         'path': '/providerSetting',
         meta: {
-            keepAlive: true
+            // keepAlive: true
         },
         component: () => import('@/views/module/field-setting/provider-setting.vue')
     },
@@ -67,7 +70,7 @@ const routes: Array<RouteRecordRaw> = [
         'name': 'previewData',
         'path': '/previewData',
         meta: {
-            keepAlive: true
+            // keepAlive: true
         },
         component: () => import('@/views/module/preview-data/preview-data.vue')
     }
@@ -110,7 +113,7 @@ router.beforeEach((to, _form, next) => {
     const meta = to.meta || {};
     // 加入缓存队列
     if (meta.keepAlive) {
-        console.log(to.name);
+        // console.log(to.name);
         useKeepAliveStore.setKeepAlive(to.name);
     }
 

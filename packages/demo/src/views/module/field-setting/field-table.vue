@@ -27,7 +27,7 @@
             </template>
         </el-table-column>
         <el-table-column prop="type" label="类型" :formatter="typeFormat" />
-        <el-table-column prop="data" label="内容" />
+        <el-table-column prop="data" label="内容" show-overflow-tooltip/>
         <el-table-column label="操作" width="120">
             <template #default="scope">
                 

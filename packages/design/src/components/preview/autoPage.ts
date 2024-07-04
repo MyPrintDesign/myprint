@@ -1,6 +1,6 @@
 import { parse, stringify } from '@myprint/design/utils/utils';
 import { px2unit, unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { nextTick, reactive, Ref } from 'vue';
+import { nextTick, reactive } from 'vue';
 import {
     FormatterVariable,
     MyElement,
@@ -10,12 +10,7 @@ import {
     RuntimeElementOption,
     TableCellElement
 } from '@myprint/design/types/entity';
-import {
-    copyPreviewWrapper,
-    element2PreviewWrapper,
-    formatter,
-    getCurrentPanel
-} from '@myprint/design/utils/elementUtil';
+import { copyPreviewWrapper, element2PreviewWrapper, formatter } from '@myprint/design/utils/elementUtil';
 import numberUtil from '@myprint/design/utils/numberUtil';
 import { elementTypeContainerList } from '@myprint/design/constants/common';
 import {
@@ -28,6 +23,7 @@ import {
 interface PreviewContext {
     autoPageIs: boolean,
     currentPreview: PreviewWrapper
+    previewData: any
     panel: Panel
     pageList: PreviewContainerWrapper[]
     currentPage: PreviewContainerWrapper
@@ -36,7 +32,7 @@ interface PreviewContext {
     pagingRepetition: boolean
 }
 
-export async function autoPage(pageList: Array<PreviewContainerWrapper>, previewContent: Ref<HTMLDivElement[] | undefined>, previewData: Ref<any>) {
+export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: Panel, previewDataList: any[]) {
     const variable = {
         pageIndex: 0,
         pageSize: 0,
@@ -52,11 +48,12 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
     let previewContext = {
         currentPreview: undefined!,
         autoPageIs: false,
-        panel: getCurrentPanel(),
+        previewData: {},
+        panel: panel,
         pageList: [],
         currentPage: undefined! as any,
         top: 0,
-        bottom: getCurrentPanel().height, // 单位 mm
+        bottom: panel.height, // 单位 mm
         pagingRepetition: true
     } as PreviewContext;
     // 处理elementWrapper
@@ -107,14 +104,20 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         previewWrapper.offsetLastElementTop = numberUtil.subScale(previewWrapper.y, offsetLastElementTop);
         offsetLastElementTop = numberUtil.sumScale(previewWrapper.y, previewWrapper.height);
     }
-    // 固定高度 表格分页打印
-    while (previewContext.pagingRepetition) {
-        previewContext.pagingRepetition = false;
-        previewContext.currentPreview = undefined!;
 
-        await newPage();
-        await installPreviewElement(previewElementList);
+    for (let previewData of previewDataList) {
+        previewContext.previewData = previewData
+        // 固定高度 表格分页打印
+        while (previewContext.pagingRepetition) {
+            previewContext.pagingRepetition = false;
+            previewContext.currentPreview = undefined!;
+
+            await newPage();
+            await installPreviewElement(previewElementList);
+        }
     }
+
+
 
     previewContext.autoPageIs = false;
     // 组装固定元素
@@ -143,7 +146,9 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
                         // debugger
                         previewWrapper.y = numberUtil.sumScale(previewContext.currentPage.offsetTop, previewWrapper.offsetLastElementTop);
                     }
+
                 }
+
 
                 // 判断需不需要分页
                 // console.log(await isNeedNewPage(previewWrapper.y, previewContext.bottom));
@@ -188,9 +193,12 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
             // 需要data
             let previewDataTmp: any;
 
+            // debugger
             if (previewWrapper.field) {
-                previewDataTmp = previewData.value[previewWrapper.field];
+                previewDataTmp = previewContext.previewData[previewWrapper.field];
             }
+
+
 
             if (!previewDataTmp) {
                 previewDataTmp = formatter(previewWrapper, variable);
@@ -236,6 +244,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
                 //     previewWrapper.tableBodyList.length = 1;
                 //     previewWrapper.previewTableRowIndex = undefined!;
                 // }
+                // console.log(previewDataTmp);
                 await autoTableRow(previewContext, previewDataTmp, tableRowIndex);
             } else if (previewWrapper.type == 'Container') {
                 previewContext.currentPage.elementList.push(previewWrapper);
@@ -473,7 +482,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         // 处理页头，页脚
 
         await nextTick();
-        getPanelDiv();
+        // getPanelDiv();
 
         if (previewContext.panel.pageHeader) {
             let preview = previewContext.panel.pageHeader as PreviewWrapper;
@@ -549,9 +558,10 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, preview
         }
     }
 
-    function getPanelDiv() {
-        return previewContent.value![previewContent.value!.length - 1];
-    }
+    // function getPanelDiv() {
+    //     // console.log(previewContent.value?.length);
+    //     return previewContent.value![previewContent.value!.length - 1];
+    // }
 }
 
 

@@ -14,7 +14,7 @@
                     <div class="preview-panel__model">
                         <div class="my-print-preview-panel__content">
                             <div v-for="(page, index) in data.pageList"
-                                 ref="previewContent"
+                                 ref="previewContentRef"
                                  :key="index"
                                  class="my-print-preview-panel__content_page preview-page-top"
                                  :style="{
@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 // import { ElDialog, ElScrollbar, ElButton, ElSelect, ElOption } from 'element-plus'
-import { inject, onMounted, reactive, ref } from 'vue';
+import { inject, nextTick, reactive, ref } from 'vue';
 import { toPdf } from '@myprint/design/utils/pdfUtil';
 import { download, printCssStyle } from '@myprint/design/utils/utils';
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
@@ -73,7 +73,7 @@ import { MyElement, Panel } from '@myprint/design/types/entity';
 import { messageFun, mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
 import { useSocket } from '@myprint/design/stores/socket';
 import { i18n } from '@myprint/design/locales';
-import { displayModel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
+import { displayModel, getCurrentPanel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { autoPage } from './autoPage';
 
@@ -84,7 +84,7 @@ const data = reactive({
     printer: configStore.defaultPrinter,
     pageList: [] as any
 });
-const previewContent = ref<HTMLDivElement[]>()!;
+const previewContentRef = ref<HTMLDivElement[]>()!;
 const mitt = inject(mittKey)!;
 const panel = inject(panelKey)! as Panel;
 const onMessage = inject(messageFun)!;
@@ -95,8 +95,8 @@ mitt.on('previewPanel', previewPanel);
 
 function print() {
     let html = '';
-    for (let i = 0; i < previewContent.value!.length; i++) {
-        html += previewContent.value![i].outerHTML;
+    for (let i = 0; i < previewContentRef.value!.length; i++) {
+        html += previewContentRef.value![i].outerHTML;
     }
     socketSend(JSON.stringify({
             content: { html, printer: data.printer },
@@ -111,18 +111,18 @@ function downloadPdf() {
     // console.log(previewContent.value)
     if (connect) {
         let html = '';
-        for (let i = 0; i < previewContent.value!.length; i++) {
-            html += previewContent.value![i].outerHTML;
+        for (let i = 0; i < previewContentRef.value!.length; i++) {
+            html += previewContentRef.value![i].outerHTML;
         }
         socketSend(JSON.stringify({
                 content: { html },
                 cmd: 'generatePdf',
-            width: unit2unit(getCurrentPanelUnit(), 'mm', panel.width),
-            height: unit2unit(getCurrentPanelUnit(), 'mm', panel.height)
+                width: unit2unit(getCurrentPanelUnit(), 'mm', panel.width),
+                height: unit2unit(getCurrentPanelUnit(), 'mm', panel.height)
             })
         );
     } else {
-        toPdf(previewContent.value, {
+        toPdf(previewContentRef.value, {
             width: unit2px(panel.width), height: unit2px(panel.height)
         });
     }
@@ -132,10 +132,6 @@ function printChromePdf() {
     printArea();
 }
 
-onMounted(() => {
-
-});
-
 function setItemRef(el: any, item: MyElement) {
     // console.log('setItemRef', item.label)
     // console.log('setItemRef')
@@ -144,9 +140,9 @@ function setItemRef(el: any, item: MyElement) {
 
 function previewPanel() {
     data.dialogVisible = true;
-    // console.log(itemRefs)
-    // console.log(previewData)
-    autoPage(data.pageList, previewContent, previewData);
+    nextTick(() => {
+        autoPage(data.pageList, getCurrentPanel(), previewData.value);
+    });
 }
 
 function closePreviewPanel() {
@@ -156,9 +152,8 @@ function closePreviewPanel() {
 
 function printArea() {
     let html = '<div style="  --tcolor: black;">';
-    // let html = '<div>'
-    for (let i = 0; i < previewContent.value!.length; i++) {
-        html += previewContent.value![i].outerHTML;
+    for (let i = 0; i < previewContentRef.value!.length; i++) {
+        html += previewContentRef.value![i].outerHTML;
     }
     html += '</div>';
     // 创建iframe
@@ -209,7 +204,7 @@ function printArea() {
 }
 
 onMessage.value = (msg: any) => {
-    console.log(msg);
+    // console.log(msg);
     let pdf = msg.pdf;
     // console.log(pdf)
     if (pdf != null) {

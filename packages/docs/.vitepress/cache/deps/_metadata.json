@@ -1,0 +1,52 @@
+{
+  "hash": "8026c8a4",
+  "configHash": "82e21b6f",
+  "lockfileHash": "a4cc5a84",
+  "browserHash": "faafda9c",
+  "optimized": {
+    "vue": {
+      "src": "../../../../../node_modules/.pnpm/registry.npmmirror.com+vue@3.3.8_typescript@5.0.2/node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "f5200f05",
+      "needsInterop": false
+    },
+    "vitepress > @vue/devtools-api": {
+      "src": "../../../../../node_modules/.pnpm/registry.npmmirror.com+@vue+devtools-api@7.3.4/node_modules/@vue/devtools-api/dist/index.js",
+      "file": "vitepress___@vue_devtools-api.js",
+      "fileHash": "0ef665a4",
+      "needsInterop": false
+    },
+    "vitepress > @vueuse/core": {
+      "src": "../../../../../node_modules/.pnpm/registry.npmmirror.com+@vueuse+core@10.11.0_vue@3.4.30/node_modules/@vueuse/core/index.mjs",
+      "file": "vitepress___@vueuse_core.js",
+      "fileHash": "4e335e3d",
+      "needsInterop": false
+    },
+    "vitepress > @vueuse/integrations/useFocusTrap": {
+      "src": "../../../../../node_modules/.pnpm/registry.npmmirror.com+@vueuse+integrations@10.11.0_focus-trap@7.5.4_vue@3.4.30/node_modules/@vueuse/integrations/useFocusTrap.mjs",
+      "file": "vitepress___@vueuse_integrations_useFocusTrap.js",
+      "fileHash": "efa43fa8",
+      "needsInterop": false
+    },
+    "vitepress > mark.js/src/vanilla.js": {
+      "src": "../../../../../node_modules/.pnpm/registry.npmmirror.com+mark.js@8.11.1/node_modules/mark.js/src/vanilla.js",
+      "file": "vitepress___mark__js_src_vanilla__js.js",
+      "fileHash": "7e2895ea",
+      "needsInterop": false
+    },
+    "vitepress > minisearch": {
+      "src": "../../../../../node_modules/.pnpm/registry.npmmirror.com+minisearch@6.3.0/node_modules/minisearch/dist/es/index.js",
+      "file": "vitepress___minisearch.js",
+      "fileHash": "88ba56bd",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-DECNIBNF": {
+      "file": "chunk-DECNIBNF.js"
+    },
+    "chunk-JUNWFENH": {
+      "file": "chunk-JUNWFENH.js"
+    }
+  }
+}

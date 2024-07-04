@@ -4,7 +4,7 @@ export const keepAliveStore = defineStore('keepAlive', {
 
     state: () => {
         return {
-            keepAliveComponents: ['Layout']
+            keepAliveComponents: ['Layout', 'design']
         };
     },
 

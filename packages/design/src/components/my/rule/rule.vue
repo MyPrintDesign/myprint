@@ -242,7 +242,7 @@ function drawRuler() {
                     .attr('x', space * i - 7)  // 设置 text 元素的 x 坐标
                     .attr('y', 10)  // 设置 text 元素的 y 坐标
                     .text(i + '')  // 设置 text 元素的文本内容
-                    .style('fill', 'white')  // b1b4b4 设置 text 元素的颜色
+                    .style('fill', 'black')  // b1b4b4 设置 text 元素的颜色
                     .style('font-size', '12px');  // 设置 text 元素的字体大小
             }
         }
@@ -261,7 +261,7 @@ function drawRuler() {
                     .attr('x', 3)  // 设置 text 元素的 x 坐标
                     .attr('y', space * i)  // 设置 text 元素的 y 坐标
                     .text(i + '')  // 设置 text 元素的文本内容
-                    .style('fill', 'white')  // 设置 text 元素的颜色
+                    .style('fill', 'black')  // 设置 text 元素的颜色
                     .attr('transform', `rotate(-90, 10, ${space * i})`)
                     .style('font-size', '12px');  // 设置 text 元素的字体大小
             }
@@ -270,7 +270,7 @@ function drawRuler() {
     }
     chartSvg.select('.u-path')
         // #8f9292
-        .style('stroke', 'white')
+        .style('stroke', 'black')
         .style('fill', 'white')
         // .attr("stroke-width", 1.9)
         .attr('d', path.toString());

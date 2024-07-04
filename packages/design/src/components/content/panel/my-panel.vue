@@ -19,6 +19,7 @@
             <div class="affix-container design-content-scroll " @scroll="scroll" @wheel="wheel"
                  ref="designScrollRef">
                 <div class="design-content design-content-bg"
+                     ref="designContentRef"
                      :style="{transformOrigin: 'left top',
                           transform: 'scale('+scaleUtil.miniMap.scale+')',
                             minWidth: valueUnit(panel.width),
@@ -116,6 +117,7 @@ onMounted(() => {
     resizeObserver.observe(designScrollRef.value!);
     
     const rect = designScrollRef.value!.getBoundingClientRect();
+    panel.runtimeOption.target = designContentRef.value
     appStore.panelPosition = { x: rect.x, y: rect.y, scrollX: 0, scrollY: 0 };
 });
 onUnmounted(() => {

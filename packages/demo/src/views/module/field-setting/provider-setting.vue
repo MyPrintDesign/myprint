@@ -7,13 +7,13 @@
                          label-width="auto"
                          :rules="rules">
                     
-<!--                    <el-form-item label="模版名称">-->
-<!--                        <el-input v-model="data.provider.name"-->
-<!--                                  type="textarea"-->
-<!--                                  :placeholder="i18n('common.width')"-->
-<!--                                  size="small"-->
-<!--                                  style="margin-right: 20px" />-->
-<!--                    </el-form-item>-->
+                    <!--                    <el-form-item label="模版名称">-->
+                    <!--                        <el-input v-model="data.provider.name"-->
+                    <!--                                  type="textarea"-->
+                    <!--                                  :placeholder="i18n('common.width')"-->
+                    <!--                                  size="small"-->
+                    <!--                                  style="margin-right: 20px" />-->
+                    <!--                    </el-form-item>-->
                     
                     <el-form-item label="单位" prop="region">
                         <el-select v-model="data.provider.pageUnit"
@@ -107,6 +107,7 @@ import { FormInstance } from 'element-plus';
 import { pageSizeList, pageUnitList } from '@myprint/design/constants/common';
 import { i18n } from '@myprint/design/locales';
 import { stringify } from '@myprint/design/utils/utils';
+import { msgError, msgSuccess } from '@/utils/util';
 
 defineOptions({
     name: 'providerSetting'
@@ -150,6 +151,9 @@ onMounted(() => {
             data.module = res.data;
             data.provider = JSON.parse(data.module.provider) as Provider;
             // console.log(data.provider);
+            if (!data.provider.elementList) {
+                data.provider.elementList = [];
+            }
             for (let element of data.provider.elementList) {
                 element.id = crypto.randomUUID();
                 if (element.columnList) {
@@ -177,9 +181,9 @@ function save() {
     data.module.previewData = null;
     moduleUpdate(data.module)
         .then(res => {
-            console.log('保存成功', res);
+            msgSuccess('保存成功');
         }).catch(e => {
-        console.error(e);
+        msgError(e.msg);
     });
 }
 

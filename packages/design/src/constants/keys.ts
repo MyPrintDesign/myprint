@@ -1,23 +1,24 @@
-import {InjectionKey, Ref} from "vue";
-import {MyElement, Panel, Provider} from "@myprint/design/types/entity";
-import {EventTypes} from "@myprint/design/types/eventType";
+import { InjectionKey, Ref } from 'vue';
+import { MyElement, Panel, Provider } from '@myprint/design/types/entity';
+import { EventTypes } from '@myprint/design/types/eventType';
 
 // @ts-ignore
-import {Emitter} from 'mitt'
+import { Emitter } from 'mitt';
+
 export const mittKey: InjectionKey<Emitter<EventTypes>> =
-    Symbol('mittKey')
+    Symbol('mittKey');
 
 export const providerKey: InjectionKey<Ref<Provider>> =
-    Symbol('providerKey')
+    Symbol('providerKey');
 
 export const panelKey: InjectionKey<Panel> =
-    Symbol('panelKey')
+    Symbol('panelKey');
 
-export const previewDataKey: InjectionKey<Ref<any>> =
-    Symbol('previewDataKey')
+export const previewDataKey: InjectionKey<Ref<any[]>> =
+    Symbol('previewDataKey');
 
 export const messageFun: InjectionKey<Ref<Function>> =
-    Symbol('messageFunKey')
+    Symbol('messageFunKey');
 
 export const selectElementKey: InjectionKey<Ref<MyElement>> =
-    Symbol('selectElementKey')
+    Symbol('selectElementKey');

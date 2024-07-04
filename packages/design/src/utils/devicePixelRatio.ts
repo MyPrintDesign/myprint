@@ -40,7 +40,6 @@ export function unit2unit(oldUnit: PageUnit, newUnit: PageUnit, val: number | un
     if (oldUnit === newUnit) {
         return val;
     }
-    // console.log(oldUnit);
     let convert = unitConvert[oldUnit]?.[newUnit];
     if (convert != null) {
         if (convert.compute === 'div') {

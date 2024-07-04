@@ -40,7 +40,7 @@
 }
 
 .my-element-wrapper {
-  will-change: transform;
+  will-change: transform !important;
   position: absolute;
   box-sizing: border-box;
   //z-index: 9999;

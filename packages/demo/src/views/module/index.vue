@@ -1,51 +1,79 @@
 <template>
-    <el-container style="height: calc(100vh - 100px);">
-        <el-aside width="200px">
-            <el-input
-                v-model="data.nameFilter"
-                placeholder="Filter keyword" />
+    <el-container style="height: calc(100vh - 60px);">
+        <el-aside width="240px"
+                  class="display-flex-column"
+                  style="background: rgb(248, 248, 248); padding-right: 6px; border-right: 1px solid rgb(233, 233, 233);">
+            <div class="module-list-filter display-flex">
+                <el-input
+                    v-model="data.nameFilter"
+                    @change="filterChange"
+                    style=" margin-left: 5px; width: calc(100% - 5px)"
+                    placeholder="过滤" />
+                <el-button class="module-list-filter-add" type="primary" plain :icon="Plus"
+                           @click="addModuleGroup" />
+            </div>
             <el-tree
-                style="max-width: 600px"
                 :data="data.moduleGroupList"
                 :props="defaultProps"
                 default-expand-all
+                node-key="id"
+                ref="elTreeRef"
+                class="module-list-tree"
                 :indent="0"
                 empty-text="">
                 <template #default="{ node, data }">
-                    <module-item @click="handleNodeClick" v-if="node.isLeaf" :node="node" />
-                    <ModuleGroupView v-else :node="node" />
+                    <ModuleGroupView v-if="data.groupIs" :node="node" @addModule="groupAddModule"
+                                     @rename="renameModuleGroup" @delete="deleteModuleGroup" />
+                    <module-item @click="handleNodeClick" v-else :node="node" @rename="renameModule"
+                                 @delete="deleteModule" />
                 </template>
             </el-tree>
+            
+            <div>123</div>
         </el-aside>
         <el-main class="module-right_main">
             <div class="module-header display-flex">
                 <div class="module-header_title">模版列表</div>
-                <el-button type="primary" :icon="Setting" @click="toFieldSetting">字段设置</el-button>
-                <el-button type="primary" :icon="Coin" @click="toPreviewData">预览数据管理</el-button>
+                <el-button type="primary" plain :icon="Plus" @click="editTemplate(null)">新增模版</el-button>
+                <el-button type="primary" plain :icon="Setting" @click="toFieldSetting">字段设置</el-button>
+                <el-button type="primary" plain :icon="Coin" @click="toPreviewData">预览数据管理</el-button>
             </div>
             <el-scrollbar class="module-list-scrollbar">
-                <div class="module-list display-flex display-flex-wrap">
-                    <el-card class="module-item_card" v-for="(template, index) in data.templateList"
+                <el-empty class="module-list-empty" v-if="data.templateList.length == 0" description="暂无数据" />
+                <div v-else class="module-list">
+                    <el-card class="module-item_card"
+                             shadow="hover"
+                             v-for="(template, index) in data.templateList"
                              :key="index">
-                        <div class="module-item_card_cover">
-                        
-                        </div>
-                        <!--                                                <el-image style="width: 100px; height: 100px"-->
-                        <!--                                                          src="https://fastly.picsum.photos/id/878/200/200.jpg?hmac=94qVwjVC5mGEAO1cRdaRSvxxUhth4qBsz66dnax2riY"-->
-                        <!--                                                          fit="contain" />-->
-                        <div class="module-item_card_tool display-flex">
-                            <div class="module-item_card_tool_template_title"></div>
-                            <el-button type="primary" :icon="Delete" />
-                            <el-button @click="editTemplate(template)">
-                                <el-icon>
-                                    <Edit />
-                                </el-icon>
-                            </el-button>
+                        <div class="display-flex display-flex-column">
+                            <el-image class="module-item_card_cover"
+                                      src="https://fastly.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0"
+                                      fit="cover" />
+                            
+                            <div class="module-item_card_tool display-flex">
+                                <div class="module-item_card_tool_template_title display-flex">
+                                    {{ template.name }}
+                                </div>
+                                <el-link @click="editTemplate(template)"
+                                         :underline="false"
+                                         class="module-item_card_tool_edit"
+                                         :icon="Edit" />
+                                <popover-menu-list :menu-list="data.menuList"
+                                                   :item="template"
+                                                   v-model:visible="template.moreVisible"
+                                                   placement="top">
+                                    <el-link :underline="false"
+                                             class="module-item_card_tool_edit"
+                                             @click.stop="template.moreVisible = true"
+                                             :icon="More" />
+                                </popover-menu-list>
+                            </div>
                         </div>
                     </el-card>
                 </div>
             
             </el-scrollbar>
+            <el-divider style="margin: 0" />
             <div class="module-page_wrapper display-flex">
                 <el-pagination
                     v-model:current-page="data.currentPage"
@@ -60,18 +88,78 @@
             </div>
         </el-main>
     </el-container>
+    
+    <rename-dialog v-model="data.renameVisible"
+                   :name-value="data.renameModuleName" />
+    
+    <delete-dialog v-model="data.deleteVisible"
+                   :name="data.deleteModuleName" />
+    
+    <el-dialog
+        v-model="data.addModuleGroupVisible"
+        title="添加"
+        width="400">
+        <el-radio-group v-model="data.addModuleGroupType">
+            <el-radio-button label="分组" value="GROUP" />
+            <el-radio-button label="模块" value="MODULE" />
+        </el-radio-group>
+        
+        <div class="add_module_group_wrapper" v-if="data.addModuleGroupType == 'GROUP'">
+            <el-form-item label="模块名" label-width="100px">
+                <el-input style="width: 240px"
+                          placeholder="请输入模块名"
+                          v-model="data.addModuleGroup.name" />
+            </el-form-item>
+        </div>
+        <div class="add_module_group_wrapper" v-else>
+            <el-form-item label="分组" label-width="100px">
+                <el-select
+                    v-model="data.addModule.moduleGroupId"
+                    placeholder="请选择分组"
+                    style="width: 240px">
+                    <el-option
+                        v-for="(item) in data.dbModuleGroupList"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                    />
+                </el-select>
+            </el-form-item>
+            <el-form-item label="模块名" label-width="100px">
+                <el-input style="width: 240px"
+                          placeholder="请输入模块名"
+                          v-model="data.addModule.name" />
+            </el-form-item>
+        </div>
+        
+        <template #footer>
+            <div class="dialog-footer">
+                <el-button @click="cancelAddModule">取消</el-button>
+                <el-button type="primary"
+                           :disabled="emptyIs(data.addModuleGroup.name) && emptyIs(data.addModule.name)"
+                           @click="clickAddModuleSure">确认
+                </el-button>
+            </div>
+        </template>
+    </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { moduleGroupList } from '@/api/moduleGroup';
-import { onMounted, reactive } from 'vue';
-import { Module, ModuleGroup, PageParam, Template } from '@/types/R';
+import { moduleGroupDelete, moduleGroupList, moduleGroupSave, moduleGroupUpdate } from '@/api/moduleGroup';
+import { nextTick, onMounted, reactive, ref } from 'vue';
+import { Module, ModuleGroup, PageParam, R, Template } from '@/types/R';
 import { useRouter } from 'vue-router';
 import { templatePage } from '@/api/template';
 import ModuleItem from '@/views/module/module-item.vue';
 import ModuleGroupView from '@/views/module/module-group.vue';
-import { moduleDetail } from '@/api/module';
-import { Coin, Delete, Edit, Setting } from '@element-plus/icons-vue';
+import { moduleCreate, moduleDelete, moduleDetail, moduleUpdate } from '@/api/module';
+import { Coin, Edit, More, Plus, Setting } from '@element-plus/icons-vue';
+import RenameDialog from '@/components/dialog/rename-dialog.vue';
+import PopoverMenuList from '@/components/popover/popover-menu-list.vue';
+import { MenuItem } from '@/types/entity';
+import DeleteDialog from '@/components/dialog/delete-dialog.vue';
+import { emptyIs, msgError, msgSuccess } from '@/utils/util';
+import { ElMessage } from 'element-plus';
 
 defineOptions({
     name: 'module'
@@ -83,16 +171,130 @@ const defaultProps = {
 };
 
 const data = reactive({
+    menuList: [
+        {
+            name: '重命名', click: (template: Template) => {
+                data.renameVisible = true;
+                data.renameModuleName = template.name;
+            }
+        },
+        {
+            name: '删除', click: (template: Template) => {
+                data.deleteVisible = true;
+                data.deleteModuleName = template.name;
+                console.log(template);
+            }
+        }
+    
+    ] as MenuItem[],
+    addModule: {
+        moduleGroupId: 1,
+        name: '',
+        provider: '{}'
+    } as Module,
+    addModuleGroup: {
+        name: ''
+    } as ModuleGroup,
     currentPage: 1,
     pageSize: 32,
     fieldSettingVisible: false,
+    dbModuleGroupList: [] as ModuleGroup[],
     moduleGroupList: [] as ModuleGroup[],
     moduleId: null as number,
     module: null as Module,
     templateList: [] as Array<Template>,
-    nameFilter: ''
+    nameFilter: '',
+    moreVisible: false,
+    renameVisible: false,
+    deleteVisible: false,
+    addModuleGroupVisible: false,
+    renameModuleName: null,
+    deleteModuleName: null,
+    addModuleGroupType: 'GROUP'
 });
+
+const elTreeRef = ref();
 const router = useRouter();
+
+function filterChange() {
+    console.log(data.moduleGroupList);
+}
+
+function addModuleGroup() {
+    data.addModuleGroupVisible = true;
+}
+
+function groupAddModule(moduleGroup: ModuleGroup) {
+    data.addModuleGroupType = 'MODULE';
+    data.addModule.moduleGroupId = moduleGroup.id;
+    data.addModuleGroupVisible = true;
+}
+
+function cancelAddModule() {
+    data.addModuleGroup.name = '';
+    data.addModule.name = '';
+    data.addModuleGroupVisible = false;
+}
+
+function renameModuleGroup(moduleGroup: ModuleGroup, name: string) {
+    moduleGroupUpdate({
+        id: moduleGroup.id,
+        name
+    }).then(res => {
+        refreshModuleList(false);
+    }).catch(e => {
+        ElMessage.error(e.msg);
+    });
+}
+
+function renameModule(module: Module, name: string) {
+    moduleUpdate({
+        id: module.id,
+        name
+    }).then(res => {
+        refreshModuleList(false);
+    }).catch(e => {
+        ElMessage.error(e.msg);
+    });
+}
+
+function deleteModuleGroup(moduleGroup: ModuleGroup) {
+    moduleGroupDelete({
+        id: moduleGroup.id
+    }).then(res => {
+        msgSuccess('删除成功');
+        refreshModuleList(false);
+    }).catch(e => {
+        msgError(e.msg);
+    });
+}
+
+function deleteModule(module: Module) {
+    moduleDelete({
+        id: module.id
+    }).then(res => {
+        refreshModuleList(false);
+        msgSuccess('删除成功');
+    }).catch(e => {
+        msgError(e.msg);
+    });
+}
+
+function clickAddModuleSure() {
+    let result: Promise<R>;
+    if (data.addModuleGroupType == 'GROUP') {
+        result = moduleGroupSave(data.addModuleGroup);
+    } else {
+        result = moduleCreate(data.addModule);
+    }
+    result.then(_res => {
+        msgSuccess('添加成功');
+        cancelAddModule();
+        refreshModuleList(false);
+    }).catch(e => {
+        msgError(e.msg);
+    });
+}
 
 function handleSizeChange(val: any) {
     data.pageSize = val;
@@ -107,45 +309,50 @@ const handleNodeClick = (module: Module) => {
     moduleDetail(module.id)
         .then(res => {
             data.module = res.data;
-            data.moduleId = res.data.id;
         })
         .catch(e => {
-            console.log(e);
+            msgError(e.msg);
         });
     
     templatePage(<Template & PageParam>{
         current: 1,
         size: 50,
         moduleId: module.id
-    })
-        .then(res => {
-            data.templateList = res.data.records;
-            // for (let i = 0; i < 10; i++) {
-            //     data.templateList.push(data.templateList[0]);
-            // }
-        })
-        .catch(e => {
-            console.log(e);
-        });
-    
+    }).then(res => {
+        data.templateList = res.data.records;
+        // for (let i = 0; i < 10; i++) {
+        //     data.templateList.push(data.templateList[0]);
+        // }
+    }).catch(e => {
+        msgError(e.msg);
+    });
 };
 
 onMounted(() => {
+    refreshModuleList();
+});
+
+function refreshModuleList(defaultOne = true) {
     moduleGroupList(<PageParam & ModuleGroup>{
         current: 1,
         size: 50,
         name: null
-    })
-        .then(res => {
-            console.log(res);
+    }).then(res => {
+            data.dbModuleGroupList = res.data;
             data.moduleGroupList = res.data;
             
-            if (data.moduleGroupList.length > 0) {
-                handleNodeClick(data.moduleGroupList[0].moduleList[0]);
+            if (defaultOne) {
+                if (data.moduleGroupList.length > 0) {
+                    nextTick(() => {
+                        elTreeRef.value.setCurrentKey(data.moduleGroupList[0].moduleList[0].id, true);
+                    });
+                    handleNodeClick(data.moduleGroupList[0].moduleList[0]);
+                }
             }
-            
-        });
-});
+        }).catch(e => {
+        msgError(e.msg);
+    });
+}
 
 function toFieldSetting() {
     router.push({
@@ -165,37 +372,14 @@ function toPreviewData() {
     });
 }
 
-function editTemplate(module: Module) {
+function editTemplate(template: Template) {
     router.push({
         path: '/design',
         query: {
-            moduleId: module.id,
-            templateId: module.id
+            moduleId: data.module.id,
+            id: template?.id
         }
     });
 }
 
 </script>
-
-<style scoped>
-.infinite-list {
-    height: 300px;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-
-.infinite-list .infinite-list-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    background: var(--el-color-primary-light-9);
-    margin: 10px;
-    color: var(--el-color-primary);
-}
-
-.infinite-list .infinite-list-item + .list-item {
-    margin-top: 10px;
-}
-</style>

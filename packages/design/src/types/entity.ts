@@ -177,7 +177,7 @@ export const statisticsTypeFormat = {
     CustomFormula: '自定义公式'
 };
 
-export type DisplayModel = 'design' | 'preview'
+export type DisplayModel = 'design' | 'preview' | 'print'
 export type PageUnit = 'px' | 'mm' | 'cm' | 'in'
 
 export type elementType = keyof typeof elementTypeFormat

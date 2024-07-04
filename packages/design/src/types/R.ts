@@ -38,5 +38,6 @@ export interface Template {
     name?: string;
     content?: any;
     coverImgUrl?: any;
+    previewData?: any[];
     module: Module
 }

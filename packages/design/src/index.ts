@@ -4,7 +4,8 @@ import MyDottedHorizontalLine from '@myprint/design/components/design/shape/line
 import MyDottedVerticalLine from '@myprint/design/components/design/shape/line/dottedVerticalLine';
 import MyHorizontalLine from '@myprint/design/components/design/shape/line/horizontalLine';
 import MyVerticalLine from '@myprint/design/components/design/shape/line/verticalLine';
-import DesignContent from './components/content';
+import DesignContent from '@myprint/design/components/content';
+import { MyPrinter } from '@myprint/design/printer';
 
 
 export * from './components/design/shape';
@@ -22,3 +23,4 @@ export {
 };
 
 export { createPrint };
+export { MyPrinter };

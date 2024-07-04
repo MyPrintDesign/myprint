@@ -393,7 +393,7 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
         const offsetX = ev.clientX - clientStartX;
         // console.log(offsetX, col)
         const newWidth = columnOldWidth + offsetX;
-        console.log(offsetX);
+        // console.log(offsetX);
         if (newWidth > 20) {
             setElementWidthPx(tableOldWidth + offsetX, props.element);
             recursionUpdateCellParentWidth(columnElement, offsetX);
@@ -566,7 +566,7 @@ const computeColumnHeight = _.throttle(() => {
         });
     }
     
-    console.log(data.rowRemovePointList);
+    // console.log(data.rowRemovePointList);
     
     // console.log(props.element.bodyList);
     // console.log(data.rowControlPointList);

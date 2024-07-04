@@ -2,24 +2,31 @@
     <div class="toolbar-container">
         
         <div class="display-flex space-between width-100-p">
-            <style-design />
+                        <style-design />
             
             <div class="display-flex-column toolbar-tool">
                 <div class="display-flex">
-                    <!--          <el-button @click="testMoveable">t</el-button>-->
                     <el-button @click="refresh">r</el-button>
-                    <!--          <el-button size="small">-->
-                    <!--            <el-icon>-->
-                    <!--              <Printer/>-->
-                    <!--            </el-icon>-->
-                    <!--            {{ i18n('toolbar.print') }}-->
-                    <!--          </el-button>-->
+                    <el-button size="small" @click="print">
+                        <el-icon>
+                            <Printer />
+                        </el-icon>
+                        {{ i18n('toolbar.print') }}
+                    </el-button>
+                    <el-button size="small" @click="serverDownloadPdf">
+                        <el-icon>
+                            <Printer />
+                        </el-icon>
+                        下载
+                    </el-button>
                     <el-button size="small" @click="preview">
                         <i class="icon-zitiyulan iconfont" />
                         {{ i18n('toolbar.preview') }}
                     </el-button>
                     <el-button size="small" @click="clearPanelClick">{{ i18n('toolbar.clear') }}</el-button>
-                    <el-button size="small" @click="save">{{ i18n('toolbar.save') }}</el-button>
+                    <el-button size="small" :disabled="getCurrentPanel().name == null || getCurrentPanel().name == ''"
+                               @click="save">{{ i18n('toolbar.save') }}
+                    </el-button>
                 </div>
             </div>
         </div>
@@ -31,14 +38,49 @@
 // import { ElIcon, ElButton } from 'element-plus'
 import { inject } from 'vue';
 import StyleDesign from './style-design.vue';
-import { mittKey, panelKey } from '@myprint/design/constants/keys';
+import { mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
 import { i18n } from '@myprint/design/locales';
-import { clearPanel, displayModel } from '@myprint/design/utils/elementUtil';
+import { clearPanel, displayModel, getCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
 import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import { Printer } from '@element-plus/icons-vue';
+import { MyPrinter } from '@myprint/design/printer';
+import { download } from '@myprint/design/utils/utils';
 
 const panel = inject(panelKey);
 const mitt = inject(mittKey)!;
+const previewData = inject(previewDataKey)!;
+
+function print() {
+    displayModel('print');
+    MyPrinter.printer({ previewDataList: previewData.value });
+}
+
+function serverDownloadPdf() {
+    displayModel('print');
+    MyPrinter.pdfServer({ previewDataList: previewData.value })
+        .then(blob => {
+            // 创建一个 URL 对象
+            const blobUrl = URL.createObjectURL(blob);
+            
+            // 创建一个 <a> 元素用于下载
+            const a = document.createElement('a');
+            a.href = blobUrl;
+            a.download = "myprinter.pdf";
+            
+            // 将 <a> 元素添加到 DOM 并触发点击事件以下载文件
+            document.body.appendChild(a);
+            a.click();
+            
+            // 移除 <a> 元素并释放 URL 对象
+            document.body.removeChild(a);
+            URL.revokeObjectURL(blobUrl);
+            
+        }).catch(e => {
+        console.error(e);
+        console.log('生成失败');
+    });
+}
 
 function preview() {
     displayModel('preview');

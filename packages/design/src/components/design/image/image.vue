@@ -115,17 +115,16 @@
 </template>
 <script setup lang="ts">
 // import { ElIcon, ElDialog } from 'element-plus'
-import 'vue-cropper/dist/index.css'
-import {VueCropper} from "vue-cropper";
-
-import {onMounted, reactive, ref} from "vue";
-import {MyElement, DownList} from "@myprint/design/types/entity";
+import 'vue-cropper/dist/index.css';
+import { VueCropper } from 'vue-cropper';
+import { onMounted, reactive, ref } from 'vue';
+import { MyElement } from '@myprint/design/types/entity';
 // import {useBase64} from "@vueuse/core";
-import {displayModelDesign, valueUnit} from "@myprint/design/utils/elementUtil";
-import {Check, CloseBold, Crop, Plus, RefreshLeft, RefreshRight, ZoomIn, ZoomOut} from "@element-plus/icons-vue";
-import {unit2px} from "@myprint/design/utils/devicePixelRatio";
+import { displayModelDesign, valueUnit } from '@myprint/design/utils/elementUtil';
+import { Check, CloseBold, Crop, Plus, RefreshLeft, RefreshRight, ZoomIn, ZoomOut } from '@element-plus/icons-vue';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { chooseImgTypeList, elementHandleStatusList } from '@myprint/design/constants/common';
-import MyTabs from "@myprint/design/components/my/tabs/my-tabs.vue";
+import MyTabs from '@myprint/design/components/my/tabs/my-tabs.vue';
 
 const props = withDefaults(defineProps<{
   element?: MyElement

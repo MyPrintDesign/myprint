@@ -97,87 +97,121 @@
 }
 
 .module-right_main {
-  padding-bottom: 0 !important;
-}
+  padding: 0 !important;
+  //height: calc(100% - 60px);
 
-.module-header {
-  height: 40px;
-  //background: gray;
-  align-items: center;
+  .module-header {
+    height: 40px;
+    //background: gray;
+    padding: 0 10px;
+    align-items: center;
 
-  .module-header_title {
-    flex: 1;
+    .module-header_title {
+      flex: 1;
+    }
+
+    .el-button {
+      padding: 8px 8px !important;
+    }
+
   }
 
-  .el-button {
-    padding: 8px 8px !important;
-  }
+  .module-list-scrollbar {
+    height: calc(100% - 102px) !important;
+    //width: calc(100% - 20px);
+    padding: 10px;
 
-}
+    .module-list-empty {
+      height: 100%;
+      padding: 200px;
+    }
 
-.module-list-scrollbar {
-  height: calc(100% - 100px) !important;
-  width: calc(100% - 20px);
-  padding: 10px;
+    .module-list {
+      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      display: grid;
 
-  .module-list {
-    gap: 10px;
+      .module-item_card {
+        //height: 190px;
+        //width: 260px;
+        //min-width: 240px;
 
-    .module-item_card {
-      height: 170px;
-      width: 240px;
-      min-width: 240px;
+        .el-card__body {
+          padding: 0 !important;
 
-      .el-card__body {
-        padding: 0 !important;
-
-        .module-item_card_cover {
-          width: 100%;
-          height: 140px;
-        }
-
-        .module-item_card_tool {
-          width: 100%;
-          height: 30px;
-
-          .module-item_card_tool_template_title {
-            flex: 1;
+          .module-item_card_cover {
+            width: 100%;
+            aspect-ratio: 260 / 160;
+            //height: 160px;
           }
 
-          .el-button {
-            padding: 8px 8px !important;
-          }
+          .module-item_card_tool {
+            width: 100%;
+            height: 40px;
+            background-color: rgb(246, 246, 246);
+            align-items: center;
 
+            .module-item_card_tool_template_title {
+              font-size: 14px;
+              flex: 1;
+              align-items: center;
+              padding-left: 4px;
+            }
+
+            .module-item_card_tool_edit {
+              width: 25px;
+              height: 25px;
+              margin-right: 5px;
+              border: 1px solid #888888;
+              border-radius: 5px;
+
+              &:hover {
+                border: 1px solid var(--drag-h-color);
+                color: #535bf2 !important;
+              }
+
+              //.el-link:hover {
+              //}
+            }
+
+            .el-button {
+              padding: 8px 8px !important;
+            }
+          }
         }
       }
     }
   }
-}
 
 
-.module-page_wrapper {
-  height: 40px;
-  //background: gray;
+  .module-page_wrapper {
+    height: 40px;
+    //background: gray;
 
-  .el-pagination__sizes {
-    margin-left: 6px;
+    .el-pagination__sizes {
+      margin-left: 6px;
 
-    .el-select--default {
-      width: 80px !important;
+      .el-select--default {
+        width: 80px !important;
 
-      .el-select__wrapper {
-        padding: 4px 4px !important;
+        .el-select__wrapper {
+          padding: 4px 4px !important;
+        }
       }
     }
-  }
 
-  .el-pagination__jump {
-    margin-left: 6px;
+    .el-pagination__jump {
+      margin-left: 6px;
 
-    .el-pagination__goto {
-      display: none;
+      .el-pagination__goto {
+        display: none;
+      }
     }
+
   }
+
 
 }
+
+
 

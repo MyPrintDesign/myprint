@@ -1,5 +1,4 @@
 import { App, ref } from 'vue';
-
 import 'vue3-colorpicker/style.css';
 
 import { messageFun, mittKey } from './constants/keys';
@@ -16,6 +15,7 @@ import 'vue-cropper/dist/index.css';
 import { useSocket } from './stores/socket';
 import { mitt } from '@myprint/design/utils/utils';
 import { useConfigStore } from '@myprint/design/stores/config';
+import { installPrinter } from '@myprint/design/printer';
 // import 'element-plus/es/components/button/style/index'
 // import 'element-plus/es/components/scrollbar/style/index'
 // import 'element-plus/es/components/switch/style/index'
@@ -73,7 +73,9 @@ const install = {
 
         useSocket().INIT_SOCKET(onSocketMessage);
 
-        useConfigStore().initConfig()
+        useConfigStore().initConfig();
+
+        installPrinter(app);
     }
 };
 export { install };

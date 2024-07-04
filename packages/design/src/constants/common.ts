@@ -16,13 +16,15 @@ export const defaultElement: MyElement[] = [];
 export const canMoveStatusList = ['SELECT', 'HANDLE'];
 
 export const fontMap = {
-    default: 'default',
-    dengxian: 'default',
-    songti : '\'zh question mark\',\'Times New Roman\',\'Songti SC\',STSong,NSimSun,SimSun,FangSong,\'Nanum Myeongjo\',NanumMyeongjo,Batang,serif',
-    kaiti: '\'zh question mark\',\'Times New Roman\',\'Kaiti SC\',STKaiti,KaiTi,serif',
-    heiti: '\'Microsoft YaHei\', sans-serif',
-    fyt: 'AlimamaFangYuanTiVF-Thin',
-    sht: 'AlimamaShuHeiTi-Boldr'
+    heiti: "'Microsoft YaHei'", //微软雅黑
+    kaiti: "'KaiTi'", // 楷体
+    heiti: "'Microsoft YaHei'", //微软雅黑
+    FZShuTi: "'FZShuTi'", //华文舒体
+    SimSun: "'SimSun'", //宋体
+    NSimSun: "'NSimSun'", //新宋体
+    DengXian: "'DengXian'", //等线
+
+    // todo 自定义字体
 }
 
 

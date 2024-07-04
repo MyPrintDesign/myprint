@@ -3,7 +3,7 @@
          ref="previewWrapRef"
          :style="style">
         <element-view :element="preview" />
-        <DataTable v-if="preview!.type === 'DataTable'" :element="preview" />
+        <DataTable v-if="preview.type === 'DataTable'" :element="preview" />
         <my-container v-else-if="preview.type === 'PageHeader'">
             <Preview v-for="(item, index) in preview.previewWrapperList" :preview="item" :key="index" />
         </my-container>

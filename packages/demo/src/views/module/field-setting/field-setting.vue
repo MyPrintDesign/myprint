@@ -307,7 +307,7 @@ function editElement(fieldEdit: FieldEdit) {
     data.addIs = 0;
     data.row = fieldEdit.row;
     data.elementType = fieldEdit.elementType;
-    console.log(data.row);
+    // console.log(data.row);
     data.elementForm = { ...fieldEdit.row };
     if (data.elementForm.option == null) {
         data.elementForm.option = {} as ElementOption;
@@ -318,7 +318,7 @@ function editElement(fieldEdit: FieldEdit) {
 function confirmImageUrl() {
     imageUrlRef.value.validate()
         .then(res => {
-            console.log(res);
+            // console.log(res);
             data.elementForm.data = data.inputImageUrl;
             data.chooseImageVisible = false;
         }).catch(err => {

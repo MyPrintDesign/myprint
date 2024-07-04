@@ -2,7 +2,7 @@
     <div class="filed-setting_wrapper">
         <div class="filed-setting_content display-flex-column">
             <div>
-                <el-button @click="addPreviewData">添加</el-button>
+                <el-button @click="addPreviewData" :disabled="data.disabledAdd">添加</el-button>
             </div>
             <preview-data-table :preview-data="data.previewData" :column-list="data.columnList" />
         </div>
@@ -23,6 +23,7 @@ import { Provider, TableHeadProviderCellElement } from '@myprint/design/types/en
 import { stringify } from '@myprint/design/utils/utils';
 import PreviewDataTable from '@/views/module/preview-data/preview-data-table.vue';
 import { gzip, unGzip } from '@/utils/gzipUtil';
+import { msgError, msgSuccess } from '@/utils/util';
 
 defineOptions({
     name: 'previewData'
@@ -37,7 +38,8 @@ const data = reactive({
     previewData: [] as any[],
     columnList: [],
     chooseImageType: 'localFile',
-    provider: {} as Provider
+    provider: {} as Provider,
+    disabledAdd: false
 });
 
 onMounted(() => {
@@ -49,7 +51,12 @@ onMounted(() => {
             if (!data.previewData) {
                 data.previewData = [];
             }
-            for (let element of data.provider.elementList) {
+            const elementList = data.provider.elementList || [];
+            if (elementList.length == 0) {
+                data.disabledAdd = true;
+                return;
+            }
+            for (let element of elementList) {
                 const column = {
                     label: element.label,
                     prop: element.field,
@@ -106,13 +113,13 @@ function addPreviewData() {
 function save() {
     // 保存
     data.module.previewDataByte = gzip(stringify(data.previewData, 'id', '$editIs'));
-    console.log(data.module.previewDataByte);
-    data.module.provider = null
+    // console.log(data.module.previewDataByte);
+    data.module.provider = null;
     moduleUpdate(data.module)
         .then(res => {
-            console.log('保存成功', res);
+            msgSuccess('保存成功');
         }).catch(e => {
-        console.error(e);
+        msgError(e.msg());
     });
 }
 
