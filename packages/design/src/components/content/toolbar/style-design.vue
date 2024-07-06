@@ -155,6 +155,7 @@ import FontSize from '@myprint/design/components/content/toolbar/toolbar-style/f
 import FontFamily from '@myprint/design/components/content/toolbar/toolbar-style/font-family.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 
+
 const elementAlignList = reactive([
     [
         {

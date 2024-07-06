@@ -8,7 +8,7 @@
         @close="closePreviewPanel"
         :show-close="false">
         <div class="preview-panel">
-            <el-scrollbar height="100%" class="preview-panel__scrollbar"
+            <my-scrollbar height="100%" class="preview-panel__scrollbar"
                           :style="{minWidth: valueUnit(panel.width),}">
                 <div class="my-print-preview-panel__wrap">
                     <div class="preview-panel__model">
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-            </el-scrollbar>
+            </my-scrollbar>
             <div class="preview-panel__tool display-flex-column display-flex-wrap">
                 <div>名称：{{ panel.name }}</div>
                 <div>打印份数：测试</div>
@@ -77,6 +77,7 @@ import { displayModel, getCurrentPanelUnit, valueUnit } from '@myprint/design/ut
 import { useConfigStore } from '@myprint/design/stores/config';
 import { autoPage } from './autoPage';
 import { PrintProps } from '@myprint/design/types/entity';
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
 
 defineExpose({ handlePreview });
 
@@ -171,7 +172,7 @@ function handlePreview(printProps: PrintProps) {
         }, printProps.timeout);
     }
     
-    return new Promise((resolve, _reject) => {
+    return new Promise<PrintResult>((resolve, _reject) => {
         data.resolveMap[data.printTaskId] = resolve;
         nextTick(() => {
             autoPage(data.pageList, panel.value, printProps.previewDataList);
@@ -257,6 +258,7 @@ onMessage.value = (msg: ClientCmd) => {
         // console.log(pdf)
         if (pdf != null) {
             // 将Buffer对象转换为Uint8Array数组
+            // @ts-ignore
             const uint8Array = new Uint8Array(pdf.data);
             // 将Uint8Array数组转换为Blob对象
             const blob = new Blob([uint8Array], { type: 'application/octet-stream' });

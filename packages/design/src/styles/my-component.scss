@@ -1,0 +1,151 @@
+:root {
+  --el-button-text-color: #606266;
+  --el-button-font-weight: 500;
+  --el-button-bg-color: #ffffff;
+  --el-border: 1px solid #dcdfe6;
+  --el-button-border-color: #dcdfe6;
+  --el-font-size-base: 14px;
+  --el-border-radius-base: 4px;
+  --el-button-size: 24px;
+
+  --el-button-hover-text-color: #409eff;
+  --el-button-hover-border-color: #c6e2ff;
+  --el-button-hover-bg-color: #ecf5ff;
+
+  --el-scrollbar-bg-color: #909399;
+  --el-text-color-secondary: #909399;
+}
+
+.my-tooltip_content {
+  z-index: 99998;
+  box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+}
+
+.popper-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 10px;
+  border-color: transparent transparent #f0f0f0 transparent;
+  position: absolute;
+  margin-top: -10px;
+}
+
+.my-select-wrapper {
+  //color: white;
+  height: 24px;
+  border-radius: 5px;
+  margin-right: 6px;
+
+  .my-select-input {
+    width: 60px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 13px;
+  }
+
+  &:hover:not(.my-icon-disabled) {
+    background: var(--tool-style-highlight-bg);
+  }
+}
+
+.my-style-font_arrow {
+  font-size: 7px;
+  width: 12px;
+  height: 24px;
+  line-height: 24px;
+}
+
+.my-scrollbar {
+  position: relative;
+  //height: calc(100% - 50px);
+  //width: calc(100% - 230px);
+  overflow: auto;
+  scrollbar-width: none;
+  //padding: 30px 260px 20px 30px;
+
+  .my-scrollbar__bar {
+
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    z-index: 1;
+    border-radius: 4px;
+  }
+
+  .is-vertical {
+    width: 6px;
+    top: 2px;
+  }
+
+  .my-scrollbar__thumb {
+    position: relative;
+    display: block;
+    height: 0;
+    width: 100%;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: var(--el-scrollbar-bg-color, var(--el-text-color-secondary));
+    transition: .3s background-color;
+    opacity: .3;
+  }
+
+  //.design-content {
+  //  left: 0;
+  //  top: 0;
+  //  height: 100%;
+  //  width: var(--panel-width);
+  //  position: relative;
+  //  background: white;
+  //  //border: var(--tcolor) 1px solid;
+  //  //box-sizing: border-box;
+  //  box-shadow: 5px 10px 15px 5px rgba(0, 21, 41, 0.08);
+  //}
+  //
+  //.design-content-bg {
+  //  //pointer-events: none;
+  //  background-image: -webkit-gradient(linear, left top, right top, color-stop(3%, rgba(0, 0, 0, .1)), color-stop(3%, transparent)), -webkit-gradient(linear, left bottom, left top, color-stop(3%, rgba(0, 0, 0, .1)), color-stop(3%, transparent));
+  //  background-image: linear-gradient(90deg, rgba(0, 0, 0, .1) 3%, transparent 0), linear-gradient(1turn, rgba(0, 0, 0, .1) 3%, transparent 0);
+  //  background-size: 5mm 5mm;
+  //  background-position: 0 0;
+  //}
+}
+
+.ps {
+
+  &:hover {
+    .ps__rail-y {
+      opacity: 1 !important;
+    }
+  }
+
+  .ps__rail-y {
+    //background-color: #999 !important;
+    background-color: transparent !important;
+    opacity: 0;
+
+    &:hover {
+
+      .ps__thumb-y {
+        width: 9px;
+      }
+    }
+
+    .ps__thumb-y {
+      background-color: var(--drag-h-color) !important;
+      width: 4px;
+      right: 0 !important;
+    }
+
+
+  }
+
+  .ps--clicking {
+    .ps__thumb-y {
+      width: 9px !important;
+    }
+  }
+
+
+}

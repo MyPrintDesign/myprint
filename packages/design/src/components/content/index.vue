@@ -1,7 +1,7 @@
 <template>
     <el-container class="design-container-root cursor-resize" :data-rotation="appStore.dataRotation">
         <el-aside width="180" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
-            <!--            <widget :module="props.module" @back="back" />-->
+            <widget :module="props.module" @back="back" />
         </el-aside>
         <el-main class="design-container-root_main">
             <PanelView />
@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+import widget from '@myprint/design/components/content/widget/index.vue';
 import PanelView from '@myprint/design/components/content/panel/index.vue';
 import { inject, provide, reactive, Ref, ref, watch } from 'vue';
 import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
@@ -23,7 +24,6 @@ import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
 import { displayModel, initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
-import { MyPrinter } from '@myprint/design/printer';
 
 const appStore = useAppStoreHook();
 
@@ -119,10 +119,10 @@ function back() {
 
 function saveTemplate() {
     displayModel('print');
-    MyPrinter.print2Img({ previewDataList: [previewData.value[0]] })
-        .then(res => {
-            $emit('panelImg', res);
-        });
+    // MyPrinter.print2Img({ previewDataList: [previewData.value[0]] })
+    //     .then(res => {
+    //         $emit('panelImg', res);
+    //     });
     
     const template = {} as Template;
     template.name = panel.name;

@@ -1,3 +1,5 @@
+import "./chunk-G3PMV62Z.js";
+
 // ../../node_modules/.pnpm/registry.npmmirror.com+@vue+devtools-shared@7.3.4/node_modules/@vue/devtools-shared/dist/index.js
 var __create = Object.create;
 var __defProp = Object.defineProperty;

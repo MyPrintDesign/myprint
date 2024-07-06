@@ -1,55 +1,66 @@
 <template>
-  <div class="align-down-list-panel">
-    
-    <div v-for="(elementAlignChildList, index) in elementAlignList">
-      <div class="align-down-list-panel__item"
-           v-for="(elementAlign) in elementAlignChildList"
-           @click="click(elementAlign)">
+    <div class="align-down-list-panel">
         
-        <my-icon v-if="showSelectedStatus"
-             class="align-down-list-panel__item__select iconfont icon-duihao"
-             :class="{'my-hidden': modelValue != elementAlign.value}">
-        </my-icon>
-        
-        <i class="align-down-list-panel__item__icon" v-if="elementAlign.icon"
-           :class="elementAlign.icon"/>
-        
-        <div class="align-down-list-panel__item__content user-select-none">
-          {{ elementAlign.label }}
+        <div v-for="(elementAlignChildList, index) in dataList">
+            <div class="align-down-list-panel__item"
+                 v-for="(elementAlign) in elementAlignChildList"
+                 @click="click(elementAlign)">
+                
+                <my-icon v-if="showSelectedStatus"
+                         class="align-down-list-panel__item__select iconfont icon-duihao"
+                         :class="{'my-hidden': modelValue != elementAlign.value}">
+                </my-icon>
+                
+                <i class="align-down-list-panel__item__icon" v-if="elementAlign.icon"
+                   :class="elementAlign.icon" />
+                
+                <div class="align-down-list-panel__item__content user-select-none">
+                    {{ elementAlign.label }}
+                </div>
+            </div>
+            
+            <div v-if="index < dataList.length - 1"
+                 class="align-down-list-panel__divider" />
         </div>
-      </div>
-      
-      <div v-if="index < elementAlignList.length - 1"
-           class="align-down-list-panel__divider"/>
+    
     </div>
-  
-  </div>
 </template>
 
 <script setup lang="ts">
-import {DownList} from "@myprint/design/types/entity";
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue'
+import { DownList } from '@myprint/design/types/entity';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import { computed } from 'vue';
 
-const emit = defineEmits(['update:modelValue', 'click'])
+const emit = defineEmits(['update:modelValue', 'click']);
 
-withDefaults(defineProps<{
-      showSelectedStatus?: boolean,
-      modelValue?: any,
-      elementAlignList: DownList[][],
+const props = withDefaults(defineProps<{
+        showSelectedStatus?: boolean,
+        modelValue?: any,
+        elementAlignList: DownList[][],
     }>(),
     {
-      modelValue: null,
-      showSelectedStatus: false,
-      elementAlignList: () => [] as DownList[][]
-    })
+        modelValue: null,
+        showSelectedStatus: false,
+        elementAlignList: () => [] as DownList[][]
+    });
+
+const dataList = computed(() => {
+    if (!props.elementAlignList || props.elementAlignList.length == 0) {
+        return [] as DownList[][];
+    }
+    if (props.elementAlignList[0] instanceof Array) {
+        return props.elementAlignList;
+    } else {
+        return [props.elementAlignList as any] as DownList[][];
+    }
+});
 
 function click(elementAlign: DownList) {
-  if (elementAlign.click) {
-    elementAlign.click()
-  } else {
-    emit('update:modelValue', elementAlign.value)
-  }
-  
+    if (elementAlign.click) {
+        elementAlign.click();
+    } else {
+        emit('update:modelValue', elementAlign.value);
+    }
 }
 
 </script>

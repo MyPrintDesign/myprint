@@ -20,27 +20,15 @@
                                class="width-60"
                                placeholder="Select"
                                size="small"
-                               historyLabel="单位">
-                <el-option
-                    v-for="item in pageUnitList"
-                    :key="item"
-                    :label="item"
-                    :value="item"
-                />
-            </my-history-select>
+                               :data-list="pageUnitList"
+                               historyLabel="单位" />
         </el-form-item>
         
         <el-form-item label="纸张" prop="region">
             <my-history-select v-model="panel.pageSize" class="width-80" placeholder="Select" size="small"
                                @change="selectPageSize"
-                               historyLabel="纸张">
-                <el-option
-                    v-for="item in pageSizeList"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value"
-                />
-            </my-history-select>
+                               :data-list="pageSizeList"
+                               historyLabel="纸张"/>
         </el-form-item>
         
         <el-form-item label="宽/高">

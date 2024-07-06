@@ -52,11 +52,14 @@
     "selecto": "^1.26.3",
     "vue-cropper": "^1.1.1",
     "vue3-colorpicker": "^2.2.3",
-    "vue3-moveable": "^0.28.0"
+    "vue3-moveable": "^0.28.0",
+    "@popperjs/core": "^2.11.8",
+    "perfect-scrollbar": "^1.5.5"
   },
   "devDependencies": {
     "@daybrush/utils": "^1.13.0",
     "@element-plus/icons-vue": "^2.1.0",
+    "element-plus": "^2.6.1",
     "@types/d3-array": "^3.2.1",
     "@types/d3-drag": "^3.0.7",
     "@types/d3-path": "^3.0.2",
@@ -65,7 +68,6 @@
     "@types/qrcode": "^1.5.5",
     "@types/snapsvg": "^0.5.8",
     "@vueuse/core": "^10.6.1",
-    "element-plus": "^2.6.1",
     "mitt": "^3.0.0",
     "pinia": "^2.1.4",
     "sass": "^1.53.0",

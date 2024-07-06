@@ -2,7 +2,7 @@
     <div class="toolbar-container">
         
         <div class="display-flex space-between width-100-p">
-            <!--                        <style-design />-->
+                                    <style-design />
             
             <div class="display-flex-column toolbar-tool">
                 <div class="display-flex">
@@ -19,10 +19,10 @@
                         </el-icon>
                         下载
                     </el-button>
-                    <el-button size="small" @click="preview">
+                    <my-button size="small" @click="preview">
                         <i class="icon-zitiyulan iconfont" />
                         {{ i18n('toolbar.preview') }}
-                    </el-button>
+                    </my-button>
                     <el-button size="small" @click="clearPanelClick">{{ i18n('toolbar.clear') }}</el-button>
                     <el-button size="small" :disabled="getCurrentPanel().name == null || getCurrentPanel().name == ''"
                                @click="save">{{ i18n('toolbar.save') }}
@@ -46,6 +46,7 @@ import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
 import { Printer } from '@element-plus/icons-vue';
 import { MyPrinter } from '@myprint/design/printer';
 import { download } from '@myprint/design/utils/utils';
+import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 
 const panel = inject(panelKey);
 const mitt = inject(mittKey)!;

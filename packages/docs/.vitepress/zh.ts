@@ -1,6 +1,7 @@
 import { createRequire } from 'module';
 import { defineConfig, type DefaultTheme } from 'vitepress';
 
+//@ts-ignore
 const require = createRequire(import.meta.url);
 const pkg = require('../package.json');
 
@@ -22,7 +23,7 @@ export const zh = defineConfig({
 
         footer: {
             message: '基于 MIT 许可发布',
-            copyright: `版权所有 © 2019-${new Date().getFullYear()} 尤雨溪`
+            copyright: `版权所有 © 2019-${new Date().getFullYear()} css`
         },
 
         docFooter: {
@@ -82,14 +83,25 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
             { text: '安装', link: 'install' },
             { text: '快速开始', link: 'getting-started' }
         ]
-    },
-        {
-            text: 'Examples',
-            items: [
-                { text: 'Markdown Examples', link: '/markdown-examples' },
-                { text: 'Runtime API Examples', link: '/api-examples' }
-            ]
-        }
+    }, {
+        text: 'API',
+        items: [
+            { text: '参数', link: '/use-api/markdown-examples' },
+            { text: 'API示例', link: '/use-api/api-example' }
+        ]
+    }, {
+        text: '部署',
+        items: [
+            { text: '客户端', link: '/deploy/client-deploy' },
+            { text: '服务端部署Centos', link: '/markdown-examples' },
+            { text: '服务端部署Debian', link: '/markdown-examples' }
+        ]
+    }, {
+        text: '扩展',
+        items: [
+            { text: '---', link: '/markdown-examples' }
+        ]
+    }
     ];
 }
 

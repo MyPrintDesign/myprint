@@ -37,7 +37,7 @@ import { toImg } from '@myprint/design/utils/pdfUtil';
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { downloadImg, downloadPdf } from '@myprint/design/api/pdfServer';
 
-defineExpose({ design2Img, handleServerDownloadImg, handleServerDownloadPdf });
+defineExpose({ handlePrint, design2Img, handleServerDownloadImg, handleServerDownloadPdf });
 // const { SEND: socketSend, printerList, connect } = useSocket();
 const configStore = useConfigStore();
 const data = reactive({
@@ -50,7 +50,6 @@ const previewContentRef = ref<HTMLDivElement[]>()!;
 const mitt = inject(mittKey)!;
 const onMessage = inject(messageFun)!;
 let itemRefs = {} as any;
-mitt.on('printPanel', printPanel);
 mitt.on('design2Img', design2Img);
 
 function setItemRef(el: any, item: MyElement) {
@@ -59,7 +58,7 @@ function setItemRef(el: any, item: MyElement) {
     itemRefs[item.id] = el;
 }
 
-function printPanel(printProps: PrintProps) {
+function handlePrint(printProps: PrintProps) {
     data.panel = printProps.panel as Panel;
     data.dialogVisible = true;
     nextTick(() => {

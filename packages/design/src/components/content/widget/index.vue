@@ -7,7 +7,7 @@
             <div style="flex: 1;"> {{ moduleName }}</div>
         </div>
         <div class="option-container display-flex-column">
-            <el-scrollbar>
+            <my-scrollbar>
                 <el-collapse v-model="openPanel" class="option-collapse">
                     <el-collapse-item title="业务字段" name="1"
                                       v-if="provider.elementList != null && provider.elementList.length > 0">
@@ -30,7 +30,7 @@
                     <!--                        </div>-->
                     <!--                    </el-collapse-item>-->
                 </el-collapse>
-            </el-scrollbar>
+            </my-scrollbar>
         
         </div>
         <div class="option-bottom">
@@ -50,6 +50,7 @@ import { inject, ref } from 'vue';
 import { providerKey } from '@myprint/design/constants/keys';
 import { customProvider } from '@myprint/design/constants/provider/custom';
 import { ArrowLeft } from '@element-plus/icons-vue';
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
 
 const $emit = defineEmits(['back']);
 

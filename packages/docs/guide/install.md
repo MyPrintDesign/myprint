@@ -30,7 +30,7 @@ $ bun add -D vitepress
 
 :::
 
-## 直接引用
+## 直接引用 {#my-anchor}
 
 [下载地址](https://code.visualstudio.com/)
 

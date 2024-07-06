@@ -1,19 +1,19 @@
 import { App, h, render } from 'vue';
 import PrintView from '@myprint/design/components/print/print.vue';
 import previewPanelView from '@myprint/design/components/preview/preview-panel.vue';
-import { mitt } from '@myprint/design/utils/utils';
 import { getCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { VNode } from 'vue-demi';
-import { PrintProps } from '@myprint/design/types/props';
+import { PrintProps, PrintResult } from '@myprint/design/types/entity';
 
 export let pdfServerUrl = '';
 
 let printNode: VNode = null!;
 let previewNode: VNode = null!;
+let handlePrint: (printProps: PrintProps) => Promise<PrintResult> = null!;
 let design2Img: (printProps: PrintProps) => Promise<ArrayBuffer[]> = null!;
 let handleServerDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
 let handleServerDownloadImg: (printProps: PrintProps) => Promise<Blob> = null!;
-let handlePreview: (printProps: PrintProps) => Promise<any> = null!;
+let handlePreview: (printProps: PrintProps) => Promise<PrintResult> = null!;
 
 export function installPrinter(app: App<any>) {
     if (!printNode) {
@@ -24,6 +24,7 @@ export function installPrinter(app: App<any>) {
         render(printNode, container);
 
         design2Img = printNode.component!.exposed!.design2Img;
+        handlePrint = printNode.component!.exposed!.handlePrint;
         handleServerDownloadPdf = printNode.component!.exposed!.handleServerDownloadPdf;
         handleServerDownloadImg = printNode.component!.exposed!.handleServerDownloadImg;
 
@@ -51,12 +52,23 @@ export const MyPrinter = {
         pdfServerUrl = url;
     },
 
+    chromePrinter(printProps: PrintProps) {
+        let panel = printProps.panel;
+        if (typeof printProps.panel == 'string') {
+            panel = JSON.parse(printProps.panel);
+        }
+        return handlePrint({
+            ...printProps,
+            panel: panel == null ? getCurrentPanel() : panel
+        });
+    },
+
     printer(printProps: PrintProps) {
         let panel = printProps.panel;
         if (typeof printProps.panel == 'string') {
             panel = JSON.parse(printProps.panel);
         }
-        mitt.emit('printPanel', {
+        return handlePrint({
             ...printProps,
             panel: panel == null ? getCurrentPanel() : panel
         });
@@ -74,6 +86,17 @@ export const MyPrinter = {
     },
 
     pdfServer(printProps: PrintProps) {
+        let panel = printProps.panel;
+        if (typeof printProps.panel == 'string') {
+            panel = JSON.parse(printProps.panel);
+        }
+        return handleServerDownloadPdf({
+            ...printProps,
+            panel: panel == null ? getCurrentPanel() : panel
+        });
+    },
+
+    pdfClient(printProps: PrintProps) {
         let panel = printProps.panel;
         if (typeof printProps.panel == 'string') {
             panel = JSON.parse(printProps.panel);

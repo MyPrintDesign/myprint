@@ -20,9 +20,9 @@
                 </el-icon>
             
             </div>
-            <el-scrollbar style="height: calc(100% - 24px);" @mousedown="bodyMouseDown">
+            <my-scrollbar height="calc(100% - 24px)" @mousedown="bodyMouseDown">
                 <slot />
-            </el-scrollbar>
+            </my-scrollbar>
             <div @mousedown="resize" v-if="data.show" class="collapse-panel-resize"></div>
         
         </div>
@@ -35,6 +35,7 @@ import { ArrowRight, Close } from '@element-plus/icons-vue';
 import { getCollapsePanelZIndex } from '@myprint/design/utils/utils';
 import { HandlePanel, HandlePanelPosition } from '@myprint/design/types/entity';
 import { useAppStoreHook } from '@myprint/design/stores/app';
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
 
 export interface Props {
     element?: HandlePanel;

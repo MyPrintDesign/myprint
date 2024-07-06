@@ -16,16 +16,16 @@ export const defaultElement: MyElement[] = [];
 export const canMoveStatusList = ['SELECT', 'HANDLE'];
 
 export const fontMap = {
-    heiti: "'Microsoft YaHei'", //微软雅黑
-    kaiti: "'KaiTi'", // 楷体
+    heiti: '\'Microsoft YaHei\'', //微软雅黑
+    kaiti: '\'KaiTi\'', // 楷体
     // heiti: "'Microsoft YaHei'", //微软雅黑
-    FZShuTi: "'FZShuTi'", //华文舒体
-    SimSun: "'SimSun'", //宋体
-    NSimSun: "'NSimSun'", //新宋体
-    DengXian: "'DengXian'", //等线
+    FZShuTi: '\'FZShuTi\'', //华文舒体
+    SimSun: '\'SimSun\'', //宋体
+    NSimSun: '\'NSimSun\'', //新宋体
+    DengXian: '\'DengXian\'' //等线
 
     // todo 自定义字体
-}
+};
 
 
 export const fontList: DownList[][] = [
@@ -296,12 +296,21 @@ export const statisticsTypeList: any[] = Object.keys(statisticsTypeFormat).map(k
 });
 
 export const chooseImgTypeList = reactive([
-    {value: 'localFile', label: '本地上传'},
-    {value: 'url', label: '图片链接'}
-]) as DownList[]
+    { value: 'localFile', label: '本地上传' },
+    { value: 'url', label: '图片链接' }
+]) as DownList[];
 
 export const pageUnitList = [
-    'px', 'mm', 'cm'
+    [{
+        label: 'px',
+        value: 'px'
+    }, {
+        label: 'mm',
+        value: 'mm'
+    }, {
+        label: 'cm',
+        value: 'cm'
+    }]
 ];
 
 export const clientProtocolList = {
