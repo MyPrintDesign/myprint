@@ -14,7 +14,7 @@
       </el-form-item>
       
       <el-form-item label="自动连接">
-        <el-switch
+        <my-switch
             v-model="configStore.autoConnect"
             class="ml-2"
             inline-prompt
@@ -64,6 +64,7 @@ import {useSocket} from "@myprint/design/stores/socket";
 import {computed} from "vue";
 import {clientProtocolList} from "@myprint/design/constants/common";
 import {useConfigStore} from "@myprint/design/stores/config";
+import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
 
 const useSocketData = useSocket()
 const configStore = useConfigStore()

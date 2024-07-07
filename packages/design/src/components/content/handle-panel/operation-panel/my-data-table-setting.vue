@@ -81,7 +81,7 @@
         
         
         <el-form-item label="分页表头">
-            <el-switch
+            <my-switch
                 :model-value="multipleElementGetValue('option.tablePageHeadIs')"
                 @update:model-value="(val:any)=>multipleElementSetValue('option.tablePageHeadIs', val)"
                 class="ml-2"
@@ -130,6 +130,7 @@ import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import { freshMoveableOption } from '@myprint/design/plugins/moveable/moveable';
 import { addStatisticsRow } from '@myprint/design/utils/table/dataTable';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
 
 const mitt = inject(mittKey)!;
 const appStore = useAppStoreHook();

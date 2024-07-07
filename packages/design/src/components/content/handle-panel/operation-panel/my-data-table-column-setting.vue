@@ -49,20 +49,16 @@
             <my-history-select :model-value="multipleElementGetValue('contentType')"
                                @update:model-value="(val:any)=>multipleElementSetValue('contentType', val)"
                                placeholder="Activity zone"
-                               historyLabel="打印类型">
-                <el-option v-for="(item, index) in textContentTypes" :key="index" :label="item.label"
-                           :value="item.value" />
-            </my-history-select>
+                               :data-list="textContentTypes"
+                               historyLabel="打印类型" />
         </el-form-item>
-        <el-form-item label="条码编码" prop="region" v-if="multipleElementGetValue('option.contentType') == 'Barcode'">
+        <el-form-item label="条码编码" prop="region" v-if="multipleElementGetValue('contentType') == 'Barcode'">
             <my-history-select class="width-140"
-                               :model-value="multipleElementGetValue('option.barCodeType')"
-                               @update:model-value="(val:any)=>multipleElementSetValue('option.barCodeType', val)"
+                               :model-value="multipleElementGetValue('barCodeType')"
+                               @update:model-value="(val:any)=>multipleElementSetValue('barCodeType', val)"
                                placeholder="条码类型"
-                               historyLabel="条码类型">
-                <el-option v-for="(item, index) in barcodeTypes" :key="index" :label="item.label" :value="item.value"
-                />
-            </my-history-select>
+                               :data-list="barcodeTypes"
+                               historyLabel="条码类型" />
             <el-tooltip
                 popper-class="barcode-type-tooltip"
                 effect="dark"
@@ -87,16 +83,16 @@
                 inactive-text="否" />
         </el-form-item>
         
-<!--        <el-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">-->
-<!--            <my-group>-->
-<!--                <my-history-input-number class="num-2"-->
-<!--                                         :min="0.01"-->
-<!--                                         :model-value="multipleElementGetValue('option.lineHeight')"-->
-<!--                                         @update:model-value="(val:any)=>multipleElementSetValue('option.lineHeight', val)"-->
-<!--                                         historyLabel="行高" />-->
-<!--                <my-unit />-->
-<!--            </my-group>-->
-<!--        </el-form-item>-->
+        <!--        <el-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">-->
+        <!--            <my-group>-->
+        <!--                <my-history-input-number class="num-2"-->
+        <!--                                         :min="0.01"-->
+        <!--                                         :model-value="multipleElementGetValue('option.lineHeight')"-->
+        <!--                                         @update:model-value="(val:any)=>multipleElementSetValue('option.lineHeight', val)"-->
+        <!--                                         historyLabel="行高" />-->
+        <!--                <my-unit />-->
+        <!--            </my-group>-->
+        <!--        </el-form-item>-->
         
         <el-form-item label="虚线样式" prop="region"
                       v-if="getElementSetting(multipleElementGetValue('type')).includes('dottedStyle')">
@@ -123,7 +119,7 @@
         
         <el-form-item label="每页统计"
                       v-if="multipleElementGetValue('runtimeOption.cellType') == 'Statistics'">
-            <el-switch
+            <my-switch
                 :model-value="multipleElementGetValue('everyPageStatisticsIs')"
                 @update:model-value="(val:any)=>multipleElementSetValue('everyPageStatisticsIs', val)"
                 class="ml-2"
@@ -134,7 +130,7 @@
         </el-form-item>
         <el-form-item label="整表统计"
                       v-if="multipleElementGetValue('runtimeOption.cellType') == 'Statistics'">
-            <el-switch
+            <my-switch
                 :model-value="multipleElementGetValue('tableStatisticsIs')"
                 @update:model-value="(val:any)=>multipleElementSetValue('tableStatisticsIs', val)"
                 class="ml-2"

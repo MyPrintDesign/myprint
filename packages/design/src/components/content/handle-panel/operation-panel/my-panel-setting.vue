@@ -65,7 +65,7 @@
         </el-form-item>
         
         <el-form-item label="边界限制">
-            <el-switch
+            <my-switch
                 v-model="panel.dragSnapPanelIs"
                 class="ml-2"
                 inline-prompt
@@ -77,7 +77,7 @@
         </el-form-item>
         
         <el-form-item label="拖动磁吸">
-            <el-switch
+            <my-switch
                 v-model="panel.dragSnapIs"
                 class="ml-2"
                 inline-prompt
@@ -102,6 +102,7 @@ import { panelKey } from '@myprint/design/constants/keys';
 import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
 import MyGroup from '@myprint/design/components/my/group/my-group.vue';
 import { changePageSize, changePageUnit } from '@myprint/design/utils/elementUtil';
+import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
 
 const panel = inject(panelKey)!;
 

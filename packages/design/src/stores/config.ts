@@ -10,7 +10,7 @@ export const useConfigStore = defineStore({
             defaultPrinter: null,
             clientProtocol: 'myprint',
             clientUrl: 'ws://127.0.0.1:9898',
-            autoConnect: true,
+            autoConnect: 1,
             settingPanel: {
                 setting: { visible: false, x: 20, y: 70, width: 800, height: 500 },
                 operation: { visible: false, x: 20, y: 70, width: 260, height: 600 },
@@ -19,7 +19,7 @@ export const useConfigStore = defineStore({
                 miniMap: { visible: false, x: 20, y: 660, width: 200, height: 200 }
             } as any,
             settingDesign: {
-                autoAlign: false
+                autoAlign: 1
             }
         };
     },

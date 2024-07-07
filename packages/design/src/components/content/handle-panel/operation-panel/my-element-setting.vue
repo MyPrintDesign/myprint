@@ -170,7 +170,7 @@
             </el-form-item>
             <el-form-item label="条码值"
                           v-if="multipleElementGetValue('contentType') == 'Barcode'">
-                <el-switch
+                <my-switch
                     :model-value="multipleElementGetValue('option.barCodeDisplayValIs')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.barCodeDisplayValIs', val)"
                     class="ml-2"
@@ -292,7 +292,7 @@
             </el-form-item>
             
             <el-form-item label="固定位置">
-                <el-switch
+                <my-switch
                     :model-value="multipleElementGetValue('option.fixed')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.fixed', val)"
                     @change="changeOptionFixed"

@@ -147,5 +147,102 @@
     }
   }
 
+}
 
+
+.my-input {
+
+  ---el-input-focus-border-color: ;
+  --el-input-border-color: #dcdfe6;
+
+  .is-focus {
+    box-shadow: 0 0 0 1px #409eff inset !important;
+  }
+
+  .my-input__wrapper {
+
+    display: inline-flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 1px 11px;
+    background-color: var(--el-input-bg-color, var(--el-fill-color-blank));
+    background-image: none;
+    border-radius: var(--el-input-border-radius, var(--el-border-radius-base));
+    cursor: text;
+    transition: var(--el-transition-box-shadow);
+    transform: translate3d(0, 0, 0);
+    box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color)) inset;
+
+    .my-input__inner {
+      --el-input-inner-height: calc(var(--el-input-height, 32px) - 2px);
+      width: 100%;
+      flex-grow: 1;
+      -webkit-appearance: none;
+      color: var(--el-input-text-color, var(--el-text-color-regular));
+      font-size: inherit;
+      height: 22px;
+      line-height: 22px;
+      padding: 0;
+      outline: 0;
+      border: none;
+      background: 0 0;
+      box-sizing: border-box;
+    }
+
+  }
+}
+
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #0003;
+  border-radius: 10px;
+  transition: all .2s ease-in-out;
+}
+
+.my-textarea__inner {
+
+  --el-input-text-color: var(--el-text-color-regular);
+  --el-input-border: var(--el-border);
+  --el-input-hover-border: var(--el-border-color-hover);
+  --el-input-focus-border: var(--el-color-primary);
+  --el-input-transparent-border: 0 0 0 1px transparent inset;
+  --el-input-border-color: var(--el-border-color);
+  --el-input-border-radius: var(--el-border-radius-base);
+  --el-input-bg-color: var(--el-fill-color-blank);
+  --el-input-icon-color: var(--el-text-color-placeholder);
+  --el-input-placeholder-color: var(--el-text-color-placeholder);
+  --el-input-hover-border-color: var(--el-border-color-hover);
+  --el-input-clear-hover-color: var(--el-text-color-secondary);
+  --el-input-focus-border-color: var(--el-color-primary);
+  --el-input-width: 100%;
+
+  position: relative;
+  display: block;
+  resize: vertical;
+  padding: 5px 11px;
+  line-height: 1.5;
+  box-sizing: border-box;
+  width: 100%;
+  font-size: inherit;
+  font-family: inherit;
+  color: var(--el-input-text-color, var(--el-text-color-regular));
+  background-color: var(--el-input-bg-color, var(--el-fill-color-blank));
+  background-image: none;
+  -webkit-appearance: none;
+  box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color)) inset;
+  border-radius: var(--el-input-border-radius, var(--el-border-radius-base));
+  transition: var(--el-transition-box-shadow);
+  border: none;
+
+  min-height: 31px;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px var(--el-input-focus-border-color) inset;
+  }
 }

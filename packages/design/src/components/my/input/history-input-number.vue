@@ -1,22 +1,23 @@
 <template>
-  <el-input-number :model-value="modelValue"
-                   ref="numRef"
-                   class="custom-input-number"
-                   :controls="false" :precision="2"
-                   @update:model-value="(val:any)=>emit('update:modelValue', val)"
-                   @change="change">
-  </el-input-number>
+    <my-input-number :model-value="modelValue"
+                     ref="numRef"
+                     class="custom-input-number"
+                     :controls="false" :precision="2"
+                     @update:model-value="(val:any)=>emit('update:modelValue', val)"
+                     @change="change">
+    </my-input-number>
 </template>
 
 <script setup lang="ts">
 
 // import { ElInputNumber } from 'element-plus'
 // import {definePropType} from "@myprint/design/constants/common";
-import {changeWrapper} from "@myprint/design/utils/historyUtil";
-import {onMounted, ref} from "vue";
+import { changeWrapper } from '@myprint/design/utils/historyUtil';
+import { onMounted, ref } from 'vue';
+import MyInputNumber from '@myprint/design/components/my/input/my-input-number.vue';
 
-const emit = defineEmits(['update:modelValue', 'change'])
-const numRef = ref(<InstanceType<any>>{})
+const emit = defineEmits(['update:modelValue', 'change']);
+const numRef = ref(<InstanceType<any>>{});
 // const props = defineProps({
 //   modelValue: {
 //     type: , default: null
@@ -24,22 +25,22 @@ const numRef = ref(<InstanceType<any>>{})
 //   historyLabel: String
 // })
 const props = withDefaults(defineProps<{
-  modelValue?: number | object,
-  historyLabel: string,
+    modelValue?: number | string,
+    historyLabel: string,
 }>(), {
-  modelValue: undefined,
-  historyLabel: undefined,
-})
+    modelValue: undefined,
+    historyLabel: undefined
+});
 
 function change(val: any) {
-  changeWrapper(val, props.historyLabel)
-  emit("change", val)
+    changeWrapper(val, props.historyLabel);
+    emit('change', val);
 }
 
 onMounted(() => {
-  const inputNumber = numRef.value.$el.querySelector('.el-input__inner');
-  inputNumber.onmousewheel = null;  // for most browsers
-  inputNumber.onwheel = null;  // for Firefox
-})
+    // const inputNumber = numRef.value.$el.querySelector('.el-input__inner');
+    // inputNumber.onmousewheel = null;  // for most browsers
+    // inputNumber.onwheel = null;  // for Firefox
+});
 
 </script>

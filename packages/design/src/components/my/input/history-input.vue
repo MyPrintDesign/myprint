@@ -1,5 +1,5 @@
 <template>
-  <el-input :model-value="modelValue"
+  <my-input :model-value="modelValue"
             @update:model-value="(val:any)=>emit('update:modelValue', val)"
             @change="(val:any)=>changeWrapper(val, historyLabel)"/>
 </template>
@@ -9,6 +9,7 @@
 // import { ElInput } from 'element-plus'
 import {definePropType} from "@myprint/design/constants/common";
 import {changeWrapper} from "@myprint/design/utils/historyUtil";
+import MyInput from '@myprint/design/components/my/input/my-input.vue';
 
 const emit = defineEmits(['update:modelValue'])
 
