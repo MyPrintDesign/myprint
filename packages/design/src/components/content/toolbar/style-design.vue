@@ -2,6 +2,7 @@
     <div class="my-group">
         
         <font-family :enable="fontEnableComputed" />
+        
         <font-size :enable="fontEnableComputed" />
         
         <div class="my-style-divider" />
@@ -26,14 +27,20 @@
         <my-color-picker
             :modelValue="multipleElementGetValue('option.color')"
             @update:model-value="(val:any)=>multipleElementSetValue('option.color', val)"
-            :enable="hasStyle(multipleElementGetValue('type'), 'color')">
-            <my-icon class="icon-zitiyanse iconfont" :enable="hasStyle(multipleElementGetValue('type'), 'color')" />
+            :disabled="!hasStyle(multipleElementGetValue('type'), 'color')">
+            <my-icon class="icon-zitiyanse iconfont"
+                     :size="14"
+                     style="height: 100%"
+                     :disabled="!hasStyle(multipleElementGetValue('type'), 'color')" />
         </my-color-picker>
         <my-color-picker
             :modelValue="multipleElementGetValue('option.background')"
             @update:model-value="(val:any)=>multipleElementSetValue('option.background', val)"
-            :enable="hasStyle(multipleElementGetValue('type'), 'background')">
-            <my-icon class="icon-bucket iconfont" :enable="hasStyle(multipleElementGetValue('type'), 'background')" />
+            :disabled="!hasStyle(multipleElementGetValue('type'), 'background')">
+            <my-icon class="icon-bucket iconfont"
+                     :size="14"
+                     style="height: 100%"
+                     :disabled="!hasStyle(multipleElementGetValue('type'), 'background')" />
         </my-color-picker>
         <div class="my-style-divider" />
         
@@ -87,18 +94,22 @@
         
         <my-style-icon tips="组合"
                        @click="group()"
-                       :enable="groupEnableIs"
+                       :disabled="groupDisabledIs"
                        class="icon-color-zh iconfont-color cursor-pointer my-style-item" />
         
         <my-style-icon tips="取消组合"
                        @click="ungroup()"
-                       :enable="ungroupEnableIs"
+                       :disabled="ungroupDisabledIs"
                        class="icon-color-qxzh iconfont-color cursor-pointer my-style-item" />
         
         <tool-icon-popover
-            :enable="hasStyleByTypeList(multipleElementGetValueList('type') as  elementType[], 'common')">
+            :disabled="!hasStyleByTypeList(multipleElementGetValueList('type') as  elementType[], 'common')">
             <template #reference>
-                <i class="icon-color-zydic iconfont-color" />
+                <my-icon
+                    style="height: 100%">
+                    <i class="icon-color-zydic iconfont-color" />
+                </my-icon>
+            
             </template>
             <template #panel>
                 <element-align :elementAlignList="elementLayerList" />
@@ -107,9 +118,12 @@
         </tool-icon-popover>
         
         <tool-icon-popover
-            :enable="hasStyleByTypeList(multipleElementGetValueList('type') as  elementType[], 'common')">
+            :disabled="!hasStyleByTypeList(multipleElementGetValueList('type') as  elementType[], 'common')">
             <template #reference>
-                <i class="icon-color-spz iconfont-color" />
+                <my-icon
+                    style="height: 100%">
+                    <i class="icon-color-spz iconfont-color" />
+                </my-icon>
             </template>
             <template #panel>
                 <element-align :elementAlignList="elementAlignList" />
@@ -263,24 +277,24 @@ const elementLayerList = reactive([
 
 const appStore = useAppStoreHook();
 
-const groupEnableIs = computed(() => {
+const groupDisabledIs = computed(() => {
     if (appStore.currentElement.length > 1) {
-        return !multipleElementGetValue('groupIs');
+        return multipleElementGetValue('groupIs');
     } else {
-        return false;
+        return true;
     }
 });
 
-const ungroupEnableIs = computed(() => {
+const ungroupDisabledIs = computed(() => {
     if (appStore.currentElement.length > 1) {
         for (let currentElementElement of appStore.currentElement) {
             if (currentElementElement.groupIs) {
-                return true;
+                return false;
             }
         }
-        return false;
+        return true;
     } else {
-        return false;
+        return true;
     }
 });
 

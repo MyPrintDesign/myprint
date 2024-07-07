@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="configStore.settingPanel.setting.visible"
+    <my-dialog v-model="configStore.settingPanel.setting.visible"
                :show-close="false"
                class="setting-dialog"
                :modal="false"
@@ -30,7 +30,7 @@
             
             </div>
         </div>
-    </el-dialog>
+    </my-dialog>
 </template>
 
 
@@ -42,6 +42,7 @@ import SettingPrinter from './setting-printer.vue';
 import SettingAbout from './setting-about.vue';
 import { useConfigStore } from '@myprint/design/stores/config';
 import SettingDesign from './setting-design.vue';
+import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
 
 const configStore = useConfigStore();
 

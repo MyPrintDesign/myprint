@@ -8,6 +8,7 @@
             <input class="my-input__inner"
                    ref="inputRef"
                    @blur="inputBlur"
+                   @focus="inputFocus"
                    :model-value="modelValue"
                    @update:model-value="(val:any)=>emit('update:modelValue', val)" />
         </div>
@@ -42,11 +43,15 @@ const data = reactive({
 
 function inputBlur() {
     data.focusIs = false;
-    console.log('333');
+    // console.log('333');
+}
+function inputFocus() {
+    data.focusIs = true;
+    // console.log('333');
 }
 
 function clickWrapper() {
-    console.log(123);
+    // console.log(123);
     data.focusIs = true;
     inputRef.value!.focus();
 }

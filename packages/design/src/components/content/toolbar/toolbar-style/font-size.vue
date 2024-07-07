@@ -26,9 +26,13 @@
     </tool-icon-popover>
     
     <div class="my-style-font-size_arrows display-flex-column">
-      <my-icon class="drop-arrow icon-jt-s iconfont" :enable="enable" @click="fontSizeAdd()">
+      <my-icon class="drop-arrow icon-jt-s iconfont"
+               :size="8"
+               :enable="enable" @click="fontSizeAdd()">
       </my-icon>
-      <my-icon class="drop-arrow icon-jt-x iconfont" :enable="enable" @click="fontSizeSub()">
+      <my-icon class="drop-arrow icon-jt-x iconfont"
+               :size="8"
+               :enable="enable" @click="fontSizeSub()">
       </my-icon>
     </div>
   </div>

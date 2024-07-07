@@ -1,7 +1,7 @@
 <template>
     <el-form label-width="80px" size="small"
              label-position="right">
-        <my-divider>
+        <my-divider-panel>
             <template #divider>
                 基础
             </template>
@@ -49,23 +49,20 @@
                                   type="textarea"
                                   historyLabel="格式化器" />
             </el-form-item>
-        </my-divider>
+        </my-divider-panel>
         
-        <my-divider class="divider-setting-layout">
+        <my-divider-panel class="divider-setting-layout">
             <template #divider>
                 布局
                 <tip-icon class="divider-setting-layout-lock iconfont"
                           placement="top"
                           tips="锁定编辑"
+                          :size="14"
+                          padding="11px"
                           :model-value="multipleElementGetValue('lock')"
                           :class="[multipleElementGetValue('lock')? 'icon-lock': 'icon-unlock']"
                           @click="changeLock"
                           @update:model-value="(val:any)=>multipleElementSetValue('lock', val)" />
-                <!--      <my-icon v-else class="divider-setting-layout-unlock iconfont icon-unlock"-->
-                <!--               :model-value="multipleElementGetValue('lock')"-->
-                <!--               @click="changeLock"-->
-                <!--               @update:model-value="(val:any)=>multipleElementSetValue('lock', val)"/>-->
-            
             </template>
             
             <el-form-item label="坐标(x/y)" v-if="getElementSetting(multipleElementGetValue('type')).includes('x')">
@@ -101,7 +98,9 @@
                                              @change="changeElementWidth"
                                              historyLabel="尺寸" />
                     <my-unit />
-                    <my-icon class="setting-wh-lock iconfont "
+                    <my-icon class="setting-wh-lock iconfont"
+                             :size="16"
+                             padding="11px"
                              :class="[multipleElementGetValue('option.keepRatio')? 'icon-wh-lock': 'icon-wh-unlock']"
                              :model-value="multipleElementGetValue('option.keepRatio')"
                              @update:model-value="(val:any)=>multipleElementSetValue('option.keepRatio', val)"
@@ -111,7 +110,7 @@
             
             <el-form-item label="不透明度"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
-                <el-slider class="width-120"
+                <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.opacity')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.opacity', val)"
                            :max="1" :min="0" :step="0.01"
@@ -120,18 +119,18 @@
                 <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
             </el-form-item>
             <el-form-item label="旋转角度" v-if="getElementSetting(multipleElementGetValue('type')).includes('rotate')">
-                <el-slider class="width-120"
+                <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.rotate')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.rotate', val)"
                            :max="359" :min="0" :step="1"
-                           @input="rotatedPoint(appStore.currentElement)"
+                           @change="rotatedPoint(appStore.currentElement)"
                            :show-tooltip="false" size="small" />
                 <div style="margin-left: 20px">{{ multipleElementGetValue('option.rotate') }}</div>
             </el-form-item>
         
-        </my-divider>
+        </my-divider-panel>
         
-        <my-divider>
+        <my-divider-panel>
             <template #divider>
                 属性
             </template>
@@ -139,34 +138,30 @@
             <el-form-item label="打印类型" prop="region"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('contentType')">
                 <my-history-select :model-value="multipleElementGetValue('contentType')"
+                                   class="width-140"
                                    @update:model-value="(val:any)=>multipleElementSetValue('contentType', val)"
                                    placeholder="Activity zone"
-                                   historyLabel="打印类型">
-                    <el-option v-for="(item, index) in textContentTypes" :key="index" :label="item.label"
-                               :value="item.value" />
-                </my-history-select>
+                                   :data-list="textContentTypes"
+                                   historyLabel="打印类型" />
             </el-form-item>
             <el-form-item label="条码编码" prop="region" v-if="multipleElementGetValue('contentType') == 'Barcode'">
-                <my-history-select class="width-140"
+                <my-history-select class="width-120"
                                    :model-value="multipleElementGetValue('option.barCodeType')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.barCodeType', val)"
                                    placeholder="条码类型"
-                                   historyLabel="条码类型">
-                    <el-option v-for="(item, index) in barcodeTypes" :key="index" :label="item.label"
-                               :value="item.value"
-                    />
-                </my-history-select>
-                <el-tooltip
+                                   :data-list="barcodeTypes"
+                                   historyLabel="条码类型" />
+                <my-tooltip
                     popper-class="barcode-type-tooltip"
                     effect="dark"
                     :max-width="200"
                     :content="currentBarCodeEg"
                     placement="top"
                 >
-                    <el-icon style="margin-left: 5px" :size="14">
+                    <my-icon>
                         <QuestionFilled />
-                    </el-icon>
-                </el-tooltip>
+                    </my-icon>
+                </my-tooltip>
             </el-form-item>
             <el-form-item label="条码值"
                           v-if="multipleElementGetValue('contentType') == 'Barcode'">
@@ -302,9 +297,9 @@
                     active-text="是"
                     inactive-text="否" />
             </el-form-item>
-        </my-divider>
+        </my-divider-panel>
         
-        <my-divider>
+        <my-divider-panel>
             <template #divider>
                 打印策略
             </template>
@@ -321,8 +316,7 @@
                 </my-history-select>
             </el-form-item>
         
-        </my-divider>
-    
+        </my-divider-panel>
     
     </el-form>
 
@@ -338,7 +332,6 @@ import {
     getElementSetting,
     textContentTypes
 } from '@myprint/design/constants/common';
-import { QuestionFilled } from '@element-plus/icons-vue';
 import MyGroup from '@myprint/design/components/my/group/my-group.vue';
 import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
 import { useAppStoreHook } from '@myprint/design/stores/app';
@@ -354,9 +347,12 @@ import { MyElement } from '@myprint/design/types/entity';
 import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
-import MyDivider from '@myprint/design/components/my/divider/my-divider.vue';
+import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
 import { mittKey } from '@myprint/design/constants/keys';
 import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
+import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
+import QuestionFilled from '@myprint/design/components/my/icon/QuestionFilled.vue';
+import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
 
 const mitt = inject(mittKey)!;
 

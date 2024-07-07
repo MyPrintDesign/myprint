@@ -1,32 +1,31 @@
 <template>
     <div class="toolbar-container">
-        
         <div class="display-flex space-between width-100-p">
-                                    <style-design />
+            <style-design />
             
             <div class="display-flex-column toolbar-tool">
                 <div class="display-flex">
-                    <el-button @click="refresh">r</el-button>
-                    <el-button size="small" @click="print">
-                        <el-icon>
+                    <my-button @click="refresh">r</my-button>
+                    <my-button size="small" @click="print">
+                        <my-icon>
                             <Printer />
-                        </el-icon>
+                        </my-icon>
                         {{ i18n('toolbar.print') }}
-                    </el-button>
-                    <el-button size="small" @click="serverDownloadPdf">
-                        <el-icon>
+                    </my-button>
+                    <my-button size="small" @click="serverDownloadPdf">
+                        <my-icon>
                             <Printer />
-                        </el-icon>
+                        </my-icon>
                         下载
-                    </el-button>
+                    </my-button>
                     <my-button size="small" @click="preview">
                         <i class="icon-zitiyulan iconfont" />
                         {{ i18n('toolbar.preview') }}
                     </my-button>
-                    <el-button size="small" @click="clearPanelClick">{{ i18n('toolbar.clear') }}</el-button>
-                    <el-button size="small" :disabled="getCurrentPanel().name == null || getCurrentPanel().name == ''"
+                    <my-button size="small" @click="clearPanelClick">{{ i18n('toolbar.clear') }}</my-button>
+                    <my-button size="small" :disabled="getCurrentPanel().name == null || getCurrentPanel().name == ''"
                                @click="save">{{ i18n('toolbar.save') }}
-                    </el-button>
+                    </my-button>
                 </div>
             </div>
         </div>
@@ -47,6 +46,7 @@ import { Printer } from '@element-plus/icons-vue';
 import { MyPrinter } from '@myprint/design/printer';
 import { download } from '@myprint/design/utils/utils';
 import MyButton from '@myprint/design/components/my/button/my-Button.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 
 const panel = inject(panelKey);
 const mitt = inject(mittKey)!;

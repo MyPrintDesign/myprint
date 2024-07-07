@@ -2,6 +2,10 @@
     <div class="style-icon"
          :class="{focus: !disabled && (hoverFlag || modelValue), 'my-icon-disabled': disabled, active: modelValue}"
          @click="click"
+         :style="{
+             'font-size': size+'px',
+             'padding': padding
+         }"
          @mouseover="hover(true)"
          @mouseleave="hover(false)">
         <slot />
@@ -16,10 +20,14 @@ const emit = defineEmits(['update:modelValue', 'click']);
 const props = withDefaults(defineProps<{
         disabled?: boolean,
         modelValue?: boolean,
+        size?: number,
+        padding?: string,
     }>(),
     {
-        disabled: true,
-        modelValue: false
+        disabled: false,
+        modelValue: false,
+        size: 14,
+        padding: null!
     });
 
 const hoverFlag = ref(false);

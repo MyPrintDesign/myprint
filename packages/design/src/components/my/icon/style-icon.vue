@@ -2,7 +2,7 @@
     <tip-icon
         :modelValue="value"
         @update:model-value="change"
-        :enable="enable">
+        :disabled="disabled">
         <slot />
     </tip-icon>
 </template>
@@ -25,14 +25,14 @@ const props = withDefaults(defineProps<{
         props?: string,
         propsValue?: string,
         enableProps?: string,
-        enable?: boolean | undefined,
+        disabled?: boolean | undefined,
         marginTop?: string,
     }>(),
     {
         props: '',
         propsValue: undefined,
         enableProps: '',
-        enable: undefined,
+        disabled: undefined,
         marginTop: ''
     });
 // console.log(props.tips)
@@ -52,21 +52,21 @@ const value = computed(() => {
     }
 });
 
-const enable = computed(() => {
-    if (props.enable !== undefined) {
-        return props.enable;
+const disabled = computed(() => {
+    if (props.disabled !== undefined) {
+        return props.disabled;
     }
     if (appStore.currentElement.length == 0) {
-        return false;
+        return true;
     }
     for (let currentElementElement of appStore.currentElement) {
         if (!hasStyle(currentElementElement.type, props.enableProps as any)) {
             // console.log(props.enableProps, 'false')
-            return false;
+            return true;
         }
     }
     // console.log(props.enableProps, 'true')
-    return true;
+    return false;
 });
 
 function change(val: boolean) {

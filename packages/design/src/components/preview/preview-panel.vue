@@ -1,5 +1,5 @@
 <template>
-    <el-dialog
+    <my-dialog
         v-model="data.dialogVisible"
         class="preview-dialog"
         fullscreen
@@ -46,20 +46,20 @@
                             />
                         </el-select>
                     </div>
-                    <el-button style="margin-left: 0" :disabled="!data.printer" @click="print">{{
+                    <my-button style="margin-left: 0" :disabled="!data.printer" @click="print">{{
                             i18n('toolbar.print')
                         }}
-                    </el-button>
+                    </my-button>
                 </template>
                 
-                <el-button style="margin-left: 0" @click="printChromePdf">{{ i18n('toolbar.chrome.print') }}</el-button>
-                <el-button style="margin-left: 0" @click="downloadPdf">{{ i18n('preview.download.pdf') }}</el-button>
-                <el-button style="margin-left: 0" @click="()=>data.dialogVisible = false">{{ i18n('common.close') }}
-                </el-button>
+                <my-button style="margin-left: 0" @click="printChromePdf">{{ i18n('toolbar.chrome.print') }}</my-button>
+                <my-button style="margin-left: 0" @click="downloadPdf">{{ i18n('preview.download.pdf') }}</my-button>
+                <my-button style="margin-left: 0" @click="()=>data.dialogVisible = false">{{ i18n('common.close') }}
+                </my-button>
             </div>
         </div>
     
-    </el-dialog>
+    </my-dialog>
 </template>
 
 <script setup lang="ts">
@@ -78,6 +78,8 @@ import { useConfigStore } from '@myprint/design/stores/config';
 import { autoPage } from './autoPage';
 import { PrintProps } from '@myprint/design/types/entity';
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
+import MyButton from '@myprint/design/components/my/button/my-Button.vue';
+import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
 
 defineExpose({ handlePreview });
 

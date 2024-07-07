@@ -1,5 +1,5 @@
 <template>
-    <component :is="tag" ref="scrollbar" :style="{maxHeight : height, height: height}" class="ps">
+    <component :is="tag" ref="scrollbar" :style="{maxHeight : height}" class="ps">
         <slot />
     </component>
 </template>

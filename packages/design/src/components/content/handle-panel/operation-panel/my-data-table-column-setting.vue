@@ -1,44 +1,50 @@
 <template>
     <el-form label-width="80px" size="small"
              label-position="right">
-        <el-divider>
-            列
-        </el-divider>
+        <my-divider-panel>
+            <template #divider>
+                列
+            </template>
+            <el-form-item label="内容" v-if="getElementSetting(multipleElementGetValue('type')).includes('data')">
+                <my-history-input style="margin-right: 20px"
+                                  historyLabel="内容"
+                                  :model-value="multipleElementGetValue('data')"
+                                  @update:model-value="(val:any)=>multipleElementSetValue('data', val)"
+                                  type="textarea" />
+            </el-form-item>
+        </my-divider-panel>
         
-        <el-form-item label="内容" v-if="getElementSetting(multipleElementGetValue('type')).includes('data')">
-            <my-history-input style="margin-right: 20px"
-                              historyLabel="内容"
-                              :model-value="multipleElementGetValue('data')"
-                              @update:model-value="(val:any)=>multipleElementSetValue('data', val)"
-                              type="textarea" />
-        </el-form-item>
-        <el-divider class="divider-setting-layout">
-            布局
-        </el-divider>
         
-        <el-form-item label="宽/高" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
-            <my-group>
-                <my-history-input-number class="width-60"
-                                         :model-value="multipleElementGetValue('width')"
-                                         @update:model-value="(val:any)=>multipleElementSetValue('width', val)"
-                                         historyLabel="尺寸" />
-                <my-history-input-number class="width-60"
-                                         :model-value="multipleElementGetValue('height')"
-                                         @update:model-value="(val:any)=>multipleElementSetValue('height', val)"
-                                         historyLabel="尺寸" />
-                <my-unit />
-            </my-group>
-        </el-form-item>
-        
-        <el-form-item label="不透明度" v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
-            <el-slider class="width-120"
-                       :model-value="multipleElementGetValue('option.opacity')"
-                       @update:model-value="(val:any)=>multipleElementSetValue('option.opacity', val)"
-                       :max="1" :min="0" :step="0.01"
-                       :show-tooltip="false" size="small"
-                       historyLabel="不透明度" />
-            <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
-        </el-form-item>
+        <my-divider-panel class="divider-setting-layout">
+            <template #divider>
+                布局
+            </template>
+            
+            <el-form-item label="宽/高" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
+                <my-group>
+                    <my-history-input-number class="width-60"
+                                             :model-value="multipleElementGetValue('width')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('width', val)"
+                                             historyLabel="尺寸" />
+                    <my-history-input-number class="width-60"
+                                             :model-value="multipleElementGetValue('height')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('height', val)"
+                                             historyLabel="尺寸" />
+                    <my-unit />
+                </my-group>
+            </el-form-item>
+            
+            <el-form-item label="不透明度"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
+                <my-slider class="width-120"
+                           :model-value="multipleElementGetValue('option.opacity')"
+                           @update:model-value="(val:any)=>multipleElementSetValue('option.opacity', val)"
+                           :max="1" :min="0" :step="0.01"
+                           :show-tooltip="false" size="small"
+                           historyLabel="不透明度" />
+                <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
+            </el-form-item>
+        </my-divider-panel>
         
         <el-divider>
             属性
@@ -47,28 +53,29 @@
         <el-form-item label="打印类型" prop="region"
                       v-if="getElementSetting(multipleElementGetValue('type')).includes('contentType')">
             <my-history-select :model-value="multipleElementGetValue('contentType')"
+                               class="width-140"
                                @update:model-value="(val:any)=>multipleElementSetValue('contentType', val)"
                                placeholder="Activity zone"
                                :data-list="textContentTypes"
                                historyLabel="打印类型" />
         </el-form-item>
         <el-form-item label="条码编码" prop="region" v-if="multipleElementGetValue('contentType') == 'Barcode'">
-            <my-history-select class="width-140"
+            <my-history-select class="width-120"
                                :model-value="multipleElementGetValue('barCodeType')"
                                @update:model-value="(val:any)=>multipleElementSetValue('barCodeType', val)"
                                placeholder="条码类型"
                                :data-list="barcodeTypes"
                                historyLabel="条码类型" />
-            <el-tooltip
+            <my-tooltip
                 popper-class="barcode-type-tooltip"
                 effect="dark"
                 :max-width="200"
                 placement="top"
             >
-                <el-icon style="margin-left: 5px" :size="14">
+                <my-icon style="margin-left: 5px" :size="14">
                     <QuestionFilled />
-                </el-icon>
-            </el-tooltip>
+                </my-icon>
+            </my-tooltip>
         </el-form-item>
         
         <el-form-item label="换行"
@@ -160,6 +167,10 @@ import { computed } from 'vue';
 import { MyElement, statisticsType, statisticsTypeFormat } from '@myprint/design/types/entity';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
+import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
+import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
 //
 // const mitt = inject(mittKey)!
 // // const data = reactive({

@@ -1,5 +1,5 @@
 <template>
-    <my-tooltip
+    <my-popover
         trigger="click"
         :disabled="disabled"
         placement="bottom">
@@ -9,7 +9,9 @@
                     <div class="display-flex-column">
                         <slot name="reference" />
                     </div>
-                    <my-icon v-if="showArrow" class="my-style-font_arrow icon-jt-x iconfont my-icon-downList-arrow"
+                    <my-icon v-if="showArrow"
+                             :size="8"
+                             class="my-style-font_arrow icon-jt-x iconfont my-icon-downList-arrow"
                              :disabled="disabled">
                     </my-icon>
                 </div>
@@ -17,12 +19,12 @@
             </div>
         </template>
         <slot name="panel" />
-    </my-tooltip>
+    </my-popover>
 </template>
 
 <script setup lang="ts">
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
+import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 
 withDefaults(defineProps<{
     disabled?: boolean

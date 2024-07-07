@@ -180,11 +180,17 @@ export function selectCell(highlightColumn: any, cellList: TableCellElement[]) {
 
 export function computedCellRect(cellList: TableCellElement[]) {
     const rect = {
-        x: 999999,
-        y: 999999,
+        x: 0,
+        y: 0,
         width: 0,
         height: 0
     } as Rect;
+
+    if (cellList.length == 0) {
+        return rect;
+    }
+    rect.x = cellList[0].runtimeOption.x;
+    rect.y = cellList[0].runtimeOption.y;
 
     for (let i = 0; i < cellList.length; i++) {
         const cell = cellList[i];

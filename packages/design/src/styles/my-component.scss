@@ -16,9 +16,13 @@
   --el-text-color-secondary: #909399;
 }
 
-.my-tooltip_content {
+.my-popover_content {
   z-index: 99998;
   box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+}
+
+.my-tooltip_content {
+
 }
 
 .popper-arrow {
@@ -31,14 +35,16 @@
   margin-top: -10px;
 }
 
-.my-select-wrapper {
+.my-select {
   //color: white;
+  width: 100%;
   height: 24px;
   border-radius: 5px;
   margin-right: 6px;
+  border: 1px solid #dcdfe6;
 
   .my-select-input {
-    width: 60px;
+    flex: 1;
     height: 24px;
     line-height: 24px;
     text-align: center;
@@ -113,6 +119,7 @@
 }
 
 .ps {
+  height: 100%;
 
   &:hover {
     .ps__rail-y {
@@ -246,3 +253,109 @@
     box-shadow: 0 0 0 1px var(--el-input-focus-border-color) inset;
   }
 }
+
+.my-dialog {
+  z-index: 99999;
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+
+  .my-dialog_wrapper {
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    .my-dialog_content {
+      padding: 5px;
+      border-radius: 2px;
+      box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);;
+      background: white;
+    }
+
+    .is-fullscreen {
+      padding: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+  }
+}
+
+.my-popup-parent--hidden {
+  overflow: hidden;
+}
+
+.my-popover_reference {
+}
+
+.my-form {
+
+  .my-form-item {
+    margin-bottom: 18px;
+
+    .my-form-item-label {
+
+      display: inline-flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      flex: 0 0 auto;
+      color: var(--el-text-color-regular);
+      padding: 0 12px 0 0;
+      box-sizing: border-box;
+
+      height: 24px;
+      line-height: 24px;
+      font-size: 12px;
+    }
+
+    .my-form-item__content {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      flex: 1;
+      line-height: 24px;
+      position: relative;
+      font-size: 12px;
+      min-width: 0;
+    }
+  }
+}
+
+.my-divider--horizontal {
+  display: block;
+  height: 1px;
+  width: 100%;
+  margin: 24px 0;
+  border-top: 1px var(--el-border-color) var(--el-border-style);
+}
+
+.my-divider {
+  position: relative;
+
+
+
+  .my-divider__text {
+
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+
+    position: absolute;
+    background-color: var(--el-bg-color);
+    padding: 0 20px;
+    font-weight: 500;
+    color: var(--el-text-color-primary);
+    font-size: 14px;
+  }
+}
+

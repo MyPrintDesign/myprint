@@ -1,121 +1,152 @@
 <template>
-  <el-popover
-      popper-class="my-popover"
-      :popper-style="popperStyle"
-      :placement="placement"
-      :visible="popoverVisible"
-      :disabled="disabled"
-      :show-arrow="false"
-      :show-after="0"
-      :hide-after="0"
-      :trigger="trigger">
-    <template #reference>
-      <div @mousedown="mousedown($event)"
-           @mouseup="mouseup($event)"
-           @mouseover="hover(true)"
-           @mouseleave="hover(false)">
-        <slot name="reference"/>
-      </div>
-    </template>
-    
-    <div @mouseover="hover(true)"
-         ref="popoverRef"
-         @mouseleave="hover(false)">
-      
-      <slot/>
-    
+    <div class="my-popover_reference"
+         :class="[props.class]"
+         ref="referenceRef"
+         @mouseenter="mouseenter"
+         @mouseleave="mouseleave"
+         @click.stop.prevent="togglePopperShow">
+        <slot name="reference"></slot>
     </div>
-  
-  </el-popover>
+    <teleport to="body">
+        <div class="my-popover_content"
+             ref="contentRef"
+             v-show="data.visible">
+            <slot></slot>
+        </div>
+    </teleport>
 </template>
 
 <script setup lang="ts">
-// import { ElPopover } from 'element-plus'
-import {ref, computed} from "vue";
-import {onClickOutside} from '@vueuse/core'
+import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { createPopper } from '@popperjs/core';
+import { onClickOutside } from '@vueuse/core';
+//@ts-ignore
+import { Placement } from '@popperjs/core/lib/enums';
 
-export interface Props {
-  trigger?: string
-  placement?: string
-  popperStyle?: any
-  pressHide?: boolean
-  disabled?: boolean
-  lock?: boolean
-}
+const props = withDefaults(defineProps<{
+    disabled?: boolean
+    placement?: Placement
+    trigger?: 'hover' | 'click'
+    class?: string
+}>(), {
+    placement: 'top',
+    trigger: 'hover'
+});
 
-const props = withDefaults(defineProps<Props>(), {
-  trigger: 'hover',
-  placement: 'top',
-  popperStyle: () => ({}),
-  pressHide: false,
-  disabled: false,
-  lock: false,
-})
+const data = reactive({
+    visible: false
+});
 
-const visible = ref({
-  popover: false
-})
-const popoverRef = ref(<any>{})
-const mousedownFlag = ref(false)
-const popoverVisible = computed(() => {
-  return props.lock || visible.value.popover
-})
-let timer: any = null
-let stop: ReturnType<typeof onClickOutside>
 
-function mousedown(_ev: MouseEvent) {
-  // ev.stopPropagation()
-  if (props.pressHide) {
-    visible.value.popover = false
-  }
-  mousedownFlag.value = true;
-}
+// const emit = defineEmits(['update:visible', 'hide', 'show']);
 
-function mouseup(_ev: MouseEvent) {
-  // ev.stopPropagation()
-  if (props.trigger == 'click') {
-    updateVisible(!visible.value.popover)
-    
-    return;
-  }
-  
-  if (props.pressHide) {
-    updateVisible(true)
-  }
-  mousedownFlag.value = false
-  
-}
-
-function hover(flag: boolean) {
-  if (props.trigger == 'click') {
-    return;
-  }
-  // ev.stopPropagation()
-  if (mousedownFlag.value && flag) {
-    return
-  }
-  updateVisible(flag)
-}
-
-function updateVisible(flag: boolean) {
-  
-  if (timer != null) {
-    clearTimeout(timer)
-  }
-  timer = setTimeout(function () {
-    visible.value.popover = flag
-    if (visible.value.popover) {
-      stop = onClickOutside(popoverRef,
-          () => {
-            if (props.trigger !== 'hover') {
-              updateVisible(false)
+const referenceRef = ref<HTMLElement>();
+const contentRef = ref<HTMLElement>();
+let popperInstance: any = null;
+// 创建 popper 实例
+const createPopperInstance = () => {
+    popperInstance = createPopper(referenceRef.value!, contentRef.value!, {
+        modifiers: [
+            {
+                name: 'offset',
+                options: {
+                    // 偏移值 左右，上下
+                    offset: [0, 10]
+                }
+            },
+            {
+                name: 'arrow',
+                options: {
+                    element: '.popper-arrow'
+                }
             }
-          });
+        ]
+        // placement: props.placement
+    });
+    nextTick(() => {
+        // 异步更新
+        popperInstance.update();
+    });
+};
+
+
+// 销毁 popper 实例
+const destroyPopperInstance = () => {
+    popperInstance?.destroy?.();
+    popperInstance = null;
+};
+
+watch(() => data.visible, (visible, _o) => {
+    if (visible) {
+        createPopperInstance();
+        // emit('show');
     } else {
-      if (stop) {
-        stop()
-      }
+        // emit('hide');
     }
-  }, 0)
+});
+
+onMounted(() => {
+    createPopperInstance();
+    contentRef.value!.style.minWidth = referenceRef.value!.offsetWidth + 'px';
+});
+
+onUnmounted(() => {
+    destroyPopperInstance();
+});
+let stopHandle: ReturnType<typeof onClickOutside>;
+
+function mouseenter() {
+    if (props.trigger != 'hover') {
+        return;
+    }
+    data.visible = true;
 }
+
+function mouseleave() {
+    if (props.trigger != 'hover') {
+        return;
+    }
+    data.visible = false;
+}
+
+const togglePopperShow = () => {
+    if (props.trigger != 'click') {
+        return;
+    }
+    if (props.disabled) {
+        return;
+    }
+    
+    if (data.visible) {
+        // close
+        onClose();
+    } else {
+        if (stopHandle == null) {
+            stopHandle = onClickOutside(contentRef, () => {
+                data.visible = false;
+            }, {
+                ignore: [referenceRef]
+            });
+        }
+        data.visible = true;
+    }
+};
+
+function onClose() {
+    stopHandle?.();
+    stopHandle = null! as any;
+    data.visible = false;
+}
+
+watch(
+    () => data.visible,
+    (val) => {
+        if (!val) {
+            onClose();
+        }
+    },
+    {
+        flush: 'post'
+    }
+);
 </script>

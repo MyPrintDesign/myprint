@@ -1,18 +1,27 @@
 <template>
     <button aria-disabled="false"
-            type="button"
-            class="my-button my-button--small">
+            :class="{
+                'my-button--small': size == 'small'
+            }"
+            class="my-button ">
         <slot />
     </button>
 </template>
 
 <script setup lang="ts">
+
+withDefaults(defineProps<{
+    size?: 'small' | '',
+}>(), {
+    size: ''
+});
+
 </script>
 
 <style>
 
 .my-button:hover {
-
+    
     color: var(--el-button-hover-text-color);
     border-color: var(--el-button-hover-border-color);
     background-color: var(--el-button-hover-bg-color);
