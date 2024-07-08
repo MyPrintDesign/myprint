@@ -1,6 +1,6 @@
 <template>
-    <form class="my-form">
+    <div class="my-form">
         <slot />
-    </form>
+    </div>
 </template>
 

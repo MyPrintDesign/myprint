@@ -1,12 +1,12 @@
 <template>
-    <el-container class="design-container-root cursor-resize" :data-rotation="appStore.dataRotation">
-        <el-aside width="180" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
+    <section class="design-container-root cursor-resize" :data-rotation="appStore.dataRotation">
+        <aside class="my-aside" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
             <widget :module="props.module" @back="back" />
-        </el-aside>
-        <el-main class="design-container-root_main">
+        </aside>
+        <main class=" my-main design-container-root_main">
             <PanelView />
-        </el-main>
-    </el-container>
+        </main>
+    </section>
     <my-mouse-tips />
 </template>
 

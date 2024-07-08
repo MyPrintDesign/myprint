@@ -23,7 +23,6 @@
 </template>
 
 <script setup lang="ts">
-// import { ElDialog, ElScrollbar, ElButton, ElSelect, ElOption } from 'element-plus'
 import { inject, nextTick, reactive, ref } from 'vue';
 import { download, printCssStyle } from '@myprint/design/utils/utils';
 import { MyElement, Panel } from '@myprint/design/types/entity';

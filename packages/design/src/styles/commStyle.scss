@@ -1,9 +1,29 @@
 .design-container-root {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  flex-basis: auto;
+  box-sizing: border-box;
+  min-width: 0;
   height: 100%;
-}
 
-.design-container-root_main {
-  padding: 0 !important;
+  .my-aside {
+    border-right: 1px solid rgb(233, 233, 233);
+    background: rgb(248, 248, 248);
+    overflow: auto;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    width: 181px;
+  }
+
+  .my-main {
+    --el-main-padding: 20px;
+    display: block;
+    flex: 1;
+    flex-basis: auto;
+    overflow: auto;
+    box-sizing: border-box;
+  }
 }
 
 .el-tabs--border-card > .el-tabs__content {
@@ -154,9 +174,9 @@
 }
 
 .my-handle-panel-icon {
-  font-size: 16px;
-  height: 16px;
-  width: 16px;
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
   margin: 2px;
   display: inline-block;
   cursor: pointer;

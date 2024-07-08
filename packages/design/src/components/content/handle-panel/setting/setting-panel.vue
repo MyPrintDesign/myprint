@@ -19,9 +19,9 @@
             <div class="setting-panel">
                 <div class="setting-panel-header display-flex">
                     <div class="setting-panel-header-title">{{ currentSettingItem.title }}</div>
-                    <el-icon color="#666666" size="20" @click="clickClose" class="cursor-pointer">
+                    <my-icon color="#666666" size="20" @click="clickClose" class="cursor-pointer">
                         <CloseBold />
-                    </el-icon>
+                    </my-icon>
                 </div>
                 
                 <setting-design v-if="currentSettingItem.type == 'DESIGN'" />
@@ -35,14 +35,14 @@
 
 
 <script setup lang="ts">
-// import { ElDialog } from 'element-plus'
-import { CloseBold } from '@element-plus/icons-vue';
 import { reactive, ref } from 'vue';
 import SettingPrinter from './setting-printer.vue';
 import SettingAbout from './setting-about.vue';
 import { useConfigStore } from '@myprint/design/stores/config';
 import SettingDesign from './setting-design.vue';
 import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import CloseBold from '@myprint/design/components/my/icon/icons/CloseBold.vue';
 
 const configStore = useConfigStore();
 

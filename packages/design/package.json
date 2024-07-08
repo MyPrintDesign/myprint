@@ -58,8 +58,6 @@
   },
   "devDependencies": {
     "@daybrush/utils": "^1.13.0",
-    "@element-plus/icons-vue": "^2.1.0",
-    "element-plus": "^2.6.1",
     "@types/d3-array": "^3.2.1",
     "@types/d3-drag": "^3.0.7",
     "@types/d3-path": "^3.0.2",

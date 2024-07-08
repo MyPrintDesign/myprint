@@ -10,7 +10,7 @@
              class="my-style-font-size user-select-none"
              @click="changeFontSizeInputShow(true)">{{ data.fontSize }}
         </div>
-        <el-input
+        <my-input
             v-show="data.fontSizeInputShow && enable"
             class="my-style-font-size"
             ref="fontSizeRef"
@@ -46,6 +46,7 @@ import { computed, onMounted, reactive, ref } from "vue";
 import { onClickOutside } from "@vueuse/core";
 import ElementAlign from "@myprint/design/components/content/toolbar/toolbar-style/element-align.vue";
 import ToolIconPopover from "@myprint/design/components/my/icon/tool-icon-popover.vue";
+import MyInput from '@myprint/design/components/my/input/my-input.vue';
 
 // const appStore = useAppStoreHook()
 

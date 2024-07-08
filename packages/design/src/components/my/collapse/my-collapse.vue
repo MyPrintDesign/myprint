@@ -11,13 +11,13 @@
                     <slot name="head" />
                 </div>
                 
-                <el-icon class="my-handle-panel-icon" @click="clickHead">
+                <my-icon class="my-handle-panel-icon" @click="clickHead">
                     <ArrowRight class="collapse-panel-head-right-icon" :class="{'is-active': data.show }" />
-                </el-icon>
+                </my-icon>
                 
-                <el-icon class="collapse-panel-head-right-close cursor-pointer" @click="clickHeadClose">
+                <my-icon class="collapse-panel-head-right-close cursor-pointer" @click="clickHeadClose">
                     <Close class="collapse-panel-head-right-icon" />
-                </el-icon>
+                </my-icon>
             
             </div>
             <my-scrollbar height="calc(100% - 24px)" @mousedown="bodyMouseDown">
@@ -29,13 +29,14 @@
     </Teleport>
 </template>
 <script setup lang="ts">
-// import {ElIcon, ElScrollbar} from 'element-plus'
 import { computed, CSSProperties, nextTick, onMounted, reactive, ref } from 'vue';
-import { ArrowRight, Close } from '@element-plus/icons-vue';
 import { getCollapsePanelZIndex } from '@myprint/design/utils/utils';
 import { HandlePanel, HandlePanelPosition } from '@myprint/design/types/entity';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import ArrowRight from '@myprint/design/components/my/icon/icons/ArrowRight.vue';
+import Close from '@myprint/design/components/my/icon/icons/Close.vue';
 
 export interface Props {
     element?: HandlePanel;

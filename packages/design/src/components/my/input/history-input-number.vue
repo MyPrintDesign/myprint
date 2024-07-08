@@ -9,9 +9,6 @@
 </template>
 
 <script setup lang="ts">
-
-// import { ElInputNumber } from 'element-plus'
-// import {definePropType} from "@myprint/design/constants/common";
 import { changeWrapper } from '@myprint/design/utils/historyUtil';
 import { onMounted, ref } from 'vue';
 import MyInputNumber from '@myprint/design/components/my/input/my-input-number.vue';

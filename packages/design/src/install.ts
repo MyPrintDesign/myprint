@@ -3,7 +3,6 @@ import 'vue3-colorpicker/style.css';
 
 import { messageFun, mittKey } from './constants/keys';
 
-
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 // @ts-ignore
@@ -16,17 +15,7 @@ import { useSocket } from './stores/socket';
 import { mitt } from '@myprint/design/utils/utils';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { installPrinter } from '@myprint/design/printer';
-// import 'element-plus/es/components/button/style/index'
-// import 'element-plus/es/components/scrollbar/style/index'
-// import 'element-plus/es/components/switch/style/index'
-// import 'element-plus/es/components/input/style/index'
-// import 'element-plus/es/components/form/style/index'
-// import 'element-plus/es/components/form-item/style/index'
-// import 'element-plus/es/components/select/style/index'
-// import 'element-plus/dist/index.css'
 
-// import {ElButton, ElSelect, ElOption, ElIcon, ElScrollbar, ElPopover,ElTooltip,ElInput,ElInputNumber,
-//     ElContainer, ElAside, ElMain, ElRow,ElCol,ElForm,ElFormItem,ElDivider,ElSwitch} from 'element-plus'
 const onSocketMessage = ref<Function>();
 
 const install = {
@@ -46,24 +35,6 @@ const install = {
             app.use(pinia);
         }
         app
-            // .use(ElButton)
-            // .use(ElSelect)
-            // .use(ElOption)
-            // .use(ElIcon)
-            // .use(ElScrollbar)
-            // .use(ElPopover)
-            // .use(ElTooltip)
-            // .use(ElInput)
-            // .use(ElInputNumber)
-            // .use(ElContainer)
-            // .use(ElAside)
-            // .use(ElMain)
-            // .use(ElRow)
-            // .use(ElCol)
-            // .use(ElForm)
-            // .use(ElFormItem)
-            // .use(ElDivider)
-            // .use(ElSwitch)
             // .use(i18n)
             .use(VueCropper)
             .use(Vue3ColorPicker);

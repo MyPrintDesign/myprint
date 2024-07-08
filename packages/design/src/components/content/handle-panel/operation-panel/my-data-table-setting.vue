@@ -13,10 +13,9 @@
             </template>
             
             <my-form-item label="高度属性">
-                <el-radio-group v-model="table.option.tableHeightType" size="small">
-                    <el-radio-button label="AUTO" value="AUTO">自动高度</el-radio-button>
-                    <el-radio-button label="FIXED" value="FIXED">固定高度</el-radio-button>
-                </el-radio-group>
+                <my-radio v-model="table.option.tableHeightType"
+                          :dataList="tableBodyHeightTypeList"
+                          size="small" />
             </my-form-item>
             
             <my-form-item label="坐标(x/y)">
@@ -51,7 +50,7 @@
             
             <my-form-item label="不透明度"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
-                <el-slider class="width-120"
+                <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.opacity')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.opacity', val)"
                            :max="1" :min="0" :step="0.01"
@@ -67,10 +66,10 @@
                 属性
             </template>
             <my-form-item label="行高">
-                <el-radio-group v-model="table.option.tableBodyHeightType" size="small">
-                    <el-radio-button label="AUTO" value="AUTO">自动</el-radio-button>
-                    <el-radio-button label="FIXED" value="FIXED">固定</el-radio-button>
-                </el-radio-group>
+                <my-radio v-model="table.option.tableBodyHeightType"
+                          :dataList="tableBodyHeightTypeList"
+                          size="small" />
+                
                 <my-group style="margin-top: 10px"
                           v-if="table.option.tableBodyHeightType == 'FIXED'">
                     
@@ -117,10 +116,9 @@
 
 </template>
 <script setup lang="ts">
-// import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
 import { inject } from 'vue';
 
-import { getElementSetting } from '@myprint/design/constants/common';
+import { getElementSetting, tableBodyHeightTypeList } from '@myprint/design/constants/common';
 import { mittKey } from '@myprint/design/constants/keys';
 import { ActionEnum, Snapshot } from '@myprint/design/utils/historyUtil';
 import MyGroup from '@myprint/design/components/my/group/my-group.vue';
@@ -140,6 +138,8 @@ import MyForm from '@myprint/design/components/my/form/my-form.vue';
 import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
 import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
+import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
+import MyRadio from '@myprint/design/components/my/radio/my-radio.vue';
 
 const mitt = inject(mittKey)!;
 const appStore = useAppStoreHook();
@@ -147,6 +147,7 @@ const appStore = useAppStoreHook();
 const table = appStore.currentElement[0];
 
 function changeTableBodyHeight(val: number) {
+    console.log(123);
     multipleElementSetValue('option.tableBodyHeight', val);
     for (let tableBodyListElement of table.tableBodyList) {
         for (let tableBodyListElementElement of tableBodyListElement) {

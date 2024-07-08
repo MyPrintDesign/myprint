@@ -1,5 +1,5 @@
 <template>
-    <el-form label-width="80px" size="small"
+    <my-form label-width="80px" size="small"
              label-position="right">
         <my-divider-panel>
             <template #divider>
@@ -34,21 +34,21 @@
             <!--                        @update:model-value="(val:any)=>multipleElementSetValue('label', val)"-->
             <!--                        historyLabel="标题"/>-->
             <!--    </el-form-item>-->
-            <el-form-item label="内容" v-if="getElementSetting(multipleElementGetValue('type')).includes('data')">
+            <my-form-item label="内容" v-if="getElementSetting(multipleElementGetValue('type')).includes('data')">
                 <my-history-input style="margin-right: 20px"
                                   historyLabel="内容"
                                   :model-value="multipleElementGetValue('data')"
                                   @update:model-value="(val:any)=>multipleElementSetValue('data', val)"
                                   type="textarea" />
-            </el-form-item>
-            <el-form-item label="格式化器"
+            </my-form-item>
+            <my-form-item label="格式化器"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('formatter')">
                 <my-history-input style="margin-right: 20px"
                                   :model-value="multipleElementGetValue('option.formatter')"
                                   @update:model-value="(val:any)=>multipleElementSetValue('option.formatter', val)"
                                   type="textarea"
                                   historyLabel="格式化器" />
-            </el-form-item>
+            </my-form-item>
         </my-divider-panel>
         
         <my-divider-panel class="divider-setting-layout">
@@ -65,7 +65,7 @@
                           @update:model-value="(val:any)=>multipleElementSetValue('lock', val)" />
             </template>
             
-            <el-form-item label="坐标(x/y)" v-if="getElementSetting(multipleElementGetValue('type')).includes('x')">
+            <my-form-item label="坐标(x/y)" v-if="getElementSetting(multipleElementGetValue('type')).includes('x')">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :disabled="multipleElementGetValue('lock')"
@@ -81,9 +81,9 @@
                                              historyLabel="位置" />
                     <my-unit />
                 </my-group>
-            </el-form-item>
+            </my-form-item>
             
-            <el-form-item label="宽/高" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
+            <my-form-item label="宽/高" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :disabled="multipleElementGetValue('lock')"
@@ -106,9 +106,9 @@
                              @update:model-value="(val:any)=>multipleElementSetValue('option.keepRatio', val)"
                              @click="changeElementKeepRatio" />
                 </my-group>
-            </el-form-item>
+            </my-form-item>
             
-            <el-form-item label="不透明度"
+            <my-form-item label="不透明度"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
                 <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.opacity')"
@@ -117,8 +117,8 @@
                            :show-tooltip="false" size="small"
                            historyLabel="不透明度" />
                 <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
-            </el-form-item>
-            <el-form-item label="旋转角度" v-if="getElementSetting(multipleElementGetValue('type')).includes('rotate')">
+            </my-form-item>
+            <my-form-item label="旋转角度" v-if="getElementSetting(multipleElementGetValue('type')).includes('rotate')">
                 <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.rotate')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.rotate', val)"
@@ -126,7 +126,7 @@
                            @change="rotatedPoint(appStore.currentElement)"
                            :show-tooltip="false" size="small" />
                 <div style="margin-left: 20px">{{ multipleElementGetValue('option.rotate') }}</div>
-            </el-form-item>
+            </my-form-item>
         
         </my-divider-panel>
         
@@ -135,7 +135,7 @@
                 属性
             </template>
             
-            <el-form-item label="打印类型" prop="region"
+            <my-form-item label="打印类型" prop="region"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('contentType')">
                 <my-history-select :model-value="multipleElementGetValue('contentType')"
                                    class="width-140"
@@ -143,8 +143,8 @@
                                    placeholder="Activity zone"
                                    :data-list="textContentTypes"
                                    historyLabel="打印类型" />
-            </el-form-item>
-            <el-form-item label="条码编码" prop="region" v-if="multipleElementGetValue('contentType') == 'Barcode'">
+            </my-form-item>
+            <my-form-item label="条码编码" prop="region" v-if="multipleElementGetValue('contentType') == 'Barcode'">
                 <my-history-select class="width-120"
                                    :model-value="multipleElementGetValue('option.barCodeType')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.barCodeType', val)"
@@ -156,14 +156,13 @@
                     effect="dark"
                     :max-width="200"
                     :content="currentBarCodeEg"
-                    placement="top"
-                >
+                    placement="top">
                     <my-icon>
                         <QuestionFilled />
                     </my-icon>
                 </my-tooltip>
-            </el-form-item>
-            <el-form-item label="条码值"
+            </my-form-item>
+            <my-form-item label="条码值"
                           v-if="multipleElementGetValue('contentType') == 'Barcode'">
                 <my-switch
                     :model-value="multipleElementGetValue('option.barCodeDisplayValIs')"
@@ -173,9 +172,9 @@
                     style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
                     active-text="显示"
                     inactive-text="隐藏" />
-            </el-form-item>
+            </my-form-item>
             
-            <el-form-item label="换行"
+            <my-form-item label="换行"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('lineBreak')">
                 <my-switch
                     :model-value="multipleElementGetValue('option.lineBreak')"
@@ -185,9 +184,9 @@
                     style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
                     active-text="是"
                     inactive-text="否" />
-            </el-form-item>
+            </my-form-item>
             
-            <el-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
+            <my-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
                 <my-group>
                     <my-history-input-number class="num-2"
                                              :min="0.01"
@@ -196,8 +195,8 @@
                                              historyLabel="行高" />
                     <my-unit />
                 </my-group>
-            </el-form-item>
-            <el-form-item label="线宽" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineWidth')">
+            </my-form-item>
+            <my-form-item label="线宽" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineWidth')">
                 <my-group>
                     <my-history-input-number class="num-2"
                                              :min="0.01"
@@ -206,19 +205,17 @@
                                              historyLabel="线宽" />
                     <my-unit />
                 </my-group>
-            </el-form-item>
+            </my-form-item>
             
-            <el-form-item label="虚线样式" prop="region"
+            <my-form-item label="虚线样式" prop="region"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('dottedStyle')">
                 <my-history-select :model-value="multipleElementGetValue('option.dottedStyle')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.dottedStyle', val)"
                                    placeholder="Activity zone"
-                                   historyLabel="虚线样式">
-                    <el-option v-for="(item, index) in dottedStyleList" :key="index" :label="item.label"
-                               :value="item.value" />
-                </my-history-select>
-            </el-form-item>
-            <el-form-item label="内边距" prop="region"
+                                   :data-list="dottedStyleList"
+                                   historyLabel="虚线样式" />
+            </my-form-item>
+            <my-form-item label="内边距" prop="region"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('padding')">
                 <my-group>
                     <my-history-input-number class="num-4"
@@ -250,9 +247,9 @@
                         <template #append>mm</template>
                     </my-history-input-number>
                 </my-group>
-            </el-form-item>
+            </my-form-item>
             
-            <el-form-item label="外边距" prop="region"
+            <my-form-item label="外边距" prop="region"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('margin')">
                 <my-group>
                     <my-history-input-number class="num-4"
@@ -284,9 +281,9 @@
                         <template #append>mm</template>
                     </my-history-input-number>
                 </my-group>
-            </el-form-item>
+            </my-form-item>
             
-            <el-form-item label="固定位置">
+            <my-form-item label="固定位置">
                 <my-switch
                     :model-value="multipleElementGetValue('option.fixed')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.fixed', val)"
@@ -296,7 +293,7 @@
                     style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
                     active-text="是"
                     inactive-text="否" />
-            </el-form-item>
+            </my-form-item>
         </my-divider-panel>
         
         <my-divider-panel>
@@ -304,25 +301,21 @@
                 打印策略
             </template>
             
-            <el-form-item label="显示策略" prop="region"
+            <my-form-item label="显示策略" prop="region"
                           v-if="multipleElementGetValue('option.fixed') == true">
                 <my-history-select :model-value="multipleElementGetValue('option.displayStrategy')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.displayStrategy', val)"
                                    placeholder="Activity zone"
-                                   historyLabel="显示策略">
-                    <el-option v-for="(item, index) in displayStrategyList" :key="index"
-                               :label="item.label"
-                               :value="item.value" />
-                </my-history-select>
-            </el-form-item>
+                                   :data-list="displayStrategyList"
+                                   historyLabel="显示策略" />
+            </my-form-item>
         
         </my-divider-panel>
     
-    </el-form>
+    </my-form>
 
 </template>
 <script setup lang="ts">
-// import { ElForm, ElFormItem, ElDivider, ElSwitch, ElTooltip } from 'element-plus'
 import { computed, inject } from 'vue';
 
 import {
@@ -351,8 +344,10 @@ import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-pan
 import { mittKey } from '@myprint/design/constants/keys';
 import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
 import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
-import QuestionFilled from '@myprint/design/components/my/icon/QuestionFilled.vue';
+import QuestionFilled from '@myprint/design/components/my/icon/icons/QuestionFilled.vue';
 import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
+import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
+import MyForm from '@myprint/design/components/my/form/my-form.vue';
 
 const mitt = inject(mittKey)!;
 

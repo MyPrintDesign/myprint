@@ -97,7 +97,6 @@
 
 </template>
 <script setup lang="ts">
-// import { ElForm, ElFormItem, ElDivider, ElSwitch} from 'element-plus'
 import { inject } from 'vue';
 import { i18n } from '@myprint/design/locales';
 

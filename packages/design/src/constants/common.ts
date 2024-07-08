@@ -300,6 +300,11 @@ export const chooseImgTypeList = reactive([
     { value: 'url', label: '图片链接' }
 ]) as DownList[];
 
+export const tableBodyHeightTypeList = reactive([
+    { value: 'AUTO', label: '自动' },
+    { value: 'FIXED', label: '固定' }
+]) as DownList[];
+
 export const pageUnitList = [
     [{
         label: 'px',
@@ -313,20 +318,20 @@ export const pageUnitList = [
     }]
 ];
 
-export const clientProtocolList = {
-    myprint: {
-        protocol: 'myprint',
-        clientUrl: 'ws://127.0.0.1:8888'
+export const clientProtocolList = [
+    {
+        label: 'myprint',
+        value: 'ws://127.0.0.1:8888'
     },
-    lodop: {
-        protocol: 'lodop',
-        clientUrl: 'ws://127.0.0.1:8000'
+    {
+        label: 'lodop',
+        value: 'ws://127.0.0.1:8000'
     },
-    hiprint: {
-        protocol: 'hiprint',
-        clientUrl: 'ws://127.0.0.1:8888'
+    {
+        label: 'hiprint',
+        value: 'ws://127.0.0.1:8888'
     }
-};
+];
 
 export const pageSizeList = [
     {

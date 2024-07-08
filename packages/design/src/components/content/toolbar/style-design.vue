@@ -135,7 +135,6 @@
 </template>
 
 <script setup lang="ts">
-// import { ElSelect, ElOption } from 'element-plus'
 import myColorPicker from '@myprint/design/components/my/color-picker/my-color-picker.vue';
 import MyStyleIcon from '@myprint/design/components/my/icon';
 // import {i18n} from "@myprint/design/locales";

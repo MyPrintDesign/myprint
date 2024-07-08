@@ -123,7 +123,7 @@ const useApp = useAppStoreHook();
 
 const bodyList = computed(() => {
     const bodyList = [...props.element.tableHeadList, ...props.element.tableBodyList, ...props.element.statisticsList];
-    console.log('computed-bodyList');
+    // console.log('computed-bodyList');
     nextTick(() => {
         data.tableRowHeightList = computedTableCell(tableRef.value.$el, bodyList);
         data.lastHeadList = lastHeadList(props.element.tableHeadList);
@@ -148,7 +148,9 @@ onMounted(() => {
             setElementWidthPx(entry.contentRect.width + 1, props.element);
             nextTick(() => {
                 data.tableRowHeightList = computedTableCell(tableRef.value.$el, bodyList.value);
-                selectCell(data.highlightColumn, data.cellList);
+                if (data.cellList && data.cellList.length > 0) {
+                    selectCell(data.highlightColumn, data.cellList);
+                }
                 updateMoveableRect();
                 computeColumn();
                 computeColumnHeight();

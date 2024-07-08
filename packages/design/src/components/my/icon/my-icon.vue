@@ -1,6 +1,6 @@
 <template>
-    <div class="style-icon"
-         :class="{focus: !disabled && (hoverFlag || modelValue), 'my-icon-disabled': disabled, active: modelValue}"
+    <i :class="{focus: !disabled && (hoverFlag || modelValue), 'my-icon-disabled': disabled, active: modelValue}"
+         class="style-icon"
          @click="click"
          :style="{
              'font-size': size+'px',
@@ -9,7 +9,7 @@
          @mouseover="hover(true)"
          @mouseleave="hover(false)">
         <slot />
-    </div>
+    </i>
 </template>
 
 <script setup lang="ts">
@@ -20,13 +20,13 @@ const emit = defineEmits(['update:modelValue', 'click']);
 const props = withDefaults(defineProps<{
         disabled?: boolean,
         modelValue?: boolean,
-        size?: number,
+        size?: number | string,
         padding?: string,
     }>(),
     {
         disabled: false,
         modelValue: false,
-        size: 14,
+        size: 20,
         padding: null!
     });
 

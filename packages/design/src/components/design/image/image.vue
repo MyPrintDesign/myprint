@@ -10,18 +10,20 @@
             
             <div class="img-tool_wrapper"
                  v-if="displayModelDesign() && elementHandleStatusList.includes(element.runtimeOption.status)">
-                <el-icon class="img-tool-icon" @click="editImgClick">
+                <my-icon class="img-tool-icon" @click="editImgClick">
                     <Crop />
-                </el-icon>
+                </my-icon>
                 <!--        <el-icon class="img-tool-icon">-->
                 <!--          <MoreFilled/>-->
                 <!--        </el-icon>-->
             </div>
         </div>
         <div class="choose-img_wrapper" v-else>
-            <el-icon v-if="displayModelDesign()" class="avatar-uploader-icon" @click="clickPlus">
+            <my-icon v-if="displayModelDesign()"
+                     :size="20"
+                     class="avatar-uploader-icon" @click="clickPlus">
                 <Plus />
-            </el-icon>
+            </my-icon>
         
         </div>
         <my-dialog
@@ -59,21 +61,21 @@
             
             </div>
             <div class="image-handle-wrapper">
-                <el-icon class="image-handle-icon" @click="imageZoomIn">
+                <my-icon class="image-handle-icon" @click="imageZoomIn">
                     <ZoomIn />
-                </el-icon>
-                <el-icon class="image-handle-icon" @click="imageZoomOut">
+                </my-icon>
+                <my-icon class="image-handle-icon" @click="imageZoomOut">
                     <ZoomOut />
-                </el-icon>
-                <el-icon class="image-handle-icon" @click="rotateLeft">
+                </my-icon>
+                <my-icon class="image-handle-icon" @click="rotateLeft">
                     <RefreshLeft />
-                </el-icon>
-                <el-icon class="image-handle-icon" @click="rotateRight">
+                </my-icon>
+                <my-icon class="image-handle-icon" @click="rotateRight">
                     <RefreshRight />
-                </el-icon>
-                <el-icon class="image-handle-icon-sure" @click="sureClip">
+                </my-icon>
+                <my-icon class="image-handle-icon-sure" @click="sureClip">
                     <Check />
-                </el-icon>
+                </my-icon>
             </div>
         
         </my-dialog>
@@ -94,9 +96,9 @@
                 <!--        </div>-->
                 <my-tabs class="choose-image-type-dialog-header_tab" v-model="data.chooseImageType"
                          :item-list="chooseImgTypeList" />
-                <el-icon color="#666666" size="20" class="cursor-pointer" @click="data.chooseImageVisible = false">
+                <my-icon color="#666666" size="20" class="cursor-pointer" @click="data.chooseImageVisible = false">
                     <CloseBold />
-                </el-icon>
+                </my-icon>
             </div>
             
             <div class="choose-image-localFile-panel display-flex" v-if="data.chooseImageType == 'localFile'">
@@ -114,18 +116,25 @@
     </div>
 </template>
 <script setup lang="ts">
-// import { ElIcon, ElDialog } from 'element-plus'
 import 'vue-cropper/dist/index.css';
 import { VueCropper } from 'vue-cropper';
 import { onMounted, reactive, ref } from 'vue';
 import { MyElement } from '@myprint/design/types/entity';
 // import {useBase64} from "@vueuse/core";
 import { displayModelDesign, valueUnit } from '@myprint/design/utils/elementUtil';
-import { Check, CloseBold, Crop, Plus, RefreshLeft, RefreshRight, ZoomIn, ZoomOut } from '@element-plus/icons-vue';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { chooseImgTypeList, elementHandleStatusList } from '@myprint/design/constants/common';
 import MyTabs from '@myprint/design/components/my/tabs/my-tabs.vue';
 import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import Crop from '@myprint/design/components/my/icon/icons/Crop.vue';
+import Plus from '@myprint/design/components/my/icon/icons/Plus.vue';
+import ZoomIn from '@myprint/design/components/my/icon/icons/ZoomIn.vue';
+import ZoomOut from '@myprint/design/components/my/icon/icons/ZoomOut.vue';
+import RefreshLeft from '@myprint/design/components/my/icon/icons/RefreshLeft.vue';
+import RefreshRight from '@myprint/design/components/my/icon/icons/RefreshRight.vue';
+import Check from '@myprint/design/components/my/icon/icons/Check.vue';
+import CloseBold from '@myprint/design/components/my/icon/icons/CloseBold.vue';
 
 const props = withDefaults(defineProps<{
     element?: MyElement

@@ -4,27 +4,7 @@
         <div
             class="u-slider-track"
             :class="{ trackTransition: transition }"
-            :style="`left: ${left}px; right: auto; width: ${right - left}px;`"
-        ></div>
-        <div
-            v-if="range"
-            tabindex="0"
-            ref="leftHandle"
-            class="m-slider-handle"
-            :class="{ handleTransition: transition }"
-            :style="`left: ${left}px; right: auto; transform: translate(-50%, -50%);`"
-            @keydown.left.prevent="disabled ? () => false : onLeftSlide(left, 'left')"
-            @keydown.right.prevent="disabled ? () => false : onRightSlide(left, 'left')"
-            @keydown.down.prevent="disabled ? () => false : onLeftSlide(left, 'left')"
-            @keydown.up.prevent="disabled ? () => false : onRightSlide(left, 'left')"
-            @mousedown="disabled ? () => false : onLeftMouseDown()"
-            @blur="tooltip && !disabled ? handlerBlur(leftTooltip) : () => false"
-        >
-            <div v-if="tooltip" ref="leftTooltip" class="m-handle-tooltip">
-                {{ leftValue }}
-                <div class="m-arrow"></div>
-            </div>
-        </div>
+            :style="`left: 0; right: auto; width: ${right}px;`" />
         <div
             tabindex="0"
             ref="rightHandle"
@@ -36,8 +16,7 @@
             @keydown.down.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
             @keydown.up.prevent="disabled ? () => false : onRightSlide(right, 'right')"
             @mousedown="disabled ? () => false : onRightMouseDown()"
-            @blur="tooltip && !disabled ? handlerBlur(rightTooltip) : () => false"
-        >
+            @blur="tooltip && !disabled ? handlerBlur(rightTooltip) : () => false">
             <div v-if="tooltip" ref="rightTooltip" class="m-handle-tooltip">
                 {{ rightValue }}
                 <div class="m-arrow"></div>
@@ -48,26 +27,21 @@
 <script setup lang="ts">
 import { ref, computed, watch, onMounted } from 'vue';
 import { cancelRaf, rafTimeout } from '@myprint/design/utils/utils';
-import { max } from 'd3-array';
 
-interface Props {
+const props = withDefaults(defineProps<{
     width?: string | number; // 宽度
     min?: number; // 最小值
     max?: number; // 最大值
     disabled?: boolean; // 是否禁用
-    range?: boolean; // 是否双滑块模式
     step?: number; // 步长，取值必须大于0，并且可被 (max - min) 整除
     formatTooltip?: (value: number) => string | number; // Slider 会把当前值传给 formatTooltip，并在 Tooltip 中显示 formatTooltip 的返回值
     tooltip?: boolean; // 是否展示 Tooltip
     modelValue?: number | number[]; // (v-model)设置当前取值，当 range 为 false 时，使用 number，否则用 [number, number]
-}
-
-const props = withDefaults(defineProps<Props>(), {
+}>(), {
     width: '100%',
     min: 0,
     max: 100,
     disabled: false,
-    range: false,
     step: 1,
     formatTooltip: (value: number) => value,
     tooltip: true,
@@ -75,12 +49,9 @@ const props = withDefaults(defineProps<Props>(), {
 });
 const transition = ref(false);
 const timer = ref();
-const left = ref(0); // 左滑块距离滑动条左端的距离
 const right = ref(0); // 右滑动距离滑动条左端的距离
 const slider = ref();
 const sliderWidth = ref();
-const leftHandle = ref(); // left handle 模板引用
-const leftTooltip = ref(); // left tooltip 模板应用
 const rightHandle = ref(); // right handler 模板引用
 const rightTooltip = ref(); // right tooltip 模板引用
 const pixelStep = computed(() => {
@@ -100,7 +71,7 @@ const totalWidth = computed(() => {
     }
 });
 const sliderValue = computed(() => {
-    let high;
+    let high: number;
     if (right.value === sliderWidth.value) {
         high = props.max;
     } else {
@@ -111,25 +82,9 @@ const sliderValue = computed(() => {
         high = high > props.max ? props.max : high;
         
     }
-    if (props.range) {
-        let low = fixedDigit((left.value / pixelStep.value) * props.step + props.min, precision.value);
-        if (props.step > 1) {
-            low = Math.round(low / props.step) * props.step;
-        }
-        return [low, high];
-    }
     return high;
 });
-const leftValue = computed(() => {
-    if (props.range) {
-        return props.formatTooltip((sliderValue.value as number[])[0]);
-    }
-    return null;
-});
 const rightValue = computed(() => {
-    if (props.range) {
-        return props.formatTooltip((sliderValue.value as number[])[1]);
-    }
     return props.formatTooltip(sliderValue.value as number);
 });
 const emits = defineEmits(['update:modelValue', 'change']);
@@ -157,20 +112,6 @@ onMounted(() => {
     getPosition();
 });
 
-function checkLow(value: number): number {
-    if (value < props.min) {
-        return props.min;
-    }
-    return value;
-}
-
-function checkHigh(value: number): number {
-    if (value > props.max) {
-        return props.max;
-    }
-    return value;
-}
-
 function checkValue(value: number): number {
     if (value < props.min) {
         return props.min;
@@ -186,13 +127,7 @@ function getSliderWidth() {
 }
 
 function getPosition() {
-    if (props.range) {
-        // 双滑块模式
-        left.value = fixedDigit(((checkLow((props.modelValue as number[])[0]) - props.min) / props.step) * pixelStep.value, 2);
-        right.value = fixedDigit(((checkHigh((props.modelValue as number[])[1]) - props.min) / props.step) * pixelStep.value, 2);
-    } else {
-        right.value = fixedDigit(((checkValue(props.modelValue as number) - props.min) / props.step) * pixelStep.value, 2);
-    }
+    right.value = fixedDigit(((checkValue(props.modelValue as number) - props.min) / props.step) * pixelStep.value, 2);
 }
 
 function fixedDigit(num: number, precision: number) {
@@ -222,57 +157,9 @@ function onClickPoint(e: any) {
         transition.value = false;
     }, 300);
     // 元素是absolute时，e.layerX是相对于自身元素左上角的水平位置
-    const targetX = fixedDigit(Math.round(e.layerX / pixelStep.value) * pixelStep.value, 2); // 鼠标点击位置距离滑动输入条左端的水平距离
-    if (props.range) {
-        // 双滑块模式
-        if (targetX <= left.value) {
-            left.value = targetX;
-            handlerFocus(leftHandle.value, leftTooltip.value);
-        } else if (targetX >= right.value) {
-            right.value = targetX;
-            handlerFocus(rightHandle.value, rightTooltip.value);
-        } else {
-            if (targetX - left.value < right.value - targetX) {
-                left.value = targetX;
-                handlerFocus(leftHandle.value, leftTooltip.value);
-            } else {
-                right.value = targetX;
-                handlerFocus(rightHandle.value, rightTooltip.value);
-            }
-        }
-    } else {
-        // 单滑块模式
-        right.value = targetX;
-        handlerFocus(rightHandle.value, rightTooltip.value);
-    }
-}
-
-function onLeftMouseDown() {
-    // 在滚动条上拖动左滑块
-    const leftX = slider.value.getBoundingClientRect().left; // 滑动条左端距离屏幕可视区域左边界的距离
-    document.onmousemove = (e: MouseEvent) => {
-        if (props.tooltip) {
-            leftTooltip.value.classList.add('show-handle-tooltip');
-        }
-        // e.clientX返回事件被触发时鼠标指针相对于浏览器可视窗口的水平坐标
-        const targetX = fixedDigit(Math.round((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2);
-        if (targetX < 0) {
-            left.value = 0;
-        } else if (targetX >= 0 && targetX <= right.value) {
-            left.value = targetX;
-        } else {
-            // targetX > right
-            left.value = right.value;
-            rightHandle.value.focus();
-            onRightMouseDown();
-        }
-    };
-    document.onmouseup = () => {
-        if (props.tooltip) {
-            leftTooltip.value.classList.remove('show-handle-tooltip');
-        }
-        document.onmousemove = null;
-    };
+    right.value = fixedDigit(Math.round(e.layerX / pixelStep.value) * pixelStep.value, 2); // 鼠标点击位置距离滑动输入条左端的水平距离
+    // 单滑块模式
+    handlerFocus(rightHandle.value, rightTooltip.value);
 }
 
 function onRightMouseDown() {
@@ -286,15 +173,9 @@ function onRightMouseDown() {
         const targetX = fixedDigit(Math.round((e.clientX - leftX) / pixelStep.value) * pixelStep.value, 2);
         if (targetX > sliderWidth.value) {
             right.value = sliderWidth.value;
-        } else if (left.value <= targetX && targetX <= sliderWidth.value) {
-            right.value = targetX;
         } else {
             // targetX < left
-            right.value = left.value;
-            if (props.range) {
-                leftHandle.value.focus();
-                onLeftMouseDown();
-            }
+            right.value = targetX;
         }
     };
     document.onmouseup = () => {
@@ -310,19 +191,14 @@ function onLeftSlide(source: number, place: string) {
     if (place === 'left') {
         // 左滑块左移
         if (targetX < 0) {
-            left.value = 0;
+            // left.value = 0;
         } else {
-            left.value = targetX;
+            // left.value = targetX;
         }
     } else {
         // 右滑块左移
-        if (targetX >= left.value) {
-            right.value = targetX;
-        } else {
-            right.value = left.value;
-            left.value = targetX;
-            leftHandle.value.focus();
-        }
+        right.value = targetX;
+        
     }
 }
 
@@ -334,15 +210,6 @@ function onRightSlide(source: number, place: string) {
             right.value = sliderWidth.value;
         } else {
             right.value = targetX;
-        }
-    } else {
-        // 左滑块右移
-        if (targetX <= right.value) {
-            left.value = targetX;
-        } else {
-            left.value = right.value;
-            right.value = targetX;
-            rightHandle.value.focus();
         }
     }
 }
@@ -488,11 +355,12 @@ function onRightSlide(source: number, place: string) {
         //}
         //
         //&:hover,
-        //&:focus {
-        //    .hover-focus-handle
-        //
-        //();
-        //}
+        &:focus {
+            //width: 20px;
+            //height: 20px;
+            //border-width: 4px;
+            //border-color: #1677ff;
+        }
         
         .show-handle-tooltip {
             pointer-events: auto;

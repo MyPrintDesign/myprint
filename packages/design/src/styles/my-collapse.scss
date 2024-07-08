@@ -1,3 +1,42 @@
+.widget-collapse-panel-fold {
+  height: 24px !important;
+  transition: height 1s;
+}
+
+.widget-collapse-panel {
+  pointer-events: all;
+  background-color: white;
+  box-sizing: border-box;
+  border-radius: 3px;
+  overflow: hidden;
+  will-change: height;
+  transition: height 1s;
+
+  .collapse-panel-head {
+    cursor: move;
+    overflow: hidden;
+
+    background: var(--drag-h-color);
+    color: white;
+    height: 20px;
+    border-bottom: 1px solid #ebeef5;
+
+    .collapse-panel-head-title {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .collapse-panel-head-right-icon {
+      transition: transform var(--el-transition-duration);
+    }
+
+    .is-active {
+      transform: rotate(90deg);
+    }
+  }
+
+}
+
 .collapse-panel {
   pointer-events: all;
   position: absolute;
@@ -65,9 +104,9 @@
 }
 
 .disable-collapse-panel-height-duration {
-  transition: none !important;
+  //transition: none !important;
 }
 
 .collapse-panel-height-duration {
-  transition: height var(--el-transition-duration);
+  //transition: height var(--el-transition-duration);
 }

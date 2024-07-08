@@ -66,7 +66,6 @@ export function getCurrentPanelUnit(panel?: Panel): PageUnit {
 
 export function setCurrentElement(element: MyElement[]) {
     appStore().currentElement = element;
-    // console.log('change')
     mitt.emit('changeElement');
 }
 

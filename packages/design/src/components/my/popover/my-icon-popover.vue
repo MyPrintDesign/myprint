@@ -30,7 +30,6 @@
 </template>
 
 <script setup lang="ts">
-// import { ElPopover } from 'element-plus'
 import {ref, computed} from "vue";
 import {onClickOutside} from '@vueuse/core'
 import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';

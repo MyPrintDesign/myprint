@@ -37,14 +37,8 @@
                 <div>客户端未连接，无法使用直接打印功能，去下载</div>
                 <template v-if="useSocket().connect">
                     <div>打印机：
-                        <el-select v-model="data.printer" placeholder="请选择" size="large">
-                            <el-option
-                                v-for="item in useSocket().printerList"
-                                :key="item.name"
-                                :label="item.displayName"
-                                :value="item.name"
-                            />
-                        </el-select>
+                        <my-select v-model="data.printer" placeholder="请选择" size="large"
+                                   :data-list="useSocket().printerList" />
                     </div>
                     <my-button style="margin-left: 0" :disabled="!data.printer" @click="print">{{
                             i18n('toolbar.print')
@@ -63,7 +57,6 @@
 </template>
 
 <script setup lang="ts">
-// import { ElDialog, ElScrollbar, ElButton, ElSelect, ElOption } from 'element-plus'
 import { inject, nextTick, reactive, ref } from 'vue';
 import { toPdf } from '@myprint/design/utils/pdfUtil';
 import { download, printCssStyle } from '@myprint/design/utils/utils';
@@ -80,6 +73,7 @@ import { PrintProps } from '@myprint/design/types/entity';
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
 import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
+import MySelect from '@myprint/design/components/my/select/my-select.vue';
 
 defineExpose({ handlePreview });
 
@@ -243,10 +237,10 @@ function printArea() {
 onMessage.value = (msg: ClientCmd) => {
     if (msg.cmd == 'printResult') {
         printResult(msg.taskId, {
-            status: msg.content.success? 'SUCCESS': 'ERROR',
+            status: msg.content.success ? 'SUCCESS' : 'ERROR',
             msg: msg.content.failureReason,
             type: 'CLIENT_PRINT'
-        })
+        });
     }
     
     if (msg.cmd == 'generatePdfResult') {
@@ -254,7 +248,7 @@ onMessage.value = (msg: ClientCmd) => {
             status: 'SUCCESS',
             msg: '',
             type: 'CLIENT_GENERATE_PDF'
-        })
+        });
         
         let pdf = msg.pdf;
         // console.log(pdf)

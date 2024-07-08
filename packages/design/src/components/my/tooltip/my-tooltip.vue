@@ -14,12 +14,12 @@
 import { Placement } from '@popperjs/core/lib/enums';
 import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
     disabled?: boolean
     placement?: Placement
     content?: string
 }>(), {
-    placement: 'top',
+    placement: 'top' as Placement,
     content: ''
 });
 

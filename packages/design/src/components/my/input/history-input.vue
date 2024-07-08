@@ -5,8 +5,6 @@
 </template>
 
 <script setup lang="ts">
-
-// import { ElInput } from 'element-plus'
 import {definePropType} from "@myprint/design/constants/common";
 import {changeWrapper} from "@myprint/design/utils/historyUtil";
 import MyInput from '@myprint/design/components/my/input/my-input.vue';

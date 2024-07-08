@@ -34,7 +34,6 @@
 </template>
 
 <script setup lang="ts">
-// import { ElIcon, ElButton } from 'element-plus'
 import { inject } from 'vue';
 import StyleDesign from './style-design.vue';
 import { mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
@@ -42,11 +41,11 @@ import { i18n } from '@myprint/design/locales';
 import { clearPanel, displayModel, getCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
 import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
-import { Printer } from '@element-plus/icons-vue';
 import { MyPrinter } from '@myprint/design/printer';
 import { download } from '@myprint/design/utils/utils';
 import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import Printer from '@myprint/design/components/my/icon/icons/Printer.vue';
 
 const panel = inject(panelKey);
 const mitt = inject(mittKey)!;
