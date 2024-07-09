@@ -324,30 +324,30 @@ import {
     dottedStyleList,
     getElementSetting,
     textContentTypes
-} from '@myprint/design/constants/common';
-import MyGroup from '@myprint/design/components/my/group/my-group.vue';
-import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
-import { useAppStoreHook } from '@myprint/design/stores/app';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+} from '../../../../constants/common';
+import MyGroup from '../../../../components/my/group/my-group.vue';
+import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '../../../../components/my/input';
+import { useAppStoreHook } from '../../../../stores/app';
+import { unit2px } from '../../../../utils/devicePixelRatio';
 import {
     freshMoveableOption,
     moveableMoveX,
     moveableMoveY,
     moveableResize,
     moveableRotate
-} from '@myprint/design/plugins/moveable/moveable';
-import { MyElement } from '@myprint/design/types/entity';
-import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
-import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
-import { mittKey } from '@myprint/design/constants/keys';
-import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
-import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
-import QuestionFilled from '@myprint/design/components/my/icon/icons/QuestionFilled.vue';
-import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
-import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
-import MyForm from '@myprint/design/components/my/form/my-form.vue';
+} from '../../../../plugins/moveable/moveable';
+import { MyElement } from '../../../../types/entity';
+import { multipleElementGetValue, multipleElementSetValue } from '../../../../utils/elementUtil';
+import MyIcon from '../../../../components/my/icon/my-icon.vue';
+import TipIcon from '../../../../components/my/icon/tip-icon.vue';
+import MyDividerPanel from '../../../../components/my/divider/my-divider-panel.vue';
+import { mittKey } from '../../../../constants/keys';
+import MySwitch from '../../../../components/my/switch/my-switch.vue';
+import MyTooltip from '../../../../components/my/tooltip/my-tooltip.vue';
+import QuestionFilled from '../../../../components/my/icon/icons/QuestionFilled.vue';
+import MySlider from '../../../../components/my/slider/my-slider.vue';
+import MyFormItem from '../../../../components/my/form/my-form-item.vue';
+import MyForm from '../../../../components/my/form/my-form.vue';
 
 const mitt = inject(mittKey)!;
 

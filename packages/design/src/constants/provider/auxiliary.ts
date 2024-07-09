@@ -1,4 +1,4 @@
-import {MyElement} from "@myprint/design/types/entity";
+import {MyElement} from "../../types/entity";
 
 export const auxiliaryProvider: Array<MyElement> = [
     // {

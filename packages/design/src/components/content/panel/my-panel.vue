@@ -47,20 +47,20 @@
 </template>
 
 <script setup lang="ts">
-import Rule from '@myprint/design/components/my/rule/rule.vue';
-import { scaleUtil } from '@myprint/design/utils/scaleUtil';
+import Rule from '../../../components/my/rule/rule.vue';
+import { scaleUtil } from '../../../utils/scaleUtil';
 import { inject, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue';
-import { Container, ContentScaleVo, MyElement } from '@myprint/design/types/entity';
-import { mittKey, panelKey } from '@myprint/design/constants/keys';
-import { record, Snapshot } from '@myprint/design/utils/historyUtil';
-import { handle, none, valueUnit } from '@myprint/design/utils/elementUtil';
-import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
-import ElementList from '@myprint/design/components/design/element-list.vue';
-import { mountedKeyboardEvent, unMountedKeyboardEvent } from '@myprint/design/utils/keyboardUtil';
-import { changeDragSnapIs, initMoveable, updatePanel } from '@myprint/design/plugins/moveable/moveable';
-import Design from '@myprint/design/components/design/design.vue';
-import { initSelecto, selecto } from '@myprint/design/plugins/moveable/selecto';
-import AuxiliaryLine from '@myprint/design/components/design/auxiliary/auxiliary-line.vue';
+import { Container, ContentScaleVo, MyElement } from '../../../types/entity';
+import { mittKey, panelKey } from '../../../constants/keys';
+import { record, Snapshot } from '../../../utils/historyUtil';
+import { handle, none, valueUnit } from '../../../utils/elementUtil';
+import { useAppStoreHook as useAppStore } from '../../../stores/app';
+import ElementList from '../../../components/design/element-list.vue';
+import { mountedKeyboardEvent, unMountedKeyboardEvent } from '../../../utils/keyboardUtil';
+import { changeDragSnapIs, initMoveable, updatePanel } from '../../../plugins/moveable/moveable';
+import Design from '../../../components/design/design.vue';
+import { initSelecto, selecto } from '../../../plugins/moveable/selecto';
+import AuxiliaryLine from '../../../components/design/auxiliary/auxiliary-line.vue';
 
 const panel = inject(panelKey)!;
 const mitt = inject(mittKey)!;

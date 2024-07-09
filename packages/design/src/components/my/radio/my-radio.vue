@@ -11,8 +11,8 @@
 
 <script setup lang="ts">
 
-import MyGroup from '@myprint/design/components/my/group/my-group.vue';
-import MyButton from '@myprint/design/components/my/button/my-Button.vue';
+import MyGroup from '../../../components/my/group/my-group.vue';
+import MyButton from '../../../components/my/button/my-Button.vue';
 
 const emit = defineEmits(['update:modelValue']);
 

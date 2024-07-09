@@ -1,4 +1,4 @@
-import { pdfServerUrl } from '@myprint/design/printer';
+import { pdfServerUrl } from '../printer';
 
 export function downloadPdf(data: any) {
     const options = {

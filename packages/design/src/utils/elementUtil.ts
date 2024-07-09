@@ -16,25 +16,25 @@ import {
     SvgData,
     TableCellElement,
     TableHeadProviderCellElement
-} from '@myprint/design/types/entity';
+} from '../types/entity';
 import {
     elementTypeContainerList,
     elementTypeLineList
-} from '@myprint/design/constants/common';
+} from '../constants/common';
 import { _defaultVal, mitt, parse, stringify } from './utils';
 import { CSSProperties, reactive } from 'vue';
 import { formatDate } from './timeUtil';
-import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
-import { arrayRemove } from '@myprint/design/utils/arrays';
-import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
-import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import { px2unit, unit2px, unit2unit } from '../utils/devicePixelRatio';
+import { arrayRemove } from '../utils/arrays';
+import { useAppStoreHook as appStore } from '../stores/app';
+import { updatePanel } from '../plugins/moveable/moveable';
 import {
     findTableHeadDeep,
     findUpperCell,
     handleTableCellInitHeight,
     recursionHandleTableHead
-} from '@myprint/design/utils/table/dataTable';
-import numberUtil from '@myprint/design/utils/numberUtil';
+} from '../utils/table/dataTable';
+import numberUtil from '../utils/numberUtil';
 
 export function displayModel(displayModel?: DisplayModel) {
     if (displayModel) {

@@ -11,19 +11,19 @@
 </template>
 
 <script setup lang="ts">
-import widget from '@myprint/design/components/content/widget/index.vue';
-import PanelView from '@myprint/design/components/content/panel/index.vue';
+import widget from '../../components/content/widget/index.vue';
+import PanelView from '../../components/content/panel/index.vue';
 import { inject, provide, reactive, Ref, ref, watch } from 'vue';
-import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
-import { to } from '@myprint/design/utils/utils';
-import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
-import { init } from '@myprint/design/utils/historyUtil';
+import { Container, Panel, Provider, RuntimeElementOption } from '../../types/entity';
+import { to } from '../../utils/utils';
+import { mittKey, panelKey, previewDataKey, providerKey } from '../../constants/keys';
+import { init } from '../../utils/historyUtil';
 //@ts-ignore
-import { Module, Template } from '@myprint/design/types/R';
-import { useAppStoreHook } from '@myprint/design/stores/app';
-import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
-import { displayModel, initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
-import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
+import { Module, Template } from '../../types/R';
+import { useAppStoreHook } from '../../stores/app';
+import MyMouseTips from '../../components/my/mouse-tips/my-mouse-tips.vue';
+import { displayModel, initPanel, parentInitElement, setCurrentPanel } from '../../utils/elementUtil';
+import { newSelecto } from '../../plugins/moveable/selecto';
 
 const appStore = useAppStoreHook();
 

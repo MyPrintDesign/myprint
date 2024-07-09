@@ -1,6 +1,6 @@
 import { Container, MyElement, Panel } from './entity';
 import { Snapshot } from '../utils/historyUtil';
-import { PrintProps } from '@myprint/design/types/entity';
+import { PrintProps } from '../types/entity';
 
 export type EventTypes = {
     preview: string;

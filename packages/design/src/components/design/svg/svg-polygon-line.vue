@@ -14,15 +14,15 @@
 import { reactive } from 'vue';
 import * as d3Path from 'd3-path';
 import { Path } from 'd3-path';
-import { Line, MyElement, PointLabel } from '@myprint/design/types/entity';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { computeLineAngle, rotatePoint } from '@myprint/design/utils/svgUtil';
-import { computedShapeBound } from '@myprint/design/utils/elementUtil';
-import { moveableDragOffsetResize } from '@myprint/design/plugins/moveable/moveable';
-import SvgBase from '@myprint/design/components/design/svg/svg-base.vue';
-import { D3DragEvent } from '@myprint/design/types/d3Type';
-import { stringify } from '@myprint/design/utils/utils';
-import { arrayRemove } from '@myprint/design/utils/arrays';
+import { Line, MyElement, PointLabel } from '../../../types/entity';
+import { unit2px } from '../../../utils/devicePixelRatio';
+import { computeLineAngle, rotatePoint } from '../../../utils/svgUtil';
+import { computedShapeBound } from '../../../utils/elementUtil';
+import { moveableDragOffsetResize } from '../../../plugins/moveable/moveable';
+import SvgBase from '../../../components/design/svg/svg-base.vue';
+import { D3DragEvent } from '../../../types/d3Type';
+import { stringify } from '../../../utils/utils';
+import { arrayRemove } from '../../../utils/arrays';
 
 const props = withDefaults(defineProps<{
     element?: MyElement

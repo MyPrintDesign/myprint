@@ -6,9 +6,9 @@
 </template>
 
 <script setup lang="ts">
-import { definePropType } from '@myprint/design/constants/common';
-import { changeWrapper } from '@myprint/design/utils/historyUtil';
-import MySelect from '@myprint/design/components/my/select/my-select.vue';
+import { definePropType } from '../../../constants/common';
+import { changeWrapper } from '../../../utils/historyUtil';
+import MySelect from '../../../components/my/select/my-select.vue';
 
 const emit = defineEmits(['update:modelValue']);
 

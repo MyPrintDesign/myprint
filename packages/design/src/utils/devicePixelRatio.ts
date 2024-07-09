@@ -1,6 +1,6 @@
-import numberUtil from '@myprint/design/utils/numberUtil';
-import { PageUnit } from '@myprint/design/types/entity';
-import { getCurrentPanelUnit } from '@myprint/design/utils/elementUtil';
+import numberUtil from '../utils/numberUtil';
+import { PageUnit } from '../types/entity';
+import { getCurrentPanelUnit } from '../utils/elementUtil';
 
 let mmDiv = document.createElement('div');
 let body = document.querySelector('body')!;

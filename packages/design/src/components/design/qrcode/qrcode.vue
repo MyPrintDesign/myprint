@@ -9,12 +9,12 @@
 </template>
 
 <script setup lang="ts">
-import { MyElement } from '@myprint/design/types/entity';
+import { MyElement } from '../../../types/entity';
 import { computed, nextTick, ref, watch } from 'vue';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+import { unit2px } from '../../../utils/devicePixelRatio';
 import QRCode from 'qrcode';
-import { elementCommonStyle } from '@myprint/design/utils/elementUtil';
-import { updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
+import { elementCommonStyle } from '../../../utils/elementUtil';
+import { updateMoveableRect } from '../../../plugins/moveable/moveable';
 import _ from 'lodash';
 
 const props = withDefaults(defineProps<{

@@ -18,10 +18,10 @@
 </template>
 
 <script setup lang="ts">
-import { useConfigStore } from '@myprint/design/stores/config';
-import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
-import MyForm from '@myprint/design/components/my/form/my-form.vue';
-import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
+import { useConfigStore } from '../../../../stores/config';
+import MySwitch from '../../../../components/my/switch/my-switch.vue';
+import MyForm from '../../../../components/my/form/my-form.vue';
+import MyFormItem from '../../../../components/my/form/my-form-item.vue';
 
 const configStore = useConfigStore();
 

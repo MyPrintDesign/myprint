@@ -8,7 +8,9 @@
     "dev:business": "vite-node ./scripts/dev-business.ts"
   },
   "devDependencies": {
+    "@types/vue": "^2.0.0",
     "@rollup/plugin-alias": "^5.0.1",
+    "rollup-plugin-dts": "^6.1.1",
     "@rollup/plugin-commonjs": "^23.0.2",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@types/less": "^3.0.3",

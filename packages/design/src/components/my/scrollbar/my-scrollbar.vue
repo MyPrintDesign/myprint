@@ -123,10 +123,8 @@ defineExpose({
     ps
 });
 </script>
-<style>
+
+<style scoped>
 @import 'perfect-scrollbar/css/perfect-scrollbar.css';
 
-.ps {
-    position: relative;
-}
 </style>

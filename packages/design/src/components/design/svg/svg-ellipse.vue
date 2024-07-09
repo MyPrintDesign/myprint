@@ -9,9 +9,9 @@
 <script setup lang="ts">
 import { reactive } from 'vue';
 
-import { MyElement, Point } from '@myprint/design/types/entity';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import SvgBase from '@myprint/design/components/design/svg/svg-base.vue';
+import { MyElement, Point } from '../../../types/entity';
+import { unit2px } from '../../../utils/devicePixelRatio';
+import SvgBase from '../../../components/design/svg/svg-base.vue';
 import { BaseType, Selection } from 'd3-selection';
 
 const props = withDefaults(defineProps<{

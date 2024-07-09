@@ -1,4 +1,4 @@
-import { HandlePanel } from '@myprint/design/types/entity';
+import { HandlePanel } from '../types/entity';
 import { reactive } from 'vue';
 
 export const handlePanelElementList = reactive({

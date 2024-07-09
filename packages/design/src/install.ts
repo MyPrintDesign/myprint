@@ -12,9 +12,9 @@ import VueCropper from 'vue-cropper';
 import 'vue-cropper/dist/index.css';
 // import i18n from "./locales";
 import { useSocket } from './stores/socket';
-import { mitt } from '@myprint/design/utils/utils';
-import { useConfigStore } from '@myprint/design/stores/config';
-import { installPrinter } from '@myprint/design/printer';
+import { mitt } from './utils/utils';
+import { useConfigStore } from './stores/config';
+import { installPrinter } from './printer';
 
 const onSocketMessage = ref<Function>();
 

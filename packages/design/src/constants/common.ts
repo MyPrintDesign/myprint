@@ -7,9 +7,9 @@ import {
     elementType,
     MyElement,
     statisticsTypeFormat
-} from '@myprint/design/types/entity';
+} from '../types/entity';
 import { PropType, reactive } from 'vue';
-import { i18n } from '@myprint/design/locales';
+import { i18n } from '../locales';
 
 export const defaultElement: MyElement[] = [];
 

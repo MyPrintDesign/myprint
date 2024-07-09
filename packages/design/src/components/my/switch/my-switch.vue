@@ -54,13 +54,3 @@ function click() {
     emit('change');
 }
 </script>
-
-<style scoped lang="scss">
-
-
-//.el-switch.is-checked .el-switch__core {
-//    border-color: var(--el-switch-border-color,var(--el-switch-on-color));
-//    background-color: var(--el-switch-on-color);
-//}
-
-</style>

@@ -38,11 +38,11 @@
 import { reactive, ref } from 'vue';
 import SettingPrinter from './setting-printer.vue';
 import SettingAbout from './setting-about.vue';
-import { useConfigStore } from '@myprint/design/stores/config';
+import { useConfigStore } from '../../../../stores/config';
 import SettingDesign from './setting-design.vue';
-import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import CloseBold from '@myprint/design/components/my/icon/icons/CloseBold.vue';
+import MyDialog from '../../../../components/my/dialog/my-dialog.vue';
+import MyIcon from '../../../../components/my/icon/my-icon.vue';
+import CloseBold from '../../../../components/my/icon/icons/CloseBold.vue';
 
 const configStore = useConfigStore();
 

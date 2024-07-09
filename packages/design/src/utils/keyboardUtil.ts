@@ -3,10 +3,10 @@ import {
     removeSelectElement,
     selectAllElement,
     selectTabNext
-} from '@myprint/design/plugins/moveable/moveable';
-import { redoPanel, undoPanel } from '@myprint/design/utils/historyUtil';
-import { mitt } from '@myprint/design/utils/utils';
-import { memoryClipboardUtil } from '@myprint/design/utils/memoryClipboardUtil';
+} from '../plugins/moveable/moveable';
+import { redoPanel, undoPanel } from '../utils/historyUtil';
+import { mitt } from '../utils/utils';
+import { memoryClipboardUtil } from '../utils/memoryClipboardUtil';
 
 
 const keyConvert = {

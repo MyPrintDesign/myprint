@@ -98,17 +98,17 @@
 </template>
 <script setup lang="ts">
 import { inject } from 'vue';
-import { i18n } from '@myprint/design/locales';
+import { i18n } from '../../../../locales';
 
-import { pageSizeList, pageUnitList } from '@myprint/design/constants/common';
-import { panelKey } from '@myprint/design/constants/keys';
-import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
-import MyGroup from '@myprint/design/components/my/group/my-group.vue';
-import { changePageSize, changePageUnit } from '@myprint/design/utils/elementUtil';
-import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
-import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
-import MyForm from '@myprint/design/components/my/form/my-form.vue';
-import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
+import { pageSizeList, pageUnitList } from '../../../../constants/common';
+import { panelKey } from '../../../../constants/keys';
+import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '../../../../components/my/input';
+import MyGroup from '../../../../components/my/group/my-group.vue';
+import { changePageSize, changePageUnit } from '../../../../utils/elementUtil';
+import MySwitch from '../../../../components/my/switch/my-switch.vue';
+import MyFormItem from '../../../../components/my/form/my-form-item.vue';
+import MyForm from '../../../../components/my/form/my-form.vue';
+import MyDividerPanel from '../../../../components/my/divider/my-divider-panel.vue';
 
 const panel = inject(panelKey)!;
 

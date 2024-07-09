@@ -119,22 +119,22 @@
 import 'vue-cropper/dist/index.css';
 import { VueCropper } from 'vue-cropper';
 import { onMounted, reactive, ref } from 'vue';
-import { MyElement } from '@myprint/design/types/entity';
+import { MyElement } from '../../../types/entity';
 // import {useBase64} from "@vueuse/core";
-import { displayModelDesign, valueUnit } from '@myprint/design/utils/elementUtil';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { chooseImgTypeList, elementHandleStatusList } from '@myprint/design/constants/common';
-import MyTabs from '@myprint/design/components/my/tabs/my-tabs.vue';
-import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import Crop from '@myprint/design/components/my/icon/icons/Crop.vue';
-import Plus from '@myprint/design/components/my/icon/icons/Plus.vue';
-import ZoomIn from '@myprint/design/components/my/icon/icons/ZoomIn.vue';
-import ZoomOut from '@myprint/design/components/my/icon/icons/ZoomOut.vue';
-import RefreshLeft from '@myprint/design/components/my/icon/icons/RefreshLeft.vue';
-import RefreshRight from '@myprint/design/components/my/icon/icons/RefreshRight.vue';
-import Check from '@myprint/design/components/my/icon/icons/Check.vue';
-import CloseBold from '@myprint/design/components/my/icon/icons/CloseBold.vue';
+import { displayModelDesign, valueUnit } from '../../../utils/elementUtil';
+import { unit2px } from '../../../utils/devicePixelRatio';
+import { chooseImgTypeList, elementHandleStatusList } from '../../../constants/common';
+import MyTabs from '../../../components/my/tabs/my-tabs.vue';
+import MyDialog from '../../../components/my/dialog/my-dialog.vue';
+import MyIcon from '../../../components/my/icon/my-icon.vue';
+import Crop from '../../../components/my/icon/icons/Crop.vue';
+import Plus from '../../../components/my/icon/icons/Plus.vue';
+import ZoomIn from '../../../components/my/icon/icons/ZoomIn.vue';
+import ZoomOut from '../../../components/my/icon/icons/ZoomOut.vue';
+import RefreshLeft from '../../../components/my/icon/icons/RefreshLeft.vue';
+import RefreshRight from '../../../components/my/icon/icons/RefreshRight.vue';
+import Check from '../../../components/my/icon/icons/Check.vue';
+import CloseBold from '../../../components/my/icon/icons/CloseBold.vue';
 
 const props = withDefaults(defineProps<{
     element?: MyElement

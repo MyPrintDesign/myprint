@@ -6,12 +6,12 @@
     </base-widget>
 </template>
 <script setup lang="ts">
-import baseWidget from '@myprint/design/components/content/widget/base-widget.vue';
+import baseWidget from '../../../components/content/widget/base-widget.vue';
 import {
     MyElement,
 // @ts-ignore
     PageUnit
-} from '@myprint/design/types/entity';
+} from '../../../types/entity';
 
 withDefaults(defineProps<{
     data?: MyElement,

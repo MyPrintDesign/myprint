@@ -1,5 +1,5 @@
 import { isFunction } from './utils';
-import { TableCellElement } from '@myprint/design/types/entity';
+import { TableCellElement } from '../types/entity';
 
 export const mouseEventType = {
     MOVE: 'mousemove',

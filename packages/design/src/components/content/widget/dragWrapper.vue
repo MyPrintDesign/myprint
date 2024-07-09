@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import { Container } from '@myprint/design/types/entity';
+import { Container } from '../../../types/entity';
 import { computed, CSSProperties, onMounted, ref } from 'vue';
 
 const props = withDefaults(defineProps<{

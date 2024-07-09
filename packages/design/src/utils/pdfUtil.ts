@@ -1,6 +1,6 @@
 import html2canvas from 'html2canvas';
 import JsPDF from 'jspdf';
-import { unit2unit } from '@myprint/design/utils/devicePixelRatio';
+import { unit2unit } from '../utils/devicePixelRatio';
 
 let defaultOptions = {
     name: new Date().getTime(),

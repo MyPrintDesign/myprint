@@ -118,28 +118,28 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 
-import { getElementSetting, tableBodyHeightTypeList } from '@myprint/design/constants/common';
-import { mittKey } from '@myprint/design/constants/keys';
-import { ActionEnum, Snapshot } from '@myprint/design/utils/historyUtil';
-import MyGroup from '@myprint/design/components/my/group/my-group.vue';
-import { MyHistoryInputNumber, MyUnit } from '@myprint/design/components/my/input';
-import { useAppStoreHook } from '@myprint/design/stores/app';
+import { getElementSetting, tableBodyHeightTypeList } from '../../../../constants/common';
+import { mittKey } from '../../../../constants/keys';
+import { ActionEnum, Snapshot } from '../../../../utils/historyUtil';
+import MyGroup from '../../../../components/my/group/my-group.vue';
+import { MyHistoryInputNumber, MyUnit } from '../../../../components/my/input';
+import { useAppStoreHook } from '../../../../stores/app';
 import {
     multipleElementGetValue,
     multipleElementSetValue,
     setElementHeightPx
-} from '@myprint/design/utils/elementUtil';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import { freshMoveableOption } from '@myprint/design/plugins/moveable/moveable';
-import { addStatisticsRow } from '@myprint/design/utils/table/dataTable';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
-import MyForm from '@myprint/design/components/my/form/my-form.vue';
-import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
-import MyButton from '@myprint/design/components/my/button/my-Button.vue';
-import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
-import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
-import MyRadio from '@myprint/design/components/my/radio/my-radio.vue';
+} from '../../../../utils/elementUtil';
+import MyIcon from '../../../../components/my/icon/my-icon.vue';
+import { freshMoveableOption } from '../../../../plugins/moveable/moveable';
+import { addStatisticsRow } from '../../../../utils/table/dataTable';
+import { unit2px } from '../../../../utils/devicePixelRatio';
+import MySwitch from '../../../../components/my/switch/my-switch.vue';
+import MyForm from '../../../../components/my/form/my-form.vue';
+import MyFormItem from '../../../../components/my/form/my-form-item.vue';
+import MyButton from '../../../../components/my/button/my-Button.vue';
+import MyDividerPanel from '../../../../components/my/divider/my-divider-panel.vue';
+import MySlider from '../../../../components/my/slider/my-slider.vue';
+import MyRadio from '../../../../components/my/radio/my-radio.vue';
 
 const mitt = inject(mittKey)!;
 const appStore = useAppStoreHook();

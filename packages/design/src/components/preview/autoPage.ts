@@ -1,5 +1,5 @@
-import { parse, stringify } from '@myprint/design/utils/utils';
-import { px2unit, unit2px } from '@myprint/design/utils/devicePixelRatio';
+import { parse, stringify } from '../../utils/utils';
+import { px2unit, unit2px } from '../../utils/devicePixelRatio';
 import { nextTick, reactive } from 'vue';
 import {
     FormatterVariable,
@@ -9,16 +9,16 @@ import {
     PreviewWrapper,
     RuntimeElementOption,
     TableCellElement
-} from '@myprint/design/types/entity';
-import { copyPreviewWrapper, element2PreviewWrapper, formatter } from '@myprint/design/utils/elementUtil';
-import numberUtil from '@myprint/design/utils/numberUtil';
-import { elementTypeContainerList } from '@myprint/design/constants/common';
+} from '../../types/entity';
+import { copyPreviewWrapper, element2PreviewWrapper, formatter } from '../../utils/elementUtil';
+import numberUtil from '../../utils/numberUtil';
+import { elementTypeContainerList } from '../../constants/common';
 import {
     lastHeadList,
     previewRowStatisticsList,
     previewTableStatisticsList,
     statisticsData
-} from '@myprint/design/utils/table/dataTable';
+} from '../../utils/table/dataTable';
 
 interface PreviewContext {
     autoPageIs: boolean,

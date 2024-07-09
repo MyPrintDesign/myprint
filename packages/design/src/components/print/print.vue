@@ -24,17 +24,17 @@
 
 <script setup lang="ts">
 import { inject, nextTick, reactive, ref } from 'vue';
-import { download, printCssStyle } from '@myprint/design/utils/utils';
-import { MyElement, Panel } from '@myprint/design/types/entity';
-import { messageFun, mittKey } from '@myprint/design/constants/keys';
-import { displayModelPrint, getCurrentPanel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
-import { useConfigStore } from '@myprint/design/stores/config';
-import Preview from '@myprint/design/components/preview/preview.vue';
-import { autoPage } from '@myprint/design/components/preview/autoPage';
-import { PrintProps } from '@myprint/design/types/entity';
-import { toImg } from '@myprint/design/utils/pdfUtil';
-import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
-import { downloadImg, downloadPdf } from '@myprint/design/api/pdfServer';
+import { download, printCssStyle } from '../../utils/utils';
+import { MyElement, Panel } from '../../types/entity';
+import { messageFun, mittKey } from '../../constants/keys';
+import { displayModelPrint, getCurrentPanel, getCurrentPanelUnit, valueUnit } from '../../utils/elementUtil';
+import { useConfigStore } from '../../stores/config';
+import Preview from '../../components/preview/preview.vue';
+import { autoPage } from '../../components/preview/autoPage';
+import { PrintProps } from '../../types/entity';
+import { toImg } from '../../utils/pdfUtil';
+import { unit2px, unit2unit } from '../../utils/devicePixelRatio';
+import { downloadImg, downloadPdf } from '../../api/pdfServer';
 
 defineExpose({ handlePrint, design2Img, handleServerDownloadImg, handleServerDownloadPdf });
 // const { SEND: socketSend, printerList, connect } = useSocket();
