@@ -17,8 +17,7 @@
                 <my-switch
                     v-model="configStore.autoConnect"
                     class="ml-2"
-                    inline-prompt
-                    style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: gray" />
+                    inline-prompt/>
             
             </my-form-item>
             
@@ -48,15 +47,15 @@
 </template>
 
 <script setup lang="ts">
-import { useSocket } from '../../../../stores/socket';
+import { useSocket } from '@myprint/design/stores/socket';
 import { computed } from 'vue';
-import { clientProtocolList } from '../../../../constants/common';
-import { useConfigStore } from '../../../../stores/config';
-import MySwitch from '../../../../components/my/switch/my-switch.vue';
-import MySelect from '../../../../components/my/select/my-select.vue';
-import MyFormItem from '../../../../components/my/form/my-form-item.vue';
-import MyForm from '../../../../components/my/form/my-form.vue';
-import MyInput from '../../../../components/my/input/my-input.vue';
+import { clientProtocolList } from '@myprint/design/constants/common';
+import { useConfigStore } from '@myprint/design/stores/config';
+import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
+import MySelect from '@myprint/design/components/my/select/my-select.vue';
+import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
+import MyForm from '@myprint/design/components/my/form/my-form.vue';
+import MyInput from '@myprint/design/components/my/input/my-input.vue';
 
 const useSocketData = useSocket();
 const configStore = useConfigStore();

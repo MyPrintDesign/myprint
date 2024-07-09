@@ -1,4 +1,4 @@
-import { Design } from '../types/entity';
+import { Design } from '@myprint/design/types/entity';
 import { reactive } from 'vue';
 
 export const scaleUtil = {

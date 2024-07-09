@@ -33,4 +33,55 @@
   --header-heigh1t: calc(100% - var(--header-height));
   --panel-width: calc(100% - 20px);
 
+
+  --my-button-text-color: #606266;
+  --my-button-font-weight: 500;
+  --my-button-bg-color: #ffffff;
+  --my-border: 1px solid #dcdfe6;
+  --my-button-border-color: #dcdfe6;
+  --my-font-size-base: 14px;
+  --my-border-radius-base: 4px;
+  --my-button-size: 24px;
+  --my-border-color: #dcdfe6;
+  --my-color-info: #909399;
+  --my-fill-color-light: #f5f7fa;
+
+  --my-button-hover-text-color: #409eff;
+  --my-button-hover-border-color: #c6e2ff;
+  --my-button-hover-bg-color: #ecf5ff;
+
+  --my-scrollbar-bg-color: #909399;
+  --my-text-color-secondary: #909399;
+
+  --my-text-color-regular: #606266;
+  --my-border-radius-circle: 100%;
+  --my-transition-duration: .3s;
+  --my-color-white: #ffffff;
+
+
+  //--el-input-focus-border-color: ;
+  --my-border-color-hover: #c0c4cc;
+  --my-color-primary: #409eff;
+  --my-text-color-placeholder: #a8abb2;
+
+  --my-input-text-color: var(--my-text-color-regular);
+  --my-input-border: var(--my-border);
+  --my-input-hover-border: var(--my-border-color-hover);
+  --my-input-focus-border: var(--my-color-primary);
+  --my-input-transparent-border: 0 0 0 1px transparent inset;
+  --my-input-border-color: var(--my-border-color);
+  --my-input-border-radius: var(--my-border-radius-base);
+  --my-input-bg-color: #fff;
+  --my-input-icon-color: var(--my-text-color-placeholder);
+  --my-input-placeholder-color: var(--my-text-color-placeholder);
+  --my-input-hover-border-color: var(--my-border-color-hover);
+  --my-input-clear-hover-color: var(--my-text-color-secondary);
+  --my-input-focus-border-color: var(--my-color-primary);
+  --my-input-width: 100%;
+
+  --my-fill-color-blank: #fff;
+  --my-text-color-primary: #303133;
+  --my-border-style: 1px solid #dcdfe6;
+
+  --my-input-inner-height: calc(var(32) - 2px);
 }

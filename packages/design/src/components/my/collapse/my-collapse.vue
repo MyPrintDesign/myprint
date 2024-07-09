@@ -30,13 +30,13 @@
 </template>
 <script setup lang="ts">
 import { computed, CSSProperties, nextTick, onMounted, reactive, ref } from 'vue';
-import { getCollapsePanelZIndex } from '../../../utils/utils';
-import { HandlePanel, HandlePanelPosition } from '../../../types/entity';
-import { useAppStoreHook } from '../../../stores/app';
-import MyScrollbar from '../../../components/my/scrollbar/my-scrollbar.vue';
-import MyIcon from '../../../components/my/icon/my-icon.vue';
-import ArrowRight from '../../../components/my/icon/icons/ArrowRight.vue';
-import Close from '../../../components/my/icon/icons/Close.vue';
+import { getCollapsePanelZIndex } from '@myprint/design/utils/utils';
+import { HandlePanel, HandlePanelPosition } from '@myprint/design/types/entity';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import ArrowRight from '@myprint/design/components/my/icon/icons/ArrowRight.vue';
+import Close from '@myprint/design/components/my/icon/icons/Close.vue';
 
 export interface Props {
     element?: HandlePanel;

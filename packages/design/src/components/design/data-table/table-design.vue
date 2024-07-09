@@ -53,13 +53,13 @@
 </template>
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
-import { Container, MyElement, TableCellElement } from '../../../types/entity';
+import { Container, MyElement, TableCellElement } from '@myprint/design/types/entity';
 import DataTable from './data-table.vue';
-import { defaultElement, elementHandleStatusList } from '../../../constants/common';
-import { tableColClone } from '../../../utils/dom';
-import { useAppStoreHook } from '../../../stores/app';
-import { sortColumn } from '../../../utils/utils';
-import { freshMoveableOption, updateMoveableRect } from '../../../plugins/moveable/moveable';
+import { defaultElement, elementHandleStatusList } from '@myprint/design/constants/common';
+import { tableColClone } from '@myprint/design/utils/dom';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import { sortColumn } from '@myprint/design/utils/utils';
+import { freshMoveableOption, updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
 import _ from 'lodash';
 import {
     recursionUpdateCellParentInitWidth,
@@ -67,7 +67,7 @@ import {
     setCurrentElement,
     setElementHeightPx,
     setElementWidthPx
-} from '../../../utils/elementUtil';
+} from '@myprint/design/utils/elementUtil';
 import {
     computedTableCell,
     getChildByParent,
@@ -75,7 +75,7 @@ import {
     getTableCellDown,
     lastHeadList,
     selectCell
-} from '../../../utils/table/dataTable';
+} from '@myprint/design/utils/table/dataTable';
 
 type MyRow = Record<number, number[]>
 

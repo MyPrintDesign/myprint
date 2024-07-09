@@ -1,12 +1,12 @@
 import { nextTick, ref } from 'vue';
-import { MyElement, elementTypeFormat, Panel } from '../types/entity';
+import { MyElement, elementTypeFormat, Panel } from '@myprint/design/types/entity';
 import { useManualRefHistory } from '@vueuse/core';
 import {
     getCurrentPanel,
     installPanelParentElement
 } from './elementUtil';
-import { useAppStoreHook as appStore } from '../stores/app';
-import { updatePanel } from '../plugins/moveable/moveable';
+import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
+import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
 
 export enum ActionEnum {
     INIT = '加载',

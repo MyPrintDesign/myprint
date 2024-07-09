@@ -1,28 +1,28 @@
-.el-card__header {
-  padding: 0 !important;
-}
+//.el-card__header {
+//  padding: 0 !important;
+//}
 
-.el-collapse.option-collapse {
-  .el-collapse-item {
-    .el-collapse-item__header {
-      user-select: none;
-      display: flex;
-      align-items: center;
-      position: sticky;
-      height: 30px;
+//.el-collapse.option-collapse {
+//  .el-collapse-item {
+//    .el-collapse-item__header {
+//      user-select: none;
+//      display: flex;
+//      align-items: center;
+//      position: sticky;
+//      height: 30px;
+//
+//      .el-collapse-item__arrow {
+//        order: -1;
+//        margin-left: 10px;
+//        margin-right: 10px;
+//      }
+//    }
+//  }
+//}
 
-      .el-collapse-item__arrow {
-        order: -1;
-        margin-left: 10px;
-        margin-right: 10px;
-      }
-    }
-  }
-}
-
-.el-input-group__append {
-  padding: 0;
-}
+//.el-input-group__append {
+//  padding: 0;
+//}
 
 .barcode-type-tooltip {
   width: 300px;
@@ -69,7 +69,7 @@
 
   &.is-checked {
     .my-switch__core {
-      border-color: var(--el-switch-border-color, var(--drag-h-color));
+      border-color: var(--drag-h-color);
       background-color: var(--drag-h-color);
 
       .my-switch__inner {
@@ -95,13 +95,13 @@
     box-sizing: border-box;
     background: var(--switch-off-color);
     cursor: pointer;
-    transition: border-color var(--el-transition-duration), background-color var(--el-transition-duration);
+    transition: border-color var(--my-transition-duration), background-color var(--my-transition-duration);
 
     .my-switch__inner {
       height: 12px;
       padding: 0 2px 0 calc(12px + 2px);
       width: 100%;
-      transition: all var(--el-transition-duration);
+      transition: all var(--my-transition-duration);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -109,7 +109,7 @@
 
       .is-text {
         font-size: 12px;
-        color: var(--el-color-white);
+        color: var(--my-color-white);
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
@@ -125,9 +125,9 @@
       height: 12px;
       left: 1px;
       position: absolute;
-      border-radius: var(--el-border-radius-circle);
-      transition: all var(--el-transition-duration);
-      background-color: var(--el-color-white);
+      border-radius: var(--my-border-radius-circle);
+      transition: all var(--my-transition-duration);
+      background-color: var(--my-color-white);
       display: flex;
       justify-content: center;
       align-items: center;

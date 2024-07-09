@@ -23,21 +23,25 @@ export interface R<D = any> {
 }
 
 export interface Module {
-    id?: number;
+    id?: string| number;
     originId?: any;
-    userId?: any;
+    userId?: number;
+    moduleGroupId?: number | string;
     name?: string;
     provider?: string;
     previewData?: string;
+    previewDataByte?: any;
 }
 
 export interface Template {
-    id?: number;
+    id?: string| number;
     userId?: any;
-    moduleId?: number;
+    moduleId?: string| number;
     name?: string;
     content?: any;
     coverImgUrl?: any;
-    previewData?: any[];
-    module: Module
+    coverImgList?: ArrayBuffer[];
+    module?: Module;
+
+    moreVisible?: boolean;
 }

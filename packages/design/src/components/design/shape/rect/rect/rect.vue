@@ -1,25 +1,25 @@
 <template>
-    <div class="my-print-rect__wrapper"
-         :style="{maxWidth: valueUnit(element.width),
+  <div class="my-print-rect__wrapper"
+       :style="{maxWidth: valueUnit(element.width),
        width: valueUnit(trend1(element.width)),
        height: valueUnit(trend1(element.height)),
        }"
-         @drop="drop($event)" />
+       @drop="drop($event)"/>
 </template>
 <script setup lang="ts">
 
-import { PropType } from 'vue';
-import { MyElement } from '../../../../../types/entity';
-import { trend1 } from '../../../../../utils/utils';
-import { valueUnit } from '../../../../../utils/elementUtil';
+import {PropType} from "vue";
+import {MyElement} from "@myprint/design/types/entity";
+import {trend1} from "@myprint/design/utils/utils";
+import {valueUnit} from "@myprint/design/utils/elementUtil";
 
 defineProps({
-    element: { type: Object as PropType<MyElement>, default: () => ({} as MyElement) }
-});
+  element: {type: Object as PropType<MyElement>, default: () => ({} as MyElement)}
+})
 
 function drop(_event: DragEvent) {
-    console.log('drop');
-    // event.stopPropagation()
+  console.log('drop')
+  // event.stopPropagation()
 }
 
 </script>

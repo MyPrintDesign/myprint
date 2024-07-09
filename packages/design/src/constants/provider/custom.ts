@@ -1,4 +1,4 @@
-import { MyElement, ElementOption, PageUnit } from '../../types/entity';
+import { MyElement, ElementOption, PageUnit } from '@myprint/design/types/entity';
 
 export const customProvider = {
     pageUnit: 'mm' as PageUnit,

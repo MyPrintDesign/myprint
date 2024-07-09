@@ -27,7 +27,7 @@
     }
 
     .collapse-panel-head-right-icon {
-      transition: transform var(--el-transition-duration);
+      transition: transform var(--my-transition-duration);
     }
 
     .is-active {
@@ -63,7 +63,7 @@
     }
 
     .collapse-panel-head-right-icon {
-      transition: transform var(--el-transition-duration);
+      transition: transform var(--my-transition-duration);
     }
 
     .collapse-panel-head-right-close {
@@ -76,7 +76,7 @@
       border-radius: 3px;
 
       .collapse-panel-head-right-icon {
-        transition: transform var(--el-transition-duration);
+        transition: transform var(--my-transition-duration);
       }
 
       :hover {

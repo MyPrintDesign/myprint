@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { definePropType } from '../../../constants/common';
+import { definePropType } from '@myprint/design/constants/common';
 import { reactive, ref } from 'vue';
 
 const emit = defineEmits(['update:modelValue']);

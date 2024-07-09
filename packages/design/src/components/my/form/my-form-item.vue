@@ -20,3 +20,7 @@ withDefaults(defineProps<{
         labelWidth: '80px'
     });
 </script>
+
+<style scoped>
+
+</style>

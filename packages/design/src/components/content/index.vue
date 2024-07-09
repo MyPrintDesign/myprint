@@ -11,19 +11,19 @@
 </template>
 
 <script setup lang="ts">
-import widget from '../../components/content/widget/index.vue';
-import PanelView from '../../components/content/panel/index.vue';
+import widget from '@myprint/design/components/content/widget/index.vue';
+import PanelView from '@myprint/design/components/content/panel/index.vue';
 import { inject, provide, reactive, Ref, ref, watch } from 'vue';
-import { Container, Panel, Provider, RuntimeElementOption } from '../../types/entity';
-import { to } from '../../utils/utils';
-import { mittKey, panelKey, previewDataKey, providerKey } from '../../constants/keys';
-import { init } from '../../utils/historyUtil';
+import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
+import { to } from '@myprint/design/utils/utils';
+import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
+import { init } from '@myprint/design/utils/historyUtil';
 //@ts-ignore
-import { Module, Template } from '../../types/R';
-import { useAppStoreHook } from '../../stores/app';
-import MyMouseTips from '../../components/my/mouse-tips/my-mouse-tips.vue';
-import { displayModel, initPanel, parentInitElement, setCurrentPanel } from '../../utils/elementUtil';
-import { newSelecto } from '../../plugins/moveable/selecto';
+import { Module, Template } from '@myprint/design/types/R';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
+import { displayModel, initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
+import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
 
 const appStore = useAppStoreHook();
 
@@ -53,63 +53,79 @@ const props = withDefaults(defineProps<{
     template: () => ({} as Template)
 });
 
+initModule();
+initTemplate();
+
 const moduleWatchStop = watch(() => props.module, (_n, _o) => {
     if (props.module) {
-        provider.value = JSON.parse(props.module.provider!);
-        previewData.value = JSON.parse(props.module.previewData!);
-        initPanel(panel, provider);
-        setCurrentPanel(panel);
+        initModule();
         moduleWatchStop();
     }
 });
 
+function initModule() {
+    if (!props.module) {
+        return;
+    }
+    provider.value = JSON.parse(props.module.provider!);
+    previewData.value = JSON.parse(props.module.previewData!);
+    initPanel(panel, provider);
+    setCurrentPanel(panel);
+}
+
 const templateWatchStop = watch(() => props.template, (_n, _o) => {
     if (props.template) {
-        to(JSON.parse(props.template.content), panel);
-        setCurrentPanel(panel);
-        
-        // initPanel();
-        
-        if (!panel.watermarkContent) {
-            panel.watermarkContent = 'my-print';
-        }
-        if (!panel.groupList) {
-            panel.groupList = [];
-        }
-        if (!panel.auxiliaryLineList) {
-            panel.auxiliaryLineList = [];
-        }
-        for (let myAuxiliaryLine of panel.auxiliaryLineList) {
-            myAuxiliaryLine.runtimeOption = { x: 0, y: 0, auxiliaryLineStatus: 'SHOW' } as RuntimeElementOption;
-        }
-        panel.runtimeOption = {} as any;
-        
-        // console.log(JSON.parse(JSON.stringify(panel.elementList[0])))
-        // for (let i = 0; i < 1000; i++) {
-        //   const  tmp = JSON.parse(JSON.stringify(panel.elementList[0]))
-        //   tmp.y = tmp.y + 0.2
-        //   // panel.elementList?.unshift(tmp)
-        //
-        // }
-        for (let i = 0; i < panel.elementList.length; i++) {
-            const element = panel.elementList[i];
-            parentInitElement(panel as Container, element, i);
-        }
-        panel.pageHeader && parentInitElement(panel, panel.pageHeader, 0);
-        panel.pageFooter && parentInitElement(panel, panel.pageFooter, 0);
-        
-        init();
-        
-        if (provider.value.pageUnit == undefined) {
-            provider.value.pageUnit = 'px';
-        }
-        
-        mitt.emit('updatePanel');
-        mitt.emit('changePageSize');
-        
+        initTemplate();
         templateWatchStop();
     }
 });
+
+function initTemplate() {
+    if (!props.template) {
+        return;
+    }
+    to(JSON.parse(props.template.content), panel);
+    setCurrentPanel(panel);
+    
+    // initPanel();
+    
+    if (!panel.watermarkContent) {
+        panel.watermarkContent = 'my-print';
+    }
+    if (!panel.groupList) {
+        panel.groupList = [];
+    }
+    if (!panel.auxiliaryLineList) {
+        panel.auxiliaryLineList = [];
+    }
+    for (let myAuxiliaryLine of panel.auxiliaryLineList) {
+        myAuxiliaryLine.runtimeOption = { x: 0, y: 0, auxiliaryLineStatus: 'SHOW' } as RuntimeElementOption;
+    }
+    panel.runtimeOption = {} as any;
+    
+    // console.log(JSON.parse(JSON.stringify(panel.elementList[0])))
+    // for (let i = 0; i < 1000; i++) {
+    //   const  tmp = JSON.parse(JSON.stringify(panel.elementList[0]))
+    //   tmp.y = tmp.y + 0.2
+    //   // panel.elementList?.unshift(tmp)
+    //
+    // }
+    for (let i = 0; i < panel.elementList.length; i++) {
+        const element = panel.elementList[i];
+        parentInitElement(panel as Container, element, i);
+    }
+    panel.pageHeader && parentInitElement(panel, panel.pageHeader, 0);
+    panel.pageFooter && parentInitElement(panel, panel.pageFooter, 0);
+    
+    init();
+    
+    if (provider.value.pageUnit == undefined) {
+        provider.value.pageUnit = 'px';
+    }
+    
+    mitt.emit('updatePanel');
+    mitt.emit('changePageSize');
+}
 
 newSelecto();
 

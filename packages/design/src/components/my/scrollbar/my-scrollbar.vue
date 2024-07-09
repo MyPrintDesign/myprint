@@ -123,8 +123,6 @@ defineExpose({
     ps
 });
 </script>
-
-<style scoped>
+<style>
 @import 'perfect-scrollbar/css/perfect-scrollbar.css';
-
 </style>

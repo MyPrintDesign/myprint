@@ -9,12 +9,12 @@
 
 <script setup lang="ts">
 import { computed, inject } from 'vue';
-import { useAppStoreHook } from '../../../stores/app';
-import TipIcon from '../../../components/my/icon/tip-icon.vue';
-import { hasStyle } from '../../../constants/common';
-import { ActionEnum, Snapshot } from '../../../utils/historyUtil';
-import { mittKey } from '../../../constants/keys';
-import { multipleElementGetValue, multipleElementSetValue } from '../../../utils/elementUtil';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
+import { hasStyle } from '@myprint/design/constants/common';
+import { ActionEnum, Snapshot } from '@myprint/design/utils/historyUtil';
+import { mittKey } from '@myprint/design/constants/keys';
+import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
 
 const mitt = inject(mittKey)!;
 

@@ -1,13 +1,13 @@
 import { clearEventBubble } from './event';
-import { MyElement, Panel, TableCellElement } from '../types/entity';
-import { displayRatio, unit2px } from '../utils/devicePixelRatio';
-// import {arrayIndexOf, arrayRemove} from "./utils/arrays";
+import { MyElement, Panel, TableCellElement } from '@myprint/design/types/entity';
+import { displayRatio, unit2px } from '@myprint/design/utils/devicePixelRatio';
+// import {arrayIndexOf, arrayRemove} from "@myprint/design/utils/arrays";
 // @ts-ignore
 import * as mittInit from 'mitt';
-import { fontList } from '../constants/common';
+import { fontList } from '@myprint/design/constants/common';
 import { Emitter } from 'mitt';
-import { EventTypes } from '../types/eventType';
-import { findFromLeftCell } from '../utils/table/dataTable';
+import { EventTypes } from '@myprint/design/types/eventType';
+import { findFromLeftCell } from '@myprint/design/utils/table/dataTable';
 
 let collapsePanelZIndex = 1000;
 

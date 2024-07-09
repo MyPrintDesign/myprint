@@ -21,14 +21,14 @@ import MyText from './text'
 import MyImage from "./image";
 import {MyDottedHorizontalLine, MyDottedVerticalLine, MyHorizontalLine, MyVerticalLine, MyRect} from "./shape";
 
-import {MyElement} from "../../types/entity";
-import SvgPolygonLine from "../../components/design/svg/svg-polygon-line.vue";
-import SvgCircle from "../../components/design/svg/svg-circle.vue";
-import DrawPanel from "../../components/design/svg/draw-panel.vue";
-import SvgLine from "../../components/design/svg/svg-line.vue";
-import SvgBezierCurve from "../../components/design/svg/svg-bezier-curve.vue";
-import SvgBezierCurveThree from "../../components/design/svg/svg-bezier-curve-three.vue";
-import SvgEllipse from "../../components/design/svg/svg-ellipse.vue";
+import {MyElement} from "@myprint/design/types/entity";
+import SvgPolygonLine from "@myprint/design/components/design/svg/svg-polygon-line.vue";
+import SvgCircle from "@myprint/design/components/design/svg/svg-circle.vue";
+import DrawPanel from "@myprint/design/components/design/svg/draw-panel.vue";
+import SvgLine from "@myprint/design/components/design/svg/svg-line.vue";
+import SvgBezierCurve from "@myprint/design/components/design/svg/svg-bezier-curve.vue";
+import SvgBezierCurveThree from "@myprint/design/components/design/svg/svg-bezier-curve-three.vue";
+import SvgEllipse from "@myprint/design/components/design/svg/svg-ellipse.vue";
 
 withDefaults(defineProps<{
   element?: MyElement

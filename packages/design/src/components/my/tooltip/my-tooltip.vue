@@ -12,7 +12,7 @@
 <script setup lang="ts">
 //@ts-ignore
 import { Placement } from '@popperjs/core/lib/enums';
-import MyPopover from '../../../components/my/popover/my-popover.vue';
+import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 
 withDefaults(defineProps<{
     disabled?: boolean

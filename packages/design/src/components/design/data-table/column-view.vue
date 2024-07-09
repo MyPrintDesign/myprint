@@ -11,8 +11,8 @@
 <script setup lang="ts">
 
 import { computed, CSSProperties, onMounted, ref } from 'vue';
-import { TableCellElement } from '../../../types/entity';
-import MyText from '../../../components/design/text';
+import { TableCellElement } from '@myprint/design/types/entity';
+import MyText from '@myprint/design/components/design/text';
 
 const props = withDefaults(defineProps<{
     column?: TableCellElement

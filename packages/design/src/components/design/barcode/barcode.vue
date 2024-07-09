@@ -9,11 +9,11 @@
 
 <script setup lang="ts">
 import JsBarcode from 'jsbarcode';
-import { MyElement } from '../../../types/entity';
+import { MyElement } from '@myprint/design/types/entity';
 import { computed, reactive, ref, watch } from 'vue';
-import { unit2px } from '../../../utils/devicePixelRatio';
-import { _defaultNum } from '../../../utils/numberUtil';
-import { elementCommonStyle } from '../../../utils/elementUtil';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+import { _defaultNum } from '@myprint/design/utils/numberUtil';
+import { elementCommonStyle } from '@myprint/design/utils/elementUtil';
 
 const props = withDefaults(defineProps<{
     element?: MyElement

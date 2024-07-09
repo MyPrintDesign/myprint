@@ -44,12 +44,12 @@
 import business from './business.vue';
 import basic from './basic.vue';
 import { inject } from 'vue';
-import { providerKey } from '../../../constants/keys';
-import { customProvider } from '../../../constants/provider/custom';
-import MyScrollbar from '../../../components/my/scrollbar/my-scrollbar.vue';
-import MyWidgetCollapse from '../../../components/my/collapse/my-widget-collapse.vue';
-import MyIcon from '../../../components/my/icon/my-icon.vue';
-import ArrowLeft from '../../../components/my/icon/icons/ArrowLeft.vue';
+import { providerKey } from '@myprint/design/constants/keys';
+import { customProvider } from '@myprint/design/constants/provider/custom';
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
+import MyWidgetCollapse from '@myprint/design/components/my/collapse/my-widget-collapse.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import ArrowLeft from '@myprint/design/components/my/icon/icons/ArrowLeft.vue';
 
 const $emit = defineEmits(['back']);
 

@@ -32,10 +32,10 @@ export interface ModuleGroup {
 }
 
 export interface Module {
-    id?: string;
+    id?: string | number;
     originId?: any;
     userId?: number;
-    moduleGroupId?: number;
+    moduleGroupId?: string | number;
     name?: string;
     provider?: string;
     previewData?: string;
@@ -43,9 +43,9 @@ export interface Module {
 }
 
 export interface Template {
-    id?: string;
+    id?: string | number;
     userId?: any;
-    moduleId?: string;
+    moduleId?: string | number;
     name?: string;
     content?: any;
     coverImgUrl?: any;

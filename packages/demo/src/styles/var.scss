@@ -44,12 +44,12 @@
   height: 100px;
   line-height: 100px;
 
-  border: 1px dashed var(--el-border-color);
+  border: 1px dashed var(--my-border-color);
   border-radius: 6px;
   cursor: pointer;
 
   &:hover {
-    border-color: var(--el-color-primary);
+    border-color: var(--my-color-primary);
   }
 }
 

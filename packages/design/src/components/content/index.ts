@@ -1,3 +1,3 @@
-import DesignContent from './index.vue'
+import DesignPanel from './index.vue'
 
-export default DesignContent
+export default DesignPanel

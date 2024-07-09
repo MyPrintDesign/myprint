@@ -20,11 +20,11 @@
 </template>
 
 <script setup lang="ts">
-import { MyAuxiliaryLine, RuntimeElementOption } from '../../../types/entity';
+import { MyAuxiliaryLine, RuntimeElementOption } from '@myprint/design/types/entity';
 import { computed, CSSProperties, onMounted, ref, watch } from 'vue';
-import { useAppStoreHook } from '../../../stores/app';
-import { getCurrentPanel } from '../../../utils/elementUtil';
-import { arrayRemove } from '../../../utils/arrays';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import { getCurrentPanel } from '@myprint/design/utils/elementUtil';
+import { arrayRemove } from '@myprint/design/utils/arrays';
 
 const props = withDefaults(defineProps<{
     element: MyAuxiliaryLine,

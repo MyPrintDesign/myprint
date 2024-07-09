@@ -8,9 +8,9 @@
   padding: 0 !important;
   text-align: center;
 
-  border-top-right-radius: var(--el-border-radius-base);
-  border-bottom-right-radius: var(--el-border-radius-base);
-  box-shadow: 0 0 0 1px var(--el-input-border-color, var(--el-border-color)) inset;
-  color: var(--el-color-info);
-  background-color: var(--el-fill-color-light);
+  border-top-right-radius: var(--my-border-radius-base);
+  border-bottom-right-radius: var(--my-border-radius-base);
+  box-shadow: 0 0 0 1px var(--my-border-color) inset;
+  color: var(--my-color-info);
+  background-color: var(--my-fill-color-light);
 }

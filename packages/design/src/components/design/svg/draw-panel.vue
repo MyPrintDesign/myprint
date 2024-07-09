@@ -10,13 +10,13 @@ import * as d3Selection from 'd3-selection';
 import * as d3Drag from 'd3-drag';
 import { DragBehavior, DraggedElementBaseType } from 'd3-drag';
 import { onMounted, reactive, ref, watch } from 'vue';
-import { MyElement, PointClick } from '../../../types/entity';
-import { unit2px } from '../../../utils/devicePixelRatio';
-import { douglasPeucker } from '../../../utils/utils';
-import { useAppStoreHook } from '../../../stores/app';
-import { checkInput, moveableEditing } from '../../../plugins/moveable/moveable';
+import { MyElement, PointClick } from '@myprint/design/types/entity';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+import { douglasPeucker } from '@myprint/design/utils/utils';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import { checkInput, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
 // import {watchImmediate} from "@vueuse/core";
-// import {updateSvg} from "./utils/svgUtil";
+// import {updateSvg} from "@myprint/design/utils/svgUtil";
 
 const canvasRef = ref();
 const data = reactive({

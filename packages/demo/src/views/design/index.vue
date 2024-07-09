@@ -1,9 +1,9 @@
 <template>
-    <design-content :template="data.template" :module="data.module" @saveTemplate="saveTemplate" @panel-img="panelImg"
+    <design-panel :template="data.template" :module="data.module" @saveTemplate="saveTemplate" @panel-img="panelImg"
                     @back="back" />
 </template>
 <script setup lang="ts">
-import { DesignContent } from '@myprint/design/index';
+import { DesignPanel } from '@myprint/design/index';
 import { templateCoverImgUpdate, templateCreate, templateDetail, templateUpdate } from '@/api/template';
 import { onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -17,7 +17,7 @@ const router = useRouter();
 
 let { moduleId, id } = route.query;
 const data = reactive({
-    template: null as Template,
+    template: null! as Template,
     module: null as Module,
     arrayBufferList: null
 });

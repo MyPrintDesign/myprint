@@ -85,7 +85,6 @@
                     @update:model-value="(val:any)=>multipleElementSetValue('option.lineBreak', val)"
                     class="ml-2"
                     inline-prompt
-                    style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
                     active-text="是"
                     inactive-text="否" />
             </my-form-item>
@@ -127,7 +126,6 @@
                     @update:model-value="(val:any)=>multipleElementSetValue('everyPageStatisticsIs', val)"
                     class="ml-2"
                     inline-prompt
-                    style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
                     active-text="显示"
                     inactive-text="隐藏" />
             </my-form-item>
@@ -138,7 +136,6 @@
                     @update:model-value="(val:any)=>multipleElementSetValue('tableStatisticsIs', val)"
                     class="ml-2"
                     inline-prompt
-                    style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color)"
                     active-text="显示"
                     inactive-text="隐藏" />
             </my-form-item>
@@ -153,21 +150,21 @@ import {
     getElementSetting,
     statisticsTypeList,
     textContentTypes
-} from '../../../../constants/common';
-import MyGroup from '../../../../components/my/group/my-group.vue';
-import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '../../../../components/my/input';
-import { multipleElementGetValue, multipleElementSetValue } from '../../../../utils/elementUtil';
+} from '@myprint/design/constants/common';
+import MyGroup from '@myprint/design/components/my/group/my-group.vue';
+import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
+import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
 import { computed } from 'vue';
-import { MyElement, statisticsType, statisticsTypeFormat } from '../../../../types/entity';
-import { useAppStoreHook } from '../../../../stores/app';
-import MySwitch from '../../../../components/my/switch/my-switch.vue';
-import MyTooltip from '../../../../components/my/tooltip/my-tooltip.vue';
-import MyIcon from '../../../../components/my/icon/my-icon.vue';
-import MyDividerPanel from '../../../../components/my/divider/my-divider-panel.vue';
-import MySlider from '../../../../components/my/slider/my-slider.vue';
-import MyForm from '../../../../components/my/form/my-form.vue';
-import MyFormItem from '../../../../components/my/form/my-form-item.vue';
-import QuestionFilled from '../../../../components/my/icon/icons/QuestionFilled.vue';
+import { MyElement, statisticsType, statisticsTypeFormat } from '@myprint/design/types/entity';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
+import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
+import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
+import MyForm from '@myprint/design/components/my/form/my-form.vue';
+import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
+import QuestionFilled from '@myprint/design/components/my/icon/icons/QuestionFilled.vue';
 //
 // const mitt = inject(mittKey)!
 // // const data = reactive({

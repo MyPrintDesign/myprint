@@ -58,22 +58,22 @@
 
 <script setup lang="ts">
 import { inject, nextTick, reactive, ref } from 'vue';
-import { toPdf } from '../../utils/pdfUtil';
-import { download, printCssStyle } from '../../utils/utils';
-import { unit2px, unit2unit } from '../../utils/devicePixelRatio';
+import { toPdf } from '@myprint/design/utils/pdfUtil';
+import { download, printCssStyle } from '@myprint/design/utils/utils';
+import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import Preview from './preview.vue';
-import { ClientCmd, MyElement, Panel, PrintResult } from '../../types/entity';
-import { messageFun } from '../../constants/keys';
-import { useSocket } from '../../stores/socket';
-import { i18n } from '../../locales';
-import { displayModel, getCurrentPanelUnit, valueUnit } from '../../utils/elementUtil';
-import { useConfigStore } from '../../stores/config';
+import { ClientCmd, MyElement, Panel, PrintResult } from '@myprint/design/types/entity';
+import { messageFun } from '@myprint/design/constants/keys';
+import { useSocket } from '@myprint/design/stores/socket';
+import { i18n } from '@myprint/design/locales';
+import { displayModel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
+import { useConfigStore } from '@myprint/design/stores/config';
 import { autoPage } from './autoPage';
-import { PrintProps } from '../../types/entity';
-import MyScrollbar from '../../components/my/scrollbar/my-scrollbar.vue';
-import MyButton from '../../components/my/button/my-Button.vue';
-import MyDialog from '../../components/my/dialog/my-dialog.vue';
-import MySelect from '../../components/my/select/my-select.vue';
+import { PrintProps } from '@myprint/design/types/entity';
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
+import MyButton from '@myprint/design/components/my/button/my-Button.vue';
+import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
+import MySelect from '@myprint/design/components/my/select/my-select.vue';
 
 defineExpose({ handlePreview });
 

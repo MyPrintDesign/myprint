@@ -66,26 +66,26 @@
 </template>
 
 <script setup lang="ts">
-import { mittKey, panelKey } from '../../../constants/keys';
+import { mittKey, panelKey } from '@myprint/design/constants/keys';
 import { computed, inject, reactive, ref } from 'vue';
-import MyHorizontalLine from '../../../components/design/shape/line/horizontalLine';
-import MyRect from '../../../components/design/shape/rect/rect';
-import MyDottedHorizontalLine from '../../../components/design/shape/line/dottedHorizontalLine';
-import MyVerticalLine from '../../../components/design/shape/line/verticalLine';
-import MyDottedVerticalLine from '../../../components/design/shape/line/dottedVerticalLine';
-import MyImage from '../../../components/design/image';
-import MyText from '../../../components/design/text';
-import DataTable from '../../../components/design/data-table/data-table.vue';
-import { Container, ContentScaleVo } from '../../../types/entity';
-import { clearEventBubble } from '../../../utils/event';
-import MathCalc from '../../../utils/numberUtil';
-import { scaleUtil } from '../../../utils/scaleUtil';
-import { useAppStoreHook } from '../../../stores/app';
-import { valueUnit } from '../../../utils/elementUtil';
-import { unit2px } from '../../../utils/devicePixelRatio';
-import { useConfigStore } from '../../../stores/config';
-import { canRedo, canUndo, redoPanel, undoPanel } from '../../../utils/historyUtil';
-import TipIcon from '../../../components/my/icon/tip-icon.vue';
+import MyHorizontalLine from '@myprint/design/components/design/shape/line/horizontalLine';
+import MyRect from '@myprint/design/components/design/shape/rect/rect';
+import MyDottedHorizontalLine from '@myprint/design/components/design/shape/line/dottedHorizontalLine';
+import MyVerticalLine from '@myprint/design/components/design/shape/line/verticalLine';
+import MyDottedVerticalLine from '@myprint/design/components/design/shape/line/dottedVerticalLine';
+import MyImage from '@myprint/design/components/design/image';
+import MyText from '@myprint/design/components/design/text';
+import DataTable from '@myprint/design/components/design/data-table/data-table.vue';
+import { Container, ContentScaleVo } from '@myprint/design/types/entity';
+import { clearEventBubble } from '@myprint/design/utils/event';
+import MathCalc from '@myprint/design/utils/numberUtil';
+import { scaleUtil } from '@myprint/design/utils/scaleUtil';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import { valueUnit } from '@myprint/design/utils/elementUtil';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+import { useConfigStore } from '@myprint/design/stores/config';
+import { canRedo, canUndo, redoPanel, undoPanel } from '@myprint/design/utils/historyUtil';
+import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
 
 const appStore = useAppStoreHook();
 const configStore = useConfigStore();

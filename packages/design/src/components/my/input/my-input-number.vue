@@ -5,11 +5,11 @@
 
 <script setup lang="ts">
 
-import MyInput from '../../../components/my/input/my-input.vue';
+import MyInput from '@myprint/design/components/my/input/my-input.vue';
 
 const emit = defineEmits(['update:modelValue']);
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
     modelValue?: string | number | null | undefined,
 }>(), {
     modelValue: undefined

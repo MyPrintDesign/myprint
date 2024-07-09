@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { Ref } from 'vue';
-import { printCssStyle } from '../utils/utils';
+import { printCssStyle } from '@myprint/design/utils/utils';
 import { useConfigStore } from './config';
 
 let lockReconnect: any;

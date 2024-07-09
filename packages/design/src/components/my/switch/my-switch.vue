@@ -1,8 +1,7 @@
 <template>
     <div class="my-switch"
          :class="{'is-checked': modelValueComputed}"
-         @click="click"
-         style="--el-switch-on-color: var(--drag-h-color); --el-switch-off-color: var(--switch-off-color);">
+         @click="click">
         <div class="my-switch__core">
             <div class="my-switch__inner">
                 <span class="is-text" aria-hidden="false">{{ statusText }}</span>
@@ -54,3 +53,13 @@ function click() {
     emit('change');
 }
 </script>
+
+<style scoped lang="scss">
+
+
+//.el-switch.is-checked .el-switch__core {
+//    border-color: var(--el-switch-border-color,var(--el-switch-on-color));
+//    background-color: var(--el-switch-on-color);
+//}
+
+</style>

@@ -10,8 +10,8 @@
 <script setup lang="ts">
 
 import { inject, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue';
-import { mittKey } from '../../../constants/keys';
-import MyDivider from '../../../components/my/divider/my-divider.vue';
+import { mittKey } from '@myprint/design/constants/keys';
+import MyDivider from '@myprint/design/components/my/divider/my-divider.vue';
 
 const props = withDefaults(defineProps<{
         class?: string,
@@ -54,3 +54,7 @@ function update() {
 }
 
 </script>
+
+<style scoped>
+
+</style>
