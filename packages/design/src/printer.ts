@@ -1,8 +1,7 @@
-import { App, h, render } from 'vue';
+import { App, h, render, VNode } from 'vue';
 import PrintView from '@myprint/design/components/print/print.vue';
 import previewPanelView from '@myprint/design/components/preview/preview-panel.vue';
 import { getCurrentPanel } from '@myprint/design/utils/elementUtil';
-import { VNode } from 'vue-demi';
 import { PrintProps, PrintResult } from '@myprint/design/types/entity';
 
 export let pdfServerUrl = '';

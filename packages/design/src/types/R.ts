@@ -1,27 +1,3 @@
-export interface Page<T> {
-    records: T[];
-    total: number;
-    size: number;
-    current: number;
-    orders: any[];
-    optimizeCountSql: boolean;
-    searchCount: boolean;
-    maxLimit?: any;
-    countId?: any;
-    pages: number;
-}
-
-export interface PageParam {
-    size?: number;
-    current?: number;
-}
-
-export interface R<D = any> {
-    code: number;
-    data: D;
-    msg?: any;
-}
-
 export interface Module {
     id?: string| number;
     originId?: any;

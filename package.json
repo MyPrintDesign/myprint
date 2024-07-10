@@ -32,9 +32,9 @@
     "unplugin-auto-import": "^0.16.6",
     "unplugin-vue-components": "^0.25.1",
     "unplugin-vue-macros": "^0.14.0",
-    "vite": "^3.2.7",
+    "vite": "5.2.6",
     "vite-node": "^0.24.3",
-    "vue": "^3.2.37"
+    "vue": "^3.4.31"
   },
   "dependencies": {
     "pinia-plugin-persistedstate": "^3.2.1"

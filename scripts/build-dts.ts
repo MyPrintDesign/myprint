@@ -125,11 +125,15 @@ async function generateTypesDefinitions(
     const compilerOptions: CompilerOptions = {
         emitDeclarationOnly: true,
         strict: false,
+        // preserveSymlinks: true,
+        skipLibCheck: true,
+        noImplicitAny: false,
         outDir
     };
     const project = new Project({
         compilerOptions,
-        tsConfigFilePath: tsWebBuildConfigPath
+        tsConfigFilePath: tsWebBuildConfigPath,
+        skipAddingFilesFromTsConfig: true,
     });
 
     const sourceFiles = await addSourceFiles(project, pkgSrcDir);

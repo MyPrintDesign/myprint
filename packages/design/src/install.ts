@@ -16,7 +16,7 @@ import { mitt } from '@myprint/design/utils/utils';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { installPrinter } from '@myprint/design/printer';
 
-const onSocketMessage = ref<Function>();
+const onSocketMessage = ref<Function>(null!);
 
 const install = {
     install(app: App<any>): any {
@@ -24,7 +24,7 @@ const install = {
         // comps.map((component:any)=>{
         //     Vue.component(component.__name as string, component);
         // })
-        console.log('~~~MyPrint 初始化~~~');
+        // console.log('~~~MyPrint 初始化~~~');
         // console.log(app)
 
         if (app.config.globalProperties.$pinia) {
@@ -39,7 +39,6 @@ const install = {
             .use(VueCropper)
             .use(Vue3ColorPicker);
         app.provide(messageFun, onSocketMessage);
-        //@ts-ignore
         app.provide(mittKey, mitt);
 
         useSocket().INIT_SOCKET(onSocketMessage);
