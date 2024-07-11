@@ -3,7 +3,6 @@
 </template>
 
 <script setup lang="ts">
-
 import {MyElement} from "@myprint/design/types/entity";
 import Design from "@myprint/design/components/design/design.vue";
 

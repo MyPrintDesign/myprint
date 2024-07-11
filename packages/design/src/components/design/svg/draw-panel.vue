@@ -15,8 +15,6 @@ import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { douglasPeucker } from '@myprint/design/utils/utils';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import { checkInput, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
-// import {watchImmediate} from "@vueuse/core";
-// import {updateSvg} from "@myprint/design/utils/svgUtil";
 
 const canvasRef = ref();
 const data = reactive({
@@ -30,6 +28,8 @@ const data = reactive({
     dragFun: {} as DragBehavior<DraggedElementBaseType, any, any>,
     doubleClick: {} as DragBehavior<DraggedElementBaseType, any, any>
 } as any);
+let startX, startY;
+let lastClickPoint: PointClick = undefined!;
 
 const props = withDefaults(defineProps<{
     element?: MyElement
@@ -100,8 +100,6 @@ if (props.element.data) {
         data.strokes.push(listElement.data);
     }
 }
-let startX, startY;
-let lastClickPoint: PointClick = undefined!;
 
 onMounted(() => {
     data.context = canvasRef.value.getContext('2d');

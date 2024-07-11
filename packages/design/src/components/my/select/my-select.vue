@@ -14,11 +14,11 @@
                 </my-icon>
             </div>
         </template>
-        <my-scrollbar height="270px">
+        <my-scrollbar :height="height">
             <element-align :model-value="modelValue"
                            showSelectedStatus
                            :elementAlignList="dataList"
-                           @update:model-value="(val:any)=>emit('update:modelValue', val)" />
+                           @update:model-value="change" />
         </my-scrollbar>
     </my-popover>
 
@@ -30,16 +30,23 @@ import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vu
 import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'change']);
 
 withDefaults(defineProps<{
         disabled?: boolean,
         showSelectedStatus?: boolean,
         modelValue: string | number | null | undefined,
         dataList: any[],
+        height?: string,
     }>(),
     {
         disabled: false,
-        showSelectedStatus: false
+        showSelectedStatus: false,
+        height: '270px'
     });
+
+function change(val) {
+    emit('update:modelValue', val);
+    emit('change', val);
+}
 </script>

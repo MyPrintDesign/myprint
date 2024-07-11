@@ -79,13 +79,11 @@ function dragIng(subject: PointLabel, event: D3DragEvent, dx: number, dy: number
                 end: svgOptions.rotateLineEndDragPoint
             },
             { start: svgOptions.rotateLineStart, end: { x: subject.x, y: subject.y } });
-        // console.log(angle)
         const centerX = svgOptions.width / 2;
         const centerY = svgOptions.height / 2;
         for (let i = 0; i < svgOptions.allPoint.length; i++) {
             let point = orgPoint[i];
             const po = rotatePoint(centerX, centerY, point.x, point.y, angle);
-            // console.log(po)
             svgOptions.allPoint[i].x = po.x;
             svgOptions.allPoint[i].y = po.y;
         }

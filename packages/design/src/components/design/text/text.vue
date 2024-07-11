@@ -10,7 +10,6 @@
         :style="style"
         @input="handleInput"
         @keydown="handleKeydown($event)" />
-
 </template>
 <script setup lang="ts">
 
@@ -37,17 +36,14 @@ const data = reactive({
     content: '',
     innerContent: ''
 });
-// console.log(props.element);
 
 onMounted(() => {
-    // console.log(props.element);
     data.content = n2br(props.element.data);
     data.innerContent = data.content;
     if (props.element.data == null) {
         const elementData = formatter(props.element);
         if (elementData != null) {
             props.element.data = elementData;
-            // console.log(props.element.data);
             data.content = n2br(elementData);
             data.innerContent = elementData;
         }
@@ -58,9 +54,7 @@ function handleKeydown(event: KeyboardEvent) {
     if (event.code === 'Enter') {
         // &zwnj;
         document.execCommand('insertHTML', false, '<br>&zwnj;');
-        
         event.preventDefault();
-        
     }
     event.stopPropagation();
 }
@@ -90,14 +84,11 @@ function handleInput(event: any) {
     // 处理输入事件，更新 content
     props.element.data = br2n(event.target.innerHTML);
     data.innerContent = props.element.data;
-    // console.log(props.element.data);
-    
 }
 
 const style = computed(() => {
     return elementCommonStyle(props.element);
 });
-
 
 watch(() => props.element.runtimeOption.status, (n, _o) => {
     if (contentRef.value == undefined) {
@@ -126,22 +117,4 @@ watch(() => props.element.contentType, (n, _o) => {
     }
     freshMoveableOption(props.element);
 });
-
-// watch(() => props.element.option.formatter, (_n, _o) => {
-//   const data = formatter(props.element)
-//   console.log(props.element)
-//   console.log(_n, _o)
-//   console.log(props.element.option.formatter, props.element.data)
-//   if (data != null) {
-//     props.element.data = data
-//   }
-// })
 </script>
-
-<style lang="scss" scoped>
-
-//.read-write-plaintext-only { //纯文本
-//    -webkit-user-modify: read-write-plaintext-only;
-//
-//}
-</style>

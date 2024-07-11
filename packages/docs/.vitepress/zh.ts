@@ -86,8 +86,9 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
     }, {
         text: 'API',
         items: [
-            { text: '参数', link: '/use-api/markdown-examples' },
-            { text: 'API示例', link: '/use-api/api-example' }
+            { text: '说明', link: '/use-api/markdown-examples' },
+            { text: '设计面板', link: '/use-api/design-panel' },
+            { text: 'API使用示例', link: '/use-api/api-example' }
         ]
     }, {
         text: '部署',

@@ -68,8 +68,10 @@ function createInstance() {
             ps.value = new PerfectScrollbar(scrollbar.value, props.options);
             toggleListeners();
             setTimeout(() => {
-                ps.value.update();
-            }, 200);
+                if (ps.value != null) {
+                    ps.value.update();
+                }
+            }, 100);
         }
     });
 }

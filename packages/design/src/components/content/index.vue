@@ -18,7 +18,7 @@ import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/desig
 import { to } from '@myprint/design/utils/utils';
 import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
 import { init } from '@myprint/design/utils/historyUtil';
-import { Module, Template } from '@myprint/design/types/R';
+import { Module, SaveResult, Template } from '@myprint/design/types/R';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
 import { displayModel, initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
@@ -49,6 +49,9 @@ const props = defineProps(
         template: {
             type: Object as PropType<Template>
         },
+        saveTemplate: {
+            type: Object as PropType<(template: Template) => SaveResult>
+        },
         module: {
             type: Object as PropType<Module>,
             required: true
@@ -57,6 +60,7 @@ const props = defineProps(
 ) as {
     template: Template,
     module: Module,
+    saveTemplate: (template: Template) => SaveResult
 };
 
 initModule();

@@ -37,9 +37,6 @@ const data = reactive({
     visible: false
 });
 
-
-// const emit = defineEmits(['update:visible', 'hide', 'show']);
-
 const referenceRef = ref<HTMLElement>();
 const contentRef = ref<HTMLElement>();
 let popperInstance: any = null;
@@ -60,8 +57,8 @@ const createPopperInstance = () => {
                     element: '.popper-arrow'
                 }
             }
-        ]
-        // placement: props.placement
+        ],
+        placement: props.placement
     });
     nextTick(() => {
         // 异步更新

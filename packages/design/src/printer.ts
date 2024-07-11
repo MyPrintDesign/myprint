@@ -40,7 +40,6 @@ export function installPrinter(app: App<any>) {
         handlePreview = previewNode.component!.exposed!.handlePreview;
         // handleServerDownloadPdf = previewNode.component!.exposed!.handleServerDownloadPdf;
         // handleServerDownloadImg = previewNode.component!.exposed!.handleServerDownloadImg;
-        console.log(container.outerHTML);
         document.body.appendChild(container);
     }
 }

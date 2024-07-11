@@ -58,12 +58,6 @@ function initPoint() {
         const data = JSON.parse(props.element.data);
         svgOptions.linePoints = data.points;
     }
-    
-    // svgOptions.controlPointEndDragStart = {...svgOptions.controlPointEnd}
-    
-    // svgOptions.controlLineStart = {x: svgOptions.width / 2, y: svgOptions.height / 2} as PointLabel
-    // svgOptions.controlPointEnd = {x: svgOptions.width / 2, y: -20, type: 'control'} as PointLabel
-    
     svgOptions.allPoint = [...svgOptions.linePoints];
 }
 
@@ -79,7 +73,6 @@ function dragEnd() {
     
     svgOptions.width = rect.width;
     svgOptions.height = rect.height;
-    // props.element.width = rect.width
     // 偏移svg
     for (let allPointElement of svgOptions.allPoint) {
         allPointElement.x -= rect.x;

@@ -26,8 +26,6 @@ onMounted(() => {
 });
 
 const headStyle = computed(() => {
-    // console.log(props.column);
-    // console.log(props.column);
     if (props.column == null) {
         return;
     }

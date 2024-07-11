@@ -1,19 +1,100 @@
 <template>
     <my-input :model-value="modelValue"
-              @update:model-value="(val:any)=>emit('update:modelValue', val)" />
+              @keydown.up.prevent="onUp"
+              @keydown.down.prevent="onDown"
+              :disabled="disabled"
+              @change="onChange"
+              autocomplete="off" />
 </template>
 
 <script setup lang="ts">
 
 import MyInput from '@myprint/design/components/my/input/my-input.vue';
+import { computed, ref, watch } from 'vue';
+import numberUtil from '@myprint/design/utils/numberUtil';
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'change']);
 
 const props = withDefaults(defineProps<{
-    modelValue?: string | number | null | undefined,
+    modelValue?: number | null | undefined,
+    min?: number // 最小值
+    max?: number,
+    step?: number, // 每次改变步数，可以为小数
+    formatter?: Function // 指定展示值的格式
+    precision?: number // 数值精度
+    disabled?: boolean // 是否禁用
 }>(), {
-    modelValue: undefined
+    modelValue: undefined,
+    min: -Infinity,
+    max: Infinity,
+    formatter: (value: string) => value,
+    step: 1,
+    precision: 0,
+    disabled: false // 是否禁用
 });
 
+const precision = computed(() => {
+    // 数值精度取步长和精度中较大者
+    const stepPrecision = String(props.step).split('.')[1]?.length || 0;
+    return Math.max(props.precision, stepPrecision);
+});
 
+function emitValue(value: number | null) {
+    if (value == props.modelValue) {
+        return;
+    }
+    console.log(123);
+    emit('change', value);
+    emit('update:modelValue', value);
+}
+
+const numValue = ref(props.formatter(props.modelValue?.toFixed(precision.value)));
+
+watch(
+    () => props.modelValue,
+    (to) => {
+        numValue.value = to === null ? null : props.formatter(Number(to).toFixed(precision.value));
+    }
+);
+
+watch(numValue, (to) => {
+    if (!to) {
+        emitValue(null);
+    }
+});
+
+function onChange(value: any) {
+    value = Number(value);
+    if (!Number.isNaN(parseFloat(value))) {
+        // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为 Number
+        if (parseFloat(value) > props.max) {
+            emitValue(props.max);
+            return;
+        }
+        if (parseFloat(value) < props.min) {
+            emitValue(props.min);
+            return;
+        }
+        if (parseFloat(value) !== props.modelValue) {
+            emitValue(parseFloat(value));
+        } else {
+            numValue.value = props.modelValue?.toFixed(precision.value);
+            emitValue(numValue.value);
+        }
+    } else {
+        numValue.value = props.modelValue?.toFixed(precision.value);
+        emitValue(numValue.value);
+    }
+    
+}
+
+function onUp() {
+    const res = parseFloat(Math.min(props.max, numberUtil.sum(props.modelValue || 0, +props.step)).toFixed(precision.value));
+    emitValue(res);
+}
+
+function onDown() {
+    const res = parseFloat(Math.max(props.min, numberUtil.sum(props.modelValue || 0, -props.step)).toFixed(precision.value));
+    emitValue(res);
+}
 </script>

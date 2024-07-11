@@ -1,11 +1,8 @@
 <template>
     <div class="display-flex"
          :style="style">
-        <img ref="qrCode" id="qrCode"
-             alt=""
-             :src="src" />
+        <img ref="qrCode" id="qrCode" alt="" :src="src" />
     </div>
-
 </template>
 
 <script setup lang="ts">
@@ -39,7 +36,6 @@ const freshQrCode = _.throttle((resetHeight: boolean) => {
     if (props.element.data == '') {
         return;
     }
-    // console.log(props.element.data)
     
     QRCode.toDataURL(props.element.data, {
         // version: 1,
@@ -61,7 +57,6 @@ const freshQrCode = _.throttle((resetHeight: boolean) => {
         
         src.value = url;
     });
-    // console.log(props.element.runtimeOption.workEnvironment )
     if (resetHeight && props.element.runtimeOption.workEnvironment !== 'DataTable') {
         props.element.height = props.element.width;
         props.element.runtimeOption.height = props.element.runtimeOption.width;
@@ -72,11 +67,9 @@ const freshQrCode = _.throttle((resetHeight: boolean) => {
     }
 }, 100);
 
-
 watch([() => qrCode.value, () => props.element.data, () => props.element.option.color, () => props.element.option.background], (_n, _o) => {
     freshQrCode(true);
 }, { immediate: true });
-
 
 watch([() => props.element.width, () => props.element.height], (_n, _o) => {
     freshQrCode(false);

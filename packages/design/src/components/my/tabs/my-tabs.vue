@@ -33,7 +33,6 @@ function click(item: DownList) {
   } else {
     emit('update:modelValue', item.value)
   }
-  
 }
 
 </script>

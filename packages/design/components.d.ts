@@ -24,7 +24,6 @@ declare module 'vue' {
     DottedVerticalLine: typeof import('./src/components/design/shape/line/dottedVerticalLine/dottedVerticalLine.vue')['default']
     Drag: typeof import('./src/components/design/drag/index.vue')['default']
     DragRect: typeof import('./src/components/content/dragRect.vue')['default']
-    Drop: typeof import('./src/components/my/drop/drop.vue')['default']
     Element: typeof import('./src/components/design/element.vue')['default']
     ElementList: typeof import('./src/components/design/elementList.vue')['default']
     GroupInput: typeof import('./src/components/my/group/groupInput.vue')['default']

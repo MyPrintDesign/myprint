@@ -1,5 +1,5 @@
 export interface Module {
-    id?: string| number;
+    id?: string | number;
     originId?: any;
     userId?: number;
     moduleGroupId?: number | string;
@@ -10,9 +10,9 @@ export interface Module {
 }
 
 export interface Template {
-    id?: string| number;
+    id?: string | number;
     userId?: any;
-    moduleId?: string| number;
+    moduleId?: string | number;
     name?: string;
     content?: any;
     coverImgUrl?: any;
@@ -20,4 +20,8 @@ export interface Template {
     module?: Module;
 
     moreVisible?: boolean;
+}
+
+export interface SaveResult {
+    status: 'SUCCESS' | 'ERROR';
 }
