@@ -10,7 +10,7 @@ import { MyElement } from '@myprint/design/types/entity';
 import { computed, nextTick, ref, watch } from 'vue';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import QRCode from 'qrcode';
-import { elementCommonStyle } from '@myprint/design/utils/elementUtil';
+import { elementCommonStyle, getParentPanel } from '@myprint/design/utils/elementUtil';
 import { updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
 import _ from 'lodash';
 
@@ -43,7 +43,7 @@ const freshQrCode = _.throttle((resetHeight: boolean) => {
         maskPattern: 7, // 0, 1, 2, 3, 4, 5, 6, 7
         margin: 0, // Define how much wide the quiet zone should be
         scale: 4,
-        width: unit2px(Math.min(props.element.width, props.element.height)), // 宽度
+        width: unit2px(Math.min(props.element.width, props.element.height), getParentPanel(props.element)), // 宽度
         color: {
             light: props.element.option.background, // 背景色
             // light: 'gray', // 背景色

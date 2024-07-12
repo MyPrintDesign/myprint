@@ -5,8 +5,6 @@ import { messageFun, mittKey } from './constants/keys';
 
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
-// @ts-ignore
-// import piniaPersist from 'pinia-plugin-persist';
 import Vue3ColorPicker from 'vue3-colorpicker';
 import VueCropper from 'vue-cropper';
 import 'vue-cropper/dist/index.css';

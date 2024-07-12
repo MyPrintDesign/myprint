@@ -8,8 +8,8 @@
                      :key="index"
                      class="my-print-preview-panel__content_page preview-page-top"
                      :style="{
-                    width: valueUnit(page.width),
-                    minHeight: valueUnit(page.height),
+                    width: valueUnit(page.width, data.panel),
+                    minHeight: valueUnit(page.height, data.panel),
                     }">
                     <preview
                         v-for="(element, index) in page.elementList"
@@ -81,7 +81,7 @@ function design2Img(printProps: PrintProps) {
                         data.pageList = [];
                         resolve(imgList);
                     }, previewContentRef.value, {
-                        width: unit2px(data.panel.width), height: unit2px(data.panel.height)
+                        width: unit2px(data.panel.width, data.panel), height: unit2px(data.panel.height, data.panel)
                     });
                 }).catch((e) => {
                 reject(e);

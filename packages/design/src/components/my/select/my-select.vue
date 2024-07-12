@@ -38,11 +38,15 @@ withDefaults(defineProps<{
         modelValue: string | number | null | undefined,
         dataList: any[],
         height?: string,
+        size?: string,
+        placeholder?: string,
     }>(),
     {
         disabled: false,
         showSelectedStatus: false,
-        height: '270px'
+        height: '270px',
+        size: 'small',
+        placeholder: '请选择'
     });
 
 function change(val) {

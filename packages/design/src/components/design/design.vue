@@ -55,6 +55,7 @@ import {
     setSelectedTargets
 } from '@myprint/design/plugins/moveable/moveable';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+import { getParentPanel } from '@myprint/design/utils/elementUtil';
 
 const designRef = ref();
 const containerMoveIconRef = ref();
@@ -77,13 +78,13 @@ const style = computed(() => {
     let width = props.element.runtimeOption.init.width;
     let height = props.element.runtimeOption.init.height;
     if (props.element.type == 'DottedVerticalLine' || props.element.type == 'VerticalLine') {
-        const lineWidth = unit2px(props.element.option.lineWidth);
+        const lineWidth = unit2px(props.element.option.lineWidth, getParentPanel(props.element));
         if (width < lineWidth) {
             width = lineWidth;
         }
     }
     if (props.element.type == 'DottedHorizontalLine' || props.element.type == 'HorizontalLine') {
-        const lineWidth = unit2px(props.element.option.lineWidth);
+        const lineWidth = unit2px(props.element.option.lineWidth, getParentPanel(props.element));
         if (height < lineWidth) {
             height = lineWidth;
         }
@@ -105,9 +106,6 @@ function elementEditClick() {
 }
 
 function elementMoveMouseDown(event: MouseEvent) {
-    // console.log(event)
-    // let initX = unit2px(props.element.x!), initY = unit2px(props.element.y!);
-    // let lastX, lastY;
     let isHandle = true;
     
     if (props.element.runtimeOption.status != 'HANDLE') {

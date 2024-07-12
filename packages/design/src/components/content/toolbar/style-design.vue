@@ -1,9 +1,9 @@
 <template>
     <div class="my-group">
         
-        <font-family :enable="fontEnableComputed" />
+        <font-family :disabled="fontDisabledComputed" />
         
-        <font-size :enable="fontEnableComputed" />
+        <font-size :disabled="fontDisabledComputed" />
         
         <div class="my-style-divider" />
         
@@ -297,18 +297,18 @@ const ungroupDisabledIs = computed(() => {
     }
 });
 
-const fontEnableComputed = computed(() => {
+const fontDisabledComputed = computed(() => {
     if (appStore.currentElement.length == 0) {
-        return false;
+        return true;
     }
     for (let currentElementElement of appStore.currentElement) {
         if (!hasStyle(currentElementElement.type, 'fontFamily' as any)) {
             // console.log(props.enableProps, 'false')
-            return false;
+            return true;
         }
     }
     // console.log(props.enableProps, 'true')
-    return true;
+    return false;
 });
 
 </script>

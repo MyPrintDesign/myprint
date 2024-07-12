@@ -3,13 +3,10 @@
         v-model="data.dialogVisible"
         class="preview-dialog"
         fullscreen
-        append-to-body
-        destroy-on-close
-        @close="closePreviewPanel"
-        :show-close="false">
+        @close="closePreviewPanel">
         <div class="preview-panel">
             <my-scrollbar height="100%" class="preview-panel__scrollbar"
-                          :style="{minWidth: valueUnit(panel.width),}">
+                          :style="{minWidth: valueUnit(panel.width, panel)}">
                 <div class="my-print-preview-panel__wrap">
                     <div class="preview-panel__model">
                         <div class="my-print-preview-panel__content">
@@ -18,8 +15,8 @@
                                  :key="index"
                                  class="my-print-preview-panel__content_page preview-page-top"
                                  :style="{
-                    width: valueUnit(page.width),
-                    minHeight: valueUnit(page.height),
+                    width: valueUnit(page.width, panel),
+                    minHeight: valueUnit(page.height, panel),
                     }">
                                 <preview
                                     v-for="(element, index) in page.elementList"
@@ -100,8 +97,8 @@ function print() {
             content: { html, printer: data.printer },
             cmd: 'print',
             taskId: data.printTaskId,
-            width: unit2unit(getCurrentPanelUnit(), 'mm', panel.value.width),
-            height: unit2unit(getCurrentPanelUnit(), 'mm', panel.value.height)
+            width: unit2unit(getCurrentPanelUnit(panel.value), 'mm', panel.value.width),
+            height: unit2unit(getCurrentPanelUnit(panel.value), 'mm', panel.value.height)
         })
     );
 }
@@ -117,13 +114,13 @@ function downloadPdf() {
                 taskId: data.printTaskId,
                 content: { html },
                 cmd: 'generatePdf',
-                width: unit2unit(getCurrentPanelUnit(), 'mm', panel.value.width),
-                height: unit2unit(getCurrentPanelUnit(), 'mm', panel.value.height)
+                width: unit2unit(getCurrentPanelUnit(panel.value), 'mm', panel.value.width),
+                height: unit2unit(getCurrentPanelUnit(panel.value), 'mm', panel.value.height)
             })
         );
     } else {
         toPdf(previewContentRef.value, {
-            width: unit2px(panel.value.width), height: unit2px(panel.value.height)
+            width: unit2px(panel.value.width, panel.value), height: unit2px(panel.value.height, panel.value)
         });
     }
 }
@@ -193,7 +190,7 @@ function printArea() {
     iframe.setAttribute('id', 'print-box');
     iframe.setAttribute(
         'style',
-        `height: ${valueUnit(panel.value.height)}; width: ${valueUnit(panel.value.width)}; position: absolute; left : 100px; top: 0;border: 0;
+        `height: ${valueUnit(panel.value.height, panel.value)}; width: ${valueUnit(panel.value.width, panel.value)}; position: absolute; left : 100px; top: 0;border: 0;
       z-index: 10000;`
     );
     // 在页面插入iframe
@@ -213,7 +210,7 @@ function printArea() {
     *{ margin:0;padding:0; }
     @media print {
       @page {
-        size: ${valueUnit(panel.value.width)} ${valueUnit(panel.value.height)};
+        size: ${valueUnit(panel.value.width, panel.value)} ${valueUnit(panel.value.height, panel.value)};
         margin: 0;
       }
     }

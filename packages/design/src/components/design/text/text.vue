@@ -12,7 +12,6 @@
         @keydown="handleKeydown($event)" />
 </template>
 <script setup lang="ts">
-
 import { computed, onMounted, watch, ref, reactive } from 'vue';
 import { MyElement } from '@myprint/design/types/entity';
 import MyBarcode from '@myprint/design/components/design/barcode';

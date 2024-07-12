@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, reactive, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import { isNil } from 'lodash';
 
 const emit = defineEmits(['update:modelValue', 'change']);
@@ -34,6 +34,9 @@ const props = withDefaults(defineProps<{
     type: 'input',
     disabled: false
 });
+onMounted(() => {
+    setNativeInputValue();
+});
 
 const nativeInputValue = computed(() =>
     isNil(props.modelValue) ? '' : String(props.modelValue)
@@ -42,6 +45,7 @@ const nativeInputValue = computed(() =>
 watch(nativeInputValue, () => setNativeInputValue());
 
 function setNativeInputValue() {
+    // console.log(nativeInputValue.value);
     if (!inputRef.value || inputRef.value.value === nativeInputValue.value) return;
     
     inputRef.value.value = nativeInputValue.value;

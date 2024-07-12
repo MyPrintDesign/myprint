@@ -44,6 +44,7 @@
 
 // 横线
 .my-print-horizontal-line__wrapper {
+  width: 100%;
   word-break: break-all;
   cursor: move;
   outline: none;
@@ -51,6 +52,7 @@
 
 .my-print-horizontal-line {
   //background: black;
+  cursor: move;
   position: absolute;
 }
 

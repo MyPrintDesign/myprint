@@ -36,7 +36,7 @@ export const useSocket = defineStore('socket', {
 
             const init = () => {
                 this.socket!.onopen = function(_event: any) {
-                    console.log('WebSocket:已连接');
+                    // console.log('WebSocket:已连接');
                     //心跳检测重置
                     stateThis.connect = true;
                     // app.SET_CLIENT_CONNECT(true)

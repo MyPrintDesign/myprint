@@ -12,7 +12,7 @@ export function initSelecto() {
     if (!selecto.value) {
         // console.log('销毁selecto')
         // selecto.value.destroy()
-        console.log('初始化selecto');
+        // console.log('初始化selecto');
         selecto.value = new Selecto({
             // The container to add a selection element
             container: document.querySelector('.design-content-scroll') as HTMLElement,

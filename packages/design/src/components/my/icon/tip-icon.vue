@@ -1,17 +1,14 @@
 <template>
     <my-tooltip :content="tips"
                 :disabled="tips == ''"
-                :show-after="50"
-                :enterable="false"
-                :hide-after="0"
                 trigger="hover"
                 placement="bottom">
         <my-icon :disabled="disabled"
                  :class="props.class"
                  :size="size"
                  :padding="padding"
-                 @click="$emit('click')"
-                 @update:model-value="(val)=>$emit('update:modelValue', val)"
+                 @click="emit('click')"
+                 @update:model-value="(val)=>emit('update:modelValue', val)"
                  :modelValue="modelValue">
             <slot />
         </my-icon>
@@ -21,6 +18,8 @@
 <script setup lang="ts">
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
+
+const emit = defineEmits(['update:modelValue', 'click']);
 
 const props = withDefaults(defineProps<{
         tips?: string,

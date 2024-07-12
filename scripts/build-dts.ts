@@ -167,7 +167,7 @@ async function build(pkgDirName: string) {
     const outDir = resolveProjectPath('dist', 'types');
     const pkgDir = resolvePackagePath(pkgDirName);
     const pkgSrcDir = resolvePackagePath(pkgDirName, 'src');
-    console.log(pkgSrcDir);
+    // console.log(pkgSrcDir);
     await generateTypesDefinitions(pkgDir, pkgSrcDir, outDir);
     await copyDts(pkgDirName);
 }

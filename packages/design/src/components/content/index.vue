@@ -53,8 +53,7 @@ const props = defineProps(
             type: Object as PropType<(template: Template) => SaveResult>
         },
         module: {
-            type: Object as PropType<Module>,
-            required: true
+            type: Object as PropType<Module>
         }
     }
 ) as {

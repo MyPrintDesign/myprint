@@ -17,7 +17,7 @@ import { Path } from 'd3-path';
 import { Line, MyElement, PointLabel } from '@myprint/design/types/entity';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { computeLineAngle, rotatePoint } from '@myprint/design/utils/svgUtil';
-import { computedShapeBound } from '@myprint/design/utils/elementUtil';
+import { computedShapeBound, getParentPanel } from '@myprint/design/utils/elementUtil';
 import { moveableDragOffsetResize } from '@myprint/design/plugins/moveable/moveable';
 import SvgBase from '@myprint/design/components/design/svg/svg-base.vue';
 import { D3DragEvent } from '@myprint/design/types/d3Type';
@@ -46,8 +46,8 @@ const svgOptions = reactive({
     virtualPoint: [] as Array<PointLabel>
 });
 
-svgOptions.width = unit2px(props.element.width);
-svgOptions.height = unit2px(props.element.height);
+svgOptions.width = unit2px(props.element.width, getParentPanel(props.element));
+svgOptions.height = unit2px(props.element.height, getParentPanel(props.element));
 
 initPoint();
 

@@ -5,7 +5,7 @@
                 ref="imgRef"
                 draggable="false"
                 @load="loadImg"
-                :style="{width: valueUnit(element.width), height: valueUnit(element.height)}"
+                :style="{width: valueUnit(element.width, getParentPanel(element)), height: valueUnit(element.height, getParentPanel(element))}"
                 :src="contentBase64" alt="image" />
             
             <div class="img-tool_wrapper"
@@ -121,7 +121,7 @@ import { VueCropper } from 'vue-cropper';
 import { onMounted, reactive, ref } from 'vue';
 import { MyElement } from '@myprint/design/types/entity';
 // import {useBase64} from "@vueuse/core";
-import { displayModelDesign, valueUnit } from '@myprint/design/utils/elementUtil';
+import { displayModelDesign, getParentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { chooseImgTypeList, elementHandleStatusList } from '@myprint/design/constants/common';
 import MyTabs from '@myprint/design/components/my/tabs/my-tabs.vue';
@@ -152,8 +152,8 @@ const option = reactive({
     info: true, //图片大小信息
     canScale: true, //图片是否允许滚轮缩放
     autoCrop: true, //是否默认生成截图框
-    autoCropWidth: unit2px(props.element.width), //默认生成截图框宽度
-    autoCropHeight: unit2px(props.element.height), //默认生成截图框高度
+    autoCropWidth: unit2px(props.element.width, getParentPanel(props.element)), //默认生成截图框宽度
+    autoCropHeight: unit2px(props.element.height, getParentPanel(props.element)), //默认生成截图框高度
     fixed: true, //是否开启截图框宽高固定比例
     fixedNumber: [props.element.width, props.element.height], //截图框的宽高比例
     full: true, //false按原比例裁切图片，不失真

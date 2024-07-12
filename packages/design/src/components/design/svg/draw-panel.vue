@@ -15,6 +15,7 @@ import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { douglasPeucker } from '@myprint/design/utils/utils';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import { checkInput, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
+import { getParentPanel } from '@myprint/design/utils/elementUtil';
 
 const canvasRef = ref();
 const data = reactive({
@@ -84,8 +85,8 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
 
 
 watch([() => props.element.width, () => props.element.height], (_n, _o) => {
-    canvasRef.value.width = unit2px(props.element.width) * 2;
-    canvasRef.value.height = unit2px(props.element.height) * 2;
+    canvasRef.value.width = unit2px(props.element.width, getParentPanel(props.element)) * 2;
+    canvasRef.value.height = unit2px(props.element.height, getParentPanel(props.element)) * 2;
     render();
 });
 watch([() => props.element.option.borderAll], (_n, _o) => {

@@ -117,8 +117,6 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         }
     }
 
-
-
     previewContext.autoPageIs = false;
     // 组装固定元素
     // await installPreviewElement(fixedPreviewElementList);
@@ -148,7 +146,6 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                     }
 
                 }
-
 
                 // 判断需不需要分页
                 // console.log(await isNeedNewPage(previewWrapper.y, previewContext.bottom));
@@ -197,8 +194,6 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
             if (previewWrapper.field) {
                 previewDataTmp = previewContext.previewData[previewWrapper.field];
             }
-
-
 
             if (!previewDataTmp) {
                 previewDataTmp = formatter(previewWrapper, variable);
@@ -260,7 +255,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                 previewContext.currentPage = tmpPage;
             } else if (previewWrapper.type == 'PageFooter') {
                 previewContext.currentPage.elementList.push(previewWrapper);
-                console.log(previewWrapper);
+                // console.log(previewWrapper);
                 const tmpPage = previewContext.currentPage;
                 previewContext.currentPage = previewWrapper;
                 await installPreviewElement(previewWrapper.previewWrapperList);
@@ -273,7 +268,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
             if (!previewContext.currentPreview.heightIs) {
                 // 重新计算顶部偏移
                 previewContext.currentPage.offsetTop = (await computeBottom(previewContext.currentPreview))!;
-                console.log('顶部偏移' + previewContext.currentPage.offsetTop);
+                // console.log('顶部偏移' + previewContext.currentPage.offsetTop);
             }
 
             previewContext.currentPreview = previewWrapper;
@@ -298,7 +293,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         }
 
         // console.log(height)
-        if (previewWrapper.y + px2unit(height) < previewContext.bottom) {
+        if (previewWrapper.y + px2unit(height, panel) < previewContext.bottom) {
             return false;
         } else {
             // console.log(previewWrapper)
@@ -308,7 +303,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         // console.log(mid)
 
         if (mid > 0 && mid < previewData.length) {
-            console.log('文本分页');
+            // console.log('文本分页');
             if (previewContext.autoPageIs) {
                 await newPage();
                 previewContext.currentPreview = element2PreviewWrapper(previewWrapper);
@@ -391,7 +386,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
 
             if (previewWrapper.option.tableHeightType == 'FIXED') {
                 // 固定高度
-                if (table.childNodes[1].clientHeight > unit2px(previewWrapper.height)) {
+                if (table.childNodes[1].clientHeight > unit2px(previewWrapper.height, panel)) {
                     if (i == index) {
                         previewWrapper.previewTableRowIndex = i + 1;
                         previewContext.pagingRepetition = true;
@@ -410,7 +405,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                 }
             }
 
-            if (await isNeedNewPage(unit2px(previewWrapper.y) + table.clientHeight, unit2px(previewContext.bottom))) {
+            if (await isNeedNewPage(unit2px(previewWrapper.y, panel) + table.clientHeight, unit2px(previewContext.bottom, panel))) {
                 // 删除刚才创建的
                 previewWrapper.tableBodyList.pop();
                 previewDataTmpList.pop();
@@ -503,7 +498,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         }
         const div = previewWrapper.target;
         // debugger
-        return numberUtil.toFixed(px2unit(numberUtil.sumScale(div.offsetTop, div.offsetHeight)));
+        return numberUtil.toFixed(px2unit(numberUtil.sumScale(div.offsetTop, div.offsetHeight), panel));
     }
 
     async function computeTop(previewWrapper: PreviewWrapper) {
@@ -512,8 +507,8 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
             return;
         }
         const div = previewWrapper.target;
-        console.log(div.offsetTop);
-        return numberUtil.toFixed(px2unit(div.offsetTop));
+        // console.log(div.offsetTop);
+        return numberUtil.toFixed(px2unit(div.offsetTop, panel));
     }
 
     async function computeTextHeight(previewWrapper: PreviewWrapper, previewDataTmp: any) {
@@ -526,7 +521,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
             return;
         }
         const height = previewWrapper.target.clientHeight;
-        return previewWrapper.y! + px2unit(height) < previewContext.bottom;
+        return previewWrapper.y + px2unit(height, panel) < previewContext.bottom;
     }
 
     async function binary_search(previewWrapper: PreviewWrapper, previewData: string, low: number, height: number): Promise<any> {
@@ -543,15 +538,15 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         //   return -1
         // }
         if (isL && !isH) {
-            console.log('返回');
+            // console.log('返回');
             return mid;
         } else if (!isH) {
             height = mid - 1;
-            console.log('减少', height);
+            // console.log('减少', height);
             return binary_search(previewWrapper, previewData, low, height);
         } else if (isL) {
             low = mid + 1;
-            console.log('增加', low);
+            // console.log('增加', low);
             return binary_search(previewWrapper, previewData, low, height);
         } else {
             return -1;

@@ -56,12 +56,27 @@ export function setCurrentPanel(panel: Panel) {
     appStore().lastPageUnit = panel.pageUnit;
 }
 
-export function getCurrentPanel(): Panel {
-    return appStore().currentPanel as Panel;
+export function getCurrentPanel(panel?: Panel): Panel {
+    return panel != null ? panel : appStore().currentPanel as Panel;
+}
+
+export function getParentPanel(element: MyElement): Panel {
+    return element.runtimeOption.parent as Panel;
+}
+
+export function getRecursionParentPanel(element: MyElement): Panel {
+    const panel = element.runtimeOption.parent as Panel;
+    if (panel == null) {
+        return null!;
+    }
+    if (panel.pageUnit != null) {
+        return panel;
+    }
+    return getRecursionParentPanel(panel as any);
 }
 
 export function getCurrentPanelUnit(panel?: Panel): PageUnit {
-    return _defaultVal(panel != null ? panel.pageUnit : appStore().currentPanel.pageUnit, 'px');
+    return _defaultVal(getCurrentPanel(panel).pageUnit, 'px');
 }
 
 export function setCurrentElement(element: MyElement[]) {
@@ -69,12 +84,12 @@ export function setCurrentElement(element: MyElement[]) {
     mitt.emit('changeElement');
 }
 
-export function valueUnit(value: number | undefined) {
-    return value + getCurrentPanel().pageUnit;
+export function valueUnit(value: number | undefined, panel?: Panel) {
+    return value + getCurrentPanel(panel).pageUnit;
 }
 
 export function widthValueUnit(element: MyElement) {
-    return element.runtimeOption.workEnvironment == 'DataTable' ? '100%' : (element.width + getCurrentPanel().pageUnit);
+    return element.runtimeOption.workEnvironment == 'DataTable' ? '100%' : (element.width + getCurrentPanel(element.runtimeOption.parent as Panel).pageUnit);
 }
 
 export function heightValueUnit(element: MyElement) {
@@ -775,6 +790,7 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
         cssStyle = elementCommonPositionStyle(element);
     }
     const option = element.option!;
+    const panel = element.runtimeOption.parent as Panel;
     let textDecoration = '';
     if (option.underline) {
         textDecoration = textDecoration + 'underline ';
@@ -828,29 +844,29 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
 
     // console.log(option.padding)
     if (option.padding) {
-        if (option.padding.top) cssStyle.paddingTop = valueUnit(option.padding.top);
-        if (option.padding.bottom) cssStyle.paddingBottom = valueUnit(option.padding.bottom);
-        if (option.padding.left) cssStyle.paddingLeft = valueUnit(option.padding.left);
-        if (option.padding.right) cssStyle.paddingRight = valueUnit(option.padding.right);
+        if (option.padding.top) cssStyle.paddingTop = valueUnit(option.padding.top, panel);
+        if (option.padding.bottom) cssStyle.paddingBottom = valueUnit(option.padding.bottom, panel);
+        if (option.padding.left) cssStyle.paddingLeft = valueUnit(option.padding.left, panel);
+        if (option.padding.right) cssStyle.paddingRight = valueUnit(option.padding.right, panel);
     }
 
     if (option.margin) {
         let subWidth = 0, subHeight = 0;
         if (option.margin.top) {
-            cssStyle.marginTop = valueUnit(option.margin.top);
-            subHeight += unit2px(option.margin.top);
+            cssStyle.marginTop = valueUnit(option.margin.top, panel);
+            subHeight += unit2px(option.margin.top, panel);
         }
         if (option.margin.bottom) {
-            cssStyle.marginBottom = valueUnit(option.margin.bottom);
-            subHeight += unit2px(option.margin.bottom);
+            cssStyle.marginBottom = valueUnit(option.margin.bottom, panel);
+            subHeight += unit2px(option.margin.bottom, panel);
         }
         if (option.margin.left) {
-            cssStyle.marginLeft = valueUnit(option.margin.left);
-            subWidth += unit2px(option.margin.left);
+            cssStyle.marginLeft = valueUnit(option.margin.left, panel);
+            subWidth += unit2px(option.margin.left, panel);
         }
         if (option.margin.right) {
-            cssStyle.marginRight = valueUnit(option.margin.right);
-            subWidth += unit2px(option.margin.right);
+            cssStyle.marginRight = valueUnit(option.margin.right, panel);
+            subWidth += unit2px(option.margin.right, panel);
         }
         if (subWidth > 0) {
             cssStyle.width = `calc(100% - ${subWidth}px)`;
@@ -1026,23 +1042,22 @@ export function setElementWidthHeightPx(width: number, height: number, element: 
 export function setElementWidthPx(width: number, element: MyElement) {
     element.runtimeOption.width = width;
     element.runtimeOption.init.width = width;
-
-    element.width = px2unit(width);
+    element.width = px2unit(width, getRecursionParentPanel(element));
 }
 
 export function setElementHeightPx(height: number, element: MyElement) {
     element.runtimeOption.height = height;
     element.runtimeOption.init.height = height;
-
-    element.height = px2unit(height);
+    element.height = px2unit(height, getRecursionParentPanel(element));
 }
 
-export function recursionUpdateCellParentWidth(columnElement: TableCellElement, offsetX: number) {
+export function recursionUpdateCellParentWidth(columnElement: TableCellElement, offsetX: number, panel: Panel) {
     columnElement.runtimeOption.width = columnElement.runtimeOption.init.width + offsetX;
-    columnElement.width = px2unit(columnElement.runtimeOption.width);
+    debugger
+    columnElement.width = px2unit(columnElement.runtimeOption.width, panel);
     // console.log(columnElement.runtimeOption.cellParent);
     if (columnElement.runtimeOption.cellParent != null) {
-        recursionUpdateCellParentWidth(columnElement.runtimeOption.cellParent, offsetX);
+        recursionUpdateCellParentWidth(columnElement.runtimeOption.cellParent, offsetX, panel);
     }
 }
 

@@ -62,6 +62,7 @@ import { sortColumn } from '@myprint/design/utils/utils';
 import { freshMoveableOption, updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
 import _ from 'lodash';
 import {
+    getParentPanel,
     recursionUpdateCellParentInitWidth,
     recursionUpdateCellParentWidth,
     setCurrentElement,
@@ -398,7 +399,7 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
         // console.log(offsetX);
         if (newWidth > 20) {
             setElementWidthPx(tableOldWidth + offsetX, props.element);
-            recursionUpdateCellParentWidth(columnElement, offsetX);
+            recursionUpdateCellParentWidth(columnElement, offsetX, getParentPanel(props.element));
             // 更新body 的宽
             setElementWidthPx(columnOldWidth + offsetX, props.element.tableBodyList[0][col]);
             // 更新

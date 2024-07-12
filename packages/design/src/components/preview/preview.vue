@@ -17,26 +17,25 @@
 </template>
 
 <script setup lang="ts">
-
 import { computed, CSSProperties, onMounted, onUnmounted, ref } from 'vue';
 import ElementView from '@myprint/design/components/design/element.vue';
 import { PreviewWrapper } from '@myprint/design/types/entity';
-import { valueUnit } from '@myprint/design/utils/elementUtil';
+import { getParentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
 import DataTable from '@myprint/design/components/design/data-table/data-table.vue';
 import { MyContainer } from '@myprint/design/components/design/container';
 
 const style = computed(() => {
     const _style = {
-        width: valueUnit(props.preview.width),
-        left: valueUnit(props.preview.x),
-        top: valueUnit(props.preview.y),
+        width: valueUnit(props.preview.width, getParentPanel(props.preview)),
+        left: valueUnit(props.preview.x, getParentPanel(props.preview)),
+        top: valueUnit(props.preview.y, getParentPanel(props.preview)),
         zIndex: props.preview.runtimeOption.index
     } as CSSProperties;
     if (props.preview.option.rotate != null) {
         _style.transform = `rotate(${props.preview.option.rotate}deg)`;
     }
     if (props.preview.heightIs) {
-        _style.height = valueUnit(props.preview.height);
+        _style.height = valueUnit(props.preview.height, getParentPanel(props.preview));
     }
     // console.log('change', element.value.previewRuntimeOption.heightIs)
     // _style.transform = getTranslate(element.value!)

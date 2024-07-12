@@ -13,7 +13,7 @@ import { MyElement } from '@myprint/design/types/entity';
 import { computed, reactive, ref, watch } from 'vue';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { _defaultNum } from '@myprint/design/utils/numberUtil';
-import { elementCommonStyle } from '@myprint/design/utils/elementUtil';
+import { elementCommonStyle, getParentPanel } from '@myprint/design/utils/elementUtil';
 
 const props = withDefaults(defineProps<{
     element?: MyElement
@@ -45,7 +45,7 @@ watch([() => barCode.value, () => props.element.data, () => props.element.option
         JsBarcode(barCode.value, props.element.data, {
             format: props.element.option.barCodeType,//选择要使用的条形码类型
             width: 1,//设置条之间的宽度
-            height: unit2px(props.element.height) - (props.element.option.barCodeDisplayValIs ? _defaultNum(props.element.option.fontSize, 10) + 5 : 0),//高度
+            height: unit2px(props.element.height, getParentPanel(props.element)) - (props.element.option.barCodeDisplayValIs ? _defaultNum(props.element.option.fontSize, 10) + 5 : 0),//高度
             displayValue: props.element.option.barCodeDisplayValIs,//是否在条形码下方显示文字
             //   text:"456",//覆盖显示的文本
             //   fontOptions:"bold italic",//使文字加粗体或变斜体

@@ -2,9 +2,7 @@
     <div :class="['design-auxiliary-line', props.element.direction == 'vertical'?
               'design-auxiliary-line-v': 'design-auxiliary-line-h',
               {
-                'pointer-events': tmp
-              },
-              {
+                'pointer-events': tmp,
                 'design-auxiliary-line-hidden': props.element.runtimeOption?.auxiliaryLineStatus == 'HIDDEN'
               }]"
          ref="designAuxiliaryLineRef"

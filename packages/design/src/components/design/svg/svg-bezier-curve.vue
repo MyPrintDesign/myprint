@@ -20,6 +20,7 @@ import { moveableDragOffsetResize } from '@myprint/design/plugins/moveable/movea
 import SvgBase from '@myprint/design/components/design/svg/svg-base.vue';
 import { bezier2 } from '@myprint/design/utils/bezierUtil';
 import { stringify } from '@myprint/design/utils/utils';
+import { getParentPanel } from '@myprint/design/utils/elementUtil';
 
 const props = withDefaults(defineProps<{
     element?: MyElement
@@ -44,8 +45,8 @@ const svgOptions = reactive({
     drawAuxiliary: false
 });
 
-svgOptions.width = unit2px(props.element.width);
-svgOptions.height = unit2px(props.element.height);
+svgOptions.width = unit2px(props.element.width, getParentPanel(props.element));
+svgOptions.height = unit2px(props.element.height, getParentPanel(props.element));
 // console.log(svgOptions)
 initPoint();
 

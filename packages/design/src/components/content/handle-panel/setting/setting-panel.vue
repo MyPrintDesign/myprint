@@ -1,10 +1,7 @@
 <template>
     <my-dialog v-model="configStore.settingPanel.setting.visible"
-               :show-close="false"
                class="setting-dialog"
-               :modal="false"
-               width="800"
-               :show-header="false">
+               width="800">
         <div class="setting-body display-flex">
             <div class="setting-menu">
                 <div class="setting-menu-title">设置</div>

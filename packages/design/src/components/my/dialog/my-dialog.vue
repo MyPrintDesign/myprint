@@ -1,6 +1,7 @@
 <template>
     <teleport to="body">
         <div class="my-dialog"
+             :class="props.class"
              v-if="data.rendered"
              role="dialog" aria-modal="true" v-show="modelValue">
             <div class="my-dialog_wrapper">
@@ -27,12 +28,12 @@ const emit = defineEmits(['close']);
 const props = withDefaults(defineProps<{
     modelValue?: boolean,
     fullscreen?: boolean,
+    class?: any,
     width?: string,
-    historyLabel: string,
 }>(), {
     modelValue: false,
     fullscreen: false,
-    historyLabel: undefined,
+    class: '',
     width: '500px'
 });
 
@@ -48,7 +49,7 @@ const style = computed(() => {
 
 watch(() => props.modelValue, (_n, _o) => {
     if (props.modelValue) {
-        data.rendered = true
+        data.rendered = true;
         document.body.classList.add('my-popup-parent--hidden');
     } else {
         emit('close');
