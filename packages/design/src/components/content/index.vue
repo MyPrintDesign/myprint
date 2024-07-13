@@ -1,7 +1,9 @@
 <template>
-    <section class="design-container-root cursor-resize" :data-rotation="appStore.dataRotation">
+    <section class="design-container-root cursor-resize" v-bind="$attrs"
+             :style="style"
+             :data-rotation="appStore.dataRotation">
         <aside class="my-aside" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
-            <widget :module="props.module" @back="back" />
+            <widget :module="props.module" :showBackButton="showBackButton" @back="back" />
         </aside>
         <main class=" my-main design-container-root_main">
             <PanelView />
@@ -13,7 +15,7 @@
 <script setup lang="ts">
 import widget from '@myprint/design/components/content/widget/index.vue';
 import PanelView from '@myprint/design/components/content/panel/index.vue';
-import { inject, PropType, provide, reactive, Ref, ref, watch } from 'vue';
+import { computed, CSSProperties, inject, PropType, provide, reactive, Ref, ref, watch } from 'vue';
 import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
 import { to } from '@myprint/design/utils/utils';
 import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
@@ -54,13 +56,34 @@ const props = defineProps(
         },
         module: {
             type: Object as PropType<Module>
+        },
+        height: {
+            type: String
+        },
+        generateImg: {
+            type: Boolean,
+            default: false
+        },
+        showBackButton: {
+            // 是否展示返回按钮
+            type: Boolean,
+            default: true
         }
     }
 ) as {
     template: Template,
     module: Module,
     saveTemplate: (template: Template) => SaveResult
+    height: string,
+    generateImg: boolean,
+    showBackButton: boolean
 };
+
+const style = computed(() => {
+    return <CSSProperties>{
+        height: props.height
+    };
+});
 
 initModule();
 initTemplate();
@@ -144,6 +167,9 @@ function back() {
 
 function saveTemplate() {
     displayModel('print');
+    if (props.generateImg) {
+    
+    }
     // MyPrinter.print2Img({ previewDataList: [previewData.value[0]] })
     //     .then(res => {
     //         $emit('panelImg', res);

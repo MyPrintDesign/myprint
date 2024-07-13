@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { App, ref } from 'vue';
 import 'vue3-colorpicker/style.css';
 
@@ -13,6 +14,7 @@ import { useSocket } from './stores/socket';
 import { mitt } from '@myprint/design/utils/utils';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { installPrinter } from '@myprint/design/printer';
+import { initDisplayRatio } from '@myprint/design/utils/devicePixelRatio';
 
 const onSocketMessage = ref<Function>(null!);
 
@@ -22,7 +24,7 @@ const install = {
         // comps.map((component:any)=>{
         //     Vue.component(component.__name as string, component);
         // })
-        // console.log('~~~MyPrint 初始化~~~');
+        console.log('~~~MyPrint 初始化~~~');
         // console.log(app)
 
         if (app.config.globalProperties.$pinia) {
@@ -44,6 +46,8 @@ const install = {
         useConfigStore().initConfig();
 
         installPrinter(app);
+
+        initDisplayRatio();
     }
 };
 export { install };

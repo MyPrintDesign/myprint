@@ -22,7 +22,7 @@ import { computed, CSSProperties, nextTick, onMounted, ref, watch, watchEffect }
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { scaleUtil } from '@myprint/design/utils/scaleUtil';
 import { getCurrentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
-import { getRatio } from '@myprint/design/utils/utils';
+import { generateUUID, getRatio } from '@myprint/design/utils/utils';
 import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
 import { Container, MyAuxiliaryLine } from '@myprint/design/types/entity';
 import { Path } from 'd3-path';
@@ -107,7 +107,7 @@ function mouseClick(event: MouseEvent) {
         return;
     }
     const auxiliaryLine = {
-        id: crypto.randomUUID(),
+        id: generateUUID(),
         x: 0,
         y: 0,
         runtimeOption: { x: 0, y: 0, auxiliaryLineStatus: 'SHOW' },

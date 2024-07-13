@@ -1,6 +1,6 @@
 import { pdfServerUrl } from '@myprint/design/printer';
 
-export function downloadPdf(data: any) {
+export async function downloadPdf(data: any) {
     const options = {
         method: 'POST',
         headers: {
@@ -9,11 +9,11 @@ export function downloadPdf(data: any) {
         body: JSON.stringify(data)
     };
 
-    return fetch(pdfServerUrl + 'print/generatePdf', options)
-        .then(response => Promise.resolve(response.blob()));
+    let response = await fetch(pdfServerUrl + 'print/generatePdf', options);
+    return await Promise.resolve(response.blob());
 }
 
-export function downloadImg(data: any) {
+export async function downloadImg(data: any) {
     const options = {
         method: 'POST',
         headers: {
@@ -22,6 +22,6 @@ export function downloadImg(data: any) {
         body: JSON.stringify(data)
     };
 
-    return fetch(pdfServerUrl + 'print/generateImg', options)
-        .then(response => Promise.resolve(response.blob()));
+    let response = await fetch(pdfServerUrl + 'print/generateImg', options);
+    return await Promise.resolve(response.blob());
 }

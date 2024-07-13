@@ -35,7 +35,8 @@
 
       .design-content-scroll {
         position: relative;
-        height: calc(100% - 50px);
+        height: calc(100%);
+        box-sizing: border-box;
         width: calc(100% - 230px);
         overflow: auto;
         padding: 30px 260px 20px 30px;

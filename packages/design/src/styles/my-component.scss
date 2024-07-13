@@ -33,6 +33,10 @@
     font-size: 13px;
   }
 
+  .my-select-input_placeholder {
+    color: gray;
+  }
+
   &:hover:not(.my-icon-disabled) {
     background: var(--tool-style-highlight-bg);
   }

@@ -5,8 +5,10 @@
         placement="bottom">
         <template #reference>
             <div class="display-flex my-select icon-popover" :class="[{'my-icon-disabled': disabled}, 'my-color-icon']">
-                <div class="my-select-input">
-                    {{ modelValue }}
+                <div class="my-select-input" :class="{
+                    'my-select-input_placeholder': isNull(modelValue)
+                }">
+                    {{ isNull(modelValue) ? modelValue : placeholder }}
                 </div>
                 <my-icon class="my-style-font_arrow icon-jt-x iconfont my-icon-downList-arrow"
                          :size="8"
@@ -29,6 +31,7 @@ import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-sty
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
 import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import { isNull } from 'lodash';
 
 const emit = defineEmits(['update:modelValue', 'change']);
 
@@ -49,7 +52,7 @@ withDefaults(defineProps<{
         placeholder: '请选择'
     });
 
-function change(val) {
+function change(val: any) {
     emit('update:modelValue', val);
     emit('change', val);
 }

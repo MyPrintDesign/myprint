@@ -2,18 +2,20 @@ import numberUtil from '@myprint/design/utils/numberUtil';
 import { PageUnit, Panel } from '@myprint/design/types/entity';
 import { getCurrentPanelUnit } from '@myprint/design/utils/elementUtil';
 
-let mmDiv = document.createElement('div');
-let body = document.querySelector('body')!;
-mmDiv.id = 'mm';
-mmDiv.style.width = '1mm';
-mmDiv.className = 'scrollbar-measure';
-body.appendChild(mmDiv);
+export let displayRatio = 3;
+
+export function initDisplayRatio() {
+    let mmDiv = document.createElement('div');
+    let body = document.querySelector('body')!;
+    mmDiv.id = 'mm';
+    mmDiv.style.width = '1mm';
+    mmDiv.className = 'scrollbar-measure';
+    body.appendChild(mmDiv);
 // 原生方法获取浏览器对元素的计算值
-let mmDivRect = mmDiv.getBoundingClientRect();
-
-body.removeChild(mmDiv);
-
-export const displayRatio = numberUtil.ceil(mmDivRect.width);
+    let mmDivRect = mmDiv.getBoundingClientRect();
+    numberUtil.ceil(mmDivRect.width);
+    body.removeChild(mmDiv);
+}
 
 // console.log(displayRatio);
 

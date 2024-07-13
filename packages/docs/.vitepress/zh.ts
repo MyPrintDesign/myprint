@@ -84,18 +84,18 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
             { text: '快速开始', link: 'getting-started' }
         ]
     }, {
-        text: 'API',
+        text: '使用',
         items: [
-            { text: '说明', link: '/use-api/markdown-examples' },
             { text: '设计面板', link: '/use-api/design-panel' },
+            { text: '组件使用', link: '/use-api/design-panel-use' },
             { text: 'API使用示例', link: '/use-api/api-example' }
         ]
     }, {
         text: '部署',
         items: [
             { text: '客户端', link: '/deploy/client-deploy' },
-            { text: '服务端部署Centos', link: '/markdown-examples' },
-            { text: '服务端部署Debian', link: '/markdown-examples' }
+            { text: '服务端部署Centos', link: '/deploy-centos' },
+            { text: '服务端部署Debian', link: '/deploy-debian' }
         ]
     }, {
         text: '扩展',

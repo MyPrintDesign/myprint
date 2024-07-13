@@ -1,11 +1,10 @@
 import { clearEventBubble } from './event';
-import { MyElement, Panel, TableCellElement } from '@myprint/design/types/entity';
-import { displayRatio, unit2px } from '@myprint/design/utils/devicePixelRatio';
-// import {arrayIndexOf, arrayRemove} from "@myprint/design/utils/arrays";
+import { MyElement, TableCellElement } from '@myprint/design/types/entity';
+import { displayRatio } from '@myprint/design/utils/devicePixelRatio';
 // @ts-ignore
 import * as mittInit from 'mitt';
-import { fontList } from '@myprint/design/constants/common';
 import { Emitter } from 'mitt';
+import { fontList } from '@myprint/design/constants/common';
 import { EventTypes } from '@myprint/design/types/eventType';
 import { findFromLeftCell } from '@myprint/design/utils/table/dataTable';
 
@@ -134,61 +133,6 @@ export function trend0(num: number) {
 
 export function trend1(num: number) {
     return num < 1 ? 1 : num;
-}
-
-// console.log(window.devicePixelRatio)
-
-export const canvas = document.createElement('canvas');
-canvas.width = 200;
-canvas.height = 200;
-// 获取绘图上下文
-const context = canvas.getContext('2d')!;
-let image: any;
-
-export function dragImg(panel: Panel, element: MyElement, event: DragEvent) {
-    // 创建一个新的canvas元素
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    canvas.width = unit2px(_width(element));
-    if (element.type == 'PageFooter' || element.type == 'PageHeader') {
-        canvas.width = unit2px(panel.width);
-    }
-    canvas.height = unit2px(_height(element));
-
-// 设置填充颜色
-    context.fillStyle = '#f0f2f5';
-    // 计算图片相对于鼠标和元素的位置
-    const target = event.target as HTMLDivElement;
-    const offsetX = event.clientX - target.getBoundingClientRect().left;
-    const offsetY = event.clientY - target.getBoundingClientRect().top;
-
-// 绘制矩形
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    // context.fillText('松开放置', 0, 0,100);
-
-    // 添加一个图标
-    // context.font = "50px 'iconfont-color'";
-    // context.fillStyle = "red";
-    // context.fillText("\ue616", 10, 40);
-
-// 创建一个新的Image对象
-    image = new Image();
-
-// 当Image对象加载完成后
-    image.onload = function() {
-        // 在页面上显示绘制的纯色图像
-        // 将canvas的数据URL赋值给Image对象的src属性
-    };
-    image.style.position = 'absolute';
-    image.style.left = '-1000px';
-    image.style.top = '0';
-    image.src = canvas.toDataURL();
-    document.body.appendChild(image);
-
-    event.dataTransfer!.setDragImage(image, offsetX, offsetY);
-}
-
-export function removeDragImg() {
-    document.body.removeChild(image);
 }
 
 export function getRatio() {
@@ -406,7 +350,7 @@ export function br2n(val: any) {
  * @returns 返回一个对象，包含一个id属性，该id为requestAnimationFrame的调用ID，可用于取消动画帧。
  */
 export function rafTimeout(fn: Function, delay = 0, interval = false): object {
-    let start: number | null = null // 记录动画开始的时间戳
+    let start: number | null = null; // 记录动画开始的时间戳
     function timeElapse(timestamp: number) {
         // 定义动画帧回调函数
         /*
@@ -414,33 +358,36 @@ export function rafTimeout(fn: Function, delay = 0, interval = false): object {
         */
         if (!start) {
             // 如果还没有开始时间，则以当前时间为开始时间
-            start = timestamp
+            start = timestamp;
         }
-        const elapsed = timestamp - start
+        const elapsed = timestamp - start;
         if (elapsed >= delay) {
             try {
-                fn() // 执行目标函数
+                fn(); // 执行目标函数
             } catch (error) {
-                console.error('Error executing rafTimeout function:', error)
+                console.error('Error executing rafTimeout function:', error);
             }
             if (interval) {
                 // 如果需要间隔执行，则重置开始时间并继续安排下一次动画帧
-                start = timestamp
-                raf.id = requestAnimationFrame(timeElapse)
+                start = timestamp;
+                raf.id = requestAnimationFrame(timeElapse);
             }
         } else {
-            raf.id = requestAnimationFrame(timeElapse)
+            raf.id = requestAnimationFrame(timeElapse);
         }
     }
+
     interface AnimationFrameID {
-        id: number
+        id: number;
     }
+
     // 创建一个对象用于存储动画帧的ID，并初始化动画帧
     const raf: AnimationFrameID = {
         id: requestAnimationFrame(timeElapse)
-    }
-    return raf
+    };
+    return raf;
 }
+
 /**
  * 用于取消 rafTimeout 函数
  *
@@ -450,8 +397,15 @@ export function rafTimeout(fn: Function, delay = 0, interval = false): object {
  */
 export function cancelRaf(raf: { id: number }): void {
     if (raf && raf.id && typeof raf.id === 'number') {
-        cancelAnimationFrame(raf.id)
+        cancelAnimationFrame(raf.id);
     } else {
-        console.warn('cancelRaf received an invalid id:', raf)
+        console.warn('cancelRaf received an invalid id:', raf);
     }
+}
+
+export function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
 }

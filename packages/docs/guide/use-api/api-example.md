@@ -2,26 +2,15 @@
 
 通过js代码直接调用
 
-## 打印
-
-## 方法说明
-
-| 方法            | 说明                  |                          参数                          |                                                 返回值 |
-|---------------|---------------------|:----------------------------------------------------:|----------------------------------------------------:|
-| preview       | 预览，会在超时/用户进行打印时进行回调 | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| printer       | 本地客户端打印             | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| chromePrinter | 浏览器打印(直接调用浏览器打印页面)  | (printProps: [PrintProps](./api-example#PrintProps)) |          [`PrintResult`](./api-example#PrintResult) |
-| pdfChrome     | 浏览器构建pdf，清晰度较差      | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-| pdfClient     | 从本地客户端获取pdf，返回Blob  | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-| pdfServer     | 从服务器获取pdf，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-| imgChrome     | 从浏览器获取img，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-| imgServer     | 从服务器获取img，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-
 ## 使用示例
+
+## 直接打印
 
 ### 客户端打印
 
-调用本地客户端进行打印，可以后台静默打印，需要提前安装本地客户端 [如何下载？](../deploy/client-deploy#download)
+调用本地客户端进行打印
+
+> 支持后台静默打印，需要提前安装本地客户端 [如何下载？](../deploy/client-deploy#download)
 
 ```ts
 import { MyPrinter } from '@myprint/design/printer';
@@ -51,12 +40,13 @@ const result = MyPrinter.chromePrinter({ previewDataList: previewData.value });
 console.log(result.status);
 ```
 
-### 预览
+## 预览
 
 唤出预览页面
 
+```ts
 <script setup>
-import { MyPrinter } from '@myprint/design/printer';
+import { MyPrinter } from 'myprint-design/src';
 
 function click(){
 
@@ -78,6 +68,7 @@ MyPrinter.preview({ previewDataList: [] })
 
 <button  @click="click">示例</button>
 
+```
 ```ts
 import { MyPrinter } from '@myprint/design/printer';
 
@@ -102,6 +93,20 @@ MyPrinter.preview({ previewDataList: previewData.value })
     });
 
 ```
+
+## 方法说明
+
+| 方法            | 说明                  |                          参数                          |                                                 返回值 |
+|---------------|---------------------|:----------------------------------------------------:|----------------------------------------------------:|
+| preview       | 预览，会在超时/用户进行打印时进行回调 | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| printer       | 本地客户端打印             | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| chromePrinter | 浏览器打印(直接调用浏览器打印页面)  | (printProps: [PrintProps](./api-example#PrintProps)) |          [`PrintResult`](./api-example#PrintResult) |
+| pdfChrome     | 浏览器构建pdf，清晰度较差      | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
+| pdfClient     | 从本地客户端获取pdf，返回Blob  | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
+| pdfServer     | 从服务器获取pdf，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
+| imgChrome     | 从浏览器获取img，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
+| imgServer     | 从服务器获取img，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
+
 
 ## Types
 

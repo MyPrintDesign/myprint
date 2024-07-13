@@ -1,4 +1,4 @@
-import { parse, stringify } from '@myprint/design/utils/utils';
+import { generateUUID, parse, stringify } from '@myprint/design/utils/utils';
 import { px2unit, unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { nextTick, reactive } from 'vue';
 import {
@@ -465,7 +465,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         // }
 
         previewContext.currentPage = reactive({
-            id: crypto.randomUUID(),
+            id: generateUUID(),
             width: previewContext.panel.width,
             height: previewContext.panel.height,
             offsetTop: 0,

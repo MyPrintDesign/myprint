@@ -21,7 +21,7 @@ import {
     elementTypeContainerList,
     elementTypeLineList
 } from '@myprint/design/constants/common';
-import { _defaultVal, mitt, parse, stringify } from './utils';
+import { _defaultVal, generateUUID, mitt, parse, stringify } from './utils';
 import { CSSProperties, reactive } from 'vue';
 import { formatDate } from './timeUtil';
 import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
@@ -196,7 +196,7 @@ export function initElement(element: MyElement, index: number) {
     let initWidth = 0, initHeight = 0, initBorderWidth = 0;
 
     if (!element.id) {
-        element.id = crypto.randomUUID();
+        element.id = generateUUID();
 
         switch (element.type) {
             case 'Text':
@@ -578,7 +578,7 @@ function findGroup(idList: string[]) {
 
 export function element2PreviewWrapper(element: MyElement): PreviewWrapper {
     const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList'), reactive({}) as PreviewWrapper);
-    previewWrapper.id = crypto.randomUUID();
+    previewWrapper.id = generateUUID();
     previewWrapper.heightIs = true;
     previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
 
@@ -633,7 +633,7 @@ export function element2PreviewWrapper(element: MyElement): PreviewWrapper {
 
 export function copyPreviewWrapper(element: PreviewWrapper): PreviewWrapper {
     const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList'), reactive({}) as PreviewWrapper);
-    previewWrapper.id = crypto.randomUUID();
+    previewWrapper.id = generateUUID();
     previewWrapper.heightIs = true;
     // console.log(element.runtimeOption.parent);
     previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
@@ -1053,7 +1053,6 @@ export function setElementHeightPx(height: number, element: MyElement) {
 
 export function recursionUpdateCellParentWidth(columnElement: TableCellElement, offsetX: number, panel: Panel) {
     columnElement.runtimeOption.width = columnElement.runtimeOption.init.width + offsetX;
-    debugger
     columnElement.width = px2unit(columnElement.runtimeOption.width, panel);
     // console.log(columnElement.runtimeOption.cellParent);
     if (columnElement.runtimeOption.cellParent != null) {

@@ -1,6 +1,6 @@
 {
   "name": "myprint-design",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/lib/index.js",
   "module": "dist/es/index.mjs",
   "types": "dist/es/index.d.ts",
@@ -67,6 +67,7 @@
     "@types/d3-path": "^3.0.2",
     "@types/d3-selection": "^3.0.10",
     "@types/d3-shape": "^3.1.6",
+    "@types/lodash": "^4.17.6",
     "@types/qrcode": "^1.5.5"
   }
 }

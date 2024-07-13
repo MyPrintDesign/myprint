@@ -56,7 +56,7 @@
 <script setup lang="ts">
 import { inject, nextTick, reactive, ref } from 'vue';
 import { toPdf } from '@myprint/design/utils/pdfUtil';
-import { download, printCssStyle } from '@myprint/design/utils/utils';
+import { download, generateUUID, printCssStyle } from '@myprint/design/utils/utils';
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import Preview from './preview.vue';
 import { ClientCmd, MyElement, Panel, PrintResult } from '@myprint/design/types/entity';
@@ -154,7 +154,7 @@ function setItemRef(el: any, item: MyElement) {
 function handlePreview(printProps: PrintProps) {
     data.dialogVisible = true;
     panel.value = printProps.panel as Panel;
-    data.printTaskId = crypto.randomUUID();
+    data.printTaskId = generateUUID();
     
     if (printProps.timeout! > 0) {
         data.previewTimeOut = setTimeout(() => {

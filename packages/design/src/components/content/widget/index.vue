@@ -1,7 +1,7 @@
 <template>
     <div class="option-container display-flex-column">
         <div class="header display-flex">
-            <my-icon size="25" class="header-back-icon">
+            <my-icon size="25" v-if="showBackButton" class="header-back-icon">
                 <ArrowLeft @click="back" />
             </my-icon>
             <div style="flex: 1;"> {{ moduleName }}</div>
@@ -56,8 +56,10 @@ const $emit = defineEmits(['back']);
 const provider = inject(providerKey)!;
 withDefaults(defineProps<{
     moduleName?: string
+    showBackButton?: boolean
 }>(), {
-    moduleName: '默认名称'
+    moduleName: '默认名称',
+    showBackButton: true
 });
 
 function back() {
