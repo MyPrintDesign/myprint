@@ -13,21 +13,24 @@
                                   :placeholder="i18n('common.width')"
                                   size="small"
                                   historyLabel="模版名称"
-                                  style="margin-right: 20px" />
+                                  style="margin-right: 18px" />
             </my-form-item>
             
             <my-form-item label="单位" prop="region">
                 <my-history-select v-model="panel.pageUnit"
                                    @change="selectPageUnit"
-                                   class="width-140"
-                                   placeholder="Select"
+                                   class="width-160"
+                                   placeholder="请选择"
                                    size="small"
                                    :data-list="pageUnitList"
                                    historyLabel="单位" />
             </my-form-item>
             
             <my-form-item label="纸张" prop="region">
-                <my-history-select v-model="panel.pageSize" class="width-140" placeholder="Select" size="small"
+                <my-history-select v-model="panel.pageSize"
+                                   class="width-160"
+                                   placeholder="请选择"
+                                   size="small"
                                    @change="selectPageSize"
                                    :data-list="pageSizeList"
                                    historyLabel="纸张"/>
@@ -35,10 +38,10 @@
             
             <my-form-item label="宽/高">
                 <my-group>
-                    <my-history-input-number class="width-60" v-model="panel.width"
+                    <my-history-input-number class="width-66" v-model="panel.width"
                                              @change="changePanelWidth"
                                              historyLabel="纸张宽" />
-                    <my-history-input-number class="width-60" v-model="panel.height"
+                    <my-history-input-number class="width-66" v-model="panel.height"
                                              @change="changePanelHeight"
                                              historyLabel="纸张高" />
                     <my-unit />

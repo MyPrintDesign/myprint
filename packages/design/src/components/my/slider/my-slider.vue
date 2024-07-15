@@ -11,10 +11,6 @@
             class="m-slider-handle"
             :class="{ handleTransition: transition }"
             :style="`left: ${right}px; right: auto; transform: translate(-50%, -50%);`"
-            @keydown.left.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
-            @keydown.right.prevent="disabled ? () => false : onRightSlide(right, 'right')"
-            @keydown.down.prevent="disabled ? () => false : onLeftSlide(right, 'right')"
-            @keydown.up.prevent="disabled ? () => false : onRightSlide(right, 'right')"
             @mousedown="disabled ? () => false : onRightMouseDown()"
             @blur="tooltip && !disabled ? handlerBlur(rightTooltip) : () => false">
             <div v-if="tooltip" ref="rightTooltip" class="m-handle-tooltip">
@@ -135,7 +131,7 @@ function fixedDigit(num: number, precision: number) {
 }
 
 function handlerBlur(tooltip: HTMLElement) {
-    tooltip.classList.remove('show-handle-tooltip');
+    tooltip && tooltip.classList.remove('show-handle-tooltip');
 }
 
 function handlerFocus(handler: HTMLElement, tooltip: HTMLElement) {
@@ -175,42 +171,14 @@ function onRightMouseDown() {
             right.value = sliderWidth.value;
         } else {
             // targetX < left
-            right.value = targetX;
+            right.value = targetX < props.min ? props.min : targetX;
         }
     };
     document.onmouseup = () => {
         if (props.tooltip) {
-            rightTooltip.value.classList.remove('show-handle-tooltip');
+            rightTooltip.value && rightTooltip.value.classList.remove('show-handle-tooltip');
         }
         document.onmousemove = null;
     };
-}
-
-function onLeftSlide(source: number, place: string) {
-    const targetX = source - pixelStep.value;
-    if (place === 'left') {
-        // 左滑块左移
-        if (targetX < 0) {
-            // left.value = 0;
-        } else {
-            // left.value = targetX;
-        }
-    } else {
-        // 右滑块左移
-        right.value = targetX;
-        
-    }
-}
-
-function onRightSlide(source: number, place: string) {
-    const targetX = source + pixelStep.value;
-    if (place === 'right') {
-        // 右滑块右移
-        if (targetX > sliderWidth.value) {
-            right.value = sliderWidth.value;
-        } else {
-            right.value = targetX;
-        }
-    }
 }
 </script>

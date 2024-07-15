@@ -388,7 +388,7 @@ function changeLocationY(_val: any) {
 }
 
 function changeElementWidth(_val) {
-    // console.log(val)
+    console.log(_val)
     moveableResize(unit2px(element.value.width), unit2px(element.value.height), element.value.option.keepRatio);
 }
 

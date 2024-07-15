@@ -22,5 +22,4 @@ defineProps({
   historyLabel: String
 })
 
-
 </script>

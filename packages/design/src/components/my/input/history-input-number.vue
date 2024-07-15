@@ -22,7 +22,7 @@ const numRef = ref(<InstanceType<any>>{});
 //   historyLabel: String
 // })
 const props = withDefaults(defineProps<{
-    modelValue?: number | string,
+    modelValue?: number | null | undefined,
     historyLabel: string,
 }>(), {
     modelValue: undefined,

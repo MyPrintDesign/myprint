@@ -37,6 +37,10 @@
     color: gray;
   }
 
+  .my-select-arrow {
+    width: 32px;
+  }
+
   &:hover:not(.my-icon-disabled) {
     background: var(--tool-style-highlight-bg);
   }
@@ -241,6 +245,13 @@
 
     background: rgba(0, 0, 0, 0.5);
 
+    .my-dialog_head {
+      padding: 5px;
+      border-radius: 2px;
+      box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);;
+      background: white;
+    }
+
     .my-dialog_content {
       padding: 5px;
       border-radius: 2px;
@@ -301,7 +312,7 @@
   height: 1px;
   width: 100%;
   margin: 24px 0;
-  border-top: 1px var(--my-border-color) var(--my-border-style);
+  border-top: var(--my-border-style);
 }
 
 .my-divider {

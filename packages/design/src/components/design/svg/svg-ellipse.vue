@@ -13,7 +13,7 @@ import { MyElement, Point } from '@myprint/design/types/entity';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import SvgBase from '@myprint/design/components/design/svg/svg-base.vue';
 import { BaseType, Selection } from 'd3-selection';
-import { getParentPanel } from '@myprint/design/utils/elementUtil';
+import { getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
 
 const props = withDefaults(defineProps<{
     element?: MyElement
@@ -54,8 +54,8 @@ initPoint();
 
 
 function initPoint() {
-    svgOptions.width = unit2px(props.element.width, getParentPanel(props.element));
-    svgOptions.height = unit2px(props.element.height, getParentPanel(props.element));
+    svgOptions.width = unit2px(props.element.width, getRecursionParentPanel(props.element));
+    svgOptions.height = unit2px(props.element.height, getRecursionParentPanel(props.element));
     
     svgOptions.centerPoint = { x: svgOptions.width / 2, y: svgOptions.height / 2 };
 }

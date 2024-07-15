@@ -3,6 +3,16 @@ import { PageUnit, Panel } from '@myprint/design/types/entity';
 import { getCurrentPanelUnit } from '@myprint/design/utils/elementUtil';
 
 export let displayRatio = 3;
+const unitConvert = {
+    px: {
+        mm: { ratio: displayRatio, compute: 'div' },
+        cm: { ratio: displayRatio * 10, compute: 'div' }
+    },
+    mm: {
+        px: { ratio: displayRatio, compute: 'mul' },
+        cm: { ratio: 10, compute: 'div' }
+    }
+} as any;
 
 export function initDisplayRatio() {
     let mmDiv = document.createElement('div');
@@ -13,11 +23,18 @@ export function initDisplayRatio() {
     body.appendChild(mmDiv);
 // 原生方法获取浏览器对元素的计算值
     let mmDivRect = mmDiv.getBoundingClientRect();
-    numberUtil.ceil(mmDivRect.width);
+    displayRatio = numberUtil.ceil(mmDivRect.width);
     body.removeChild(mmDiv);
-}
 
-// console.log(displayRatio);
+    unitConvert.px = {
+        mm: { ratio: displayRatio, compute: 'div' },
+        cm: { ratio: displayRatio * 10, compute: 'div' }
+    };
+    unitConvert.mm = {
+        px: { ratio: displayRatio, compute: 'mul' },
+        cm: { ratio: 10, compute: 'div' }
+    };
+}
 
 export function px2unit(val: number, panel?: Panel): number {
     // 获取每毫米的像素值
@@ -59,13 +76,4 @@ export function unit2unit(oldUnit: PageUnit, newUnit: PageUnit, val: number | un
     }
 }
 
-const unitConvert = {
-    px: {
-        mm: { ratio: displayRatio, compute: 'div' },
-        cm: { ratio: displayRatio * 10, compute: 'div' }
-    },
-    mm: {
-        px: { ratio: displayRatio, compute: 'mul' },
-        cm: { ratio: 10, compute: 'div' }
-    }
-} as any;
+

@@ -139,7 +139,7 @@ function dragStart(ev: MouseEvent) {
     element.runtimeOption.init.x = element.runtimeOption.x;
     element.runtimeOption.init.y = element.runtimeOption.y;
     
-    element.runtimeOption.parent = {} as Container;
+    element.runtimeOption.parent = panel;
     
     dragWrapper.visible = true;
     dragWrapper.opacity = 1;

@@ -1,6 +1,6 @@
 <template>
     <design-panel :template="data.template" :module="data.module" @saveTemplate="saveTemplate" @panel-img="panelImg"
-                    @back="back" />
+                  @back="back" />
 </template>
 <script setup lang="ts">
 import { DesignPanel } from '@myprint/design/index';
@@ -43,6 +43,17 @@ onMounted(() => {
     
 });
 
+const updateQuery = (id: string) => {
+    router.replace({
+        path: route.path,
+        query: {
+            ...route.query,
+            id: id
+        }
+    });
+};
+
+
 function back() {
     router.go(-1);
 }
@@ -57,7 +68,8 @@ function saveTemplate(template: Template) {
         data.template.moduleId = data.module.id;
         templateCreate(data.template)
             .then(res => {
-                id = res.data.id;
+                id = res.data.id as string;
+                updateQuery(id)
                 msgSuccess('新增成功');
                 if (data.arrayBufferList != null) {
                     panelImg(data.arrayBufferList);
@@ -65,7 +77,7 @@ function saveTemplate(template: Template) {
             });
     } else {
         templateUpdate(data.template)
-            .then(res => {
+            .then(_res => {
                 msgSuccess('保存成功');
             });
     }

@@ -1,8 +1,15 @@
 <template>
-    <textarea v-if="type == 'textarea'" class="my-textarea__inner" />
+    <textarea v-if="type == 'textarea'"
+              ref="textareaRef"
+              :disabled="disabled"
+              @blur="inputBlur"
+              @focus="inputFocus"
+              @input="onInput"
+              @change="onChange"
+              class="my-textarea__inner" />
     
     <div v-else class="my-input display-flex">
-        <div ref="inputWrapperRef" class="my-input__wrapper"
+        <div class="my-input__wrapper"
              :class="[{'is-focus': data.focusIs}]"
              @click="clickWrapper">
             <input class="my-input__inner"
@@ -23,8 +30,8 @@ import { isNil } from 'lodash';
 
 const emit = defineEmits(['update:modelValue', 'change']);
 
-const inputWrapperRef = ref<HTMLDivElement>();
 const inputRef = ref<HTMLInputElement>(null!);
+const textareaRef = ref<HTMLInputElement>(null!);
 
 const props = withDefaults(defineProps<{
     modelValue: string | number | null | undefined,
@@ -38,6 +45,10 @@ onMounted(() => {
     setNativeInputValue();
 });
 
+const myInputRef = computed(() => {
+    return inputRef.value ? inputRef.value : textareaRef.value;
+});
+
 const nativeInputValue = computed(() =>
     isNil(props.modelValue) ? '' : String(props.modelValue)
 );
@@ -46,9 +57,9 @@ watch(nativeInputValue, () => setNativeInputValue());
 
 function setNativeInputValue() {
     // console.log(nativeInputValue.value);
-    if (!inputRef.value || inputRef.value.value === nativeInputValue.value) return;
+    if (!myInputRef.value || myInputRef.value.value === nativeInputValue.value) return;
     
-    inputRef.value.value = nativeInputValue.value;
+    myInputRef.value.value = nativeInputValue.value;
 }
 
 const data = reactive({
@@ -78,6 +89,6 @@ function onChange(e: InputEvent) {
 function clickWrapper() {
     // console.log(123);
     data.focusIs = true;
-    inputRef.value!.focus();
+    myInputRef.value!.focus();
 }
 </script>

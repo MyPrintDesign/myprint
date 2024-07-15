@@ -5,6 +5,10 @@
              v-if="data.rendered"
              role="dialog" aria-modal="true" v-show="modelValue">
             <div class="my-dialog_wrapper">
+                <div v-if="title != null" class="my-dialog_head">
+                
+                </div>
+                
                 <div class="my-dialog_content"
                      v-bind="$attrs"
                      :class="{
@@ -29,6 +33,7 @@ const props = withDefaults(defineProps<{
     modelValue?: boolean,
     fullscreen?: boolean,
     class?: any,
+    title?: string,
     width?: string,
 }>(), {
     modelValue: false,

@@ -62,7 +62,7 @@ import { sortColumn } from '@myprint/design/utils/utils';
 import { freshMoveableOption, updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
 import _ from 'lodash';
 import {
-    getParentPanel,
+    getRecursionParentPanel,
     recursionUpdateCellParentInitWidth,
     recursionUpdateCellParentWidth,
     setCurrentElement,
@@ -286,7 +286,6 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
         
         if (clientStartX == clientEndX && clientEndY == clientStartY) {
             // 选取整列
-            console.log(data.row, data.col);
             const { cellList } = getTableCellDown(bodyList.value, data.row, data.col);
             data.cellList = cellList;
             selectCell(data.highlightColumn, data.cellList);
@@ -302,8 +301,10 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
                 //     data.highlightColumn.col = targetIndex;
                 // }
                 
-                computedTableCell(props.element.runtimeOption.target, bodyList.value);
-                computeColumn();
+                nextTick(() => {
+                    computedTableCell(props.element.runtimeOption.target, bodyList.value);
+                    computeColumn();
+                });
                 // const rect = computedCellRect(data.cellList);
                 // data.highlightColumn.x = rect.x;
                 // data.highlightColumn.y = rect.y;
@@ -399,7 +400,7 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
         // console.log(offsetX);
         if (newWidth > 20) {
             setElementWidthPx(tableOldWidth + offsetX, props.element);
-            recursionUpdateCellParentWidth(columnElement, offsetX, getParentPanel(props.element));
+            recursionUpdateCellParentWidth(columnElement, offsetX, getRecursionParentPanel(props.element));
             // 更新body 的宽
             setElementWidthPx(columnOldWidth + offsetX, props.element.tableBodyList[0][col]);
             // 更新

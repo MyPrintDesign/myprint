@@ -43,9 +43,8 @@ function emitValue(value: number | null) {
     if (value == props.modelValue) {
         return;
     }
-    console.log(123);
-    emit('change', value);
     emit('update:modelValue', value);
+    emit('change', value);
 }
 
 const numValue = ref(props.formatter(props.modelValue?.toFixed(precision.value)));

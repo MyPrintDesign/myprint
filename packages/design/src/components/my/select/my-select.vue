@@ -8,9 +8,9 @@
                 <div class="my-select-input" :class="{
                     'my-select-input_placeholder': isNull(modelValue)
                 }">
-                    {{ isNull(modelValue) ? modelValue : placeholder }}
+                    {{ isNull(modelValue) ? placeholder : modelValue }}
                 </div>
-                <my-icon class="my-style-font_arrow icon-jt-x iconfont my-icon-downList-arrow"
+                <my-icon class="my-select-arrow my-style-font_arrow icon-jt-x iconfont my-icon-downList-arrow"
                          :size="8"
                          :disabled="disabled">
                 </my-icon>

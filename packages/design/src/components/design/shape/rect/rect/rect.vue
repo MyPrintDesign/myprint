@@ -1,18 +1,18 @@
 <template>
     <div class="my-print-rect__wrapper"
-         :style="{maxWidth: valueUnit(element.width),
-       width: valueUnit(trend1(element.width)),
-       height: valueUnit(trend1(element.height)),
-       }" />
+         :style="labelStyle" />
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { computed, PropType } from 'vue';
 import { MyElement } from '@myprint/design/types/entity';
-import { trend1 } from '@myprint/design/utils/utils';
-import { valueUnit } from '@myprint/design/utils/elementUtil';
+import { computedStyle } from '@myprint/design/components/design/shape/line/computeStyle';
 
-defineProps({
+const props = defineProps({
     element: { type: Object as PropType<MyElement>, default: () => ({} as MyElement) }
+});
+
+const labelStyle = computed(() => {
+    return computedStyle(props.element, 'rect', 'solid');
 });
 
 </script>

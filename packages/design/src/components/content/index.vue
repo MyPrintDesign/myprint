@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import widget from '@myprint/design/components/content/widget/index.vue';
 import PanelView from '@myprint/design/components/content/panel/index.vue';
-import { computed, CSSProperties, inject, PropType, provide, reactive, Ref, ref, watch } from 'vue';
+import { computed, CSSProperties, inject, onMounted, PropType, provide, reactive, Ref, ref, watch } from 'vue';
 import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
 import { to } from '@myprint/design/utils/utils';
 import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
@@ -85,8 +85,11 @@ const style = computed(() => {
     };
 });
 
-initModule();
-initTemplate();
+onMounted(() => {
+    initModule();
+    initTemplate();
+    newSelecto();
+});
 
 const moduleWatchStop = watch(() => props.module, (_n, _o) => {
     if (props.module) {
@@ -159,7 +162,6 @@ function initTemplate() {
     mitt.emit('changePageSize');
 }
 
-newSelecto();
 
 function back() {
     $emit('back');
@@ -176,6 +178,7 @@ function saveTemplate() {
     //     });
     
     const template = {} as Template;
+    console.log(panel.name);
     template.name = panel.name;
     template.content = JSON.stringify(panel, (key, value) => {
         if ('runtimeOption' == key) return undefined;

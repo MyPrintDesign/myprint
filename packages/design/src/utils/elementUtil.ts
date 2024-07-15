@@ -60,10 +60,6 @@ export function getCurrentPanel(panel?: Panel): Panel {
     return panel != null ? panel : appStore().currentPanel as Panel;
 }
 
-export function getParentPanel(element: MyElement): Panel {
-    return element.runtimeOption.parent as Panel;
-}
-
 export function getRecursionParentPanel(element: MyElement): Panel {
     const panel = element.runtimeOption.parent as Panel;
     if (panel == null) {
@@ -355,7 +351,7 @@ export function initElement(element: MyElement, index: number) {
         }
     }
 
-    if (element.type == 'Text') {
+    if (element.type == 'Text' || element.type == 'TextTime') {
         if (!element.contentType) {
             element.contentType = 'Text';
         }

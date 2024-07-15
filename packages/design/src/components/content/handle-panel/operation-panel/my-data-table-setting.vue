@@ -6,7 +6,9 @@
             <template #divider>
                 布局
                 <my-icon class="divider-setting-layout-lock iconfont"
+                         :size="14"
                          :model-value="multipleElementGetValue('lock')"
+                         padding="11px"
                          :class="[multipleElementGetValue('lock')? 'icon-lock': 'icon-unlock']"
                          @click="changeLock"
                          @update:model-value="(val:any)=>multipleElementSetValue('lock', val)" />

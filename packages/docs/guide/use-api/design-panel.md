@@ -5,7 +5,9 @@ layout: page
 <script setup lang="ts">
 import { inBrowser } from 'vitepress'; 
 import { computed, defineAsyncComponent } from 'vue';
-import { useRouter } from 'vitepress';
+import { useRouter } from 'vitepress'; 
+import { template } from '../../examples/constant.js'; 
+
 const { go } = useRouter();
 
 const DesignPanel = computed(()=>{
@@ -21,7 +23,7 @@ const DesignPanel = computed(()=>{
 
 </script>
 
-<design-panel class="design-panel" :showBackButton="false" :template="null!" @back="go('guide/use-api/api-example')" 
+<design-panel class="design-panel" :showBackButton="false" :template="template" @back="go('guide/use-api/api-example')" 
 :module="{
     provider: JSON.stringify({width: 100, height: 100, pageUnit: 'mm'} as Provider),
     previewData: '[{}]'
