@@ -271,18 +271,24 @@ onMounted(() => {
     if (!props.element.data) {
         return;
     }
-    fetch(props.element.data)
-        .then(async res => {
-            const blob = res.blob();
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                // console.log(1)
-                sourceBase64.value = reader.result;
-                contentBase64.value = reader.result;
-                // console.log(contentBase64.value)
-            };
-            reader.readAsDataURL(await blob);
-        });
+    if ((props.element.data as string).startsWith('http')) {
+        fetch(props.element.data)
+            .then(async res => {
+                const blob = res.blob();
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    // console.log(1)
+                    sourceBase64.value = reader.result;
+                    contentBase64.value = reader.result;
+                    // console.log(contentBase64.value)
+                };
+                reader.readAsDataURL(await blob);
+            });
+    } else {
+        sourceBase64.value = props.element.data;
+        contentBase64.value = props.element.data;
+    }
+    
 });
 
 function loadImg() {

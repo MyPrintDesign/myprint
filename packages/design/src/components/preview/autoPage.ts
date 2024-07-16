@@ -205,6 +205,8 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
 
             if (previewWrapper.type == 'Image') {
                 previewWrapper.data = previewDataTmp;
+                // 如果是图片地址，则下载下来
+                // todo
                 previewContext.currentPage.elementList.push(previewWrapper);
                 await nextTick();
             } else if (previewWrapper.type == 'Text' || previewWrapper.type == 'PageNum' || previewWrapper.type == 'TextTime') {

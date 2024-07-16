@@ -1,6 +1,6 @@
 <template>
     <div ref="headRef"
-         class="widget-collapse-panel user-select-none "
+         class="widget-collapse-panel user-select-none"
          :class="{'widget-collapse-panel-fold': !data.show}">
         <div class="collapse-panel-head display-flex">
             <div class="collapse-panel-head-title display-flex">

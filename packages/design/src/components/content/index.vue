@@ -2,9 +2,9 @@
     <section class="design-container-root cursor-resize" v-bind="$attrs"
              :style="style"
              :data-rotation="appStore.dataRotation">
-        <aside class="my-aside" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
-            <widget :module="props.module" :showBackButton="showBackButton" @back="back" />
-        </aside>
+<!--        <aside class="my-aside" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">-->
+<!--            <widget :module="props.module" :showBackButton="showBackButton" @back="back" />-->
+<!--        </aside>-->
         <main class=" my-main design-container-root_main">
             <PanelView />
         </main>
@@ -178,7 +178,6 @@ function saveTemplate() {
     //     });
     
     const template = {} as Template;
-    console.log(panel.name);
     template.name = panel.name;
     template.content = JSON.stringify(panel, (key, value) => {
         if ('runtimeOption' == key) return undefined;

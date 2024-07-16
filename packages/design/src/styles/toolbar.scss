@@ -8,10 +8,16 @@
 
   .toolbar-tool {
     justify-content: center;
+
+    .toolbar-tool_button_margin_right {
+      margin-right: 5px;
+    }
+
   }
 }
 
-.my-group {
+.my-style-design {
+  min-width: calc(100% - 350px);
   height: 40px;
   display: flex;
   align-items: center;
@@ -20,6 +26,13 @@
     line-height: 16px;
     padding: 4px;
     margin-right: 6px;
+  }
+
+  .my-style-divider {
+    margin-right: 8px;
+    height: 20px;
+    width: 0;
+    border-left: 1px solid #dfe2e5;
   }
 }
 
@@ -170,11 +183,6 @@
   }
 }
 
-.my-style-divider {
-  margin-right: 8px;
-  height: 20px;
-  width: 0;
-  border-left: 1px solid #dfe2e5;
-}
+
 
 

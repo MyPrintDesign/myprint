@@ -9,14 +9,14 @@
         <div class="option-container display-flex-column">
             <my-scrollbar>
                 
-                <my-widget-collapse title="业务字段"
+                <my-widget-collapse :title="i18n('common.business.widget')"
                                     v-if="provider.elementList !=null && provider.elementList.length> 0">
                     <div class="display-flex display-flex-wrap" style="gap: 5px">
                         <business v-for="(element, index) in provider.elementList" :key="index" :data="element"
                                   :pageUnit="provider.pageUnit" />
                     </div>
                 </my-widget-collapse>
-                <my-widget-collapse title="公共组件">
+                <my-widget-collapse :title="i18n('common.common.widget')">
                     <div class="display-flex" style="flex-wrap: wrap;">
                         <basic v-for="(element, index) in customProvider.elementList" :key="index" :data="element"
                                :pageUnit="customProvider.pageUnit" />
@@ -50,6 +50,7 @@ import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vu
 import MyWidgetCollapse from '@myprint/design/components/my/collapse/my-widget-collapse.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import ArrowLeft from '@myprint/design/components/my/icon/icons/ArrowLeft.vue';
+import { i18n } from '@myprint/design/locales';
 
 const $emit = defineEmits(['back']);
 

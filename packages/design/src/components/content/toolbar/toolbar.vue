@@ -5,25 +5,27 @@
             
             <div class="display-flex-column toolbar-tool">
                 <div class="display-flex">
-                    <my-button @click="refresh">r</my-button>
-                    <my-button size="small" @click="print">
+                    <my-button size="small" class="toolbar-tool_button_margin_right" @click="print">
                         <my-icon>
                             <Printer />
                         </my-icon>
                         {{ i18n('toolbar.print') }}
                     </my-button>
-                    <my-button size="small" @click="serverDownloadPdf">
+                    <my-button size="small" class="toolbar-tool_button_margin_right" @click="serverDownloadPdf">
                         <my-icon>
                             <Printer />
                         </my-icon>
-                        下载
+                        {{ i18n('toolbar.download') }}
                     </my-button>
-                    <my-button size="small" @click="preview">
+                    <my-button size="small" class="toolbar-tool_button_margin_right" @click="preview">
                         <i class="icon-zitiyulan iconfont" />
                         {{ i18n('toolbar.preview') }}
                     </my-button>
-                    <my-button size="small" @click="clearPanelClick">{{ i18n('toolbar.clear') }}</my-button>
-                    <my-button size="small" :disabled="getCurrentPanel().name == null || getCurrentPanel().name == ''"
+                    <my-button size="small" class="toolbar-tool_button_margin_right" @click="clearPanelClick">
+                        {{ i18n('toolbar.clear') }}
+                    </my-button>
+                    <my-button size="small" class="toolbar-tool_button_margin_right"
+                               :disabled="getCurrentPanel().name == null || getCurrentPanel().name == ''"
                                @click="save">{{ i18n('toolbar.save') }}
                     </my-button>
                 </div>

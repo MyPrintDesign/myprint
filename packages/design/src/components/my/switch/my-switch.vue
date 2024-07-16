@@ -27,7 +27,7 @@ const props = withDefaults(defineProps<{
     {
         enable: true,
         modelValue: undefined,
-        nullActive: true,
+        nullActive: false,
         activeText: '开',
         inactiveText: '关'
     });
@@ -39,9 +39,8 @@ const modelValueComputed = computed(() => {
 const statusText = computed(() => {
     if (modelValueComputed.value) {
         return props.activeText;
-    } else if (props.modelValue == 0) {
-        return props.inactiveText;
     }
+    return props.inactiveText;
 });
 
 function click() {

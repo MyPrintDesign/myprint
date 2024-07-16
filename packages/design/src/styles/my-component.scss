@@ -108,6 +108,25 @@
   //}
 }
 
+.hover-non-blod {
+  .ps__rail-x {
+    &:hover {
+      .ps__thumb-x {
+        height: 4px !important;
+      }
+    }
+  }
+
+  .ps__rail-y {
+    &:hover {
+      .ps__thumb-y {
+        width: 4px !important;
+      }
+    }
+  }
+
+}
+
 .ps {
   height: 100%;
 
@@ -115,6 +134,29 @@
     .ps__rail-y {
       opacity: 1 !important;
     }
+
+    .ps__rail-x {
+      opacity: 1 !important;
+    }
+  }
+
+  .ps__rail-x {
+    //background-color: #999 !important;
+    background-color: transparent !important;
+    opacity: 0;
+
+    &:hover {
+      .ps__thumb-x {
+        height: 9px;
+      }
+    }
+
+    .ps__thumb-x {
+      background-color: var(--drag-h-color) !important;
+      height: 4px;
+      right: 0 !important;
+    }
+
   }
 
   .ps__rail-y {
@@ -123,7 +165,6 @@
     opacity: 0;
 
     &:hover {
-
       .ps__thumb-y {
         width: 9px;
       }
@@ -135,10 +176,13 @@
       right: 0 !important;
     }
 
-
   }
 
   .ps--clicking {
+    .ps__thumb-x {
+      height: 9px !important;
+    }
+
     .ps__thumb-y {
       width: 9px !important;
     }

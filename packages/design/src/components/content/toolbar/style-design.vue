@@ -1,27 +1,20 @@
 <template>
-    <div class="my-group">
-        
+    <my-scrollbar class="my-style-design" :hover-blod="false">
         <font-family :disabled="fontDisabledComputed" />
         
         <font-size :disabled="fontDisabledComputed" />
         
         <div class="my-style-divider" />
         
-        <!--        <div>
-                  <style-icon tips="清除">
-                    <i class="icon-zitibiankuang iconfont"/>
-                  </style-icon>
-                </div>-->
-        
-        <my-style-icon tips="加粗"
+        <my-style-icon :tips="i18n('toolbar.style.blob')"
                        props="option.bold"
                        enableProps="bold"
                        class="icon-zitijiacu iconfont cursor-pointer my-style-item" />
-        <my-style-icon tips="倾斜" props="option.italic" enableProps="italic"
+        <my-style-icon :tips="i18n('toolbar.style.italic')" props="option.italic" enableProps="italic"
                        class="icon-zitixieti iconfont cursor-pointer my-style-item" />
-        <my-style-icon tips="下划线" props="option.underline" enableProps="underline"
+        <my-style-icon :tips="i18n('toolbar.style.underline')" props="option.underline" enableProps="underline"
                        class="icon-zitixiahuaxian iconfont cursor-pointer my-style-item" />
-        <my-style-icon tips="删除线" props="option.lineThrough" enableProps="lineThrough"
+        <my-style-icon :tips="i18n('toolbar.style.lineThrough')" props="option.lineThrough" enableProps="lineThrough"
                        class="icon-wenben-shanchuxian iconfont cursor-pointer my-style-item" />
         
         <my-color-picker
@@ -44,17 +37,17 @@
         </my-color-picker>
         <div class="my-style-divider" />
         
-        <my-style-icon tips="左对齐"
+        <my-style-icon :tips="i18n('toolbar.style.textAlignLeft')"
                        props="option.textAlign"
                        propsValue="start"
                        class="icon-zuoduiqi iconfont cursor-pointer my-style-item"
                        enableProps="textAlign" />
-        <my-style-icon tips="水平居中"
+        <my-style-icon :tips="i18n('toolbar.style.textAlignCenter')"
                        props="option.textAlign"
                        propsValue="center"
                        class="icon-chuizhijuzhong iconfont cursor-pointer my-style-item"
                        enableProps="textAlign" />
-        <my-style-icon tips="右对齐"
+        <my-style-icon :tips="i18n('toolbar.style.textAlignRight')"
                        props="option.textAlign"
                        propsValue="end"
                        enableProps="textAlign"
@@ -67,37 +60,37 @@
         <!--          <i class="icon-caidan iconfont"/>-->
         <!--        </style-icon>-->
         
-        <my-style-icon tips="顶对齐"
+        <my-style-icon :tips="i18n('toolbar.style.verticalAlignTop')"
                        props="option.verticalAlign"
                        propsValue="start"
                        enableProps="verticalAlign"
                        class="icon-shangduiqi iconfont cursor-pointer my-style-item" />
-        <my-style-icon tips="垂直居中"
+        <my-style-icon :tips="i18n('toolbar.style.verticalAlignCenter')"
                        props="option.verticalAlign"
                        propsValue="center"
                        enableProps="verticalAlign"
                        class="icon-shuipingjuzhong iconfont cursor-pointer my-style-item" />
-        <my-style-icon tips="底对齐"
+        <my-style-icon :tips="i18n('toolbar.style.verticalAlignBottom')"
                        props="option.verticalAlign"
                        propsValue="end"
                        enableProps="verticalAlign"
                        class="icon-xiaduiqi iconfont cursor-pointer my-style-item" />
-        <my-style-icon tips="换行" marginTop="-3px"
+        <my-style-icon :tips="i18n('toolbar.style.lineBreak')" marginTop="-3px"
                        props="option.lineBreak"
                        enableProps="lineBreak"
                        class="icon-wenbenhuanhang iconfont cursor-pointer my-style-item" />
         
-        <my-style-icon tips="边框"
+        <my-style-icon :tips="i18n('toolbar.style.borderAll')"
                        props="option.borderAll"
                        enableProps="borderAll"
                        class="icon-jurassic_border-all iconfont cursor-pointer my-style-item" />
         
-        <my-style-icon tips="组合"
+        <my-style-icon :tips="i18n('toolbar.style.group')"
                        @click="group()"
                        :disabled="groupDisabledIs"
                        class="icon-color-zh iconfont-color cursor-pointer my-style-item" />
         
-        <my-style-icon tips="取消组合"
+        <my-style-icon :tips="i18n('toolbar.style.unGroup')"
                        @click="ungroup()"
                        :disabled="ungroupDisabledIs"
                        class="icon-color-qxzh iconfont-color cursor-pointer my-style-item" />
@@ -105,8 +98,7 @@
         <tool-icon-popover
             :disabled="!hasStyleByTypeList(multipleElementGetValueList('type') as  elementType[], 'common')">
             <template #reference>
-                <my-icon
-                    style="height: 100%">
+                <my-icon>
                     <i class="icon-color-zydic iconfont-color" />
                 </my-icon>
             
@@ -120,8 +112,7 @@
         <tool-icon-popover
             :disabled="!hasStyleByTypeList(multipleElementGetValueList('type') as  elementType[], 'common')">
             <template #reference>
-                <my-icon
-                    style="height: 100%">
+                <my-icon >
                     <i class="icon-color-spz iconfont-color" />
                 </my-icon>
             </template>
@@ -130,7 +121,7 @@
             </template>
         
         </tool-icon-popover>
-    </div>
+    </my-scrollbar>
 
 </template>
 
@@ -167,7 +158,8 @@ import { DownList, elementType } from '@myprint/design/types/entity';
 import FontSize from '@myprint/design/components/content/toolbar/toolbar-style/font-size.vue';
 import FontFamily from '@myprint/design/components/content/toolbar/toolbar-style/font-family.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
+import { i18n } from '@myprint/design/locales';
 
 const elementAlignList = reactive([
     [

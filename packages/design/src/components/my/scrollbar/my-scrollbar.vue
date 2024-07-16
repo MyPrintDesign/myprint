@@ -1,5 +1,7 @@
 <template>
-    <component :is="tag" ref="scrollbar" :style="{maxHeight : height}" class="ps">
+    <component :is="tag" ref="scrollbar" :class="{
+        'hover-non-blod': !hoverBlod
+    }" :style="{maxHeight : height}" class="ps">
         <slot />
     </component>
 </template>
@@ -29,12 +31,14 @@ export type PerfectScrollbarEmits = {
 const props = withDefaults(defineProps<{
         tag?: string
         height?: string
-        options?: any
+        options?: any,
+        hoverBlod: boolean
     }>(),
     {
         tag: 'div',
         height: '100%',
-        options: () => ({})
+        options: () => ({}),
+        hoverBlod: true
     }
 );
 
@@ -65,7 +69,10 @@ function createInstance() {
     nextTick(() => {
         if (scrollbar.value) {
             // @ts-ignore
-            ps.value = new PerfectScrollbar(scrollbar.value, props.options);
+            ps.value = new PerfectScrollbar(scrollbar.value, {
+                wheelPropagation: false,
+                ...props.options
+            });
             toggleListeners();
             setTimeout(() => {
                 if (ps.value != null) {

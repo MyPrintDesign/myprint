@@ -64,7 +64,9 @@ function handlePrint(printProps: PrintProps) {
         // console.log(printProps);
         autoPage(data.pageList, data.panel, printProps.previewDataList)
             .then(() => {
-                printArea();
+                nextTick(() => {
+                    printArea();
+                });
             });
     });
 }
@@ -147,11 +149,11 @@ function handleServerDownloadPdf(printProps: PrintProps) {
 
 function getPrintElementHtml() {
     let html = '<div style="  --tcolor: black;">';
+    debugger
     for (let i = 0; i < previewContentRef.value!.length; i++) {
         html += previewContentRef.value![i].outerHTML;
     }
     html += '</div>';
-    
     return html;
 }
 
@@ -164,7 +166,7 @@ function printArea() {
     iframe.setAttribute('id', 'print-box');
     iframe.setAttribute(
         'style',
-        `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; position: absolute;; left: 0; top: 0;border: 0;
+        `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; position: absolute; left: 0; top: 0;border: 0;
       z-index: 10000;`
     );
     // 在页面插入iframe
