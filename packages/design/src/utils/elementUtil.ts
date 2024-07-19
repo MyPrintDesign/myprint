@@ -17,12 +17,9 @@ import {
     TableCellElement,
     TableHeadProviderCellElement
 } from '@myprint/design/types/entity';
-import {
-    elementTypeContainerList,
-    elementTypeLineList
-} from '@myprint/design/constants/common';
+import { elementTypeContainerList, elementTypeLineList } from '@myprint/design/constants/common';
 import { _defaultVal, generateUUID, mitt, parse, stringify } from './utils';
-import { CSSProperties, reactive } from 'vue';
+import { CSSProperties, reactive } from 'vue-demi';
 import { formatDate } from './timeUtil';
 import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { arrayRemove } from '@myprint/design/utils/arrays';
@@ -35,6 +32,7 @@ import {
     recursionHandleTableHead
 } from '@myprint/design/utils/table/dataTable';
 import numberUtil from '@myprint/design/utils/numberUtil';
+import { isEmpty, isNil } from 'lodash';
 
 export function displayModel(displayModel?: DisplayModel) {
     if (displayModel) {
@@ -838,8 +836,11 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
         }
     }
 
-    // console.log(option.padding)
-    if (option.padding) {
+    if (!isNil(option.borderRadius)) {
+        cssStyle.borderRadius = valueUnit(option.borderRadius, panel);
+    }
+
+    if (!isNil(option.padding)) {
         if (option.padding.top) cssStyle.paddingTop = valueUnit(option.padding.top, panel);
         if (option.padding.bottom) cssStyle.paddingBottom = valueUnit(option.padding.bottom, panel);
         if (option.padding.left) cssStyle.paddingLeft = valueUnit(option.padding.left, panel);
@@ -892,7 +893,10 @@ export function formatter(element: MyElement, variable: FormatterVariable = {} a
                 contentData = '不支持的变量';
             } else {
                 try {
-                    contentData = formatDate(variable.nowDate ? variable.nowDate : new Date(), variableNames[0]);
+                    // todo 格式化时间
+                    const time = formatDate(variable.nowDate ? variable.nowDate : new Date(), variableNames[0]);
+                    variable[variableNames[0]] = time;
+                    contentData = replaceVariables(element.option.formatter, variable);
                 } catch (e) {
                     contentData = '不支持的变量';
                 }
@@ -927,7 +931,7 @@ function parseVariables(str: string): { name: string, defaultValue: string }[] {
     // 解析变量名和默认值
     const variables: { name: string, defaultValue: string }[] = [];
     for (const match of matches) {
-        const parts = match.slice(2, -2).split(':'); // 去除 {{ 和 }} 并按冒号分割
+        const parts = match.slice(2, -2).split('::'); // 去除 {{ 和 }} 并按冒号分割
         const name = parts[0].trim(); // 变量名
         const defaultValue = parts[1] ? parts[1].trim() : ''; // 默认值（如果有的话）
 
@@ -944,7 +948,7 @@ export function replaceVariables(str: string, params: { [key: string]: any }): s
     for (const variable of variables) {
         const { name, defaultValue } = variable;
         const value = params[name] !== undefined ? params[name] : defaultValue;
-        result = result.replace(new RegExp(`{{${name}:${defaultValue}}}`, 'g'), value);
+        result = result.replace(new RegExp(isEmpty(defaultValue) ? `{{${name}}}` : `{{${name}::${defaultValue}}}`, 'g'), value);
     }
 
     return result;

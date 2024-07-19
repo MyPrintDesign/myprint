@@ -1,4 +1,4 @@
-import { CSSProperties } from 'vue';
+import { CSSProperties } from 'vue-demi';
 import { getRecursionParentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
 import { _defaultNum } from '@myprint/design/utils/numberUtil';
 import { MyElement } from '@myprint/design/types/entity';

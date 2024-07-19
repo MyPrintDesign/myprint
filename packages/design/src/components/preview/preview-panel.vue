@@ -33,19 +33,19 @@
                 <div>打印份数：测试</div>
                 <div>客户端未连接，无法使用直接打印功能，去下载</div>
                 <template v-if="useSocket().connect">
-                    <div>打印机：
+                    <div>{{ i18n('toolbar.printer') }}：
                         <my-select v-model="data.printer" placeholder="请选择" size="large"
                                    :data-list="useSocket().printerList" />
                     </div>
-                    <my-button style="margin-left: 0" :disabled="!data.printer" @click="print">{{
+                    <my-button :disabled="!data.printer" @click="print">{{
                             i18n('toolbar.print')
                         }}
                     </my-button>
                 </template>
                 
-                <my-button style="margin-left: 0" @click="printChromePdf">{{ i18n('toolbar.chrome.print') }}</my-button>
-                <my-button style="margin-left: 0" @click="downloadPdf">{{ i18n('preview.download.pdf') }}</my-button>
-                <my-button style="margin-left: 0" @click="()=>data.dialogVisible = false">{{ i18n('common.close') }}
+                <my-button @click="printChromePdf">{{ i18n('toolbar.chrome.print') }}</my-button>
+                <my-button @click="downloadPdf">{{ i18n('preview.download.pdf') }}</my-button>
+                <my-button @click="()=>data.dialogVisible = false">{{ i18n('common.close') }}
                 </my-button>
             </div>
         </div>
@@ -54,25 +54,25 @@
 </template>
 
 <script setup lang="ts">
-import { inject, nextTick, reactive, ref } from 'vue';
+import { inject, nextTick, reactive, ref } from 'vue-demi';
 import { toPdf } from '@myprint/design/utils/pdfUtil';
-import { download, generateUUID, printCssStyle } from '@myprint/design/utils/utils';
+import { download, generateUUID } from '@myprint/design/utils/utils';
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import Preview from './preview.vue';
-import { ClientCmd, MyElement, Panel, PrintResult } from '@myprint/design/types/entity';
+import { ClientCmd, MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
 import { messageFun } from '@myprint/design/constants/keys';
 import { useSocket } from '@myprint/design/stores/socket';
 import { i18n } from '@myprint/design/locales';
 import { displayModel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { autoPage } from './autoPage';
-import { PrintProps } from '@myprint/design/types/entity';
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
 import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
 import MySelect from '@myprint/design/components/my/select/my-select.vue';
+import { getPrintElementHtml, iFramePrint } from '@myprint/design/utils/myprint';
 
-defineExpose({ handlePreview });
+defineExpose({ handleChromePreview });
 
 const configStore = useConfigStore();
 const data = reactive({
@@ -126,15 +126,14 @@ function downloadPdf() {
 }
 
 function printChromePdf() {
+    iFramePrint(panel.value, getPrintElementHtml(previewContentRef.value!));
     printResult(data.printTaskId, {
         status: 'SUCCESS',
         type: 'CHROME_PRINT'
     });
-    printArea();
 }
 
 function printResult(printTaskId: string, result: PrintResult) {
-    
     if (data.previewTimeOut) {
         clearTimeout(data.previewTimeOut);
     }
@@ -146,12 +145,10 @@ function printResult(printTaskId: string, result: PrintResult) {
 }
 
 function setItemRef(el: any, item: MyElement) {
-    // console.log('setItemRef', item.label)
-    // console.log('setItemRef')
     itemRefs[item.id] = el;
 }
 
-function handlePreview(printProps: PrintProps) {
+function handleChromePreview(printProps: PrintProps) {
     data.dialogVisible = true;
     panel.value = printProps.panel as Panel;
     data.printTaskId = generateUUID();
@@ -178,59 +175,6 @@ function closePreviewPanel() {
     data.pageList = [];
 }
 
-function printArea() {
-    let html = '<div style="  --tcolor: black;">';
-    for (let i = 0; i < previewContentRef.value!.length; i++) {
-        html += previewContentRef.value![i].outerHTML;
-    }
-    html += '</div>';
-    // 创建iframe
-    let iframe = document.createElement('iframe');
-    // 设置iframe样式
-    iframe.setAttribute('id', 'print-box');
-    iframe.setAttribute(
-        'style',
-        `height: ${valueUnit(panel.value.height, panel.value)}; width: ${valueUnit(panel.value.width, panel.value)}; position: absolute; left : 100px; top: 0;border: 0;
-      z-index: 10000;`
-    );
-    // 在页面插入iframe
-    document.body.appendChild(iframe);
-    // 获取iframe内的html
-    let iframeDocument = iframe.contentWindow!.document;
-    // 经需要打印的DOM插入iframe
-    
-    const linkElement = iframeDocument.createElement('style');
-    linkElement.type = 'text/css';
-    linkElement.textContent = printCssStyle(); // 根据实际文件路径修改
-    iframeDocument.body.innerHTML = html;
-    
-    // 设置iframe内的header，添加样式文件
-    iframeDocument.getElementsByTagName('head')[0].innerHTML = `
-  <style>
-    *{ margin:0;padding:0; }
-    @media print {
-      @page {
-        size: ${valueUnit(panel.value.width, panel.value)} ${valueUnit(panel.value.height, panel.value)};
-        margin: 0;
-      }
-    }
-  </style>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">`;
-    iframeDocument.head.appendChild(linkElement);
-    
-    // 关闭iframe
-    iframeDocument.close();
-    // 使iframe失去焦点
-    iframe.contentWindow!.focus();
-    // 调用iframe的打印方法
-    iframe.contentWindow!.print();
-    // 移除iframe
-    setTimeout(function() {
-        document.body.removeChild(iframe);
-    }, 100);
-    
-}
-
 onMessage.value = (msg: ClientCmd) => {
     if (msg.cmd == 'printResult') {
         printResult(msg.taskId, {
@@ -248,7 +192,6 @@ onMessage.value = (msg: ClientCmd) => {
         });
         
         let pdf = msg.pdf;
-        // console.log(pdf)
         if (pdf != null) {
             // 将Buffer对象转换为Uint8Array数组
             // @ts-ignore

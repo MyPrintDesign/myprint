@@ -1,4 +1,4 @@
-import { InjectionKey, Ref } from 'vue';
+import { InjectionKey, Ref } from 'vue-demi';
 import { MyElement, Panel, Provider } from '@myprint/design/types/entity';
 import { EventTypes } from '@myprint/design/types/eventType';
 

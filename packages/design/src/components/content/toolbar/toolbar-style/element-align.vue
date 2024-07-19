@@ -29,7 +29,7 @@
 <script setup lang="ts">
 import { DownList } from '@myprint/design/types/entity';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import { computed } from 'vue';
+import { computed } from 'vue-demi';
 
 const emit = defineEmits(['update:modelValue', 'click']);
 

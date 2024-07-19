@@ -48,7 +48,7 @@
 
 <script setup lang="ts">
 import { useSocket } from '@myprint/design/stores/socket';
-import { computed } from 'vue';
+import { computed } from 'vue-demi';
 import { clientProtocolList } from '@myprint/design/constants/common';
 import { useConfigStore } from '@myprint/design/stores/config';
 import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';

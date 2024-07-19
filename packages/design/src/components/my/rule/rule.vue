@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, CSSProperties, nextTick, onMounted, ref, watch, watchEffect } from 'vue';
+import { computed, CSSProperties, nextTick, onMounted, ref, watch, watchEffect } from 'vue-demi';
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { scaleUtil } from '@myprint/design/utils/scaleUtil';
 import { getCurrentPanel, valueUnit } from '@myprint/design/utils/elementUtil';

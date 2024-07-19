@@ -117,7 +117,7 @@
 
 </template>
 <script setup lang="ts">
-import { inject } from 'vue';
+import { inject } from 'vue-demi';
 
 import { getElementSetting, tableBodyHeightTypeList } from '@myprint/design/constants/common';
 import { mittKey } from '@myprint/design/constants/keys';

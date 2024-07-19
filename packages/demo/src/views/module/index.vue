@@ -47,7 +47,9 @@
                              :key="index">
                         <div class="display-flex display-flex-column">
                             <el-image class="module-item_card_cover"
-                                      src="https://fastly.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0"
+                                      :src="getImgUrl(template.coverImgUrl)"
+                                      :zoom-rate="1.02"
+                                      :preview-src-list="[getImgUrl(template.coverImgUrl)]"
                                       fit="cover" />
                             
                             <div class="module-item_card_tool display-flex">
@@ -81,7 +83,7 @@
                     :page-sizes="[32, 64, 128]"
                     background
                     layout="prev, pager, next, sizes, jumper"
-                    :total="400"
+                    :total="data.dataTotal"
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
                 />
@@ -90,9 +92,11 @@
     </el-container>
     
     <rename-dialog v-model="data.renameVisible"
+                   @confirm="confirmTemplateRename"
                    :name-value="data.renameModuleName" />
     
     <delete-dialog v-model="data.deleteVisible"
+                   @confirm="confirmTemplateDelete"
                    :name="data.deleteModuleName" />
     
     <el-dialog
@@ -149,7 +153,7 @@ import { moduleGroupDelete, moduleGroupList, moduleGroupSave, moduleGroupUpdate 
 import { nextTick, onMounted, reactive, ref } from 'vue';
 import { Module, ModuleGroup, PageParam, R, Template } from '@/types/R';
 import { useRouter } from 'vue-router';
-import { templatePage } from '@/api/template';
+import { templateDelete, templatePage, templateUpdate } from '@/api/template';
 import ModuleItem from '@/views/module/module-item.vue';
 import ModuleGroupView from '@/views/module/module-group.vue';
 import { moduleCreate, moduleDelete, moduleDetail, moduleUpdate } from '@/api/module';
@@ -176,12 +180,14 @@ const data = reactive({
             name: '重命名', click: (template: Template) => {
                 data.renameVisible = true;
                 data.renameModuleName = template.name;
+                data.template = template;
             }
         },
         {
             name: '删除', click: (template: Template) => {
                 data.deleteVisible = true;
                 data.deleteModuleName = template.name;
+                data.template = template;
                 console.log(template);
             }
         }
@@ -197,11 +203,13 @@ const data = reactive({
     } as ModuleGroup,
     currentPage: 1,
     pageSize: 32,
+    dataTotal: 0,
     fieldSettingVisible: false,
     dbModuleGroupList: [] as ModuleGroup[],
     moduleGroupList: [] as ModuleGroup[],
     moduleId: null as number,
-    module: null as Module,
+    module: {} as Module,
+    template: {} as Template,
     templateList: [] as Array<Template>,
     nameFilter: '',
     moreVisible: false,
@@ -215,6 +223,14 @@ const data = reactive({
 
 const elTreeRef = ref();
 const router = useRouter();
+
+function getImgUrl(url: string) {
+    if (url == null || url == '') {
+        return 'https://fastly.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0';
+    } else {
+        return import.meta.env.VITE_API_BASE_URL + url;
+    }
+}
 
 function filterChange() {
     console.log(data.moduleGroupList);
@@ -240,7 +256,7 @@ function renameModuleGroup(moduleGroup: ModuleGroup, name: string) {
     moduleGroupUpdate({
         id: moduleGroup.id,
         name
-    }).then(res => {
+    }).then(_res => {
         refreshModuleList(false);
     }).catch(e => {
         ElMessage.error(e.msg);
@@ -251,7 +267,7 @@ function renameModule(module: Module, name: string) {
     moduleUpdate({
         id: module.id,
         name
-    }).then(res => {
+    }).then(_res => {
         refreshModuleList(false);
     }).catch(e => {
         ElMessage.error(e.msg);
@@ -261,7 +277,7 @@ function renameModule(module: Module, name: string) {
 function deleteModuleGroup(moduleGroup: ModuleGroup) {
     moduleGroupDelete({
         id: moduleGroup.id
-    }).then(res => {
+    }).then(_res => {
         msgSuccess('删除成功');
         refreshModuleList(false);
     }).catch(e => {
@@ -272,11 +288,32 @@ function deleteModuleGroup(moduleGroup: ModuleGroup) {
 function deleteModule(module: Module) {
     moduleDelete({
         id: module.id
-    }).then(res => {
+    }).then(_res => {
         refreshModuleList(false);
         msgSuccess('删除成功');
     }).catch(e => {
         msgError(e.msg);
+    });
+}
+
+function confirmTemplateRename(name: string) {
+    templateUpdate({
+        id: data.template.id,
+        name
+    }).then(_res => {
+        refreshModuleList(false);
+    }).catch(e => {
+        ElMessage.error(e.msg);
+    });
+}
+
+function confirmTemplateDelete() {
+    templateDelete({
+        id: data.template.id
+    }).then(_res => {
+        refreshTemplateList();
+    }).catch(e => {
+        ElMessage.error(e.msg);
     });
 }
 
@@ -306,6 +343,7 @@ function handleCurrentChange(val: any) {
 }
 
 const handleNodeClick = (module: Module) => {
+    data.module.id = module.id;
     moduleDetail(module.id)
         .then(res => {
             data.module = res.data;
@@ -313,19 +351,7 @@ const handleNodeClick = (module: Module) => {
         .catch(e => {
             msgError(e.msg);
         });
-    
-    templatePage(<Template & PageParam>{
-        current: 1,
-        size: 50,
-        moduleId: module.id
-    }).then(res => {
-        data.templateList = res.data.records;
-        // for (let i = 0; i < 10; i++) {
-        //     data.templateList.push(data.templateList[0]);
-        // }
-    }).catch(e => {
-        msgError(e.msg);
-    });
+    refreshTemplateList();
 };
 
 onMounted(() => {
@@ -335,21 +361,37 @@ onMounted(() => {
 function refreshModuleList(defaultOne = true) {
     moduleGroupList(<PageParam & ModuleGroup>{
         current: 1,
-        size: 50,
+        size: 9999999,
         name: null
     }).then(res => {
-            data.dbModuleGroupList = res.data;
-            data.moduleGroupList = res.data;
-            
-            if (defaultOne) {
-                if (data.moduleGroupList.length > 0) {
-                    nextTick(() => {
-                        elTreeRef.value.setCurrentKey(data.moduleGroupList[0].moduleList[0].id, true);
-                    });
-                    handleNodeClick(data.moduleGroupList[0].moduleList[0]);
-                }
+        data.dbModuleGroupList = res.data;
+        data.moduleGroupList = res.data;
+        
+        if (defaultOne) {
+            if (data.moduleGroupList.length > 0) {
+                nextTick(() => {
+                    elTreeRef.value.setCurrentKey(data.moduleGroupList[0].moduleList[0].id, true);
+                });
+                handleNodeClick(data.moduleGroupList[0].moduleList[0]);
             }
-        }).catch(e => {
+        }
+    }).catch(e => {
+        msgError(e.msg);
+    });
+}
+
+function refreshTemplateList() {
+    templatePage(<Template & PageParam>{
+        current: data.currentPage,
+        size: data.pageSize,
+        moduleId: data.module.id
+    }).then(res => {
+        data.templateList = res.data.records;
+        data.dataTotal = res.data.total;
+        // for (let i = 0; i < 10; i++) {
+        //     data.templateList.push(data.templateList[0]);
+        // }
+    }).catch(e => {
         msgError(e.msg);
     });
 }

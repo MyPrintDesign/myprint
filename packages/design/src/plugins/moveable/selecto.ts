@@ -1,5 +1,5 @@
 import Selecto from 'selecto';
-import { Ref, ref } from 'vue';
+import { Ref, ref } from 'vue-demi';
 
 export const selecto = ref() as Ref<Selecto>;
 

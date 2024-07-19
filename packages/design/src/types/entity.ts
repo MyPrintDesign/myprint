@@ -2,7 +2,7 @@ export interface PrintProps {
     panel?: Panel | string,
     // appointChannel?: 'SERVER' | 'CHROME' | 'CLIENT',
     previewDataList: any[],
-    timeout?: number
+    timeout?: number,
 }
 
 export interface PrintResult {
@@ -353,6 +353,7 @@ export interface ElementOption {
     italic: boolean;
     borderAll: boolean;
     borderWidth: number;
+    borderRadius: number;
     lineWidth: number;
     rotate: number;
     // textType: string;

@@ -3,7 +3,6 @@
         <div class="my-dialog"
              :class="props.class"
              v-if="data.rendered"
-             
              role="dialog" aria-modal="true" v-show="modelValue">
             <div class="my-dialog_wrapper"
                  ref="dialogRef"
@@ -29,9 +28,9 @@
 
 <script setup lang="ts">
 
-import { computed, nextTick, reactive, ref, watch } from 'vue';
+import { computed, nextTick, reactive, ref, watch } from 'vue-demi';
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(['update:modelValue', 'close']);
 
 const props = withDefaults(defineProps<{
     modelValue?: boolean,
@@ -71,6 +70,7 @@ watch(() => props.modelValue, (_n, _o) => {
 });
 
 function onClose() {
+    emit('update:modelValue', false);
     emit('close');
 }
 

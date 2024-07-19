@@ -1,5 +1,5 @@
 import { HandlePanel } from '@myprint/design/types/entity';
-import { reactive } from 'vue';
+import { reactive } from 'vue-demi';
 
 export const handlePanelElementList = reactive({
     'setting': {

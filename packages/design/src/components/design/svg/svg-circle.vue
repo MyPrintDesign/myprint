@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive } from 'vue-demi';
 
 import { MyElement, Point } from '@myprint/design/types/entity';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';

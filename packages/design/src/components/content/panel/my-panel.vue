@@ -49,7 +49,7 @@
 <script setup lang="ts">
 import Rule from '@myprint/design/components/my/rule/rule.vue';
 import { scaleUtil } from '@myprint/design/utils/scaleUtil';
-import { inject, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { inject, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue-demi';
 import { Container, ContentScaleVo, MyElement } from '@myprint/design/types/entity';
 import { mittKey, panelKey } from '@myprint/design/constants/keys';
 import { record, Snapshot } from '@myprint/design/utils/historyUtil';

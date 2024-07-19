@@ -32,7 +32,7 @@
 
 
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref } from 'vue-demi';
 import SettingPrinter from './setting-printer.vue';
 import SettingAbout from './setting-about.vue';
 import { useConfigStore } from '@myprint/design/stores/config';

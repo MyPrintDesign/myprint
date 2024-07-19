@@ -150,7 +150,7 @@ import {
     multipleElementGetValueList,
     multipleElementSetValue
 } from '@myprint/design/utils/elementUtil';
-import { computed, reactive } from 'vue';
+import { computed, reactive } from 'vue-demi';
 import ToolIconPopover from '@myprint/design/components/my/icon/tool-icon-popover.vue';
 import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-style/element-align.vue';
 //@ts-ignore

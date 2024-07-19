@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive } from 'vue-demi';
 
 const props = withDefaults(defineProps<{
     content?: string

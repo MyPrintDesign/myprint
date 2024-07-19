@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import { mittKey, panelKey } from '@myprint/design/constants/keys';
-import { computed, inject, reactive, ref } from 'vue';
+import { computed, inject, reactive, ref } from 'vue-demi';
 import MyHorizontalLine from '@myprint/design/components/design/shape/line/horizontalLine';
 import MyRect from '@myprint/design/components/design/shape/rect/rect';
 import MyDottedHorizontalLine from '@myprint/design/components/design/shape/line/dottedHorizontalLine';

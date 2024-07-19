@@ -1,27 +1,30 @@
 # 快速开始
 本节将介绍如何在项目中使用 My-print。
 ::: tip 示例仓库
- [gitee]
 
-[github]
+[`gitee`](http://www.baidu.com)
+
+[`github`](http://www.baidu.com)
+
+[点击体验](./use-api/design-panel)
 :::
 
 ## 导入
 ```ts
 // main.ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import {createPrint, MyPrinter} from "myprint-design/src";
+import { createApp } from 'vue';
+import App from './App.vue';
+import { createPrint, MyPrinter } from 'myprint-design';
 // 引入样式文件
 import 'myprint-design/css/index.css';
 
-const app = createApp(App)
+const app = createApp(App);
 
 // 设置pdf服务器地址(可选)
-MyPrinter.setServerUrl(import.meta.env.VITE_API_PDF_SERVER_URL);
+MyPrinter.setServerUrl('http://127.0.0.1:19898/');
 
 app.use(createPrint);
-app.mount('#app')
+app.mount('#app');
 ```
 
 ## 使用

@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue';
-import type { Ref } from 'vue';
+import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue-demi';
+import type { Ref } from 'vue-demi';
 import PerfectScrollbar from 'perfect-scrollbar';
 
 export type PerfectScrollbarEmitsKeys =
@@ -32,7 +32,7 @@ const props = withDefaults(defineProps<{
         tag?: string
         height?: string
         options?: any,
-        hoverBlod: boolean
+        hoverBlod?: boolean
     }>(),
     {
         tag: 'div',

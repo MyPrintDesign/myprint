@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { Ref } from 'vue';
+import { Ref } from 'vue-demi';
 import { printCssStyle } from '@myprint/design/utils/utils';
 import { useConfigStore } from './config';
 

@@ -1,4 +1,4 @@
-import { nextTick, ref } from 'vue';
+import { nextTick, ref } from 'vue-demi';
 import { MyElement, elementTypeFormat, Panel } from '@myprint/design/types/entity';
 import { useManualRefHistory } from '@vueuse/core';
 import {
@@ -33,7 +33,7 @@ export interface Snapshot {
     type?: 'Element' | 'PANEL'
 }
 
-const historyRecord = ref<Snapshot>(<Snapshot>{});
+const historyRecord = ref<Snapshot>({} as Snapshot);
 const {
     undoStack,
     redoStack,
@@ -122,11 +122,11 @@ function undoPanel() {
     // console.log(history)
     const panel = getCurrentPanel();
     panel.elementList = [];
-    nextTick(()=>{
+    nextTick(() => {
         panel.elementList = (historyRecord.value.panel as Panel).elementList;
         installPanelParentElement(panel);
         updatePanel();
-    })
+    });
     // console.log(redoStack)
     // copyBasicType(historyRecord.value.target, panel)
     // if (!snapshot) {
@@ -147,11 +147,11 @@ function redoPanel() {
     const panel = getCurrentPanel();
     redo();
     panel.elementList = [];
-    nextTick(()=>{
+    nextTick(() => {
         panel.elementList = (historyRecord.value.panel as Panel).elementList;
         installPanelParentElement(panel);
         updatePanel();
-    })
+    });
     updatePanel();
     // copyBasicType(historyRecord.value.target, panel)
 }

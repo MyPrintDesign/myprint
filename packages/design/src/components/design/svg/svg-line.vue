@@ -9,7 +9,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
+import { reactive } from 'vue-demi';
 
 import * as d3Path from 'd3-path';
 import { Path } from 'd3-path';

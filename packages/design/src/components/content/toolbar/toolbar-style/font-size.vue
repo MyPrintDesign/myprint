@@ -42,7 +42,7 @@
 import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
 import { fontSizeList } from '@myprint/design/constants/common';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import { computed, onMounted, reactive, ref } from 'vue';
+import { computed, onMounted, reactive, ref } from 'vue-demi';
 import { onClickOutside } from '@vueuse/core';
 import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-style/element-align.vue';
 import ToolIconPopover from '@myprint/design/components/my/icon/tool-icon-popover.vue';
@@ -57,8 +57,8 @@ const props = withDefaults(defineProps<{
         disabled: false
     });
 
-const fontSizeRef = ref();
-const fontSizeWrapperRef = ref();
+const fontSizeRef = ref<HTMLDivElement>();
+const fontSizeWrapperRef = ref<HTMLDivElement>();
 const data = reactive({
     fontSizeInputShow: false,
     fontSize: '13'

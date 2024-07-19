@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue';
+import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue-demi';
 import { createPopper } from '@popperjs/core';
 import { onClickOutside } from '@vueuse/core';
 //@ts-ignore

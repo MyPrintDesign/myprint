@@ -29,9 +29,10 @@ const renameModuleNameRef = ref();
 const props = withDefaults(defineProps<{
     node?: any,
     modelValue: boolean
-    nameValue: string
+    nameValue?: string
 }>(), {
-    node: () => ({})
+    node: () => ({}),
+    nameValue: null
 });
 
 watch(() => props.nameValue, (_o, _n) => {

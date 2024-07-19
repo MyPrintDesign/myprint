@@ -29,7 +29,7 @@
     </Teleport>
 </template>
 <script setup lang="ts">
-import { computed, CSSProperties, nextTick, onMounted, reactive, ref } from 'vue';
+import { computed, CSSProperties, nextTick, onMounted, reactive, ref } from 'vue-demi';
 import { getCollapsePanelZIndex } from '@myprint/design/utils/utils';
 import { HandlePanel, HandlePanelPosition } from '@myprint/design/types/entity';
 import { useAppStoreHook } from '@myprint/design/stores/app';

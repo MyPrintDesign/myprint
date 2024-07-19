@@ -113,7 +113,7 @@
 <script setup lang="ts">
 import 'vue-cropper/dist/index.css';
 import { VueCropper } from 'vue-cropper';
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
 // import {useBase64} from "@vueuse/core";
 import { displayModelDesign, getRecursionParentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
@@ -130,6 +130,7 @@ import RefreshLeft from '@myprint/design/components/my/icon/icons/RefreshLeft.vu
 import RefreshRight from '@myprint/design/components/my/icon/icons/RefreshRight.vue';
 import Check from '@myprint/design/components/my/icon/icons/Check.vue';
 import CloseBold from '@myprint/design/components/my/icon/icons/CloseBold.vue';
+import { downloadImg2Base64 } from '@myprint/design/utils/utils';
 
 const props = withDefaults(defineProps<{
     element?: MyElement
@@ -272,18 +273,13 @@ onMounted(() => {
         return;
     }
     if ((props.element.data as string).startsWith('http')) {
-        fetch(props.element.data)
-            .then(async res => {
-                const blob = res.blob();
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    // console.log(1)
-                    sourceBase64.value = reader.result;
-                    contentBase64.value = reader.result;
-                    // console.log(contentBase64.value)
-                };
-                reader.readAsDataURL(await blob);
-            });
+        downloadImg2Base64(props.element.data)
+            .then(base64 => {
+                sourceBase64.value = base64;
+                contentBase64.value = base64;
+            }).catch(_e => {
+            
+        });
     } else {
         sourceBase64.value = props.element.data;
         contentBase64.value = props.element.data;

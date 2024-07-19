@@ -24,7 +24,7 @@ import MyCollapse from '@myprint/design/components/my/collapse/my-collapse.vue';
 import MyElementSetting from './my-element-setting.vue';
 import MyPanelSetting from './my-panel-setting.vue';
 import { elementTypeFormat } from '@myprint/design/types/entity';
-import { computed } from 'vue';
+import { computed } from 'vue-demi';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyDataTableSetting

@@ -36,7 +36,7 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
+import { inject } from 'vue-demi';
 import StyleDesign from './style-design.vue';
 import { mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
 import { i18n } from '@myprint/design/locales';
@@ -55,7 +55,7 @@ const previewData = inject(previewDataKey)!;
 
 function print() {
     displayModel('print');
-    MyPrinter.printer({ previewDataList: previewData.value });
+    MyPrinter.clientPrinter({ previewDataList: previewData.value });
 }
 
 function serverDownloadPdf() {
@@ -71,14 +71,10 @@ function serverDownloadPdf() {
 
 function preview() {
     displayModel('preview');
-    MyPrinter.preview({ previewDataList: previewData.value })
+    MyPrinter.chromePreview({ previewDataList: previewData.value })
         .then(res => {
             console.log(res);
         });
-}
-
-function refresh() {
-    window.location.reload();
 }
 
 function save() {

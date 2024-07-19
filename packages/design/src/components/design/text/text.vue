@@ -12,7 +12,7 @@
         @keydown="handleKeydown($event)" />
 </template>
 <script setup lang="ts">
-import { computed, onMounted, watch, ref, reactive } from 'vue';
+import { computed, onMounted, watch, ref, reactive } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
 import MyBarcode from '@myprint/design/components/design/barcode';
 import MyQrcode from '@myprint/design/components/design/qrcode';
@@ -34,6 +34,9 @@ const contentRef = ref();
 const data = reactive({
     content: '',
     innerContent: ''
+});
+const style = computed(() => {
+    return elementCommonStyle(props.element);
 });
 
 onMounted(() => {
@@ -85,10 +88,6 @@ function handleInput(event: any) {
     data.innerContent = props.element.data;
 }
 
-const style = computed(() => {
-    return elementCommonStyle(props.element);
-});
-
 watch(() => props.element.runtimeOption.status, (n, _o) => {
     if (contentRef.value == undefined) {
         return;
@@ -104,7 +103,6 @@ watch(() => props.element.data, (_n, _o) => {
     if (data.innerContent !== props.element.data) {
         data.content = n2br(props.element.data);
         data.innerContent = data.content;
-        // console.log(data.content);
     }
 });
 

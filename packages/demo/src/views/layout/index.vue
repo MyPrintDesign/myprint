@@ -8,7 +8,7 @@
                 :hide-timeout="0"
                 :show-timeout ="0"
                 mode="horizontal"
-                menu-trigger="none"
+                menu-trigger="click"
                 :teleported="false"
                 :collapse-transition="false"
                 :popper-offset="-1000"

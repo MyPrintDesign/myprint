@@ -7,7 +7,7 @@
 
 <script setup lang="ts">
 import { MyElement } from '@myprint/design/types/entity';
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, nextTick, ref, watch } from 'vue-demi';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import QRCode from 'qrcode';
 import { elementCommonStyle, getRecursionParentPanel } from '@myprint/design/utils/elementUtil';

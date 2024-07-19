@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import { changeWrapper } from '@myprint/design/utils/historyUtil';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue-demi';
 import MyInputNumber from '@myprint/design/components/my/input/my-input-number.vue';
 
 const emit = defineEmits(['update:modelValue', 'change']);

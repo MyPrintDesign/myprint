@@ -17,7 +17,7 @@ export function moduleCreate(data: Module) {
     });
 }
 
-export function moduleDetail(id: string) {
+export function moduleDetail(id: string | number) {
     return request<Module>({
         url: `/module/${id}/detail`,
         method: 'post'

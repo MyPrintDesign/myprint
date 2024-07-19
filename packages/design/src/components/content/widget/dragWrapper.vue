@@ -6,7 +6,7 @@
 
 <script setup lang="ts">
 import { Container } from '@myprint/design/types/entity';
-import { computed, CSSProperties, onMounted, ref } from 'vue';
+import { computed, CSSProperties, onMounted, ref } from 'vue-demi';
 
 const props = withDefaults(defineProps<{
     data?: Container & { visible: boolean, opacity: number, transitionAnime: boolean }

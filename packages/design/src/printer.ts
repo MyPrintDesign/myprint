@@ -1,4 +1,4 @@
-import { App, h, render, VNode } from 'vue';
+import { App, h, render, VNode } from 'vue-demi';
 import PrintView from '@myprint/design/components/print/print.vue';
 import previewPanelView from '@myprint/design/components/preview/preview-panel.vue';
 import { getCurrentPanel } from '@myprint/design/utils/elementUtil';
@@ -8,11 +8,14 @@ export let pdfServerUrl = '';
 
 let printNode: VNode = null!;
 let previewNode: VNode = null!;
-let handlePrint: (printProps: PrintProps) => Promise<PrintResult> = null!;
-let design2Img: (printProps: PrintProps) => Promise<ArrayBuffer[]> = null!;
+let handleChromePrint: (printProps: PrintProps) => Promise<PrintResult> = null!;
+let handleClientPrint: (printProps: PrintProps) => Promise<PrintResult> = null!;
+let handleChromeDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
+let handleClientDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
 let handleServerDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
+let handleChromeDownloadImg: (printProps: PrintProps) => Promise<ArrayBuffer[]> = null!;
 let handleServerDownloadImg: (printProps: PrintProps) => Promise<Blob> = null!;
-let handlePreview: (printProps: PrintProps) => Promise<PrintResult> = null!;
+let handleChromePreview: (printProps: PrintProps) => Promise<PrintResult> = null!;
 
 export function installPrinter(app: App<any>) {
     if (!printNode) {
@@ -22,9 +25,13 @@ export function installPrinter(app: App<any>) {
 
         render(printNode, container);
 
-        design2Img = printNode.component!.exposed!.design2Img;
-        handlePrint = printNode.component!.exposed!.handlePrint;
+        handleChromePrint = printNode.component!.exposed!.handleChromePrint;
+        handleClientPrint = printNode.component!.exposed!.handleClientPrint;
+
+        handleChromeDownloadPdf = printNode.component!.exposed!.handleServerDownloadPdf;
+        handleClientDownloadPdf = printNode.component!.exposed!.handleServerDownloadPdf;
         handleServerDownloadPdf = printNode.component!.exposed!.handleServerDownloadPdf;
+        handleChromeDownloadImg = printNode.component!.exposed!.handleChromeDownloadImg;
         handleServerDownloadImg = printNode.component!.exposed!.handleServerDownloadImg;
 
         document.body.appendChild(container.firstElementChild!);
@@ -37,7 +44,7 @@ export function installPrinter(app: App<any>) {
 
         render(previewNode, container);
 
-        handlePreview = previewNode.component!.exposed!.handlePreview;
+        handleChromePreview = previewNode.component!.exposed!.handleChromePreview;
         // handleServerDownloadPdf = previewNode.component!.exposed!.handleServerDownloadPdf;
         // handleServerDownloadImg = previewNode.component!.exposed!.handleServerDownloadImg;
         document.body.appendChild(container);
@@ -50,34 +57,56 @@ export const MyPrinter = {
         pdfServerUrl = url;
     },
 
+    chromePreview(printProps: PrintProps) {
+        let panel = printProps.panel;
+        if (typeof printProps.panel == 'string') {
+            panel = JSON.parse(printProps.panel);
+        }
+        return handleChromePreview({
+            ...printProps,
+            panel: panel == null ? getCurrentPanel() : panel
+        });
+    },
+
     chromePrinter(printProps: PrintProps) {
         let panel = printProps.panel;
         if (typeof printProps.panel == 'string') {
             panel = JSON.parse(printProps.panel);
         }
-        return handlePrint({
+        return handleChromePrint({
             ...printProps,
             panel: panel == null ? getCurrentPanel() : panel
         });
     },
 
-    printer(printProps: PrintProps) {
+    clientPrinter(printProps: PrintProps) {
         let panel = printProps.panel;
         if (typeof printProps.panel == 'string') {
             panel = JSON.parse(printProps.panel);
         }
-        return handlePrint({
+        return handleClientPrint({
             ...printProps,
             panel: panel == null ? getCurrentPanel() : panel
         });
     },
 
-    preview(printProps: PrintProps) {
+    pdfChrome(printProps: PrintProps) {
         let panel = printProps.panel;
         if (typeof printProps.panel == 'string') {
             panel = JSON.parse(printProps.panel);
         }
-        return handlePreview({
+        return handleChromeDownloadPdf({
+            ...printProps,
+            panel: panel == null ? getCurrentPanel() : panel
+        });
+    },
+
+    pdfClient(printProps: PrintProps) {
+        let panel = printProps.panel;
+        if (typeof printProps.panel == 'string') {
+            panel = JSON.parse(printProps.panel);
+        }
+        return handleClientDownloadPdf({
             ...printProps,
             panel: panel == null ? getCurrentPanel() : panel
         });
@@ -94,80 +123,13 @@ export const MyPrinter = {
         });
     },
 
-    pdfClient(printProps: PrintProps) {
-        let panel = printProps.panel;
-        if (typeof printProps.panel == 'string') {
-            panel = JSON.parse(printProps.panel);
-        }
-        return handleServerDownloadPdf({
-            ...printProps,
-            panel: panel == null ? getCurrentPanel() : panel
-        });
+    imgChrome(printProps: PrintProps) {
+        return handleChromeDownloadImg({ ...printProps, panel: getCurrentPanel() });
     },
 
     imgServer(printProps: PrintProps) {
         return handleServerDownloadImg({ ...printProps, panel: getCurrentPanel() });
-    },
-
-    print2ImgLocal(printProps: PrintProps) {
-        return design2Img({ ...printProps, panel: getCurrentPanel() });
     }
 
+
 };
-
-
-// function print() {
-//     // 即将被创建的组件的z-index
-//     const { nextZIndex } = useZIndex();
-//     // 每个组件有唯一的id
-//     const id = `message_${seed++}`;
-//     // 用来防止Message组件的容器
-//     const container = document.createElement('div');
-//
-//     // 在添加组件应有的属性
-//     const newProps = {
-//         // ...props,
-//         id,
-//         zIndex: nextZIndex(),
-//         // destroyMesssage见下文
-//         useDestroy: destroyMesssage
-//     };
-//     const vnode = h(printView, newProps);
-//     // 通过render函数将虚拟DOM节点渲染或挂载到真实DOM节点上
-//     render(vnode, container);
-//     // 在页面上添加，即显示
-//     document.body.appendChild(container.firstElementChild!);
-//
-//     // 存储当前创建的实例,并且使用shallowReactive做浅层监听
-//     const instances: MesssageContext[] = shallowReactive([]);
-//
-//     const instance = {
-//         id,
-//         vnode,
-//         props: newProps,
-//         vm,
-//         // manualDistory下文添加
-//         destroy: manualDistory
-//     };
-//     // 将当前创建的实例添加到实例数组中
-//     instances.push(instance);
-//
-//     //  手动调用删除, 也就是手动调整组件中的visible值
-//     //  visible 是通过expose传出来的
-//     const manualDistory = () => {
-//         const instance = instances.find((instance) => instance.id === id);
-//         if (instance) {
-//             instance.vm.exposed!.visible.value = false;
-//         }
-//     };
-//
-//     // 卸载组件
-//     const destroyMesssage = () => {
-//         // 从实例数组中删除
-//         const index = instances.findIndex((instance) => instance.id === id);
-//         if (index === -1) return;
-//         instances.splice(index, 1);
-//         render(null, container);
-//     };
-//
-// }

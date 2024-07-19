@@ -10,7 +10,7 @@
 <script setup lang="ts">
 
 import MyInput from '@myprint/design/components/my/input/my-input.vue';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue-demi';
 import numberUtil from '@myprint/design/utils/numberUtil';
 
 const emit = defineEmits(['update:modelValue', 'change']);

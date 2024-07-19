@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue-demi';
 
 import * as d3Array from 'd3-array';
 import * as d3Selection from 'd3-selection';

@@ -1,9 +1,13 @@
 <template>
-    <design-panel :template="data.template" :module="data.module" @saveTemplate="saveTemplate" @panel-img="panelImg"
+    <design-panel :template="data.template"
+                  generateImg
+                  :module="data.module"
+                  :saveTemplate="saveTemplate"
+                  @panel-img="panelImg"
                   @back="back" />
 </template>
 <script setup lang="ts">
-import { DesignPanel } from '@myprint/design/index';
+import { DesignPanel, SaveResult } from '@myprint/design/index';
 import { templateCoverImgUpdate, templateCreate, templateDetail, templateUpdate } from '@/api/template';
 import { onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -59,28 +63,36 @@ function back() {
 }
 
 function saveTemplate(template: Template) {
-    if (data.template == null) {
-        data.template = {} as Template;
-    }
-    data.template.name = template.name;
-    data.template.content = template.content;
-    if (data.template.id == null) {
-        data.template.moduleId = data.module.id;
-        templateCreate(data.template)
-            .then(res => {
-                id = res.data.id as string;
-                updateQuery(id)
-                msgSuccess('新增成功');
-                if (data.arrayBufferList != null) {
-                    panelImg(data.arrayBufferList);
-                }
+    return new Promise<SaveResult>((resolve, reject) => {
+        if (data.template == null) {
+            data.template = {} as Template;
+        }
+        data.template.name = template.name;
+        data.template.content = template.content;
+        if (data.template.id == null) {
+            data.template.moduleId = data.module.id;
+            templateCreate(data.template)
+                .then(res => {
+                    id = res.data.id as string;
+                    updateQuery(id);
+                    msgSuccess('新增成功');
+                    if (data.arrayBufferList != null) {
+                        panelImg(data.arrayBufferList);
+                    }
+                    resolve({ status: 'SUCCESS' } as SaveResult);
+                }).catch(_e => {
+                reject({ status: 'ERROR' } as SaveResult);
             });
-    } else {
-        templateUpdate(data.template)
-            .then(_res => {
-                msgSuccess('保存成功');
+        } else {
+            templateUpdate(data.template)
+                .then(_res => {
+                    msgSuccess('保存成功');
+                    resolve({ status: 'SUCCESS' } as SaveResult);
+                }).catch(_e => {
+                reject({ status: 'ERROR' } as SaveResult);
             });
-    }
+        }
+    });
 }
 
 function panelImg(arrayBufferList: ArrayBuffer []) {

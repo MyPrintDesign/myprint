@@ -9,7 +9,7 @@ import {
 } from '@myprint/design/types/entity';
 import numberUtil from '@myprint/design/utils/numberUtil';
 import { parse, stringify } from '@myprint/design/utils/utils';
-import { reactive } from 'vue';
+import { reactive } from 'vue-demi';
 import { installParentElement, setCurrentElement } from '@myprint/design/utils/elementUtil';
 
 

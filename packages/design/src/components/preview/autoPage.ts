@@ -1,6 +1,6 @@
-import { generateUUID, parse, stringify } from '@myprint/design/utils/utils';
+import { downloadImg2Base64, generateUUID, parse, stringify } from '@myprint/design/utils/utils';
 import { px2unit, unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { nextTick, reactive } from 'vue';
+import { nextTick, reactive } from 'vue-demi';
 import {
     FormatterVariable,
     MyElement,
@@ -106,7 +106,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
     }
 
     for (let previewData of previewDataList) {
-        previewContext.previewData = previewData
+        previewContext.previewData = previewData;
         // 固定高度 表格分页打印
         while (previewContext.pagingRepetition) {
             previewContext.pagingRepetition = false;
@@ -206,7 +206,14 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
             if (previewWrapper.type == 'Image') {
                 previewWrapper.data = previewDataTmp;
                 // 如果是图片地址，则下载下来
-                // todo
+                if ((previewWrapper.data as string).startsWith('http')) {
+                    // 网络图片，下载下来
+                    try {
+                        previewWrapper.data = await downloadImg2Base64(previewWrapper.data);
+                    } catch (e: any) {
+                        previewWrapper.data = '图片加载错误';
+                    }
+                }
                 previewContext.currentPage.elementList.push(previewWrapper);
                 await nextTick();
             } else if (previewWrapper.type == 'Text' || previewWrapper.type == 'PageNum' || previewWrapper.type == 'TextTime') {

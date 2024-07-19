@@ -154,7 +154,7 @@ import {
 import MyGroup from '@myprint/design/components/my/group/my-group.vue';
 import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
 import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
-import { computed } from 'vue';
+import { computed } from 'vue-demi';
 import { MyElement, statisticsType, statisticsTypeFormat } from '@myprint/design/types/entity';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';

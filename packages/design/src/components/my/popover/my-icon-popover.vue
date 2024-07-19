@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref } from 'vue-demi';
 import { onClickOutside } from '@vueuse/core';
 import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
 import { Placement } from '@popperjs/core/lib/enums';

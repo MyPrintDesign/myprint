@@ -23,7 +23,7 @@
 
 import { fontList, hasStyle } from '@myprint/design/constants/common';
 import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
-import { reactive, watch } from 'vue';
+import { reactive, watch } from 'vue-demi';
 import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-style/element-align.vue';
 import ToolIconPopover from '@myprint/design/components/my/icon/tool-icon-popover.vue';
 import { useAppStoreHook } from '@myprint/design/stores/app';

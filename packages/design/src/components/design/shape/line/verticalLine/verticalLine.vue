@@ -4,7 +4,7 @@
 </template>
 <script setup lang="ts">
 
-import { computed } from 'vue';
+import { computed } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
 import { computedStyle } from '../computeStyle';
 

@@ -10,7 +10,7 @@
     </Teleport>
 </template>
 <script setup lang="ts">
-import { inject, nextTick, reactive, ref } from 'vue';
+import { inject, nextTick, reactive, ref } from 'vue-demi';
 // @ts-ignore
 import { Container, MyElement, PageUnit, Point, SvgData } from '@myprint/design/types/entity';
 import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';

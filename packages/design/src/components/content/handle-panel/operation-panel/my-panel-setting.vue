@@ -98,7 +98,7 @@
 
 </template>
 <script setup lang="ts">
-import { inject } from 'vue';
+import { inject } from 'vue-demi';
 import { i18n } from '@myprint/design/locales';
 
 import { pageSizeList, pageUnitList } from '@myprint/design/constants/common';

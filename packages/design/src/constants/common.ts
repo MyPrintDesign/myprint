@@ -8,7 +8,7 @@ import {
     MyElement,
     statisticsTypeFormat
 } from '@myprint/design/types/entity';
-import { PropType, reactive } from 'vue';
+import { PropType, reactive } from 'vue-demi';
 import { i18n } from '@myprint/design/locales';
 
 export const defaultElement: MyElement[] = [];
@@ -88,13 +88,13 @@ const commonElementSetting: Array<elementSettingType> = ['x', 'y', 'width', 'hei
 const styleElementSetting: Array<elementSettingType> = ['textAlign', 'verticalAlign', 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'fontFamily', 'fontSize'];
 const elementSetting: Record<elementType, Array<elementSettingType>> =
     {
-        Image: [...commonElementSetting, 'common'],
-        Text: [...commonElementSetting, ...styleElementSetting, 'common', 'fontFamily', 'fontSize', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'lineBreak'],
-        TextTime: [...commonElementSetting, ...styleElementSetting, 'common', 'fontFamily', 'fontSize', 'color', 'hiddenLabel', 'formatter', 'padding', 'margin', 'label'],
+        Image: [...commonElementSetting, 'common', 'borderRadius'],
+        Text: [...commonElementSetting, ...styleElementSetting, 'common', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'lineBreak'],
+        TextTime: [...commonElementSetting, ...styleElementSetting, 'common', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'formatter', 'padding', 'margin', 'label'],
         Panel: [...commonElementSetting, 'common'],
         DataTable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
         FREETable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
-        Rect: [...commonElementSetting, 'common', 'color', 'background'],
+        Rect: [...commonElementSetting, 'common', 'borderRadius', 'color', 'background'],
         HorizontalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'lineWidth'],
         DottedHorizontalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'dottedStyle', 'lineWidth'],
         VerticalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'lineWidth'],
@@ -102,7 +102,7 @@ const elementSetting: Record<elementType, Array<elementSettingType>> =
         Container: [...commonElementSetting, 'common'],
         PageHeader: [...commonElementSetting, 'common'],
         PageFooter: [...commonElementSetting, 'common'],
-        PageNum: [...commonElementSetting, ...styleElementSetting, 'common', 'formatter'],
+        PageNum: [...commonElementSetting, ...styleElementSetting, 'common', 'formatter', 'borderRadius'],
         SvgPolygonLine: ['common', 'color', 'background', 'x', 'y', 'opacity'],
         SvgCircle: ['common', 'color', 'background', 'x', 'y', 'opacity'],
         SvgEllipse: ['common', 'color', 'background', 'x', 'y', 'opacity'],

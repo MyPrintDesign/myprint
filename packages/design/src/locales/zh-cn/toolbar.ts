@@ -28,6 +28,9 @@ export default {
     'toolbar.style.borderAll': '边框',
     'toolbar.style.group': '组合',
     'toolbar.style.unGroup': '取消组合',
+
+    'toolbar.printer': '打印机',
+
 }
 
 

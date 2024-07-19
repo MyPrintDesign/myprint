@@ -28,11 +28,12 @@ const emit = defineEmits(['update:visible']);
 
 withDefaults(defineProps<{
     menuList?: Array<MenuItem>,
-    visible: boolean,
+    visible?: boolean,
     item: any,
 }>(), {
     menuList: () => ([]),
-    item: () => ({})
+    item: () => ({}),
+    visible: false
 });
 
 function updateVisible(val: boolean) {

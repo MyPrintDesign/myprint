@@ -4,7 +4,7 @@ import { Container, MyElement } from '@myprint/design/types/entity';
 import { addElement, getCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { parse, stringify } from '@myprint/design/utils/utils';
 import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
-import { nextTick } from 'vue';
+import { nextTick } from 'vue-demi';
 import { px2unit } from '@myprint/design/utils/devicePixelRatio';
 
 type memoryClipboardType = 'COPY' | 'CUT'

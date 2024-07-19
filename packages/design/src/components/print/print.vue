@@ -23,20 +23,20 @@
 </template>
 
 <script setup lang="ts">
-import { inject, nextTick, reactive, ref } from 'vue';
-import { download, printCssStyle } from '@myprint/design/utils/utils';
-import { MyElement, Panel } from '@myprint/design/types/entity';
-import { messageFun, mittKey } from '@myprint/design/constants/keys';
-import { displayModelPrint, getCurrentPanel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
+import { inject, nextTick, reactive, ref } from 'vue-demi';
+import { download } from '@myprint/design/utils/utils';
+import { MyElement, Panel, PrintProps } from '@myprint/design/types/entity';
+import { messageFun } from '@myprint/design/constants/keys';
+import { displayModelPrint, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
 import { useConfigStore } from '@myprint/design/stores/config';
 import Preview from '@myprint/design/components/preview/preview.vue';
 import { autoPage } from '@myprint/design/components/preview/autoPage';
-import { PrintProps } from '@myprint/design/types/entity';
-import { toImg } from '@myprint/design/utils/pdfUtil';
+import { chrome2Img } from '@myprint/design/utils/pdfUtil';
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { downloadImg, downloadPdf } from '@myprint/design/api/pdfServer';
+import { getPrintElementHtml, iFramePrint } from '@myprint/design/utils/myprint';
 
-defineExpose({ handlePrint, design2Img, handleServerDownloadImg, handleServerDownloadPdf });
+defineExpose({ handleClientPrint, handleChromeDownloadImg, handleServerDownloadImg, handleServerDownloadPdf });
 // const { SEND: socketSend, printerList, connect } = useSocket();
 const configStore = useConfigStore();
 const data = reactive({
@@ -46,18 +46,14 @@ const data = reactive({
     panel: null! as Panel
 });
 const previewContentRef = ref<HTMLDivElement[]>()!;
-const mitt = inject(mittKey)!;
 const onMessage = inject(messageFun)!;
 let itemRefs = {} as any;
-mitt.on('design2Img', design2Img);
 
 function setItemRef(el: any, item: MyElement) {
-    // console.log('setItemRef', item.label)
-    // console.log('setItemRef')
     itemRefs[item.id] = el;
 }
 
-function handlePrint(printProps: PrintProps) {
+function handleClientPrint(printProps: PrintProps) {
     data.panel = printProps.panel as Panel;
     data.dialogVisible = true;
     nextTick(() => {
@@ -71,14 +67,14 @@ function handlePrint(printProps: PrintProps) {
     });
 }
 
-function design2Img(printProps: PrintProps) {
+function handleChromeDownloadImg(printProps: PrintProps) {
     return new Promise<ArrayBuffer[]>((resolve, reject) => {
         data.panel = printProps.panel as Panel;
         data.dialogVisible = true;
         nextTick(() => {
             autoPage(data.pageList, data.panel, printProps.previewDataList)
                 .then(() => {
-                    toImg((imgList) => {
+                    chrome2Img((imgList) => {
                         // 清空内容
                         data.pageList = [];
                         resolve(imgList);
@@ -101,7 +97,7 @@ function handleServerDownloadImg(printProps: PrintProps) {
         nextTick(() => {
             autoPage(data.pageList, data.panel, printProps.previewDataList)
                 .then(() => {
-                    const html = getPrintElementHtml();
+                    const html = getPrintElementHtml(previewContentRef.value!);
                     downloadImg({
                         content: html,
                         height: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.height),
@@ -127,8 +123,7 @@ function handleServerDownloadPdf(printProps: PrintProps) {
         nextTick(() => {
             autoPage(data.pageList, data.panel, printProps.previewDataList)
                 .then(() => {
-                    const html = getPrintElementHtml();
-                    
+                    const html = getPrintElementHtml(previewContentRef.value!);
                     downloadPdf({
                         content: html,
                         height: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.height),
@@ -147,70 +142,12 @@ function handleServerDownloadPdf(printProps: PrintProps) {
     });
 }
 
-function getPrintElementHtml() {
-    let html = '<div style="  --tcolor: black;">';
-    debugger
-    for (let i = 0; i < previewContentRef.value!.length; i++) {
-        html += previewContentRef.value![i].outerHTML;
-    }
-    html += '</div>';
-    return html;
-}
-
 function printArea() {
-    const panel = getCurrentPanel();
-    const html = getPrintElementHtml();
-    // 创建iframe
-    let iframe = document.createElement('iframe');
-    // 设置iframe样式
-    iframe.setAttribute('id', 'print-box');
-    iframe.setAttribute(
-        'style',
-        `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; position: absolute; left: 0; top: 0;border: 0;
-      z-index: 10000;`
-    );
-    // 在页面插入iframe
-    document.body.appendChild(iframe);
-    // 获取iframe内的html
-    let iframeDocument = iframe.contentWindow!.document;
-    // 经需要打印的DOM插入iframe
-    
-    const linkElement = iframeDocument.createElement('style');
-    linkElement.type = 'text/css';
-    linkElement.textContent = printCssStyle(); // 根据实际文件路径修改
-    iframeDocument.body.innerHTML = html;
-    
-    // 设置iframe内的header，添加样式文件
-    iframeDocument.getElementsByTagName('head')[0].innerHTML = `
-  <style>
-    *{ margin:0;padding:0; }
-    @media print {
-      @page {
-        size: ${valueUnit(panel.width)} ${valueUnit(panel.height)};
-        margin: 0;
-      }
-    }
-  </style>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">`;
-    iframeDocument.head.appendChild(linkElement);
-    
-    // 关闭iframe
-    iframeDocument.close();
-    // 使iframe失去焦点
-    iframe.contentWindow!.focus();
-    // 调用iframe的打印方法
-    iframe.contentWindow!.print();
-    // 移除iframe
-    setTimeout(function() {
-        // console.log('关闭');
-        // data.pageList = [];
-        // document.body.removeChild(iframe);
-    }, 100);
-    
+    const html = getPrintElementHtml(previewContentRef.value!);
+    iFramePrint(data.panel, html);
 }
 
 onMessage.value = (msg: any) => {
-    console.log(msg);
     let pdf = msg.pdf;
     // console.log(pdf)
     if (pdf != null) {

@@ -21,7 +21,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue-demi';
 import { cancelRaf, rafTimeout } from '@myprint/design/utils/utils';
 
 const props = withDefaults(defineProps<{

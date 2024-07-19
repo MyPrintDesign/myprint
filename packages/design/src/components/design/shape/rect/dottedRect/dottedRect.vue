@@ -1,18 +1,18 @@
 <template>
     <div class="my-print-dotted-rect__wrapper"
-         :style="{maxWidth: widthValueUnit(element), width: valueUnit(trend1(element.width - 2 * element.option.borderWidth)),
-       height: valueUnit(trend1(element.height - 2 * element.option.borderWidth)),
-       margin: valueUnit(element.option.borderWidth),
-       outlineWidth: valueUnit(element.option.borderWidth),
-       }" />
+         :style="labelStyle" />
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { computed, PropType } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
-import { trend1 } from '@myprint/design/utils/utils';
-import { valueUnit, widthValueUnit } from '@myprint/design/utils/elementUtil';
+import { computedStyle } from '@myprint/design/components/design/shape/line/computeStyle';
 
-defineProps({
+const props = defineProps({
     element: { type: Object as PropType<MyElement>, default: () => ({} as MyElement) }
 });
+
+const labelStyle = computed(() => {
+    return computedStyle(props.element, 'rect', 'solid');
+});
+
 </script>

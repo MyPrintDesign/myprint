@@ -1,4 +1,4 @@
-import { reactive } from 'vue';
+import { reactive } from 'vue-demi';
 import { Container } from '@myprint/design/types/entity';
 
 export const mouseTips = {

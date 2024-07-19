@@ -83,49 +83,8 @@ export function parse<T>(str: string, target: T): T {
 
 
 export function to<T>(source: any, target: T): T {
-    // for (let targetObjKey in targetObj) {
-    //     target[targetObjKey] = targetObj[targetObjKey]
-    // }
-    // return target;
     return Object.assign(target as any, source);
 }
-
-// export function copyBasicType<T>(sourceObj: any, target: T) {
-//     for (let targetObjKey in sourceObj) {
-//         let pro = sourceObj[targetObjKey]
-//         if (pro instanceof Object) {
-//             copyBasicType(pro, target[targetObjKey] )
-//             console.log(targetObjKey, 'true')
-//         } else {
-//             target[targetObjKey] = pro
-//         }
-//     }
-// }
-
-// export function swap<T>(targetObj: any, target: T) {
-//     const tmp = {}
-//     Object.assign(tmp, target);
-//     Object.assign(target, targetObj);
-//     Object.assign(targetObj, tmp);
-// }
-
-// export function toElement(targetObj: any): Element {
-//     let element: Element
-//     if (targetObj.type == 'Text') {
-//         element = {} as TextElement
-//     } else {
-//         element = {} as Element
-//     }
-//
-//     Object.assign(element, targetObj);
-//     initElement(element)
-//
-//     return element
-// }
-
-// export function initElement(element: Element) {
-//
-// }
 
 export function trend0(num: number) {
     return num < 0 ? 0 : num;
@@ -227,21 +186,21 @@ export function download(blob: Blob, fileName: string) {
     URL.revokeObjectURL(blobUrl);
 }
 
-
-export function _width(element: MyElement) {
-    if (['DottedVerticalLine', 'VerticalLine'].includes(element.type)) {
-        return element.option.borderWidth + 0.6;
-    }
-    return element.width;
+export function downloadImg2Base64(url: string) {
+    return new Promise((resolve, reject) => {
+        fetch(url)
+            .then(async res => {
+                const blob = res.blob();
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve(reader.result);
+                };
+                reader.readAsDataURL(await blob);
+            }).catch(e => {
+            reject(e);
+        });
+    });
 }
-
-export function _height(element: MyElement) {
-    if (['DottedHorizontalLine', 'HorizontalLine'].includes(element.type)) {
-        return element.option.borderWidth + 2;
-    }
-    return element.height;
-}
-
 
 export function getFontFamilyName(val: string) {
     for (let fontListElement of fontList) {
@@ -255,7 +214,11 @@ export function getFontFamilyName(val: string) {
     return '默认';
 }
 
-
+/**
+ * 路径压缩
+ * @param points
+ * @param epsilon
+ */
 export function douglasPeucker(points, epsilon) {
     if (points.length <= 2) {
         return points;

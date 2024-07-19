@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject } from 'vue';
+import { computed, inject } from 'vue-demi';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
 import { hasStyle } from '@myprint/design/constants/common';

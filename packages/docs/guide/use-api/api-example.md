@@ -45,30 +45,33 @@ console.log(result.status);
 唤出预览页面
 
 ```ts
-<script setup>
+<script setup >
 import { MyPrinter } from 'myprint-design/src';
 
-function click(){
+function click() {
 
-MyPrinter.preview({ previewDataList: [] })
-    .then(res => {
-        // 预览页面进行打印时，回调，预览页面的停留时间也会记入超时时间
-        if (res.status == 'SUCCESS') {
-            console.log('打印成功');
-        } else if (res.status == 'ERROR') {
-            console.log('打印失败', res.msg);
-        } else if (res.status == 'TIMEOUT') {
-            console.log('打印超时');
-        }
-    });
+    MyPrinter.preview({ previewDataList: [] })
+        .then(res => {
+            // 预览页面进行打印时，回调，预览页面的停留时间也会记入超时时间
+            if (res.status == 'SUCCESS') {
+                console.log('打印成功');
+            } else if (res.status == 'ERROR') {
+                console.log('打印失败', res.msg);
+            } else if (res.status == 'TIMEOUT') {
+                console.log('打印超时');
+            }
+        });
 }
 
 </script>
 
 
-<button  @click="click">示例</button>
+< button
+@click
+= "click" > 示例 < /button>
 
 ```
+
 ```ts
 import { MyPrinter } from '@myprint/design/printer';
 
@@ -96,17 +99,16 @@ MyPrinter.preview({ previewDataList: previewData.value })
 
 ## 方法说明
 
-| 方法            | 说明                  |                          参数                          |                                                 返回值 |
-|---------------|---------------------|:----------------------------------------------------:|----------------------------------------------------:|
-| preview       | 预览，会在超时/用户进行打印时进行回调 | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| printer       | 本地客户端打印             | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| chromePrinter | 浏览器打印(直接调用浏览器打印页面)  | (printProps: [PrintProps](./api-example#PrintProps)) |          [`PrintResult`](./api-example#PrintResult) |
-| pdfChrome     | 浏览器构建pdf，清晰度较差      | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-| pdfClient     | 从本地客户端获取pdf，返回Blob  | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-| pdfServer     | 从服务器获取pdf，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-| imgChrome     | 从浏览器获取img，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-| imgServer     | 从服务器获取img，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
-
+| 方法            | 说明                    |                          参数                          |                                                 返回值 |
+|---------------|-----------------------|:----------------------------------------------------:|----------------------------------------------------:|
+| chromePreview | 预览页面，会在超时/用户进行打印时进行回调 | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| chromePrinter | 浏览器打印(直接调用浏览器打印页面)    | (printProps: [PrintProps](./api-example#PrintProps)) |          [`PrintResult`](./api-example#PrintResult) |
+| clientPrinter | 本地客户端打印               | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| pdfChrome     | 浏览器构建pdf，清晰度较差        | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
+| pdfClient     | 从本地客户端获取pdf，返回Blob    | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
+| pdfServer     | 从服务器获取pdf，返回Blob      | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
+| imgChrome     | 从浏览器获取img，返回Blob      | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
+| imgServer     | 从服务器获取img，返回Blob      | (printProps: [PrintProps](./api-example#PrintProps)) |                                     `Promise<Blob>` |
 
 ## Types
 

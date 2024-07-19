@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import JsBarcode from 'jsbarcode';
 import { MyElement } from '@myprint/design/types/entity';
-import { computed, reactive, ref, watch } from 'vue';
+import { computed, reactive, ref, watch } from 'vue-demi';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { _defaultNum } from '@myprint/design/utils/numberUtil';
 import { elementCommonStyle, getRecursionParentPanel } from '@myprint/design/utils/elementUtil';

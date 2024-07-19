@@ -9,7 +9,7 @@ import { CurveGenerator } from 'd3-shape';
 import * as d3Selection from 'd3-selection';
 import * as d3Drag from 'd3-drag';
 import { DragBehavior, DraggedElementBaseType } from 'd3-drag';
-import { onMounted, reactive, ref, watch } from 'vue';
+import { onMounted, reactive, ref, watch } from 'vue-demi';
 import { MyElement, PointClick } from '@myprint/design/types/entity';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { douglasPeucker } from '@myprint/design/utils/utils';
@@ -29,7 +29,7 @@ const data = reactive({
     dragFun: {} as DragBehavior<DraggedElementBaseType, any, any>,
     doubleClick: {} as DragBehavior<DraggedElementBaseType, any, any>
 } as any);
-let startX, startY;
+let startX: number, startY: number;
 let lastClickPoint: PointClick = undefined!;
 
 const props = withDefaults(defineProps<{
@@ -83,7 +83,6 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
     render();
 });
 
-
 watch([() => props.element.width, () => props.element.height], (_n, _o) => {
     canvasRef.value.width = unit2px(props.element.width, getRecursionParentPanel(props.element)) * 2;
     canvasRef.value.height = unit2px(props.element.height, getRecursionParentPanel(props.element)) * 2;
@@ -92,14 +91,23 @@ watch([() => props.element.width, () => props.element.height], (_n, _o) => {
 watch([() => props.element.option.borderAll], (_n, _o) => {
     render();
 });
+watch([() => props.element.data], (_n, _o) => {
+    initData();
+    render();
+});
 
-if (props.element.data) {
+function initData() {
     const list = JSON.parse(props.element.data);
+    data.strokes = [];
     for (let listElement of list) {
         listElement.data['stroke'] = listElement['stroke'];
         listElement.data['strokeWidth'] = listElement['strokeWidth'];
         data.strokes.push(listElement.data);
     }
+}
+
+if (props.element.data) {
+    initData();
 }
 
 onMounted(() => {

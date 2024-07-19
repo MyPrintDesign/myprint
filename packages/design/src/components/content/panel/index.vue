@@ -28,7 +28,7 @@ import OperationPanel from '../handle-panel/operation-panel/index.vue';
 import SettingPanel from '../handle-panel/setting/setting-panel.vue';
 import { useConfigStore } from '@myprint/design/stores/config';
 import MinimapPanel from '@myprint/design/components/content/handle-panel/minimap-panel.vue';
-import { onMounted } from 'vue';
+import { onMounted } from 'vue-demi';
 
 const configStore = useConfigStore();
 

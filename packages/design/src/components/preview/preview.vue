@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, CSSProperties, onMounted, onUnmounted, ref } from 'vue';
+import { computed, CSSProperties, onMounted, onUnmounted, ref } from 'vue-demi';
 import ElementView from '@myprint/design/components/design/element.vue';
 import { PreviewWrapper } from '@myprint/design/types/entity';
 import { getRecursionParentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
@@ -37,8 +37,6 @@ const style = computed(() => {
     if (props.preview.heightIs) {
         _style.height = valueUnit(props.preview.height, getRecursionParentPanel(props.preview));
     }
-    // console.log('change', element.value.previewRuntimeOption.heightIs)
-    // _style.transform = getTranslate(element.value!)
     return _style;
 });
 const props = withDefaults(defineProps<{
@@ -50,13 +48,10 @@ const previewWrapRef = ref();
 
 onMounted(() => {
     props.preview.target = previewWrapRef.value;
-    // previewWrapRef.value.element = props.element;
 });
+
 onUnmounted(() => {
     props.preview.target = undefined;
 });
-// console.log(props.preview)
-
-// const element = computed(() => props.preview.element)
 
 </script>

@@ -21,10 +21,12 @@
 
 const emit = defineEmits(['update:modelValue', 'confirm']);
 
-const props = withDefaults(defineProps<{
+withDefaults(defineProps<{
     modelValue: boolean
-    name: string
-}>(), {});
+    name?: string
+}>(), {
+    name: null
+});
 
 function clickRenameSure() {
     emit('confirm');

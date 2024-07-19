@@ -17,7 +17,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { reactive, ref } from 'vue';
+import { reactive, ref } from 'vue-demi';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import ArrowRight from '@myprint/design/components/my/icon/icons/ArrowRight.vue';
 

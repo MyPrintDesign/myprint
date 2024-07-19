@@ -9,7 +9,7 @@
     </td>
 </template>
 <script setup lang="ts">
-import { computed, CSSProperties, onMounted, ref } from 'vue';
+import { computed, CSSProperties, onMounted, ref } from 'vue-demi';
 import { TableCellElement } from '@myprint/design/types/entity';
 import MyText from '@myprint/design/components/design/text';
 

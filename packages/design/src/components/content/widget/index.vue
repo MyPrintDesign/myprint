@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import business from './business.vue';
 import basic from './basic.vue';
-import { inject } from 'vue';
+import { inject } from 'vue-demi';
 import { providerKey } from '@myprint/design/constants/keys';
 import { customProvider } from '@myprint/design/constants/provider/custom';
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';

@@ -108,6 +108,17 @@
                 </my-group>
             </my-form-item>
             
+            <my-form-item label="圆角边框"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('borderRadius')">
+                <my-group>
+                    <my-history-input-number class="width-60"
+                                             :model-value="multipleElementGetValue('option.borderRadius')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('option.borderRadius', val)"
+                                             historyLabel="圆角" />
+                    <my-unit />
+                </my-group>
+            </my-form-item>
+            
             <my-form-item label="不透明度"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
                 <my-slider class="width-120"
@@ -291,6 +302,9 @@
                     active-text="是"
                     inactive-text="否" />
             </my-form-item>
+            
+            <my-button size="small" @click="clearDrawPanel">清空画布</my-button>
+        
         </my-divider-panel>
         
         <my-divider-panel>
@@ -313,7 +327,7 @@
 
 </template>
 <script setup lang="ts">
-import { computed, inject } from 'vue';
+import { computed, inject } from 'vue-demi';
 
 import {
     barcodeTypes,
@@ -345,6 +359,7 @@ import QuestionFilled from '@myprint/design/components/my/icon/icons/QuestionFil
 import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
 import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
 import MyForm from '@myprint/design/components/my/form/my-form.vue';
+import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 
 const mitt = inject(mittKey)!;
 
@@ -388,13 +403,17 @@ function changeLocationY(_val: any) {
 }
 
 function changeElementWidth(_val) {
-    console.log(_val)
+    console.log(_val);
     moveableResize(unit2px(element.value.width), unit2px(element.value.height), element.value.option.keepRatio);
 }
 
 function changeElementKeepRatio() {
     // console.log(val)
     freshMoveableOption(element.value);
+}
+
+function clearDrawPanel() {
+    element.value.data = JSON.stringify([]);
 }
 
 function changeBarCodeType(val: any) {

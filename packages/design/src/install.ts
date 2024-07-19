@@ -1,5 +1,4 @@
-// @ts-nocheck
-import { App, ref } from 'vue';
+import { App, ref } from 'vue-demi';
 import 'vue3-colorpicker/style.css';
 
 import { messageFun, mittKey } from './constants/keys';
@@ -24,7 +23,7 @@ const install = {
         // comps.map((component:any)=>{
         //     Vue.component(component.__name as string, component);
         // })
-        console.log('~~~MyPrint 初始化~~~');
+        // console.log('~~~MyPrint 初始化~~~');
         // console.log(app)
 
         if (app.config.globalProperties.$pinia) {
@@ -32,11 +31,13 @@ const install = {
         } else {
             const pinia = createPinia();
             pinia.use(piniaPluginPersistedstate);
+            // @ts-ignore
             app.use(pinia);
         }
         app
             // .use(i18n)
             .use(VueCropper)
+            // @ts-ignore
             .use(Vue3ColorPicker);
         app.provide(messageFun, onSocketMessage);
         app.provide(mittKey, mitt);

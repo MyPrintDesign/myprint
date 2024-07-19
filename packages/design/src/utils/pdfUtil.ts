@@ -13,7 +13,7 @@ let defaultOptions = {
     // allowTaint: true
 };
 
-export async function toImg(imgListCallback: (imageList: ArrayBuffer[]) => void, pageDomList: any, options: any) {
+export async function chrome2Img(imgListCallback: (imageList: ArrayBuffer[]) => void, pageDomList: any, options: any) {
     defaultOptions.width = options.width;
     defaultOptions.height = options.height;
     const imageMap: Record<number, ArrayBuffer> = {};

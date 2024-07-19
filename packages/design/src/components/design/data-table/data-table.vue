@@ -40,7 +40,7 @@
 
 import ColumnView from './column-view.vue';
 import TextView from '../text/text.vue';
-import { CSSProperties, onMounted, watch } from 'vue';
+import { CSSProperties, onMounted, watch } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 

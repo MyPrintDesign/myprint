@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 
-import { inject, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue';
+import { inject, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue-demi';
 import { mittKey } from '@myprint/design/constants/keys';
 import MyDivider from '@myprint/design/components/my/divider/my-divider.vue';
 

@@ -3,7 +3,7 @@
          :style="labelStyle" />
 </template>
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
+import { computed, PropType } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
 import { computedStyle } from '@myprint/design/components/design/shape/line/computeStyle';
 

@@ -43,3 +43,11 @@ export function templateDetail(id: string) {
         data: { id }
     });
 }
+
+export function templateDelete(data: Template) {
+    return request({
+        url: '/template/delete',
+        method: 'post',
+        data: data
+    });
+}
