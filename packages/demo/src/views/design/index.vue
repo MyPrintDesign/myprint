@@ -23,7 +23,7 @@ let { moduleId, id } = route.query;
 const data = reactive({
     template: null! as Template,
     module: null as Module,
-    arrayBufferList: null
+    blobList: null
 });
 
 onMounted(() => {
@@ -95,12 +95,12 @@ function saveTemplate(template: Template) {
     });
 }
 
-function panelImg(arrayBufferList: ArrayBuffer []) {
-    data.arrayBufferList = null;
+function panelImg(blobList: Blob []) {
+    data.blobList = null;
     if (id) {
         const formData = new FormData();
-        for (let i = 0; i < arrayBufferList.length; i++) {
-            const blob = new Blob([arrayBufferList[i]]);
+        for (let i = 0; i < blobList.length; i++) {
+            const blob = blobList[i];
             formData.append('fileList', blob);
         }
         
@@ -110,7 +110,7 @@ function panelImg(arrayBufferList: ArrayBuffer []) {
             console.log(res);
         });
     } else {
-        data.arrayBufferList = arrayBufferList;
+        data.blobList = blobList;
     }
     
 }

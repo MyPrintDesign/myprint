@@ -3,6 +3,7 @@
         v-model="data.dialogVisible"
         class="preview-dialog"
         fullscreen
+        :showHeader="false"
         @close="closePreviewPanel">
         <div class="preview-panel">
             <my-scrollbar height="100%" class="preview-panel__scrollbar"
@@ -54,16 +55,15 @@
 </template>
 
 <script setup lang="ts">
-import { inject, nextTick, reactive, ref } from 'vue-demi';
+import { nextTick, reactive, ref } from 'vue-demi';
 import { toPdf } from '@myprint/design/utils/pdfUtil';
-import { download, generateUUID } from '@myprint/design/utils/utils';
-import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
+import { download } from '@myprint/design/utils/utils';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import Preview from './preview.vue';
-import { ClientCmd, MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
-import { messageFun } from '@myprint/design/constants/keys';
+import { MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
 import { useSocket } from '@myprint/design/stores/socket';
 import { i18n } from '@myprint/design/locales';
-import { displayModel, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
+import { displayModel, valueUnit } from '@myprint/design/utils/elementUtil';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { autoPage } from './autoPage';
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
@@ -71,6 +71,12 @@ import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
 import MySelect from '@myprint/design/components/my/select/my-select.vue';
 import { getPrintElementHtml, iFramePrint } from '@myprint/design/utils/myprint';
+import {
+    handleClientResult,
+    handleTimeOut,
+    myPrintClientService,
+    printResult
+} from '@myprint/design/plugins/myprintClientService';
 
 defineExpose({ handleChromePreview });
 
@@ -80,12 +86,11 @@ const data = reactive({
     printer: configStore.defaultPrinter,
     pageList: [] as any,
     resolveMap: {},
-    previewTimeOut: null! as any,
-    printTaskId: null as any
+    previewTimeOutMap: {},
+    taskId: null as any
 });
 const previewContentRef = ref<HTMLDivElement[]>()!;
 const panel = ref({} as Panel);
-const onMessage = inject(messageFun)!;
 let itemRefs = {} as any;
 
 function print() {
@@ -93,14 +98,15 @@ function print() {
     for (let i = 0; i < previewContentRef.value!.length; i++) {
         html += previewContentRef.value![i].outerHTML;
     }
-    useSocket().SEND(JSON.stringify({
-            content: { html, printer: data.printer },
-            cmd: 'print',
-            taskId: data.printTaskId,
-            width: unit2unit(getCurrentPanelUnit(panel.value), 'mm', panel.value.width),
-            height: unit2unit(getCurrentPanelUnit(panel.value), 'mm', panel.value.height)
-        })
-    );
+    myPrintClientService.print({
+        content: { html, printer: data.printer },
+        cmd: 'print',
+        taskId: data.taskId
+    }, panel.value)
+        .then(res => {
+            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap, panel.value.name);
+        });
+    // useSocket().SEND(JSON.stringify());
 }
 
 function downloadPdf() {
@@ -110,38 +116,39 @@ function downloadPdf() {
         for (let i = 0; i < previewContentRef.value!.length; i++) {
             html += previewContentRef.value![i].outerHTML;
         }
-        useSocket().SEND(JSON.stringify({
-                taskId: data.printTaskId,
-                content: { html },
-                cmd: 'generatePdf',
-                width: unit2unit(getCurrentPanelUnit(panel.value), 'mm', panel.value.width),
-                height: unit2unit(getCurrentPanelUnit(panel.value), 'mm', panel.value.height)
-            })
-        );
+        myPrintClientService.print({
+            content: { html },
+            cmd: 'generatePdf',
+            taskId: data.taskId
+        }, panel.value).then(res => {
+            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap, panel.value.name);
+        });
     } else {
         toPdf(previewContentRef.value, {
             width: unit2px(panel.value.width, panel.value), height: unit2px(panel.value.height, panel.value)
+        }).then(blob => {
+            download(blob, panel.value.name + '.pdf');
+            printResult(data.taskId, {
+                status: 'SUCCESS',
+                msg: '',
+                type: 'CHROME_GENERATE_PDF'
+            }, data.previewTimeOutMap, data.resolveMap);
+        }).catch(e => {
+            printResult(data.taskId, {
+                status: 'ERROR',
+                msg: e.msg,
+                type: 'CHROME_GENERATE_PDF'
+            }, data.previewTimeOutMap, data.resolveMap);
         });
     }
 }
 
 function printChromePdf() {
     iFramePrint(panel.value, getPrintElementHtml(previewContentRef.value!));
-    printResult(data.printTaskId, {
+    printResult(data.taskId, {
         status: 'SUCCESS',
         type: 'CHROME_PRINT'
-    });
-}
-
-function printResult(printTaskId: string, result: PrintResult) {
-    if (data.previewTimeOut) {
-        clearTimeout(data.previewTimeOut);
-    }
-    
-    if (data.resolveMap[printTaskId]) {
-        data.resolveMap[printTaskId](result);
-        delete data.resolveMap[printTaskId];
-    }
+    }, data.previewTimeOutMap, data.resolveMap);
 }
 
 function setItemRef(el: any, item: MyElement) {
@@ -151,19 +158,12 @@ function setItemRef(el: any, item: MyElement) {
 function handleChromePreview(printProps: PrintProps) {
     data.dialogVisible = true;
     panel.value = printProps.panel as Panel;
-    data.printTaskId = generateUUID();
+    data.taskId = printProps.taskId;
     
-    if (printProps.timeout! > 0) {
-        data.previewTimeOut = setTimeout(() => {
-            printResult(data.printTaskId, {
-                status: 'TIMEOUT',
-                type: 'TIMEOUT'
-            });
-        }, printProps.timeout);
-    }
+    handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
     
     return new Promise<PrintResult>((resolve, _reject) => {
-        data.resolveMap[data.printTaskId] = resolve;
+        data.resolveMap[printProps.taskId!] = resolve;
         nextTick(() => {
             autoPage(data.pageList, panel.value, printProps.previewDataList);
         });
@@ -173,34 +173,10 @@ function handleChromePreview(printProps: PrintProps) {
 function closePreviewPanel() {
     displayModel('design');
     data.pageList = [];
+    
+    printResult(data.taskId, {
+        status: 'CLOSE',
+        type: 'CLOSE'
+    }, data.previewTimeOutMap, data.resolveMap);
 }
-
-onMessage.value = (msg: ClientCmd) => {
-    if (msg.cmd == 'printResult') {
-        printResult(msg.taskId, {
-            status: msg.content.success ? 'SUCCESS' : 'ERROR',
-            msg: msg.content.failureReason,
-            type: 'CLIENT_PRINT'
-        });
-    }
-    
-    if (msg.cmd == 'generatePdfResult') {
-        printResult(msg.taskId, {
-            status: 'SUCCESS',
-            msg: '',
-            type: 'CLIENT_GENERATE_PDF'
-        });
-        
-        let pdf = msg.pdf;
-        if (pdf != null) {
-            // 将Buffer对象转换为Uint8Array数组
-            // @ts-ignore
-            const uint8Array = new Uint8Array(pdf.data);
-            // 将Uint8Array数组转换为Blob对象
-            const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
-            download(blob, panel.value.name);
-        }
-    }
-    
-};
 </script>

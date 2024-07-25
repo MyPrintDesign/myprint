@@ -18,7 +18,7 @@ import PanelView from '@myprint/design/components/content/panel/index.vue';
 import { computed, CSSProperties, inject, onMounted, provide, reactive, Ref, ref, watch } from 'vue-demi';
 import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
 import { to } from '@myprint/design/utils/utils';
-import { mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
+import { designPropsKey, mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
 import { init } from '@myprint/design/utils/historyUtil';
 // @ts-ignore
 import { Module, SaveResult, Template } from '@myprint/design/types/R';
@@ -27,6 +27,7 @@ import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.
 import { displayModel, initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
 import { MyPrinter } from '@myprint/design/printer';
+import { MyMessage } from '@myprint/design/components/my/message/my-message';
 
 const appStore = useAppStoreHook();
 
@@ -56,9 +57,20 @@ const props = withDefaults(defineProps<{
     height?: string;
     generateImg?: boolean;
     showBackButton?: boolean;
+    showPrintButton?: boolean;
+    showDownloadPdfButton?: boolean;
+    showPreviewButton?: boolean;
+    showClearButton?: boolean;
+    showSaveButton?: boolean;
 }>(), {
-    showBackButton: true
+    showBackButton: true,
+    showPrintButton: true,
+    showDownloadPdfButton: true,
+    showPreviewButton: true,
+    showClearButton: true,
+    showSaveButton: true
 });
+provide(designPropsKey, props);
 
 const style = computed(() => {
     return <CSSProperties>{
@@ -106,7 +118,7 @@ function initTemplate() {
     // initPanel();
     
     if (!panel.watermarkContent) {
-        panel.watermarkContent = 'my-print';
+        // panel.watermarkContent = 'my-print';
     }
     if (!panel.groupList) {
         panel.groupList = [];
@@ -167,7 +179,9 @@ function saveTemplate() {
         props.saveTemplate(template)
             .then(_res => {
                 // 保存成功
+                MyMessage.success('保存成功');
             }).catch(_e => {
+            MyMessage.success('保存失败');
             // 保存失败
         });
     }

@@ -5,26 +5,31 @@
             
             <div class="display-flex-column toolbar-tool">
                 <div class="display-flex">
-                    <my-button size="small" class="toolbar-tool_button_margin_right" @click="print">
+                    <my-button v-if="designProps.showPrintButton" size="small" class="toolbar-tool_button_margin_right"
+                               @click="print">
                         <my-icon>
                             <Printer />
                         </my-icon>
                         {{ i18n('toolbar.print') }}
                     </my-button>
-                    <my-button size="small" class="toolbar-tool_button_margin_right" @click="serverDownloadPdf">
+                    <my-button v-if="designProps.showDownloadPdfButton" size="small"
+                               class="toolbar-tool_button_margin_right"
+                               @click="serverDownloadPdf">
                         <my-icon>
                             <Printer />
                         </my-icon>
                         {{ i18n('toolbar.download') }}
                     </my-button>
-                    <my-button size="small" class="toolbar-tool_button_margin_right" @click="preview">
+                    <my-button v-if="designProps.showPreviewButton" size="small"
+                               class="toolbar-tool_button_margin_right" @click="preview">
                         <i class="icon-zitiyulan iconfont" />
                         {{ i18n('toolbar.preview') }}
                     </my-button>
-                    <my-button size="small" class="toolbar-tool_button_margin_right" @click="clearPanelClick">
+                    <my-button v-if="designProps.showClearButton" size="small" class="toolbar-tool_button_margin_right"
+                               @click="clearPanelClick">
                         {{ i18n('toolbar.clear') }}
                     </my-button>
-                    <my-button size="small" class="toolbar-tool_button_margin_right"
+                    <my-button v-if="designProps.showSaveButton" size="small" class="toolbar-tool_button_margin_right"
                                :disabled="getCurrentPanel().name == null || getCurrentPanel().name == ''"
                                @click="save">{{ i18n('toolbar.save') }}
                     </my-button>
@@ -38,7 +43,7 @@
 <script setup lang="ts">
 import { inject } from 'vue-demi';
 import StyleDesign from './style-design.vue';
-import { mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
+import { designPropsKey, mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
 import { i18n } from '@myprint/design/locales';
 import { clearPanel, displayModel, getCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
@@ -52,10 +57,14 @@ import Printer from '@myprint/design/components/my/icon/icons/Printer.vue';
 const panel = inject(panelKey);
 const mitt = inject(mittKey)!;
 const previewData = inject(previewDataKey)!;
+const designProps = inject(designPropsKey)!;
 
 function print() {
     displayModel('print');
-    MyPrinter.clientPrinter({ previewDataList: previewData.value });
+    MyPrinter.clientPrinter({ previewDataList: previewData.value, printer: 'PDFWriter' })
+        .then(res => {
+            console.log(res);
+        });
 }
 
 function serverDownloadPdf() {

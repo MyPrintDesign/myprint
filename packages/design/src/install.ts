@@ -1,7 +1,7 @@
-import { App, ref } from 'vue-demi';
+import { App } from 'vue-demi';
 import 'vue3-colorpicker/style.css';
 
-import { messageFun, mittKey } from './constants/keys';
+import { mittKey } from './constants/keys';
 
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
@@ -14,8 +14,7 @@ import { mitt } from '@myprint/design/utils/utils';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { installPrinter } from '@myprint/design/printer';
 import { initDisplayRatio } from '@myprint/design/utils/devicePixelRatio';
-
-const onSocketMessage = ref<Function>(null!);
+import { installMessage } from '@myprint/design/components/my/message/my-message';
 
 const install = {
     install(app: App<any>): any {
@@ -39,14 +38,14 @@ const install = {
             .use(VueCropper)
             // @ts-ignore
             .use(Vue3ColorPicker);
-        app.provide(messageFun, onSocketMessage);
         app.provide(mittKey, mitt);
 
-        useSocket().INIT_SOCKET(onSocketMessage);
+        useSocket().INIT_SOCKET();
 
         useConfigStore().initConfig();
 
         installPrinter(app);
+        installMessage(app);
 
         initDisplayRatio();
     }

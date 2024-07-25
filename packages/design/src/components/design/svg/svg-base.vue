@@ -3,7 +3,7 @@
     <svg ref="chartRef" class="my-print-chart">
         <path class="u-path" d="" />
         
-        <template v-if="displayModelDesign()">
+        <template v-if="displayDesign(element)">
             <line class="u-line" v-for="(_index, _item) in svgOptions.controlLine" />
             
             <g class="u-point" style="display: none" v-for="(_index, _item) in svgOptions.allPoint">
@@ -22,12 +22,12 @@ import { onMounted, ref, watch } from 'vue-demi';
 import * as d3Array from 'd3-array';
 import * as d3Selection from 'd3-selection';
 import * as d3Drag from 'd3-drag';
-import { MyElement, Line, Point, PointLabel, PointClick } from '@myprint/design/types/entity';
+import { Line, MyElement, Point, PointClick, PointLabel } from '@myprint/design/types/entity';
 import { dist, updateSvg } from '@myprint/design/utils/svgUtil';
 import { Path } from 'd3-path';
 import { elementHandleHandleStatusList } from '@myprint/design/constants/common';
 import { D3DragEvent } from '@myprint/design/types/d3Type';
-import { displayModelDesign } from '@myprint/design/utils/elementUtil';
+import { displayDesign } from '@myprint/design/utils/elementUtil';
 
 const props = withDefaults(defineProps<{
     element?: MyElement,

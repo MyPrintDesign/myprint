@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { Ref } from 'vue-demi';
 import { printCssStyle } from '@myprint/design/utils/utils';
 import { useConfigStore } from './config';
+import { ClientCmd } from '@myprint/design/types/entity';
 
 let lockReconnect: any;
 export const useSocket = defineStore('socket', {
@@ -10,11 +10,12 @@ export const useSocket = defineStore('socket', {
             socket: undefined as any,
             timer: undefined as any,
             connect: false,
-            printerList: [] as any[]
+            printerList: [] as any[],
+            resolveMap: {}
         };
     },
     actions: {
-        INIT_SOCKET(onSocketMessage: Ref<Function | undefined>) {
+        INIT_SOCKET() {
             // console.log(onSocketMessage)
             // console.log('初始化INIT_SOCKET')
             let stateThis = this;
@@ -27,11 +28,13 @@ export const useSocket = defineStore('socket', {
                     lockReconnect = false;
                 }, 4000);
             };
-            const onMessage = (msgData: any) => {
+            const onMessage = (msgData: ClientCmd) => {
                 // 遍历onMessage集合并触发
-                if (onSocketMessage.value) {
-                    onSocketMessage.value.call(null, msgData);
-                }
+                // if (onSocketMessage.value) {
+                //     onSocketMessage.value.call(null, msgData);
+                // }
+                this.resolveMap[msgData.taskId](msgData);
+                delete this.resolveMap[msgData.taskId];
             };
 
             const init = () => {
@@ -50,7 +53,7 @@ export const useSocket = defineStore('socket', {
 
                 //接收到消息的回调方法
                 this.socket!.onmessage = function(event: any) {
-                    const msgData = JSON.parse(event.data);
+                    const msgData = JSON.parse(event.data) as ClientCmd;
                     switch (msgData.cmd) {
                         case 'printerList':
                             stateThis.printerList = (msgData.content as any[]).map(res => ({
@@ -139,8 +142,11 @@ export const useSocket = defineStore('socket', {
 
             createSocket();
         },
-        SEND(msg: any) {
-            this.socket!.send(msg);
+        SEND(taskId: string, msg: any) {
+            return new Promise<ClientCmd>((resolve, _reject) => {
+                this.resolveMap[taskId] = resolve;
+                this.socket!.send(msg);
+            });
         }
     }
 });

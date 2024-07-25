@@ -2,6 +2,9 @@ import { Template } from '../../design/src/types/R';
 import { ElementOption, MyElement, Panel } from '../../design/src/types/entity';
 
 const templateContent = {
+    width: 100,
+    height: 100,
+    pageUnit: 'mm',
     elementList: [{
         type: 'Text',
         x: 10,
@@ -32,7 +35,7 @@ const templateContent = {
             y: 30,
             width: 20,
             height: 20
-        },{// 横实线
+        }, {// 横实线
             type: 'Image',
             x: 10,
             y: 30,

@@ -1,21 +1,46 @@
+import { Module, SaveResult, Template } from '@myprint/design/types/R';
+
 export interface PrintProps {
+    taskId?: string,
     panel?: Panel | string,
+    printer?: string,
     // appointChannel?: 'SERVER' | 'CHROME' | 'CLIENT',
     previewDataList: any[],
     timeout?: number,
 }
 
+export interface DesignPanelProps {
+    template?: Template;
+    saveTemplate?: (template: Template) => Promise<SaveResult>;
+    module?: Module;
+    height?: string;
+    generateImg?: boolean;
+    showBackButton?: boolean;
+    showPrintButton?: boolean;
+    showDownloadPdfButton?: boolean;
+    showPreviewButton?: boolean;
+    showClearButton?: boolean;
+    showSaveButton?: boolean;
+}
+
+export interface MyPrintOptions {
+    serverUrl?: string;
+    disabledClient?: boolean;
+}
+
 export interface PrintResult {
-    status: 'SUCCESS' | 'ERROR' | 'TIMEOUT';
+    status: 'SUCCESS' | 'ERROR' | 'TIMEOUT' | 'CLOSE';
     msg?: string,
-    type: 'CHROME_PRINT' | 'TIMEOUT' | 'CLIENT_PRINT' | 'CLIENT_GENERATE_PDF';
+    type: 'CHROME_PRINT' | 'TIMEOUT' | 'CLIENT_PRINT' | 'CHROME_GENERATE_PDF' |'CHROME_GENERATE_IMG'|'SERVER_GENERATE_IMG' | 'CLIENT_GENERATE_PDF'| 'SERVER_GENERATE_PDF'| 'CLOSE';
 }
 
 export interface ClientCmd {
     taskId: string;
-    cmd: 'print' | 'generatePdf' | 'generatePdfResult' | 'printResult',
+    cmd: 'print' | 'printerList' | 'generatePdf' | 'generatePdfResult' | 'printResult' | 'pong',
     pdf?: Buffer,
-    content?: any
+    content?: any,
+    width?: number,
+    height?: number
 }
 
 export interface Provider {
@@ -112,7 +137,6 @@ export interface Panel extends Container {
     auxiliaryLineList: MyAuxiliaryLine[];
 }
 
-
 export interface PreviewWrapper extends MyElement, TableCellElement, PreviewContainerWrapper {
     offsetLastElementTop: number;
     heightIs: boolean;
@@ -121,7 +145,6 @@ export interface PreviewWrapper extends MyElement, TableCellElement, PreviewCont
     target: any;
     previewWrapperList: PreviewWrapper[];
 }
-
 
 export interface PreviewContainerWrapper extends MyElement {
     offsetTop: number;
@@ -321,6 +344,8 @@ export interface RuntimeElementOption extends Position {
     status: elementStatus;
     auxiliaryLineStatus: auxiliaryLineStatus;
     cutIngIs: boolean;
+
+    previewIs: boolean;
 
     /**
      * 工作环境，如果是在表格中，填充满整个cell

@@ -19,6 +19,7 @@ import {
     previewTableStatisticsList,
     statisticsData
 } from '@myprint/design/utils/table/dataTable';
+import { isEmpty } from 'lodash';
 
 interface PreviewContext {
     autoPageIs: boolean,
@@ -206,7 +207,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
             if (previewWrapper.type == 'Image') {
                 previewWrapper.data = previewDataTmp;
                 // 如果是图片地址，则下载下来
-                if ((previewWrapper.data as string).startsWith('http')) {
+                if (!isEmpty(previewWrapper.data) && (previewWrapper.data as string).startsWith('http')) {
                     // 网络图片，下载下来
                     try {
                         previewWrapper.data = await downloadImg2Base64(previewWrapper.data);

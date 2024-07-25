@@ -2,15 +2,12 @@
 
 通过js代码直接调用
 
-## 使用示例
 
-## 直接打印
-
-### 客户端打印
+## 客户端打印
 
 调用本地客户端进行打印
 
-> 支持后台静默打印，需要提前安装本地客户端 [如何下载？](../deploy/client-deploy#download)
+> 支持后台静默打印，需要提前安装本地客户端 [如何下载？](../deploy/client#download)
 
 ```ts
 import { MyPrinter } from '@myprint/design/printer';
@@ -29,7 +26,7 @@ MyPrinter.printer({ previewDataList: previewData.value })
 
 ```
 
-### 浏览器打印
+## 浏览器打印
 
 调用浏览器进行打印，无法后台静默打印，需要用户手动点击打印，无法得知打印结果`(无法知道用户是否取消)`
 
@@ -40,39 +37,36 @@ const result = MyPrinter.chromePrinter({ previewDataList: previewData.value });
 console.log(result.status);
 ```
 
-## 预览
+## 唤出预览页面
 
 唤出预览页面
 
-```ts
-<script setup >
-import { MyPrinter } from 'myprint-design/src';
+```vue
 
-function click() {
-
-    MyPrinter.preview({ previewDataList: [] })
-        .then(res => {
-            // 预览页面进行打印时，回调，预览页面的停留时间也会记入超时时间
-            if (res.status == 'SUCCESS') {
-                console.log('打印成功');
-            } else if (res.status == 'ERROR') {
-                console.log('打印失败', res.msg);
-            } else if (res.status == 'TIMEOUT') {
-                console.log('打印超时');
-            }
-        });
-}
+<script setup>
+    import { MyPrinter } from 'myprint-design/src';
+    
+    function click() {
+        
+        MyPrinter.preview({ previewDataList: [] })
+            .then(res => {
+                // 预览页面进行打印时，回调，预览页面的停留时间也会记入超时时间
+                if (res.status == 'SUCCESS') {
+                    console.log('打印成功');
+                } else if (res.status == 'ERROR') {
+                    console.log('打印失败', res.msg);
+                } else if (res.status == 'TIMEOUT') {
+                    console.log('打印超时');
+                }
+            });
+    }
 
 </script>
 
-
-< button
-@click
-= "click" > 示例 < /button>
-
+<button @click="click"> 示例</button>
 ```
 
-```ts
+```vue
 import { MyPrinter } from '@myprint/design/printer';
 
 MyPrinter.preview({ previewDataList: previewData.value })

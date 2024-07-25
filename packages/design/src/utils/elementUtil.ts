@@ -41,8 +41,8 @@ export function displayModel(displayModel?: DisplayModel) {
     return appStore().displayModel;
 }
 
-export function displayModelDesign() {
-    return appStore().displayModel == 'design';
+export function displayDesign(element: MyElement) {
+    return !element.runtimeOption.previewIs;
 }
 
 export function displayModelPrint() {
@@ -575,6 +575,7 @@ export function element2PreviewWrapper(element: MyElement): PreviewWrapper {
     previewWrapper.id = generateUUID();
     previewWrapper.heightIs = true;
     previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
+    previewWrapper.runtimeOption.previewIs = true
 
     if (element.elementList != null && element.elementList.length > 0) {
         // const pList: PreviewWrapper[] = []

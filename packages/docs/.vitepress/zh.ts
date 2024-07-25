@@ -93,14 +93,16 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
     }, {
         text: '部署',
         items: [
-            { text: '客户端', link: '/deploy/client-deploy' },
-            { text: '服务端部署Centos', link: '/deploy-centos' },
-            { text: '服务端部署Debian', link: '/deploy-debian' }
+            { text: '客户端', link: '/deploy/client' },
+            { text: '服务端部署Centos', link: '/deploy/centos' },
+            { text: '服务端部署Debian', link: '/deploy/debian' },
+            { text: '服务端部署k8s', link: '/deploy/k8s' }
         ]
     }, {
-        text: '扩展',
+        text: '参考',
         items: [
-            { text: '---', link: '/markdown-examples' }
+            { text: '常见问题', link: '/reference/question' },
+            { text: '集思广益', link: '/reference/join' }
         ]
     }
     ];

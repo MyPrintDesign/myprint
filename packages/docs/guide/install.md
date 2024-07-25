@@ -20,7 +20,7 @@ yarn add -D myprint-design
 
 :::
 
-## 直接引用 {#my-anchor}
+## 直接引用(仅支持ts) {#my-anchor}
 
 [下载地址](https://code.visualstudio.com/)
 

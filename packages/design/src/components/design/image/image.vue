@@ -9,7 +9,7 @@
                 :src="contentBase64" alt="image" />
             
             <div class="img-tool_wrapper"
-                 v-if="displayModelDesign() && elementHandleStatusList.includes(element.runtimeOption.status)">
+                 v-if="displayDesign(element) && elementHandleStatusList.includes(element.runtimeOption.status)">
                 <my-icon class="img-tool-icon" @click="editImgClick">
                     <Crop />
                 </my-icon>
@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="choose-img_wrapper" v-else>
-            <my-icon v-if="displayModelDesign()"
+            <my-icon v-if="displayDesign(element)"
                      :size="20"
                      class="avatar-uploader-icon" @click="clickPlus">
                 <Plus />
@@ -116,7 +116,11 @@ import { VueCropper } from 'vue-cropper';
 import { onMounted, reactive, ref } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
 // import {useBase64} from "@vueuse/core";
-import { displayModelDesign, getRecursionParentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
+import {
+    displayDesign,
+    getRecursionParentPanel,
+    valueUnit
+} from '@myprint/design/utils/elementUtil';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { chooseImgTypeList, elementHandleStatusList } from '@myprint/design/constants/common';
 import MyTabs from '@myprint/design/components/my/tabs/my-tabs.vue';

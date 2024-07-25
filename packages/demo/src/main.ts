@@ -14,16 +14,19 @@ import 'element-plus/dist/index.css';
 //引入zhCn
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import ElementPlus from 'element-plus';
+import { initVisitorId } from '@/utils/util';
 
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 const app = createApp(App);
 app.use(pinia);
 
-
 app.use(ElementPlus, { locale: zhCn });
+initVisitorId();
 
-MyPrinter.setServerUrl(import.meta.env.VITE_API_PDF_SERVER_URL);
+MyPrinter.initMyPrinter({
+    serverUrl: import.meta.env.VITE_API_PDF_SERVER_URL
+});
 app.use(createPrint);
 
 app.provide(mittKey, mitt());

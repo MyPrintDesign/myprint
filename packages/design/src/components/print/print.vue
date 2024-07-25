@@ -23,10 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import { inject, nextTick, reactive, ref } from 'vue-demi';
-import { download } from '@myprint/design/utils/utils';
-import { MyElement, Panel, PrintProps } from '@myprint/design/types/entity';
-import { messageFun } from '@myprint/design/constants/keys';
+import { nextTick, reactive, ref } from 'vue-demi';
+import { MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
 import { displayModelPrint, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
 import { useConfigStore } from '@myprint/design/stores/config';
 import Preview from '@myprint/design/components/preview/preview.vue';
@@ -35,108 +33,166 @@ import { chrome2Img } from '@myprint/design/utils/pdfUtil';
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { downloadImg, downloadPdf } from '@myprint/design/api/pdfServer';
 import { getPrintElementHtml, iFramePrint } from '@myprint/design/utils/myprint';
+import {
+    handleClientResult,
+    handleTimeOut,
+    myPrintClientService,
+    printResult
+} from '@myprint/design/plugins/myprintClientService';
+import { isEmpty } from 'lodash';
 
-defineExpose({ handleClientPrint, handleChromeDownloadImg, handleServerDownloadImg, handleServerDownloadPdf });
-// const { SEND: socketSend, printerList, connect } = useSocket();
+defineExpose({
+    handleChromePrint,
+    handleClientPrint,
+    handleChromeDownloadImg,
+    handleServerDownloadImg,
+    handleServerDownloadPdf
+});
 const configStore = useConfigStore();
 const data = reactive({
     dialogVisible: false,
-    printer: configStore.defaultPrinter,
     pageList: [] as any,
+    resolveMap: {},
+    previewTimeOutMap: {},
     panel: null! as Panel
 });
 const previewContentRef = ref<HTMLDivElement[]>()!;
-const onMessage = inject(messageFun)!;
 let itemRefs = {} as any;
 
 function setItemRef(el: any, item: MyElement) {
     itemRefs[item.id] = el;
 }
 
+function handleChromePrint(printProps: PrintProps) {
+    return new Promise<PrintResult>(async (resolve, _reject) => {
+        data.resolveMap[printProps.taskId!] = resolve;
+        
+        handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
+        data.panel = printProps.panel as Panel;
+        await nextTick();
+        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        await nextTick();
+        printArea();
+        printResult(printProps.taskId!, {
+            status: 'SUCCESS',
+            type: 'CHROME_PRINT'
+        }, data.previewTimeOutMap, data.resolveMap);
+    });
+}
+
 function handleClientPrint(printProps: PrintProps) {
-    data.panel = printProps.panel as Panel;
-    data.dialogVisible = true;
-    nextTick(() => {
-        // console.log(printProps);
-        autoPage(data.pageList, data.panel, printProps.previewDataList)
-            .then(() => {
-                nextTick(() => {
-                    printArea();
-                });
-            });
+    return new Promise<PrintResult>(async (resolve, _reject) => {
+        data.resolveMap[printProps.taskId!] = resolve;
+        
+        handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
+        data.panel = printProps.panel as Panel;
+        await nextTick();
+        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        await nextTick();
+        let printer = printProps.printer;
+        
+        if (isEmpty(printer)) {
+            printer = configStore.defaultPrinter!;
+        }
+        
+        if (isEmpty(printer)) {
+            printResult(printProps.taskId!, {
+                status: 'ERROR',
+                msg: '未指定打印机',
+                type: 'CLIENT_PRINT'
+            }, data.previewTimeOutMap, data.resolveMap);
+            return;
+        }
+        
+        if (!myPrintClientService.connectIs()) {
+            printResult(printProps.taskId!, {
+                status: 'ERROR',
+                msg: '客户端未连接',
+                type: 'CLIENT_PRINT'
+            }, data.previewTimeOutMap, data.resolveMap);
+            return;
+        }
+        
+        myPrintClientService.print({
+            content: { html: getPrintElementHtml(previewContentRef.value!), printer: printProps.printer },
+            cmd: 'print',
+            taskId: printProps.taskId!
+        }, data.panel).then(res => {
+            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap, data.panel.name);
+        });
     });
 }
 
 function handleChromeDownloadImg(printProps: PrintProps) {
-    return new Promise<ArrayBuffer[]>((resolve, reject) => {
+    return new Promise<Blob[]>(async (resolve, _reject) => {
+        data.resolveMap[printProps.taskId!] = resolve;
+        
+        handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
         data.panel = printProps.panel as Panel;
-        data.dialogVisible = true;
-        nextTick(() => {
-            autoPage(data.pageList, data.panel, printProps.previewDataList)
-                .then(() => {
-                    chrome2Img((imgList) => {
-                        // 清空内容
-                        data.pageList = [];
-                        resolve(imgList);
-                    }, previewContentRef.value, {
-                        width: unit2px(data.panel.width, data.panel), height: unit2px(data.panel.height, data.panel)
-                    });
-                }).catch((e) => {
-                reject(e);
-            });
-        }).catch((e) => {
-            reject(e);
+        await nextTick();
+        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        chrome2Img(previewContentRef.value, {
+            width: unit2px(data.panel.width, data.panel), height: unit2px(data.panel.height, data.panel)
+        }).then(res => {
+            // 清空内容
+            data.pageList = [];
+            resolve(res);
+            printResult(printProps.taskId!, {
+                status: 'SUCCESS',
+                type: 'CHROME_GENERATE_IMG'
+            }, data.previewTimeOutMap, data.resolveMap);
         });
     });
 }
 
 function handleServerDownloadImg(printProps: PrintProps) {
-    return new Promise<Blob>((resolve, reject) => {
+    return new Promise<Blob>(async (resolve, reject) => {
+        data.resolveMap[printProps.taskId!] = resolve;
+        
+        handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
         data.panel = printProps.panel as Panel;
-        data.dialogVisible = true;
-        nextTick(() => {
-            autoPage(data.pageList, data.panel, printProps.previewDataList)
-                .then(() => {
-                    const html = getPrintElementHtml(previewContentRef.value!);
-                    downloadImg({
-                        content: html,
-                        height: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.height),
-                        width: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.width)
-                    }).then(async blob => {
-                        resolve(blob);
-                    }).catch(e => {
-                        reject(e);
-                    });
-                }).catch((e) => {
-                reject(e);
-            });
-        }).catch((e) => {
+        
+        await nextTick();
+        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        const html = getPrintElementHtml(previewContentRef.value!);
+        downloadImg({
+            content: html,
+            height: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.height),
+            width: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.width)
+        }).then(async blob => {
+            resolve(blob);
+            printResult(printProps.taskId!, {
+                status: 'SUCCESS',
+                type: 'SERVER_GENERATE_IMG'
+            }, data.previewTimeOutMap, data.resolveMap);
+        }).catch(e => {
             reject(e);
         });
     });
 }
 
 function handleServerDownloadPdf(printProps: PrintProps) {
-    return new Promise<Blob>((resolve, reject) => {
+    debugger
+    return new Promise<Blob>(async (resolve, reject) => {
+        data.resolveMap[printProps.taskId!] = resolve;
+        
+        handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
         data.panel = printProps.panel as Panel;
-        data.dialogVisible = true;
-        nextTick(() => {
-            autoPage(data.pageList, data.panel, printProps.previewDataList)
-                .then(() => {
-                    const html = getPrintElementHtml(previewContentRef.value!);
-                    downloadPdf({
-                        content: html,
-                        height: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.height),
-                        width: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.width)
-                    }).then(async blob => {
-                        resolve(blob);
-                    }).catch(e => {
-                        reject(e);
-                    });
-                }).catch((e) => {
-                reject(e);
-            });
-        }).catch((e) => {
+        
+        await nextTick();
+        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        const html = getPrintElementHtml(previewContentRef.value!);
+        downloadPdf({
+            content: html,
+            height: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.height),
+            width: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.width)
+        }).then(async blob => {
+            resolve(blob);
+            printResult(printProps.taskId!, {
+                status: 'SUCCESS',
+                type: 'SERVER_GENERATE_PDF'
+            }, data.previewTimeOutMap, data.resolveMap);
+        }).catch(e => {
             reject(e);
         });
     });
@@ -147,15 +203,5 @@ function printArea() {
     iFramePrint(data.panel, html);
 }
 
-onMessage.value = (msg: any) => {
-    let pdf = msg.pdf;
-    // console.log(pdf)
-    if (pdf != null) {
-        // 将Buffer对象转换为Uint8Array数组
-        const uint8Array = new Uint8Array(pdf.data);
-        // 将Uint8Array数组转换为Blob对象
-        const blob = new Blob([uint8Array], { type: 'application/octet-stream' });
-        download(blob, data.panel.name);
-    }
-};
+
 </script>

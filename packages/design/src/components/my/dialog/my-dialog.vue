@@ -4,13 +4,10 @@
              :class="props.class"
              v-if="data.rendered"
              role="dialog" aria-modal="true" v-show="modelValue">
-            <div class="my-dialog_wrapper"
+            <div class="my-dialog_wrapper display-flex-column"
                  ref="dialogRef"
                  tabindex="-1"
                  @keyup.esc="onClose">
-                <div v-if="title != null" class="my-dialog_head">
-                    <!--                todo 弹窗头-->
-                </div>
                 
                 <div class="my-dialog_content"
                      v-bind="$attrs"
@@ -18,6 +15,21 @@
                     'is-fullscreen': fullscreen
                      }"
                      :style="style">
+                    
+                    <div class="my-dialog_header display-flex" v-if="showHeader">
+                        <div v-if="title != null" class="my-dialog_head_title">
+                            {{ title }}
+                        </div>
+                        <div v-else class="my-dialog_head_slot">
+                            <slot name="head"></slot>
+                        </div>
+                        
+                        <div class="my-dialog_head_close display-flex">
+                            <my-icon color="#666666" size="20" class="cursor-pointer" @click="onClose">
+                                <CloseBold />
+                            </my-icon>
+                        </div>
+                    </div>
                     <slot></slot>
                 </div>
             
@@ -29,18 +41,22 @@
 <script setup lang="ts">
 
 import { computed, nextTick, reactive, ref, watch } from 'vue-demi';
+import CloseBold from '@myprint/design/components/my/icon/icons/CloseBold.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 
 const emit = defineEmits(['update:modelValue', 'close']);
 
 const props = withDefaults(defineProps<{
     modelValue?: boolean,
     fullscreen?: boolean,
+    showHeader?: boolean,
     class?: any,
     title?: string,
     width?: string,
 }>(), {
     modelValue: false,
     fullscreen: false,
+    showHeader: true,
     class: '',
     width: '500px'
 });
@@ -48,7 +64,7 @@ const props = withDefaults(defineProps<{
 const data = reactive({
     rendered: false
 });
-const dialogRef = ref(); // DOM 引用
+const dialogRef = ref();
 
 const style = computed(() => {
     return {

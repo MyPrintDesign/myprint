@@ -22,6 +22,11 @@ export interface R<D = any> {
     msg?: any;
 }
 
+export interface Login {
+    visitorId?: string;
+    token?: string;
+}
+
 export interface ModuleGroup {
     id?: string;
     originId?: any;

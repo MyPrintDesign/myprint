@@ -7,15 +7,15 @@ outline: deep
 :::
 
 ##   
-打印设计面板
+打印设计面板，设计结果支持打印、生成pdf、生成图片，支持浏览器、客户端、服务端三种生成，并且三种方式生成结果高度统一
 
 `Vue@3.4.31` `TypeScript@5.0.2` `Vite@5.2.6`
 
 配套服务
 
-客户端（本地调用打印机进行打印）[`去下载`](http://www.baidu.com)
+客户端（本地调用打印机进行打印）[`去下载`](./deploy/client#download)
 
-服务端（服务端生成pdf）[`去下载`](http://www.baidu.com)
+服务端（服务端生成pdf）[`去下载`](https://myprint.top/myprint-server.zip)
 
 ## 支持的控件
 

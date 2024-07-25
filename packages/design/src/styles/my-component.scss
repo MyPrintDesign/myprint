@@ -286,20 +286,39 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);;
 
     background: rgba(0, 0, 0, 0.5);
 
-    .my-dialog_head {
+    .my-dialog_header {
       padding: 5px;
-      border-radius: 2px;
-      box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);;
       background: white;
+
+      .my-dialog_head_title {
+        padding: 5px;
+        flex: 1;
+        //border-radius: 2px;
+        //box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);;
+        background: white;
+      }
+
+      .my-dialog_head_slot {
+        flex: 1;
+      }
+
+      .my-dialog_head_close {
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        width: 30px;
+        background: white;
+      }
     }
+
 
     .my-dialog_content {
       padding: 5px;
-      border-radius: 2px;
-      box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);;
+      //border-radius: 2px;
       background: white;
     }
 
@@ -429,4 +448,101 @@
 
 .ps {
   position: relative;
+}
+
+
+// 滑动渐变过渡效果
+.slide-fade-move,
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(-16px);
+  -ms-transform: translateY(-16px); /* IE 9 */
+  -webkit-transform: translateY(-16px); /* Safari and Chrome */
+  opacity: 0;
+}
+
+.slide-fade-leave-active {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+
+.m-message-wrap {
+  position: fixed;
+  z-index: 999; // 突出显示该层级
+  width: 100%;
+  left: 0;
+  right: 0;
+  pointer-events: none; // 保证整个message区域不遮挡背后元素响应鼠标事件
+  .m-message {
+    text-align: center;
+
+    &:not(:last-child) {
+      margin-bottom: 8px;
+    }
+
+    .m-message-content {
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 12px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08),
+      0 3px 6px -4px rgba(0, 0, 0, 0.12),
+      0 9px 28px 8px rgba(0, 0, 0, 0.05);
+      pointer-events: auto; // 保证内容区域部分可以正常响应鼠标事件
+      .u-svg {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        margin-right: 8px;
+      }
+
+      .circular {
+        display: inline-block;
+        animation: loading-rotate 2s linear infinite;
+        @keyframes loading-rotate {
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        .path {
+          stroke-dasharray: 90, 150;
+          stroke-dashoffset: 0;
+          stroke-width: 5;
+          stroke-linecap: round;
+          animation: loading-dash 1.5s ease-in-out infinite;
+          @keyframes loading-dash {
+            0% {
+              stroke-dasharray: 1, 200;
+              stroke-dashoffset: 0;
+            }
+
+            50% {
+              stroke-dasharray: 90, 150;
+              stroke-dashoffset: -40px;
+            }
+            100% {
+              stroke-dasharray: 90, 150;
+              stroke-dashoffset: -120px;
+            }
+          }
+        }
+      }
+
+      .u-content {
+        display: inline-block;
+        font-size: 14px;
+        color: rgba(0, 0, 0, 0.88);
+        line-height: 22px;
+      }
+    }
+  }
 }

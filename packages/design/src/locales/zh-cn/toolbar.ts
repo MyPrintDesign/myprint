@@ -1,6 +1,6 @@
 export default {
     'toolbar.chrome.print': '浏览器打印1',
-    'toolbar.print': '打印1',
+    'toolbar.print': '打印12',
     'toolbar.preview': '预览1',
     'toolbar.download': '下载1',
     'toolbar.clear': '清空1',

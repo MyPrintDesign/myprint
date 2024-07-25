@@ -1,10 +1,13 @@
 import { App, h, render, VNode } from 'vue-demi';
 import PrintView from '@myprint/design/components/print/print.vue';
 import previewPanelView from '@myprint/design/components/preview/preview-panel.vue';
-import { getCurrentPanel } from '@myprint/design/utils/elementUtil';
-import { PrintProps, PrintResult } from '@myprint/design/types/entity';
+import { getCurrentPanel, parentInitElement } from '@myprint/design/utils/elementUtil';
+import { Container, MyPrintOptions, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
+import { generateUUID } from '@myprint/design/utils/utils';
 
-export let pdfServerUrl = '';
+export const myPrintOptions: MyPrintOptions = {
+    disabledClient: false
+};
 
 let printNode: VNode = null!;
 let previewNode: VNode = null!;
@@ -13,7 +16,7 @@ let handleClientPrint: (printProps: PrintProps) => Promise<PrintResult> = null!;
 let handleChromeDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
 let handleClientDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
 let handleServerDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
-let handleChromeDownloadImg: (printProps: PrintProps) => Promise<ArrayBuffer[]> = null!;
+let handleChromeDownloadImg: (printProps: PrintProps) => Promise<Blob[]> = null!;
 let handleServerDownloadImg: (printProps: PrintProps) => Promise<Blob> = null!;
 let handleChromePreview: (printProps: PrintProps) => Promise<PrintResult> = null!;
 
@@ -45,91 +48,69 @@ export function installPrinter(app: App<any>) {
         render(previewNode, container);
 
         handleChromePreview = previewNode.component!.exposed!.handleChromePreview;
-        // handleServerDownloadPdf = previewNode.component!.exposed!.handleServerDownloadPdf;
-        // handleServerDownloadImg = previewNode.component!.exposed!.handleServerDownloadImg;
         document.body.appendChild(container);
     }
 }
 
-export const MyPrinter = {
+function initPanel(panel: Panel) {
+    panel.runtimeOption = {} as any;
+    for (let i = 0; i < panel.elementList.length; i++) {
+        const element = panel.elementList[i];
+        parentInitElement(panel as Container, element, i);
+    }
+    panel.pageHeader && parentInitElement(panel, panel.pageHeader, 0);
+    panel.pageFooter && parentInitElement(panel, panel.pageFooter, 0);
+}
 
-    setServerUrl(url: string) {
-        pdfServerUrl = url;
+function convertPrintProps(printProps: PrintProps) {
+    let panel = printProps.panel;
+    if (typeof printProps.panel == 'string') {
+        panel = JSON.parse(printProps.panel);
+        initPanel(panel as Panel);
+    }
+    printProps.taskId = generateUUID();
+    return {
+        ...printProps,
+        panel: panel == null ? getCurrentPanel() : panel
+    };
+}
+
+export const MyPrinter = {
+    initMyPrinter(options: MyPrintOptions) {
+        options.serverUrl && (myPrintOptions.serverUrl = options.serverUrl);
+        options.disabledClient != null && (myPrintOptions.disabledClient = options.disabledClient);
     },
 
     chromePreview(printProps: PrintProps) {
-        let panel = printProps.panel;
-        if (typeof printProps.panel == 'string') {
-            panel = JSON.parse(printProps.panel);
-        }
-        return handleChromePreview({
-            ...printProps,
-            panel: panel == null ? getCurrentPanel() : panel
-        });
+        return handleChromePreview(convertPrintProps(printProps));
     },
 
     chromePrinter(printProps: PrintProps) {
-        let panel = printProps.panel;
-        if (typeof printProps.panel == 'string') {
-            panel = JSON.parse(printProps.panel);
-        }
-        return handleChromePrint({
-            ...printProps,
-            panel: panel == null ? getCurrentPanel() : panel
-        });
+        return handleChromePrint(convertPrintProps(printProps));
     },
 
     clientPrinter(printProps: PrintProps) {
-        let panel = printProps.panel;
-        if (typeof printProps.panel == 'string') {
-            panel = JSON.parse(printProps.panel);
-        }
-        return handleClientPrint({
-            ...printProps,
-            panel: panel == null ? getCurrentPanel() : panel
-        });
+        return handleClientPrint(convertPrintProps(printProps));
     },
 
     pdfChrome(printProps: PrintProps) {
-        let panel = printProps.panel;
-        if (typeof printProps.panel == 'string') {
-            panel = JSON.parse(printProps.panel);
-        }
-        return handleChromeDownloadPdf({
-            ...printProps,
-            panel: panel == null ? getCurrentPanel() : panel
-        });
+        return handleChromeDownloadPdf(convertPrintProps(printProps));
     },
 
     pdfClient(printProps: PrintProps) {
-        let panel = printProps.panel;
-        if (typeof printProps.panel == 'string') {
-            panel = JSON.parse(printProps.panel);
-        }
-        return handleClientDownloadPdf({
-            ...printProps,
-            panel: panel == null ? getCurrentPanel() : panel
-        });
+        return handleClientDownloadPdf(convertPrintProps(printProps));
     },
 
     pdfServer(printProps: PrintProps) {
-        let panel = printProps.panel;
-        if (typeof printProps.panel == 'string') {
-            panel = JSON.parse(printProps.panel);
-        }
-        return handleServerDownloadPdf({
-            ...printProps,
-            panel: panel == null ? getCurrentPanel() : panel
-        });
+        return handleServerDownloadPdf(convertPrintProps(printProps));
     },
 
     imgChrome(printProps: PrintProps) {
-        return handleChromeDownloadImg({ ...printProps, panel: getCurrentPanel() });
+        return handleChromeDownloadImg(convertPrintProps(printProps));
     },
 
     imgServer(printProps: PrintProps) {
-        return handleServerDownloadImg({ ...printProps, panel: getCurrentPanel() });
+        return handleServerDownloadImg(convertPrintProps(printProps));
     }
-
 
 };
