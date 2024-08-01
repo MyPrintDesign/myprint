@@ -124,6 +124,8 @@ function undoPanel() {
     panel.elementList = [];
     nextTick(() => {
         panel.elementList = (historyRecord.value.panel as Panel).elementList;
+        panel.pageHeader = (historyRecord.value.panel as Panel).pageHeader;
+        panel.pageFooter = (historyRecord.value.panel as Panel).pageFooter;
         installPanelParentElement(panel);
         updatePanel();
     });
@@ -149,6 +151,8 @@ function redoPanel() {
     panel.elementList = [];
     nextTick(() => {
         panel.elementList = (historyRecord.value.panel as Panel).elementList;
+        panel.pageHeader = (historyRecord.value.panel as Panel).pageHeader;
+        panel.pageFooter = (historyRecord.value.panel as Panel).pageFooter;
         installPanelParentElement(panel);
         updatePanel();
     });

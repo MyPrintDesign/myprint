@@ -159,10 +159,11 @@
 .mouse-tips {
   position: absolute;
   left: 15px;
+  z-index: 1000;
   top: 0;
   will-change: transform;
   //background: #f0f2f5;
   //background: gray;
-  color: white;
+  color: var(--drag-h-color);
   //border: 1px solid gray;
 }

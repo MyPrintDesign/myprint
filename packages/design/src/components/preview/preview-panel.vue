@@ -33,20 +33,20 @@
                 <div>名称：{{ panel.name }}</div>
                 <div>打印份数：测试</div>
                 <div>客户端未连接，无法使用直接打印功能，去下载</div>
-                <template v-if="useSocket().connect">
+                <template v-if="MyPrinter.clientConnectIs()">
                     <div>{{ i18n('toolbar.printer') }}：
-                        <my-select v-model="data.printer" placeholder="请选择" size="large"
-                                   :data-list="useSocket().printerList" />
+                        <my-select v-model="data.printer" placeholder="请选择" size="middle"
+                                   :data-list="printList" />
                     </div>
-                    <my-button :disabled="!data.printer" @click="print">{{
+                    <my-button style="margin-top: 40px" :disabled="!data.printer" @click="print">{{
                             i18n('toolbar.print')
                         }}
                     </my-button>
                 </template>
                 
-                <my-button @click="printChromePdf">{{ i18n('toolbar.chrome.print') }}</my-button>
-                <my-button @click="downloadPdf">{{ i18n('preview.download.pdf') }}</my-button>
-                <my-button @click="()=>data.dialogVisible = false">{{ i18n('common.close') }}
+                <my-button class="preview-panel__tool_button" @click="printChromePdf">{{ i18n('toolbar.chrome.print') }}</my-button>
+                <my-button class="preview-panel__tool_button" @click="downloadPdf">{{ i18n('preview.download.pdf') }}</my-button>
+                <my-button class="preview-panel__tool_button" @click="()=>data.dialogVisible = false">{{ i18n('common.close') }}
                 </my-button>
             </div>
         </div>
@@ -55,13 +55,12 @@
 </template>
 
 <script setup lang="ts">
-import { nextTick, reactive, ref } from 'vue-demi';
+import { computed, nextTick, reactive, ref } from 'vue-demi';
 import { toPdf } from '@myprint/design/utils/pdfUtil';
 import { download } from '@myprint/design/utils/utils';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import Preview from './preview.vue';
 import { MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
-import { useSocket } from '@myprint/design/stores/socket';
 import { i18n } from '@myprint/design/locales';
 import { displayModel, valueUnit } from '@myprint/design/utils/elementUtil';
 import { useConfigStore } from '@myprint/design/stores/config';
@@ -77,6 +76,7 @@ import {
     myPrintClientService,
     printResult
 } from '@myprint/design/plugins/myprintClientService';
+import { MyPrinter } from '@myprint/design/printer';
 
 defineExpose({ handleChromePreview });
 
@@ -93,35 +93,52 @@ const previewContentRef = ref<HTMLDivElement[]>()!;
 const panel = ref({} as Panel);
 let itemRefs = {} as any;
 
+const printList = computed(() => {
+    return MyPrinter.getPrinterList().map(res => {
+        return {
+            label: res.name,
+            value: res.name
+        };
+    });
+});
+
 function print() {
-    let html = '';
-    for (let i = 0; i < previewContentRef.value!.length; i++) {
-        html += previewContentRef.value![i].outerHTML;
-    }
     myPrintClientService.print({
-        content: { html, printer: data.printer },
+        content: { html: getPrintElementHtml(previewContentRef.value!, data.pageList), printer: data.printer },
         cmd: 'print',
         taskId: data.taskId
     }, panel.value)
         .then(res => {
-            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap, panel.value.name);
+            console.log(res);
+            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap);
+        })
+        .catch(e => {
+            // console.log(e);
+            printResult(data.taskId, {
+                status: 'ERROR',
+                msg: e.msg,
+                type: 'CLIENT_PRINT'
+            }, data.previewTimeOutMap, data.resolveMap);
         });
-    // useSocket().SEND(JSON.stringify());
 }
 
 function downloadPdf() {
-    // console.log(previewContent.value)
-    if (useSocket().connect) {
-        let html = '';
-        for (let i = 0; i < previewContentRef.value!.length; i++) {
-            html += previewContentRef.value![i].outerHTML;
-        }
+    if (MyPrinter.clientConnectIs()) {
         myPrintClientService.print({
-            content: { html },
+            content: { html: getPrintElementHtml(previewContentRef.value!, data.pageList) },
             cmd: 'generatePdf',
             taskId: data.taskId
         }, panel.value).then(res => {
-            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap, panel.value.name);
+            const blob = handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap);
+            if (blob) {
+                download(blob, panel.value.name + '.pdf');
+            }
+        }).catch(e => {
+            printResult(data.taskId, {
+                status: 'ERROR',
+                msg: e.msg,
+                type: 'CLIENT_GENERATE_PDF'
+            }, data.previewTimeOutMap, data.resolveMap);
         });
     } else {
         toPdf(previewContentRef.value, {
@@ -144,7 +161,7 @@ function downloadPdf() {
 }
 
 function printChromePdf() {
-    iFramePrint(panel.value, getPrintElementHtml(previewContentRef.value!));
+    iFramePrint(panel.value, getPrintElementHtml(previewContentRef.value!, data.pageList));
     printResult(data.taskId, {
         status: 'SUCCESS',
         type: 'CHROME_PRINT'

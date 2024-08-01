@@ -59,12 +59,13 @@ export const tableColClone = {
 };
 tableColClone.init();
 
-export function getPrintElementHtml(htmlElement: HTMLElement[]) {
+export function getPrintElementHtml(htmlElement: HTMLElement[], pageList: any[]) {
     let html = '<div style="  --tcolor: black;">';
     for (let i = 0; i < htmlElement!.length; i++) {
         html += htmlElement![i].outerHTML;
     }
     html += '</div>';
+    pageList.length = 0;
     return html;
 }
 
@@ -75,7 +76,7 @@ export function iFramePrint(panel: Panel, html: string) {
     iframe.setAttribute('id', 'print-box');
     iframe.setAttribute(
         'style',
-        `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; position: absolute; left: 0; top: 0;border: 0;
+        `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; display: none; position: absolute; left: 99999; top: 0;border: 0;
       z-index: 10000;`
     );
     // 在页面插入iframe
@@ -113,6 +114,6 @@ export function iFramePrint(panel: Panel, html: string) {
     setTimeout(function() {
         // console.log('关闭');
         // data.pageList = [];
-        // document.body.removeChild(iframe);
+        document.body.removeChild(iframe);
     }, 100);
 }

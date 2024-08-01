@@ -31,7 +31,7 @@ import { DownList } from '@myprint/design/types/entity';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import { computed } from 'vue-demi';
 
-const emit = defineEmits(['update:modelValue', 'click']);
+const emit = defineEmits(['update:modelValue', 'change', 'click']);
 
 const props = withDefaults(defineProps<{
         showSelectedStatus?: boolean,
@@ -60,6 +60,7 @@ function click(elementAlign: DownList) {
         elementAlign.click();
     } else {
         emit('update:modelValue', elementAlign.value);
+        emit('change', elementAlign);
     }
 }
 

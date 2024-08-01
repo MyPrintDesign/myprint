@@ -137,6 +137,9 @@
     --docsearch-primary-color: var(--vp-c-brand-1) !important;
 }
 
+body {
+    line-height: normal;
+}
 
 .vp-table {
     width: 100%;
@@ -176,4 +179,29 @@
             /*font-family: var(--font-family-mono);*/
         }
     }
+}
+
+.VPContent:has(.design-container-root) {
+    padding-right: 0 !important;
+}
+
+.client-img {
+    width: 500px;
+}
+
+.client-img_padding {
+    width: 460px;
+    margin-top: 20px;
+    margin-left: 20px;
+    box-shadow: 0px 6px 20px rgba(25, 25, 26, .2), 0px 2px 12px rgba(25, 25, 26, .2);
+
+}
+
+.icon {
+    background-color: transparent !important;
+}
+
+.beian_a {
+    color: var(--vp-button-brand-bg);
+    text-decoration: inherit !important;
 }

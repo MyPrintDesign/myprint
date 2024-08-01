@@ -47,10 +47,10 @@ export const shared = defineConfig({
     ],
 
     themeConfig: {
-        logo: { src: '/myprint-icon.svg', width: 24, height: 24 },
+        logo: { src: '/myprint-icon_doc_right.svg', width: 24, height: 24 },
 
         socialLinks: [
-            { icon: 'github', link: 'https://github.com/vuejs/vitepress' }
+            { icon: 'github', link: 'https://github.com/MyPrintDesign/myprint' }
         ],
 
         search: {

@@ -26,6 +26,10 @@
   z-index: 2;
 }
 
+.group-container .is-active {
+  z-index: 2;
+}
+
 .group-container > :not(:first-child).my-button,
 .group-container > :not(:first-child) .my-input__wrapper,
 .group-container > :not(:first-child) .my-select__wrapper {

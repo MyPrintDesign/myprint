@@ -1,7 +1,7 @@
 <template>
   <div class="my_tab display-flex-column">
     <div class="my_tab-tab">
-      <div class="my_tab-title"
+      <div class="my_tab-title cursor-pointer"
            :class="{active: item.value == modelValue}"
            v-for="(item) in itemList" @click="click(item)">{{ item.label }}
       </div>

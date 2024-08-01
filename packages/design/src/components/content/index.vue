@@ -2,7 +2,7 @@
     <section class="design-container-root cursor-resize" v-bind="$attrs"
              :style="style"
              :data-rotation="appStore.dataRotation">
-        <aside class="my-aside" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
+        <aside class="my-aside display-flex-column" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
             <widget :module="props.module" :showBackButton="showBackButton" @back="back" />
         </aside>
         <main class=" my-main design-container-root_main">
@@ -26,12 +26,19 @@ import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
 import { displayModel, initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
-import { MyPrinter } from '@myprint/design/printer';
 import { MyMessage } from '@myprint/design/components/my/message/my-message';
+import { MyPrinter } from '@myprint/design/printer';
 
 const appStore = useAppStoreHook();
 
-const $emit = defineEmits(['saveTemplate', 'back', 'panelImg']);
+const $emit = defineEmits<{
+    (e: 'back'): void;
+    (e: 'panelImg', blobList: Blob[]): void;
+}>();
+
+const data = reactive({
+    buildImgIs: false
+});
 
 const provider = ref({}) as Ref<Provider>;
 const panel = reactive({
@@ -51,10 +58,10 @@ provide(previewDataKey, previewData);
 mitt.on('saveTemplate', saveTemplate);
 
 const props = withDefaults(defineProps<{
-    template?: Template;
-    saveTemplate?: (template: Template) => Promise<SaveResult>;
     module?: Module;
+    template?: Template;
     height?: string;
+    saveTemplate?: (template: Template) => Promise<SaveResult>;
     generateImg?: boolean;
     showBackButton?: boolean;
     showPrintButton?: boolean;
@@ -162,11 +169,16 @@ function back() {
 function saveTemplate() {
     displayModel('print');
     if (props.generateImg) {
-        MyPrinter.imgChrome({ previewDataList: [previewData.value[0]] })
-            .then(res => {
-                // console.log(res);
-                $emit('panelImg', res);
+        if (!data.buildImgIs) {
+            data.buildImgIs = true;
+            MyPrinter.imgChrome({ previewDataList: [previewData.value.length > 0 ? previewData.value[0] : {}] })
+                .then(res => {
+                    $emit('panelImg', res.blobList!);
+                    data.buildImgIs = false;
+                }).catch(_e => {
+                data.buildImgIs = false;
             });
+        }
     }
     
     const template = {} as Template;

@@ -187,7 +187,7 @@ function onHideMessage(index: number) {
                     >
                         <circle class="path" cx="25" cy="25" r="20" fill="none"></circle>
                     </svg>
-                    <p class="u-content">{{ message.content }}</p>
+                    <span class="u-content">{{ message.content }}</span>
                 </div>
             </div>
         </TransitionGroup>

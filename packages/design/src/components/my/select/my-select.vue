@@ -4,13 +4,19 @@
         :disabled="disabled"
         placement="bottom">
         <template #reference>
-            <div class="display-flex my-select icon-popover" :class="[{'my-icon-disabled': disabled}, 'my-color-icon']">
+            <div class="display-flex my-select" :class="[{'my-icon-disabled': disabled,
+            'my-select-middle': size== 'middle'
+            }, 'my-color-icon']">
                 <div class="my-select-input" :class="{
                     'my-select-input_placeholder': isNull(modelValue)
                 }">
-                    {{ isNull(modelValue) ? placeholder : modelValue }}
+                    {{ isNull(modelValue) ? placeholder : data.label }}
                 </div>
                 <my-icon class="my-select-arrow my-style-font_arrow icon-jt-x iconfont my-icon-downList-arrow"
+                         :focusBk="false"
+                         :class="[{
+                             'my-select-arrow-middle': size== 'middle'
+                         }]"
                          :size="8"
                          :disabled="disabled">
                 </my-icon>
@@ -20,7 +26,7 @@
             <element-align :model-value="modelValue"
                            showSelectedStatus
                            :elementAlignList="dataList"
-                           @update:model-value="change" />
+                           @change="change" />
         </my-scrollbar>
     </my-popover>
 
@@ -32,16 +38,17 @@ import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vu
 import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import { isNull } from 'lodash';
+import { onMounted, reactive } from 'vue-demi';
 
 const emit = defineEmits(['update:modelValue', 'change']);
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
         disabled?: boolean,
         showSelectedStatus?: boolean,
         modelValue: string | number | null | undefined,
         dataList: any[],
         height?: string,
-        size?: string,
+        size?: 'small' | 'middle',
         placeholder?: string,
     }>(),
     {
@@ -52,8 +59,30 @@ withDefaults(defineProps<{
         placeholder: '请选择'
     });
 
+const data = reactive({
+    label: ''
+});
+
+onMounted(() => {
+    for (let itemList of props.dataList) {
+        if (itemList instanceof Array) {
+            for (let item of itemList) {
+                if (props.modelValue == item.value) {
+                    data.label = item.label;
+                }
+            }
+        } else {
+            if (props.modelValue == itemList.value) {
+                data.label = itemList.label;
+            }
+        }
+    }
+});
+
+
 function change(val: any) {
-    emit('update:modelValue', val);
-    emit('change', val);
+    emit('update:modelValue', val.value);
+    emit('change', val.value);
+    data.label = val.label;
 }
 </script>

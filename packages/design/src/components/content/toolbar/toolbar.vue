@@ -53,6 +53,7 @@ import { download } from '@myprint/design/utils/utils';
 import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import Printer from '@myprint/design/components/my/icon/icons/Printer.vue';
+import { MyMessage } from '@myprint/design/components/my/message/my-message';
 
 const panel = inject(panelKey);
 const mitt = inject(mittKey)!;
@@ -61,29 +62,47 @@ const designProps = inject(designPropsKey)!;
 
 function print() {
     displayModel('print');
-    MyPrinter.clientPrinter({ previewDataList: previewData.value, printer: 'PDFWriter' })
+    const defaultPrinter = MyPrinter.getDefaultPrinter();
+    MyPrinter.clientPrinter({ previewDataList: previewData.value, printer: defaultPrinter?.name })
         .then(res => {
-            console.log(res);
-        });
+            switch (res.status) {
+                case 'SUCCESS':
+                    break;
+                case 'TIMEOUT':
+                    MyMessage.error('打印超时');
+                    break;
+                case 'ERROR':
+                    MyMessage.error('打印失败，' + res.msg);
+                    break;
+            }
+        }).catch(e => {
+        MyMessage.error('打印失败，' + e.msg);
+    });
 }
 
 function serverDownloadPdf() {
     displayModel('print');
     MyPrinter.pdfServer({ previewDataList: previewData.value })
-        .then(blob => {
-            download(blob, 'myprint.pdf');
+        .then(res => {
+            switch (res.status) {
+                case 'SUCCESS':
+                    download(res.blob!, 'myprint.pdf');
+                    break;
+                case 'TIMEOUT':
+                    MyMessage.error('下载超时');
+                    break;
+                case 'ERROR':
+                    MyMessage.error('下载失败，' + res.msg);
+                    break;
+            }
         }).catch(e => {
-        console.error(e);
-        console.log('生成失败');
+        MyMessage.error('下载失败，' + e.msg);
     });
 }
 
 function preview() {
     displayModel('preview');
-    MyPrinter.chromePreview({ previewDataList: previewData.value })
-        .then(res => {
-            console.log(res);
-        });
+    MyPrinter.chromePreview({ previewDataList: previewData.value });
 }
 
 function save() {

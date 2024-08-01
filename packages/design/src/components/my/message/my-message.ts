@@ -2,7 +2,8 @@ import { App, h, render, VNode } from 'vue-demi';
 import MessageView from '@myprint/design/components/my/message/my-message.vue';
 
 let messageNode: VNode = null!;
-export let handleSuccess: (content: string) => void = null!;
+let handleSuccess: (content: string) => void = null!;
+let handleError: (content: string) => void = null!;
 
 export function installMessage(app: App<any>) {
     if (!messageNode) {
@@ -13,6 +14,7 @@ export function installMessage(app: App<any>) {
         render(messageNode, container);
 
         handleSuccess = messageNode.component!.exposed!.success;
+        handleError = messageNode.component!.exposed!.error;
 
         document.body.appendChild(container.firstElementChild!);
     }
@@ -21,5 +23,8 @@ export function installMessage(app: App<any>) {
 export const MyMessage = {
     success(msg: string) {
         handleSuccess(msg);
-    }
+    },
+    error(msg: string) {
+        handleError(msg);
+    },
 };

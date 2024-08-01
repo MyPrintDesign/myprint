@@ -22,11 +22,17 @@
 
   .preview-panel__tool {
     color: white;
+    padding-left: 20px;
+    padding-right: 20px;
     background: rgb(41, 42, 45);
-    min-width: 300px;
-    max-width: 300px;
+    min-width: 260px;
+    max-width: 260px;
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
+
+    .preview-panel__tool_button {
+      margin-top: 8px;
+    }
   }
 }

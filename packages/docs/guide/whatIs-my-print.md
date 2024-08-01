@@ -2,20 +2,34 @@
 outline: deep
 ---
 
+# 打印设计
+
 :::tip :tada: :100:快速体验:100: :tada:
 [点击体验](./use-api/design-panel)
 :::
 
-##   
-打印设计面板，设计结果支持打印、生成pdf、生成图片，支持浏览器、客户端、服务端三种生成，并且三种方式生成结果高度统一
+## 说明
 
-`Vue@3.4.31` `TypeScript@5.0.2` `Vite@5.2.6`
+* 项目技术栈：`Vue@3.4.31` `TypeScript@5.0.2` `Vite@5.2.6`
+* 打印设计面板，设计结果支持打印、生成pdf、生成图片，支持浏览器、客户端、服务端三种生成，并且三种方式生成结果高度统一。
+* 支持多级表头数据表格。
+* 支持svg。
+* 操作简单，内置快捷键：Ctrl+c、Ctrl+v快速复制粘贴、Ctrl+s保存、Ctrl+z回滚、Ctrl+y重做、方向键微调位置。
+* 多种安装方式支持`centos`、`debian`、`docker`、`k8s` 一键安装
 
-配套服务
+## 配套服务
 
-客户端（本地调用打印机进行打印）[`去下载`](./deploy/client#download)
+### 客户端（本地调用打印机进行打印）[`去下载`](./deploy/client#download)
 
-服务端（服务端生成pdf）[`去下载`](https://myprint.top/myprint-server.zip)
+:::tip
+本地客户端支持局域网连接，可以做到同一局域网内别的机器的浏览器提交任务，由同一个打印机进行打印
+:::
+
+### 服务端（服务端生成pdf）[`去下载`](https://myprint.top/myprint-server.zip)
+
+:::tip
+在服务器生成pdf或者图片
+:::
 
 ## 支持的控件
 

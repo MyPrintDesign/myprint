@@ -112,7 +112,7 @@
         <tool-icon-popover
             :disabled="!hasStyleByTypeList(multipleElementGetValueList('type') as  elementType[], 'common')">
             <template #reference>
-                <my-icon >
+                <my-icon>
                     <i class="icon-color-spz iconfont-color" />
                 </my-icon>
             </template>
@@ -270,7 +270,8 @@ const appStore = useAppStoreHook();
 
 const groupDisabledIs = computed(() => {
     if (appStore.currentElement.length > 1) {
-        return multipleElementGetValue('groupIs');
+        const groupIs = multipleElementGetValue('groupIs');
+        return groupIs || groupIs == false;
     } else {
         return true;
     }

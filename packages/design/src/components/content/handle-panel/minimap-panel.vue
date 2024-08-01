@@ -8,9 +8,9 @@
             <div class="scale-design-content"
                  ref="designContentRef"
                  :style="{
-        left : data.miniMap.x+'px',
-        top :data.miniMap.y+'px',
-        transformOrigin: '0% 0%',
+                            left : data.miniMap.x+'px',
+                            top :data.miniMap.y+'px',
+                            transformOrigin: '0% 0%',
                             width: scaleUtil.scale(data.width)+ 'px',
                             height: scaleUtil.scale(data.height)+'px',
                             scale: data.scale

@@ -31,7 +31,9 @@ export interface MyPrintOptions {
 export interface PrintResult {
     status: 'SUCCESS' | 'ERROR' | 'TIMEOUT' | 'CLOSE';
     msg?: string,
-    type: 'CHROME_PRINT' | 'TIMEOUT' | 'CLIENT_PRINT' | 'CHROME_GENERATE_PDF' |'CHROME_GENERATE_IMG'|'SERVER_GENERATE_IMG' | 'CLIENT_GENERATE_PDF'| 'SERVER_GENERATE_PDF'| 'CLOSE';
+    blob?: Blob,
+    blobList?: Blob[],
+    type: 'CHROME_PRINT' | 'TIMEOUT' | 'CLIENT_PRINT' | 'CHROME_GENERATE_PDF' | 'CHROME_GENERATE_IMG' | 'SERVER_GENERATE_IMG' | 'CLIENT_GENERATE_PDF' | 'SERVER_GENERATE_PDF' | 'CLOSE';
 }
 
 export interface ClientCmd {
@@ -41,6 +43,34 @@ export interface ClientCmd {
     content?: any,
     width?: number,
     height?: number
+}
+
+export interface Printer {
+
+    /**
+     * a longer description of the printer's type.
+     */
+    description: string;
+    /**
+     * the name of the printer as shown in Print Preview.
+     */
+    displayName: string;
+    /**
+     * whether or not a given printer is set as the default printer on the OS.
+     */
+    isDefault: boolean;
+    /**
+     * the name of the printer as understood by the OS.
+     */
+    name: string;
+    /**
+     * an object containing a variable number of platform-specific printer information.
+     */
+    options: any;
+    /**
+     * the current status of the printer.
+     */
+    status: number;
 }
 
 export interface Provider {

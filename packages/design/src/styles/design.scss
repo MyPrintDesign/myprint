@@ -89,6 +89,7 @@
   appearance: none;
   border: 0;
   //color: black;
+  line-height: 16px;
   font-weight: bold;
   color: red;
 }
@@ -243,7 +244,6 @@
   }
 
   .choose-image-localFile-panel {
-
     width: 520px;
     height: 117px;
     user-select: none;
@@ -302,6 +302,7 @@
     font-size: 15px;
     line-height: 15px;
     visibility: hidden;
+    color: red;
 
     &:hover {
       visibility: visible;

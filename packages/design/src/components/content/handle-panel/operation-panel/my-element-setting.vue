@@ -220,7 +220,8 @@
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('dottedStyle')">
                 <my-history-select :model-value="multipleElementGetValue('option.dottedStyle')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.dottedStyle', val)"
-                                   placeholder="Activity zone"
+                                   placeholder="请选择"
+                                   class="width-120"
                                    :data-list="dottedStyleList"
                                    historyLabel="虚线样式" />
             </my-form-item>
@@ -303,7 +304,9 @@
                     inactive-text="否" />
             </my-form-item>
             
-            <my-button size="small" @click="clearDrawPanel">清空画布</my-button>
+            <my-button size="small"
+                       v-if="getElementSetting(multipleElementGetValue('type')).includes('clearDrawPanel')"
+                       @click="clearDrawPanel">清空画布</my-button>
         
         </my-divider-panel>
         
@@ -316,7 +319,8 @@
                           v-if="multipleElementGetValue('option.fixed') == true">
                 <my-history-select :model-value="multipleElementGetValue('option.displayStrategy')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.displayStrategy', val)"
-                                   placeholder="Activity zone"
+                                   placeholder="请选择"
+                                   class="width-120"
                                    :data-list="displayStrategyList"
                                    historyLabel="显示策略" />
             </my-form-item>
@@ -341,11 +345,12 @@ import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import {
+    addCanSelectElement,
     freshMoveableOption,
     moveableMoveX,
     moveableMoveY,
     moveableResize,
-    moveableRotate
+    moveableRotate, removeCanSelectElement
 } from '@myprint/design/plugins/moveable/moveable';
 import { MyElement } from '@myprint/design/types/entity';
 import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
@@ -385,6 +390,11 @@ function changeOptionFixed() {
 }
 
 function changeLock() {
+    if (element.value.lock) {
+        removeCanSelectElement(element.value);
+    } else {
+        addCanSelectElement(element.value);
+    }
     freshMoveableOption(element.value);
 }
 

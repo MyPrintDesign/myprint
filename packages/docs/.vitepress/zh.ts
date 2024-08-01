@@ -17,13 +17,13 @@ export const zh = defineConfig({
         },
 
         editLink: {
-            pattern: 'https://github.com/vuejs/vitepress/edit/main/docs/:path',
+            pattern: 'https://github.com/MyPrintDesign/myprint/edit/main/packages/docs/:path',
             text: '在 GitHub 上编辑此页面'
         },
 
         footer: {
-            message: '基于 MIT 许可发布',
-            copyright: `版权所有 © 2019-${new Date().getFullYear()} css`
+            message: '本文档内容版权属于 MyPrint 作者，保留所有权利 ',
+            copyright: `版权所有 © 2019-${new Date().getFullYear()} css <a href="https://beian.miit.gov.cn/" target="_blank" class="beian_a"></a>`
         },
 
         docFooter: {
@@ -62,14 +62,14 @@ function nav(): DefaultTheme.NavItem[] {
         {
             text: pkg.version,
             items: [
-                {
-                    text: '更新日志',
-                    link: 'https://github.com/vuejs/vitepress/blob/main/CHANGELOG.md'
-                },
-                {
-                    text: '参与贡献',
-                    link: 'https://github.com/vuejs/vitepress/blob/main/.github/contributing.md'
-                }
+                // {
+                //     text: '更新日志',
+                //     link: 'https://github.com/vuejs/vitepress/blob/main/CHANGELOG.md'
+                // },
+                // {
+                //     text: '参与贡献',
+                //     link: 'https://github.com/vuejs/vitepress/blob/main/.github/contributing.md'
+                // }
             ]
         }
     ];
@@ -96,6 +96,7 @@ function sidebarGuide(): DefaultTheme.SidebarItem[] {
             { text: '客户端', link: '/deploy/client' },
             { text: '服务端部署Centos', link: '/deploy/centos' },
             { text: '服务端部署Debian', link: '/deploy/debian' },
+            { text: '服务端部署Docker', link: '/deploy/docker' },
             { text: '服务端部署k8s', link: '/deploy/k8s' }
         ]
     }, {

@@ -4,12 +4,19 @@
 }
 
 .iconfont {
-  color: var(--tcolor);
   font-family: "iconfont" !important;
   font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-yanjing_xianshi_o:before {
+  content: "\ebcc";
+}
+
+.icon-yanjing_yincang_o:before {
+  content: "\ebcd";
 }
 
 .icon-duihao:before {
@@ -23,7 +30,6 @@
 .icon-wh-lock:before {
   content: "\e60d";
 }
-
 
 .icon-lock:before {
   content: "\e62d";

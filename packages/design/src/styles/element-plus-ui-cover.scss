@@ -32,14 +32,14 @@
   border-radius: 8px !important;
   overflow: hidden;
 
+  .my-dialog_content {
+    padding: 0 !important;
+  }
+
   .el-dialog__header {
     display: none;
   }
 
-}
-
-.setting-dialog {
-  padding: 0 !important;
 }
 
 .preview-dialog {

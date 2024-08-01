@@ -1,6 +1,5 @@
 <template>
-    <div class="my-print-preview-panel__wrap"
-         :class="{'my-print-print_hidden': displayModelPrint()}">
+    <div class="my-print-preview-panel__wrap my-print-print_hidden">
         <div class="preview-panel__model">
             <div class="my-print-preview-panel__content">
                 <div v-for="(page, index) in data.pageList"
@@ -25,11 +24,10 @@
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue-demi';
 import { MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
-import { displayModelPrint, getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
-import { useConfigStore } from '@myprint/design/stores/config';
+import { getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
 import Preview from '@myprint/design/components/preview/preview.vue';
 import { autoPage } from '@myprint/design/components/preview/autoPage';
-import { chrome2Img } from '@myprint/design/utils/pdfUtil';
+import { chrome2Img, toPdf } from '@myprint/design/utils/pdfUtil';
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { downloadImg, downloadPdf } from '@myprint/design/api/pdfServer';
 import { getPrintElementHtml, iFramePrint } from '@myprint/design/utils/myprint';
@@ -46,12 +44,13 @@ defineExpose({
     handleClientPrint,
     handleChromeDownloadImg,
     handleServerDownloadImg,
+    handleChromeDownloadPdf,
+    handleClientDownloadPdf,
     handleServerDownloadPdf
 });
-const configStore = useConfigStore();
 const data = reactive({
     dialogVisible: false,
-    pageList: [] as any,
+    pageList: [] as any[],
     resolveMap: {},
     previewTimeOutMap: {},
     panel: null! as Panel
@@ -73,6 +72,7 @@ function handleChromePrint(printProps: PrintProps) {
         await autoPage(data.pageList, data.panel, printProps.previewDataList);
         await nextTick();
         printArea();
+        data.pageList.length = 0
         printResult(printProps.taskId!, {
             status: 'SUCCESS',
             type: 'CHROME_PRINT'
@@ -91,8 +91,13 @@ function handleClientPrint(printProps: PrintProps) {
         await nextTick();
         let printer = printProps.printer;
         
-        if (isEmpty(printer)) {
-            printer = configStore.defaultPrinter!;
+        if (!myPrintClientService.connectIs()) {
+            printResult(printProps.taskId!, {
+                status: 'ERROR',
+                msg: '客户端未连接',
+                type: 'CLIENT_PRINT'
+            }, data.previewTimeOutMap, data.resolveMap);
+            return;
         }
         
         if (isEmpty(printer)) {
@@ -104,27 +109,18 @@ function handleClientPrint(printProps: PrintProps) {
             return;
         }
         
-        if (!myPrintClientService.connectIs()) {
-            printResult(printProps.taskId!, {
-                status: 'ERROR',
-                msg: '客户端未连接',
-                type: 'CLIENT_PRINT'
-            }, data.previewTimeOutMap, data.resolveMap);
-            return;
-        }
-        
         myPrintClientService.print({
-            content: { html: getPrintElementHtml(previewContentRef.value!), printer: printProps.printer },
+            content: { html: getPrintElementHtml(previewContentRef.value!, data.pageList), printer: printProps.printer },
             cmd: 'print',
             taskId: printProps.taskId!
         }, data.panel).then(res => {
-            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap, data.panel.name);
+            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap);
         });
     });
 }
 
 function handleChromeDownloadImg(printProps: PrintProps) {
-    return new Promise<Blob[]>(async (resolve, _reject) => {
+    return new Promise<PrintResult>(async (resolve, _reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         
         handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
@@ -133,12 +129,12 @@ function handleChromeDownloadImg(printProps: PrintProps) {
         await autoPage(data.pageList, data.panel, printProps.previewDataList);
         chrome2Img(previewContentRef.value, {
             width: unit2px(data.panel.width, data.panel), height: unit2px(data.panel.height, data.panel)
-        }).then(res => {
+        }).then(blobList => {
             // 清空内容
             data.pageList = [];
-            resolve(res);
             printResult(printProps.taskId!, {
                 status: 'SUCCESS',
+                blobList,
                 type: 'CHROME_GENERATE_IMG'
             }, data.previewTimeOutMap, data.resolveMap);
         });
@@ -154,26 +150,29 @@ function handleServerDownloadImg(printProps: PrintProps) {
         
         await nextTick();
         await autoPage(data.pageList, data.panel, printProps.previewDataList);
-        const html = getPrintElementHtml(previewContentRef.value!);
+        const html = getPrintElementHtml(previewContentRef.value!, data.pageList);
         downloadImg({
             content: html,
             height: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.height),
             width: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.width)
-        }).then(async blob => {
-            resolve(blob);
+        }).then(blob => {
             printResult(printProps.taskId!, {
                 status: 'SUCCESS',
+                blob,
                 type: 'SERVER_GENERATE_IMG'
             }, data.previewTimeOutMap, data.resolveMap);
         }).catch(e => {
-            reject(e);
+            reject({
+                status: 'SUCCESS',
+                msg: e.msg,
+                type: 'SERVER_GENERATE_IMG'
+            });
         });
     });
 }
 
-function handleServerDownloadPdf(printProps: PrintProps) {
-    debugger
-    return new Promise<Blob>(async (resolve, reject) => {
+function handleChromeDownloadPdf(printProps: PrintProps) {
+    return new Promise<PrintResult>(async (resolve, reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         
         handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
@@ -181,27 +180,85 @@ function handleServerDownloadPdf(printProps: PrintProps) {
         
         await nextTick();
         await autoPage(data.pageList, data.panel, printProps.previewDataList);
-        const html = getPrintElementHtml(previewContentRef.value!);
+        toPdf(previewContentRef.value, {
+            width: unit2px(data.panel.width, data.panel), height: unit2px(data.panel.height, data.panel)
+        }).then(blob => {
+            data.pageList.length = 0
+            printResult(printProps.taskId!, {
+                status: 'SUCCESS',
+                blob,
+                type: 'CHROME_GENERATE_PDF'
+            }, data.previewTimeOutMap, data.resolveMap);
+        }).catch(e => {
+            data.pageList.length = 0
+            reject({
+                status: 'ERROR',
+                msg: e.msg,
+                type: 'CHROME_GENERATE_PDF'
+            });
+        });
+    });
+}
+
+function handleClientDownloadPdf(printProps: PrintProps) {
+    return new Promise<PrintResult>(async (resolve, reject) => {
+        data.resolveMap[printProps.taskId!] = resolve;
+        
+        handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
+        data.panel = printProps.panel as Panel;
+        
+        await nextTick();
+        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        
+        myPrintClientService.print({
+            content: { html: getPrintElementHtml(previewContentRef.value!, data.pageList) },
+            cmd: 'generatePdf',
+            taskId: printProps.taskId!
+        }, data.panel).then(res => {
+            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap);
+        }).catch(e => {
+            reject({
+                status: 'ERROR',
+                msg: e.msg,
+                type: 'CLIENT_GENERATE_PDF'
+            });
+        });
+    });
+}
+
+function handleServerDownloadPdf(printProps: PrintProps) {
+    return new Promise<PrintResult>(async (resolve, reject) => {
+        data.resolveMap[printProps.taskId!] = resolve;
+        
+        handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
+        data.panel = printProps.panel as Panel;
+        
+        await nextTick();
+        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        const html = getPrintElementHtml(previewContentRef.value!, data.pageList);
         downloadPdf({
             content: html,
             height: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.height),
             width: unit2unit(getCurrentPanelUnit(data.panel), 'mm', data.panel.width)
-        }).then(async blob => {
-            resolve(blob);
+        }).then(blob => {
             printResult(printProps.taskId!, {
                 status: 'SUCCESS',
+                blob: blob,
                 type: 'SERVER_GENERATE_PDF'
             }, data.previewTimeOutMap, data.resolveMap);
         }).catch(e => {
-            reject(e);
+            reject({
+                status: 'ERROR',
+                msg: e.msg,
+                type: 'SERVER_GENERATE_PDF'
+            });
         });
     });
 }
 
 function printArea() {
-    const html = getPrintElementHtml(previewContentRef.value!);
+    const html = getPrintElementHtml(previewContentRef.value!, data.pageList);
     iFramePrint(data.panel, html);
 }
-
 
 </script>

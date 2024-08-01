@@ -4,6 +4,7 @@ import previewPanelView from '@myprint/design/components/preview/preview-panel.v
 import { getCurrentPanel, parentInitElement } from '@myprint/design/utils/elementUtil';
 import { Container, MyPrintOptions, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
 import { generateUUID } from '@myprint/design/utils/utils';
+import { myPrintClientService } from '@myprint/design/plugins/myprintClientService';
 
 export const myPrintOptions: MyPrintOptions = {
     disabledClient: false
@@ -13,11 +14,11 @@ let printNode: VNode = null!;
 let previewNode: VNode = null!;
 let handleChromePrint: (printProps: PrintProps) => Promise<PrintResult> = null!;
 let handleClientPrint: (printProps: PrintProps) => Promise<PrintResult> = null!;
-let handleChromeDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
-let handleClientDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
-let handleServerDownloadPdf: (printProps: PrintProps) => Promise<Blob> = null!;
-let handleChromeDownloadImg: (printProps: PrintProps) => Promise<Blob[]> = null!;
-let handleServerDownloadImg: (printProps: PrintProps) => Promise<Blob> = null!;
+let handleChromeDownloadPdf: (printProps: PrintProps) => Promise<PrintResult> = null!;
+let handleClientDownloadPdf: (printProps: PrintProps) => Promise<PrintResult> = null!;
+let handleServerDownloadPdf: (printProps: PrintProps) => Promise<PrintResult> = null!;
+let handleChromeDownloadImg: (printProps: PrintProps) => Promise<PrintResult> = null!;
+let handleServerDownloadImg: (printProps: PrintProps) => Promise<PrintResult> = null!;
 let handleChromePreview: (printProps: PrintProps) => Promise<PrintResult> = null!;
 
 export function installPrinter(app: App<any>) {
@@ -31,8 +32,8 @@ export function installPrinter(app: App<any>) {
         handleChromePrint = printNode.component!.exposed!.handleChromePrint;
         handleClientPrint = printNode.component!.exposed!.handleClientPrint;
 
-        handleChromeDownloadPdf = printNode.component!.exposed!.handleServerDownloadPdf;
-        handleClientDownloadPdf = printNode.component!.exposed!.handleServerDownloadPdf;
+        handleChromeDownloadPdf = printNode.component!.exposed!.handleChromeDownloadPdf;
+        handleClientDownloadPdf = printNode.component!.exposed!.handleClientDownloadPdf;
         handleServerDownloadPdf = printNode.component!.exposed!.handleServerDownloadPdf;
         handleChromeDownloadImg = printNode.component!.exposed!.handleChromeDownloadImg;
         handleServerDownloadImg = printNode.component!.exposed!.handleServerDownloadImg;
@@ -79,6 +80,31 @@ export const MyPrinter = {
     initMyPrinter(options: MyPrintOptions) {
         options.serverUrl && (myPrintOptions.serverUrl = options.serverUrl);
         options.disabledClient != null && (myPrintOptions.disabledClient = options.disabledClient);
+    },
+
+    clientConnectIs() {
+        return myPrintClientService.connectIs();
+    },
+
+    getPrinterList() {
+        return myPrintClientService.getPrinterList();
+    },
+
+    getDefaultPrinter() {
+        const printList = myPrintClientService.getPrinterList();
+        if (printList == null || printList.length == 0) {
+            return null;
+        }
+        for (let printListElement of printList) {
+            if (printListElement.isDefault) {
+                return printListElement;
+            }
+        }
+        return printList[0];
+    },
+
+    asyncGetPrinterList() {
+        return myPrintClientService.asyncGetPrinterList();
     },
 
     chromePreview(printProps: PrintProps) {

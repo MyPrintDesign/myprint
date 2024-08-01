@@ -1,5 +1,5 @@
 <template>
-    <div :class="['m-slider', { disabled: disabled }]" ref="slider" :style="`width: ${totalWidth};`">
+    <div :class="['m-slider', { 'm-slider-disabled': disabled }]" ref="slider" :style="`width: ${totalWidth};`">
         <div class="u-slider-rail" @click.self="disabled ? () => false : onClickPoint($event)"></div>
         <div
             class="u-slider-track"

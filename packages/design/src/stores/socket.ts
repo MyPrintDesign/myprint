@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { printCssStyle } from '@myprint/design/utils/utils';
 import { useConfigStore } from './config';
-import { ClientCmd } from '@myprint/design/types/entity';
+import { ClientCmd, Printer } from '@myprint/design/types/entity';
 
 let lockReconnect: any;
 export const useSocket = defineStore('socket', {
@@ -10,7 +10,7 @@ export const useSocket = defineStore('socket', {
             socket: undefined as any,
             timer: undefined as any,
             connect: false,
-            printerList: [] as any[],
+            printerList: [] as Printer[],
             resolveMap: {}
         };
     },
@@ -30,11 +30,10 @@ export const useSocket = defineStore('socket', {
             };
             const onMessage = (msgData: ClientCmd) => {
                 // 遍历onMessage集合并触发
-                // if (onSocketMessage.value) {
-                //     onSocketMessage.value.call(null, msgData);
-                // }
-                this.resolveMap[msgData.taskId](msgData);
-                delete this.resolveMap[msgData.taskId];
+                if (this.resolveMap[msgData.taskId]) {
+                    this.resolveMap[msgData.taskId](msgData);
+                    delete this.resolveMap[msgData.taskId];
+                }
             };
 
             const init = () => {
@@ -56,10 +55,8 @@ export const useSocket = defineStore('socket', {
                     const msgData = JSON.parse(event.data) as ClientCmd;
                     switch (msgData.cmd) {
                         case 'printerList':
-                            stateThis.printerList = (msgData.content as any[]).map(res => ({
-                                label: res.displayName,
-                                value: res.name
-                            }));
+                            stateThis.printerList = (msgData.content as any[]).map(res => (res));
+                            onMessage(msgData);
                             break;
                         case 'printResult':
                             onMessage(msgData);
@@ -141,6 +138,9 @@ export const useSocket = defineStore('socket', {
             };
 
             createSocket();
+        },
+        SET_PRINTER_LIST(list: Printer[]) {
+            this.printerList = list;
         },
         SEND(taskId: string, msg: any) {
             return new Promise<ClientCmd>((resolve, _reject) => {

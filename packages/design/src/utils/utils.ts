@@ -362,7 +362,7 @@ export function cancelRaf(raf: { id: number }): void {
     if (raf && raf.id && typeof raf.id === 'number') {
         cancelAnimationFrame(raf.id);
     } else {
-        console.warn('cancelRaf received an invalid id:', raf);
+        // console.warn('cancelRaf received an invalid id:', raf);
     }
 }
 

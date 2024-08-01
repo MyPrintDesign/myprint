@@ -1,33 +1,83 @@
-.my-button {
-  font-size: 12px;
-  border-radius: 3px;
+//.my-button {
+//  font-size: 12px;
+//  border-radius: 3px;
+//
+//  display: inline-flex;
+//  justify-content: center;
+//  align-items: center;
+//  line-height: 1;
+//  height: 24px;
+//  white-space: nowrap;
+//  cursor: pointer;
+//  color: var(--drag-h-color);
+//  text-align: center;
+//  box-sizing: border-box;
+//  outline: 0;
+//  transition: .1s;
+//  font-weight: 500;
+//  -webkit-user-select: none;
+//  -moz-user-select: none;
+//  -ms-user-select: none;
+//  user-select: none;
+//  vertical-align: middle;
+//  -webkit-appearance: none;
+//  //background-color: var(--el-button-bg-color);
+//  border: var(--my-border);
+//  border-color: var(--my-button-border-color);
+//  padding: 5px 11px;
+//
+//  &:hover {
+//    background-color: var(--bg-highlight-color);
+//
+//  }
+//}
 
+
+.my-button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   line-height: 1;
-  height: 24px;
+  height: 32px;
   white-space: nowrap;
   cursor: pointer;
-  color: var(--drag-h-color);
+  color: var(--my-button-text-color);
   text-align: center;
   box-sizing: border-box;
   outline: 0;
   transition: .1s;
-  font-weight: 500;
+  font-weight: var(--my-button-font-weight);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
   vertical-align: middle;
   -webkit-appearance: none;
-  //background-color: var(--el-button-bg-color);
+  background-color: var(--my-button-bg-color);
   border: var(--my-border);
   border-color: var(--my-button-border-color);
-  padding: 5px 11px;
+  padding: 8px 15px;
+  font-size: var(--my-font-size-base);
+  border-radius: var(--my-border-radius-base);
 
-  &:hover {
+  &:hover:not(.disabled) {
+    color: var(--drag-h-color);
+    border-color: var(--drag-h-color);
     background-color: var(--bg-highlight-color);
-
+    outline: 0;
   }
+
+  &.is-active:not(.disabled) {
+    color: var(--drag-h-color);
+    border-color: var(--drag-h-color);
+    background-color: var(--bg-highlight-color);
+    outline: 0;
+  }
+}
+
+.my-button--small {
+  height: var(--my-button-size);
+  padding: 5px 11px;
+  font-size: 12px;
+  border-radius: calc(var(--my-border-radius-base) - 1px);
 }

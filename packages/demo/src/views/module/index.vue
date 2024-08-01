@@ -301,6 +301,7 @@ function confirmTemplateRename(name: string) {
         id: data.template.id,
         name
     }).then(_res => {
+        data.deleteVisible = false;
         refreshModuleList(false);
     }).catch(e => {
         ElMessage.error(e.msg);
@@ -311,6 +312,7 @@ function confirmTemplateDelete() {
     templateDelete({
         id: data.template.id
     }).then(_res => {
+        data.deleteVisible = false;
         refreshTemplateList();
     }).catch(e => {
         ElMessage.error(e.msg);

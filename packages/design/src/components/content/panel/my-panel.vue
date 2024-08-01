@@ -1,9 +1,9 @@
 <template>
     <div class="design-panel user-select-none">
         <div class="display-flex">
-            <div style="min-width: 20px; height: 20px" @click="clickAuxiliaryLineVisible"
-                 class="cursor-pointer"
-                 :class="[auxiliaryLineVisible? 'eys' :'eye-close']" />
+            <my-icon style="min-width: 20px; height: 20px" @click="clickAuxiliaryLineVisible"
+                 class="cursor-pointer iconfont "
+                 :class="[auxiliaryLineVisible? 'icon-yanjing_xianshi_o' :'icon-yanjing_yincang_o']" />
             <rule :direction="highlightRule.horizontal.direction"
                   :length="panel.width"
                   :auxiliaryLineVisible="auxiliaryLineVisible"
@@ -61,6 +61,7 @@ import { changeDragSnapIs, initMoveable, updatePanel } from '@myprint/design/plu
 import Design from '@myprint/design/components/design/design.vue';
 import { initSelecto, selecto } from '@myprint/design/plugins/moveable/selecto';
 import AuxiliaryLine from '@myprint/design/components/design/auxiliary/auxiliary-line.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 
 const panel = inject(panelKey)!;
 const mitt = inject(mittKey)!;

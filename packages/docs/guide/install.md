@@ -4,9 +4,11 @@
 
 # 前置准备
 
-## npm 安装
+:::danger :tada: :100:注意:100: :tada:
+需要基于vue3的项目引用，其他框架正在努力解决中！！！
+:::
 
-推荐使用 npm 的方式安装，它能更好地和 webpack 打包工具配合使用。
+## npm 安装
 
 ::: code-group
 
@@ -22,7 +24,7 @@ yarn add -D myprint-design
 
 ## 直接引用(仅支持ts) {#my-anchor}
 
-[下载地址](https://code.visualstudio.com/)
+[下载地址](https://github.com/MyPrintDesign/myprint)
 
 ### 如何引用？
 

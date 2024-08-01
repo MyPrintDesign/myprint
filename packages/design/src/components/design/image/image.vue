@@ -31,7 +31,7 @@
             v-model="data.cropVisible"
             width="640px"
             title="图片裁剪">
-            <div style="width: 600px; height: 500px">
+            <div style="width: 640px; height: 640px">
                 <VueCropper ref="cropper"
                             :img="sourceBase64"
                             :outputSize="option.outputSize"
@@ -81,6 +81,7 @@
         
         <my-dialog
             class="choose-image-type-dialog"
+            :show-header="false"
             v-model="data.chooseImageVisible"
             width="520px">
             
@@ -148,7 +149,7 @@ const sourceBase64 = ref();
 const contentBase64 = ref();
 const option = reactive({
     outputSize: 1, //裁剪生成图片的质量(可选0.1 - 1)
-    outputType: 'jpeg', //裁剪生成图片的格式（jpeg || png || webp）
+    outputType: 'png', //裁剪生成图片的格式（jpeg || png || webp）
     info: true, //图片大小信息
     canScale: true, //图片是否允许滚轮缩放
     autoCrop: true, //是否默认生成截图框
@@ -166,7 +167,7 @@ const option = reactive({
     infoTrue: false, //true为展示真实输出图片宽高，false展示看到的截图框宽高
     maxImgSize: 3000, //限制图片最大宽度和高度
     enlarge: 1, //图片根据截图框输出比例倍数
-    mode: '600px 600px' //图片默认渲染方式
+    mode: '640px 640px' //图片默认渲染方式
 });
 
 // console.log(option)

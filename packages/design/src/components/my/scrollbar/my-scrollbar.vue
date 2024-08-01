@@ -46,6 +46,12 @@ const emit = defineEmits<PerfectScrollbarEmits>();
 const scrollbar = ref<HTMLElement>()!;
 const ps: Ref = ref()!;
 
+const resizeObserver = new ResizeObserver(_entries => {
+    if (ps.value) {
+        ps.value.update();
+    }
+});
+
 watch(
     () => props.options,
     () => {
@@ -73,6 +79,9 @@ function createInstance() {
                 wheelPropagation: false,
                 ...props.options
             });
+            
+            resizeObserver.observe(scrollbar.value);
+            
             toggleListeners();
             setTimeout(() => {
                 if (ps.value != null) {
@@ -84,6 +93,7 @@ function createInstance() {
 }
 
 function destroyInstance() {
+    resizeObserver.disconnect();
     if (ps.value) {
         toggleListeners(false);
         ps.value.destroy();

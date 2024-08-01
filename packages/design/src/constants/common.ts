@@ -82,7 +82,14 @@ export const fontSizeList: DownList[][] = [
 
 
 export const definePropType = <T>(val: any): PropType<T> => val;
-type elementSettingType = keyof ElementOption | (keyof Container) | 'contentType' | 'data' | 'label' | 'common'
+type elementSettingType =
+    keyof ElementOption
+    | (keyof Container)
+    | 'contentType'
+    | 'data'
+    | 'label'
+    | 'common'
+    | 'clearDrawPanel'
 // "x", 'y', "width", 'height', "font", 'fontSize', "color", 'hiddenLabel', 'opacity', "rotate"
 const commonElementSetting: Array<elementSettingType> = ['x', 'y', 'width', 'height', 'opacity', 'rotate'];
 const styleElementSetting: Array<elementSettingType> = ['textAlign', 'verticalAlign', 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'fontFamily', 'fontSize'];
@@ -109,7 +116,7 @@ const elementSetting: Record<elementType, Array<elementSettingType>> =
         SvgLine: ['common', 'color', 'background', 'x', 'y', 'opacity'],
         SvgBezierCurve: ['common', 'color', 'background', 'x', 'y', 'opacity'],
         SvgBezierCurveThree: ['common', 'color', 'background', 'x', 'y', 'opacity'],
-        DrawPanel: ['common', 'color', 'background', 'borderAll', 'x', 'y', 'opacity']
+        DrawPanel: ['common', 'color', 'background', 'borderAll', 'x', 'y', 'opacity', 'clearDrawPanel']
     };
 
 export function getElementSetting(type: elementType) {

@@ -62,7 +62,9 @@ const createPopperInstance = () => {
     });
     nextTick(() => {
         // 异步更新
-        popperInstance.update();
+        if (popperInstance != null) {
+            popperInstance.update();
+        }
     });
 };
 

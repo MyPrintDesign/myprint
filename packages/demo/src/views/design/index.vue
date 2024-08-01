@@ -1,5 +1,6 @@
 <template>
     <design-panel :template="data.template"
+                  class="demo-design-panel"
                   generateImg
                   :module="data.module"
                   :saveTemplate="saveTemplate"
@@ -75,20 +76,22 @@ function saveTemplate(template: Template) {
                 .then(res => {
                     id = res.data.id as string;
                     updateQuery(id);
-                    msgSuccess('新增成功');
-                    if (data.arrayBufferList != null) {
-                        panelImg(data.arrayBufferList);
+                    // msgSuccess('新增成功');
+                    if (data.blobList != null) {
+                        panelImg(data.blobList);
                     }
                     resolve({ status: 'SUCCESS' } as SaveResult);
                 }).catch(_e => {
+                // console.log(_e);
                 reject({ status: 'ERROR' } as SaveResult);
             });
         } else {
             templateUpdate(data.template)
                 .then(_res => {
-                    msgSuccess('保存成功');
+                    // msgSuccess('保存成功');
                     resolve({ status: 'SUCCESS' } as SaveResult);
                 }).catch(_e => {
+                // console.log(_e);
                 reject({ status: 'ERROR' } as SaveResult);
             });
         }

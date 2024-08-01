@@ -1,36 +1,35 @@
 <template>
-    <i :class="{focus: !disabled && (hoverFlag || modelValue), 'my-icon-disabled': disabled, active: modelValue}"
-         class="style-icon"
-         @click="click"
-         :style="{
+    <i :class="{'my-icon-disabled': disabled,
+    active: modelValue,
+    'icon-focus-bk': focusBk}"
+       class="style-icon"
+       @click="click"
+       :style="{
              'font-size': size+'px',
              'padding': padding
-         }"
-         @mouseover="hover(true)"
-         @mouseleave="hover(false)">
+         }">
         <slot />
     </i>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue-demi';
 
 const emit = defineEmits(['update:modelValue', 'click']);
 
 const props = withDefaults(defineProps<{
         disabled?: boolean,
         modelValue?: boolean,
+        focusBk?: boolean,
         size?: number | string,
         padding?: string,
     }>(),
     {
         disabled: false,
         modelValue: false,
+        focusBk: true,
         size: 20,
         padding: null!
     });
-
-const hoverFlag = ref(false);
 
 function click() {
     if (props.disabled) {
@@ -40,8 +39,8 @@ function click() {
     emit('click');
 }
 
-function hover(flag: boolean) {
-    hoverFlag.value = flag;
-}
+// function hover(flag: boolean) {
+//     hoverFlag.value = flag;
+// }
 
 </script>

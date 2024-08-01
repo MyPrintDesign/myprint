@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import errorCode from '@/utils/errorCode';
+// import errorCode from '@/utils/errorCode';
 import { R } from '@/types/R';
-import { visitorId } from '@/utils/util';
+import { token, visitorId } from '@/utils/util';
 // import cache from '@/plugins/cache'
 // import { saveAs } from 'file-saver'
 
@@ -30,6 +30,7 @@ service.interceptors.request.use(config => {
     //     config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
     // }
     config.headers.set('visitorId', visitorId);
+    config.headers.set('token', token);
     // get请求映射params参数
     if (config.method === 'get' && config.params) {
         let url = config.url;
@@ -77,7 +78,7 @@ service.interceptors.response.use(res => {
         // 未设置状态码则默认成功状态
         const code = res.data.code || 200;
         // 获取错误信息
-        const msg = errorCode[code] || res.data.msg || errorCode['default'];
+        // const msg = errorCode[code] || res.data.msg || errorCode['default'];
         // 二进制数据则直接返回
         if (res.request.responseType === 'blob' || res.request.responseType === 'arraybuffer') {
             return res;
@@ -97,10 +98,7 @@ service.interceptors.response.use(res => {
             return Promise.reject('无效的会话，或者会话已过期，请重新登录。');
         } else if (code === 500) {
             // Message({ message: msg, type: 'error' })
-            return Promise.reject({
-                data: res.data,
-                msg: msg
-            });
+            return Promise.reject(res.data);
         } else if (code === 601) {
             // Message({ message: msg, type: 'warning' })
             return Promise.reject('error');
