@@ -1,5 +1,4 @@
 <template>
-    <!--  多边形的线-->
     <svg ref="chartRef" class="my-print-chart">
         <path class="u-path" d="" />
         

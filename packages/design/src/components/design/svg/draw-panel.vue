@@ -1,5 +1,5 @@
 <template>
-    <img alt="" class="my-print-draw_panel_img" v-if="useAppStoreHook().displayModel == 'preview'" :src="data.imgSrc">
+    <img alt="" class="my-print-draw_panel_img" v-if="useAppStoreHook().displayModel == 'preview' || useAppStoreHook().displayModel == 'print'" :src="data.imgSrc">
     <canvas ref="canvasRef" class="my-print-draw_panel" />
 </template>
 
@@ -60,7 +60,7 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
                         
                         moveableEditing();
                         
-                        console.log('double-click');
+                        // console.log('double-click');
                         lastClickPoint = undefined!;
                     } else {
                         lastClickPoint = {

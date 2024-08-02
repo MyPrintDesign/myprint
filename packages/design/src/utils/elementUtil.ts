@@ -162,18 +162,18 @@ export function innerElementIs(point: Point, element: MyElement, parentElement: 
         && point.y >= parentElement.runtimeOption.y && point.y <= parentElement.runtimeOption.y + parentElement.runtimeOption.height;
 }
 
-export function parentInitElement(parent: Container, element: MyElement, index: number) {
-    initElement(element, index);
+export function parentInitElement(panel: Panel, parent: Container, element: MyElement, index: number) {
+    initElement(panel, element, index);
     installParentElement(parent, element);
     if (element.elementList?.length > 0) {
         for (let i = 0; i < element.elementList.length; i++) {
             let elementTmp = element.elementList[i];
-            parentInitElement(element, elementTmp, i);
+            parentInitElement(panel, element, elementTmp, i);
         }
     }
 }
 
-export function initElement(element: MyElement, index: number) {
+export function initElement(panel: Panel, element: MyElement, index: number) {
     if (element == null) {
         return;
     }
@@ -328,16 +328,16 @@ export function initElement(element: MyElement, index: number) {
                     const dataJson = {} as SvgData;
                     if (points) {
                         for (let point of points) {
-                            point.x = unit2px(point.x);
-                            point.y = unit2px(point.y);
+                            point.x = unit2px(point.x, panel);
+                            point.y = unit2px(point.y, panel);
                         }
                         dataJson.points = points;
                     }
 
                     if (controlPoints) {
                         for (let point of controlPoints) {
-                            point.x = unit2px(point.x);
-                            point.y = unit2px(point.y);
+                            point.x = unit2px(point.x, panel);
+                            point.y = unit2px(point.y, panel);
                         }
                         dataJson.controlPoints = controlPoints;
                     }
@@ -361,7 +361,7 @@ export function initElement(element: MyElement, index: number) {
             for (let j = 0; j < headList.length; j++) {
                 const column = headList[j];
                 if (column) {
-                    parentInitElement(element, column, i);
+                    parentInitElement(panel, element, column, i);
                     column.runtimeOption.workEnvironment = 'DataTable';
                     column.runtimeOption.cellType = 'Head';
                 }
@@ -371,7 +371,7 @@ export function initElement(element: MyElement, index: number) {
         for (let i = 0; i < element.tableBodyList.length; i++) {
             const bodyList = element.tableBodyList[i];
             for (let j = 0; j < bodyList.length; j++) {
-                parentInitElement(element, bodyList[j], element.tableHeadList.length);
+                parentInitElement(panel, element, bodyList[j], element.tableHeadList.length);
                 bodyList[j].runtimeOption.workEnvironment = 'DataTable';
                 bodyList[j].runtimeOption.cellType = 'Body';
             }
@@ -383,7 +383,7 @@ export function initElement(element: MyElement, index: number) {
         for (let i = 0; i < element.statisticsList.length; i++) {
             const statisticsList = element.statisticsList[i];
             for (let j = 0; j < statisticsList.length; j++) {
-                parentInitElement(element, statisticsList[j], element.tableHeadList.length);
+                parentInitElement(panel, element, statisticsList[j], element.tableHeadList.length);
                 statisticsList[j].runtimeOption.workEnvironment = 'DataTable';
                 statisticsList[j].runtimeOption.cellType = 'Statistics';
             }
@@ -436,10 +436,10 @@ export function initElement(element: MyElement, index: number) {
 
     element.runtimeOption.init = {} as Container;
     element.runtimeOption.init.runtimeOption = {} as RuntimeElementOption;
-    element.runtimeOption.width = unit2px(element.width);
-    element.runtimeOption.height = unit2px(element.height);
-    element.runtimeOption.x = unit2px(element.x);
-    element.runtimeOption.y = unit2px(element.y);
+    element.runtimeOption.width = unit2px(element.width, panel);
+    element.runtimeOption.height = unit2px(element.height, panel);
+    element.runtimeOption.x = unit2px(element.x, panel);
+    element.runtimeOption.y = unit2px(element.y, panel);
     element.runtimeOption.rotate = element.option.rotate;
     element.runtimeOption.init.x = element.runtimeOption.x;
     element.runtimeOption.init.y = element.runtimeOption.y;
@@ -575,7 +575,7 @@ export function element2PreviewWrapper(element: MyElement): PreviewWrapper {
     previewWrapper.id = generateUUID();
     previewWrapper.heightIs = true;
     previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
-    previewWrapper.runtimeOption.previewIs = true
+    previewWrapper.runtimeOption.previewIs = true;
 
     if (element.elementList != null && element.elementList.length > 0) {
         // const pList: PreviewWrapper[] = []
@@ -689,12 +689,12 @@ export function clearParent(element: MyElement) {
     element.runtimeOption.parent = undefined;
 }
 
-export function addElement(parent: Container, element: MyElement) {
+export function addElement(panel: Panel, parent: Container, element: MyElement) {
     if (parent.elementList == null) {
         parent.elementList = [];
     }
     parent.elementList.push(element);
-    initElement(element, parent.elementList.length - 1);
+    initElement(panel, element, parent.elementList.length - 1);
     installParentElement(parent, element);
 }
 

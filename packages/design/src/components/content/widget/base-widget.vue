@@ -120,7 +120,7 @@ function dragStart(ev: MouseEvent) {
         }
     }
     
-    initElement(element, 0);
+    initElement(panel, element, 0);
     
     // console.log(element.width);
     // console.log(element.height);
@@ -238,7 +238,7 @@ function dragStart(ev: MouseEvent) {
             // 放回原处
             dragWrapper.opacity = 1;
             if (dragWrapper.x == startX && dragWrapper.y == startY) {
-                console.log('==');
+                // console.log('==');
                 dragWrapper.visible = false;
             } else {
                 dragWrapper.transitionAnime = true;
@@ -254,7 +254,7 @@ function dragStart(ev: MouseEvent) {
             if (parentElement) {
                 element.x = element.x - parentElement.x;
                 element.y = element.y - parentElement.y;
-                addElement(parentElement, element);
+                addElement(panel, parentElement, element);
                 parentElement.runtimeOption.dragInIs = false;
                 parentElement = undefined!;
             } else {
@@ -289,7 +289,7 @@ function dragStart(ev: MouseEvent) {
                             installParentElement(panel, element);
                         }
                     ).end(() => {
-                    addElement(panel, element);
+                    addElement(panel, panel, element);
                 });
                 // console.log(panel)
             }

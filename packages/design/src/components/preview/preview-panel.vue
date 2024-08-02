@@ -104,12 +104,12 @@ const printList = computed(() => {
 
 function print() {
     myPrintClientService.print({
-        content: { html: getPrintElementHtml(previewContentRef.value!, data.pageList), printer: data.printer },
+        content: { html: getPrintElementHtml(previewContentRef.value!, []), printer: data.printer },
         cmd: 'print',
         taskId: data.taskId
     }, panel.value)
         .then(res => {
-            console.log(res);
+            // console.log(res);
             handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap);
         })
         .catch(e => {
@@ -125,7 +125,7 @@ function print() {
 function downloadPdf() {
     if (MyPrinter.clientConnectIs()) {
         myPrintClientService.print({
-            content: { html: getPrintElementHtml(previewContentRef.value!, data.pageList) },
+            content: { html: getPrintElementHtml(previewContentRef.value!, []) },
             cmd: 'generatePdf',
             taskId: data.taskId
         }, panel.value).then(res => {
@@ -161,7 +161,7 @@ function downloadPdf() {
 }
 
 function printChromePdf() {
-    iFramePrint(panel.value, getPrintElementHtml(previewContentRef.value!, data.pageList));
+    iFramePrint(panel.value, getPrintElementHtml(previewContentRef.value!, []));
     printResult(data.taskId, {
         status: 'SUCCESS',
         type: 'CHROME_PRINT'

@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import '@/styles/var.scss';
 import '@/styles/module.scss';
 import '@myprint/design/styles/index.scss';
-import { createPrint, Printer } from '@myprint/design/index';
+import { createPrint, MyPrinter } from '@myprint/design/index';
 
 import { mittKey } from '@/constants/keys';
 import router from './router';

@@ -16,7 +16,7 @@
 import widget from '@myprint/design/components/content/widget/index.vue';
 import PanelView from '@myprint/design/components/content/panel/index.vue';
 import { computed, CSSProperties, inject, onMounted, provide, reactive, Ref, ref, watch } from 'vue-demi';
-import { Container, Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
+import { Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
 import { to } from '@myprint/design/utils/utils';
 import { designPropsKey, mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
 import { init } from '@myprint/design/utils/historyUtil';
@@ -147,10 +147,10 @@ function initTemplate() {
     // }
     for (let i = 0; i < panel.elementList.length; i++) {
         const element = panel.elementList[i];
-        parentInitElement(panel as Container, element, i);
+        parentInitElement(panel, panel, element, i);
     }
-    panel.pageHeader && parentInitElement(panel, panel.pageHeader, 0);
-    panel.pageFooter && parentInitElement(panel, panel.pageFooter, 0);
+    panel.pageHeader && parentInitElement(panel, panel, panel.pageHeader, 0);
+    panel.pageFooter && parentInitElement(panel, panel, panel.pageFooter, 0);
     
     init();
     

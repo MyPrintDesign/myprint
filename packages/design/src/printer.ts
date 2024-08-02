@@ -2,7 +2,7 @@ import { App, h, render, VNode } from 'vue-demi';
 import PrintView from '@myprint/design/components/print/print.vue';
 import previewPanelView from '@myprint/design/components/preview/preview-panel.vue';
 import { getCurrentPanel, parentInitElement } from '@myprint/design/utils/elementUtil';
-import { Container, MyPrintOptions, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
+import { MyPrintOptions, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
 import { generateUUID } from '@myprint/design/utils/utils';
 import { myPrintClientService } from '@myprint/design/plugins/myprintClientService';
 
@@ -57,10 +57,10 @@ function initPanel(panel: Panel) {
     panel.runtimeOption = {} as any;
     for (let i = 0; i < panel.elementList.length; i++) {
         const element = panel.elementList[i];
-        parentInitElement(panel as Container, element, i);
+        parentInitElement(panel, panel, element, i);
     }
-    panel.pageHeader && parentInitElement(panel, panel.pageHeader, 0);
-    panel.pageFooter && parentInitElement(panel, panel.pageFooter, 0);
+    panel.pageHeader && parentInitElement(panel, panel, panel.pageHeader, 0);
+    panel.pageFooter && parentInitElement(panel, panel, panel.pageFooter, 0);
 }
 
 function convertPrintProps(printProps: PrintProps) {

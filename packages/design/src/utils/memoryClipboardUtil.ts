@@ -103,7 +103,7 @@ export const memoryClipboardUtil = {
                 const parentTmp = elementTypeContainerList.includes(datum.type) ? getCurrentPanel() : parent;
                 computePosition(datum, parentTmp);
                 boundElement(datum, parentTmp);
-                addElement(parentTmp, datum);
+                addElement(getCurrentPanel(), parentTmp, datum);
                 newElementList.push(datum);
             }
             // 记录历史
@@ -125,7 +125,7 @@ export const memoryClipboardUtil = {
                 computePosition(newElement, parentTmp);
 
                 boundElement(newElement, parentTmp);
-                addElement(parentTmp, newElement);
+                addElement(getCurrentPanel(), parentTmp, newElement);
                 newElementList.push(newElement);
             }
 
