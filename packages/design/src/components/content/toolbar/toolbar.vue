@@ -45,7 +45,7 @@ import { inject } from 'vue-demi';
 import StyleDesign from './style-design.vue';
 import { designPropsKey, mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
 import { i18n } from '@myprint/design/locales';
-import { clearPanel, displayModel, getCurrentPanel } from '@myprint/design/utils/elementUtil';
+import { clearPanel, getCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
 import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
 import { MyPrinter } from '@myprint/design/printer';
@@ -61,7 +61,6 @@ const previewData = inject(previewDataKey)!;
 const designProps = inject(designPropsKey)!;
 
 function print() {
-    displayModel('print');
     const defaultPrinter = MyPrinter.getDefaultPrinter();
     MyPrinter.clientPrinter({ previewDataList: previewData.value, printer: defaultPrinter?.name })
         .then(res => {
@@ -81,7 +80,6 @@ function print() {
 }
 
 function serverDownloadPdf() {
-    displayModel('print');
     MyPrinter.pdfServer({ previewDataList: previewData.value })
         .then(res => {
             switch (res.status) {
@@ -101,7 +99,6 @@ function serverDownloadPdf() {
 }
 
 function preview() {
-    displayModel('preview');
     MyPrinter.chromePreview({ previewDataList: previewData.value });
 }
 

@@ -1,6 +1,5 @@
 import {
     Container,
-    DisplayModel,
     ElementOption,
     elementType,
     FormatterVariable,
@@ -34,20 +33,24 @@ import {
 import numberUtil from '@myprint/design/utils/numberUtil';
 import { isEmpty, isNil } from 'lodash';
 
-export function displayModel(displayModel?: DisplayModel) {
-    if (displayModel) {
-        appStore().displayModel = displayModel;
-    }
-    return appStore().displayModel;
-}
+// export function displayModel(displayModel?: DisplayModel) {
+//     if (displayModel) {
+//         appStore().displayModel = displayModel;
+//     }
+//     return appStore().displayModel;
+// }
 
 export function displayDesign(element: MyElement) {
-    return !element.runtimeOption.previewIs;
+    return !displayPreview(element);
 }
 
-export function displayModelPrint() {
-    return appStore().displayModel == 'print';
+export function displayPreview(element: MyElement) {
+    return element.runtimeOption.previewIs;
 }
+
+// export function displayModelPrint() {
+//     return appStore().displayModel == 'print';
+// }
 
 export function setCurrentPanel(panel: Panel) {
     appStore().currentPanel = panel;

@@ -62,7 +62,7 @@ import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import Preview from './preview.vue';
 import { MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
 import { i18n } from '@myprint/design/locales';
-import { displayModel, valueUnit } from '@myprint/design/utils/elementUtil';
+import { valueUnit } from '@myprint/design/utils/elementUtil';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { autoPage } from './autoPage';
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
@@ -188,7 +188,6 @@ function handleChromePreview(printProps: PrintProps) {
 }
 
 function closePreviewPanel() {
-    displayModel('design');
     data.pageList = [];
     
     printResult(data.taskId, {

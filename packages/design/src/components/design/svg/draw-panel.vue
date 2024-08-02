@@ -1,5 +1,5 @@
 <template>
-    <img alt="" class="my-print-draw_panel_img" v-if="useAppStoreHook().displayModel == 'preview' || useAppStoreHook().displayModel == 'print'" :src="data.imgSrc">
+    <img alt="" class="my-print-draw_panel_img" v-if="displayPreview(element)" :src="data.imgSrc">
     <canvas ref="canvasRef" class="my-print-draw_panel" />
 </template>
 
@@ -13,9 +13,8 @@ import { onMounted, reactive, ref, watch } from 'vue-demi';
 import { MyElement, PointClick } from '@myprint/design/types/entity';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { douglasPeucker } from '@myprint/design/utils/utils';
-import { useAppStoreHook } from '@myprint/design/stores/app';
 import { checkInput, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
-import { getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
+import { displayPreview, getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
 
 const canvasRef = ref();
 const data = reactive({

@@ -2,7 +2,8 @@ import { defineConfig } from 'vitepress';
 import { search as zhSearch } from './zh';
 
 export const shared = defineConfig({
-    title: 'MyPrint',
+    title: 'MyPrint|打印设计器',
+    description: '操作简单，组件丰富的一站式打印解决方案打印设计器',
 
     lastUpdated: true,
     cleanUrls: true,
@@ -58,7 +59,7 @@ export const shared = defineConfig({
             options: {
                 locales: { ...zhSearch }
             }
-        },
+        }
 
         // carbonAds: { code: 'CEBDT27Y', placement: 'vuejsorg' }
     }
