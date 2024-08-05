@@ -16,15 +16,13 @@
             <my-form-item label="自动连接">
                 <my-switch
                     v-model="configStore.autoConnect"
-                    class="ml-2"
-                    inline-prompt/>
+                    class="ml-2" />
             
             </my-form-item>
             
             <my-form-item label="客户端协议">
                 <my-select v-model="configStore.clientProtocol"
-                           :data-list="clientProtocolList"
-                           placeholder="Select" size="small" />
+                           :data-list="clientProtocolList" />
             
             </my-form-item>
             
@@ -34,9 +32,8 @@
             
             
             <my-form-item label="默认打印机">
-                <my-select v-model="configStore.defaultPrinter" placeholder="Select" size="small"
-                           :data-list="useSocketData.printerList"
-                           clearable />
+                <my-select v-model="configStore.defaultPrinter"
+                           :data-list="useSocketData.printerList" />
             </my-form-item>
         
         </my-form>

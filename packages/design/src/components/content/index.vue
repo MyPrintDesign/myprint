@@ -24,7 +24,7 @@ import { init } from '@myprint/design/utils/historyUtil';
 import { Module, SaveResult, Template } from '@myprint/design/types/R';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
-import { initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
+import { defaultPreviewData, initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
 import { MyMessage } from '@myprint/design/components/my/message/my-message';
 import { MyPrinter } from '@myprint/design/printer';
@@ -170,7 +170,7 @@ function saveTemplate() {
     if (props.generateImg) {
         if (!data.buildImgIs) {
             data.buildImgIs = true;
-            MyPrinter.imgChrome({ previewDataList: [previewData.value.length > 0 ? previewData.value[0] : {}] })
+            MyPrinter.imgChrome({ previewDataList: [defaultPreviewData(previewData.value)[0]] })
                 .then(res => {
                     $emit('panelImg', res.blobList!);
                     data.buildImgIs = false;

@@ -14,6 +14,7 @@
 <script setup lang="ts">
 
 import { computed } from 'vue-demi';
+import { i18n } from '@myprint/design/locales';
 
 const emit = defineEmits(['update:modelValue', 'click', 'change']);
 
@@ -28,8 +29,8 @@ const props = withDefaults(defineProps<{
         enable: true,
         modelValue: undefined,
         nullActive: false,
-        activeText: '开',
-        inactiveText: '关'
+        activeText: i18n('common.switch.open'),
+        inactiveText: i18n('common.switch.close')
     });
 
 const modelValueComputed = computed(() => {

@@ -1,8 +1,9 @@
 <template>
-    <my-input :model-value="modelValue"
+    <my-input :model-value="innerValue"
               @keydown.up.prevent="onUp"
               @keydown.down.prevent="onDown"
               :disabled="disabled"
+              @input="onInput"
               @change="onChange"
               autocomplete="off" />
 </template>
@@ -12,6 +13,7 @@
 import MyInput from '@myprint/design/components/my/input/my-input.vue';
 import { computed, ref, watch } from 'vue-demi';
 import numberUtil from '@myprint/design/utils/numberUtil';
+import { isEmpty } from 'lodash';
 
 const emit = defineEmits(['update:modelValue', 'change']);
 
@@ -33,6 +35,12 @@ const props = withDefaults(defineProps<{
     disabled: false // 是否禁用
 });
 
+const innerValue = ref(props.modelValue);
+watch(() => props.modelValue, (_newVal, _oldVal) => {
+    innerValue.value = props.modelValue;
+});
+
+
 const precision = computed(() => {
     // 数值精度取步长和精度中较大者
     const stepPrecision = String(props.step).split('.')[1]?.length || 0;
@@ -47,23 +55,40 @@ function emitValue(value: number | null) {
     emit('change', value);
 }
 
-const numValue = ref(props.formatter(props.modelValue?.toFixed(precision.value)));
+// const numValue = ref(props.formatter(props.modelValue?.toFixed(precision.value)));
 
-watch(
-    () => props.modelValue,
-    (to) => {
-        numValue.value = to === null ? null : props.formatter(Number(to).toFixed(precision.value));
-    }
-);
+// watch(
+//     () => props.modelValue,
+//     (to) => {
+//         numValue.value = to === null ? null : props.formatter(Number(to).toFixed(precision.value));
+//     }
+// );
+//
+// watch(numValue, (to) => {
+//     if (!to) {
+//         emitValue(null);
+//     }
+// });
 
-watch(numValue, (to) => {
-    if (!to) {
-        emitValue(null);
+function onInput(value: any) {
+    
+    if (isEmpty(value)) {
+        emitValue(value);
+        return;
     }
-});
+    
+    value = value.replace(/,/g, '');
+    // console.log('onInput', value, parseFloat(value));
+    if (!Number.isNaN(parseFloat(value))) {
+        console.log('onInput', value);
+        // emitValue(value);
+        innerValue.value = value
+    }
+}
 
 function onChange(value: any) {
-    value = Number(value);
+    console.log('onChange', value);
+    value = value.replace(/,/g, '');
     if (!Number.isNaN(parseFloat(value))) {
         // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为 Number
         if (parseFloat(value) > props.max) {
@@ -75,14 +100,17 @@ function onChange(value: any) {
             return;
         }
         if (parseFloat(value) !== props.modelValue) {
+            console.log('onChange', parseFloat(value));
             emitValue(parseFloat(value));
         } else {
-            numValue.value = props.modelValue?.toFixed(precision.value);
-            emitValue(numValue.value);
+            // value = props.modelValue?.toFixed(precision.value);
+            console.log('onChange', parseFloat(value));
+            emitValue(parseFloat(value));
         }
     } else {
-        numValue.value = props.modelValue?.toFixed(precision.value);
-        emitValue(numValue.value);
+        // numValue.value = props.modelValue?.toFixed(precision.value);
+        console.log('onChange', value);
+        emitValue(parseFloat(value));
     }
     
 }

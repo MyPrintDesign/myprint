@@ -3,7 +3,7 @@
              label-position="right">
         <my-divider-panel>
             <template #divider>
-                基础
+                {{ i18n('common.basics') }}
             </template>
             
             <!--    <my-button class="my-element-setting-choose-img" v-if="multipleElementGetValue('type') == 'Image'">-->
@@ -34,29 +34,30 @@
             <!--                        @update:model-value="(val:any)=>multipleElementSetValue('label', val)"-->
             <!--                        historyLabel="标题"/>-->
             <!--    </el-form-item>-->
-            <my-form-item label="内容" v-if="getElementSetting(multipleElementGetValue('type')).includes('data')">
+            <my-form-item :label="i18n('common.content')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('data')">
                 <my-history-input style="margin-right: 20px"
-                                  historyLabel="内容"
+                                  :historyLabel="i18n('common.content')"
                                   :model-value="multipleElementGetValue('data')"
                                   @update:model-value="(val:any)=>multipleElementSetValue('data', val)"
                                   type="textarea" />
             </my-form-item>
-            <my-form-item label="格式化器"
+            <my-form-item :label="i18n('handle.formatter')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('formatter')">
                 <my-history-input style="margin-right: 20px"
                                   :model-value="multipleElementGetValue('option.formatter')"
                                   @update:model-value="(val:any)=>multipleElementSetValue('option.formatter', val)"
                                   type="textarea"
-                                  historyLabel="格式化器" />
+                                  :historyLabel="i18n('handle.formatter')" />
             </my-form-item>
         </my-divider-panel>
         
         <my-divider-panel class="divider-setting-layout">
             <template #divider>
-                布局
+                {{ i18n('common.layout') }}
                 <tip-icon class="divider-setting-layout-lock iconfont"
                           placement="top"
-                          tips="锁定编辑"
+                          :tips="i18n('handle.lock.edit')"
                           :size="14"
                           padding="11px"
                           :model-value="multipleElementGetValue('lock')"
@@ -65,38 +66,40 @@
                           @update:model-value="(val:any)=>multipleElementSetValue('lock', val)" />
             </template>
             
-            <my-form-item label="坐标(x/y)" v-if="getElementSetting(multipleElementGetValue('type')).includes('x')">
+            <my-form-item :label="i18n('common.xy')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('x')">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :disabled="multipleElementGetValue('lock')"
                                              :model-value="multipleElementGetValue('x')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('x', val)"
                                              @change="changeLocationX"
-                                             historyLabel="位置" />
+                                             :historyLabel="i18n('common.position')" />
                     <my-history-input-number class="width-60"
                                              :disabled="multipleElementGetValue('lock')"
                                              :model-value="multipleElementGetValue('y')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('y', val)"
                                              @change="changeLocationY"
-                                             historyLabel="位置" />
+                                             :historyLabel="i18n('common.position')" />
                     <my-unit />
                 </my-group>
             </my-form-item>
             
-            <my-form-item label="宽/高" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
+            <my-form-item :label="i18n('handle.width&height')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :disabled="multipleElementGetValue('lock')"
                                              :model-value="multipleElementGetValue('width')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('width', val)"
                                              @change="changeElementWidth"
-                                             historyLabel="尺寸" />
+                                             :historyLabel="i18n('handle.page.width')" />
                     <my-history-input-number class="width-60"
                                              :disabled="multipleElementGetValue('lock')"
                                              :model-value="multipleElementGetValue('height')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('height', val)"
                                              @change="changeElementWidth"
-                                             historyLabel="尺寸" />
+                                             :historyLabel="i18n('handle.page.height')" />
                     <my-unit />
                     <my-icon class="setting-wh-lock iconfont"
                              :size="16"
@@ -108,28 +111,29 @@
                 </my-group>
             </my-form-item>
             
-            <my-form-item label="圆角边框"
+            <my-form-item :label="i18n('handle.border.radius')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('borderRadius')">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :model-value="multipleElementGetValue('option.borderRadius')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.borderRadius', val)"
-                                             historyLabel="圆角" />
+                                             :historyLabel="i18n('handle.border.radius')" />
                     <my-unit />
                 </my-group>
             </my-form-item>
             
-            <my-form-item label="不透明度"
+            <my-form-item :label="i18n('handle.opacity')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
                 <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.opacity')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.opacity', val)"
                            :max="1" :min="0" :step="0.01"
                            :show-tooltip="false" size="small"
-                           historyLabel="不透明度" />
+                           :historyLabel="i18n('handle.opacity')" />
                 <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
             </my-form-item>
-            <my-form-item label="旋转角度" v-if="getElementSetting(multipleElementGetValue('type')).includes('rotate')">
+            <my-form-item :label="i18n('handle.rotate')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('rotate')">
                 <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.rotate')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.rotate', val)"
@@ -143,29 +147,30 @@
         
         <my-divider-panel>
             <template #divider>
-                属性
+                {{ i18n('common.attr') }}
             </template>
             
-            <my-form-item label="打印类型" prop="region"
+            <my-form-item :label="i18n('handle.content.type')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('contentType')">
                 <my-history-select :model-value="multipleElementGetValue('contentType')"
                                    class="width-140"
                                    @update:model-value="(val:any)=>multipleElementSetValue('contentType', val)"
-                                   placeholder="Activity zone"
                                    :data-list="textContentTypes"
-                                   historyLabel="打印类型" />
+                                   :historyLabel="i18n('handle.content.type')" />
             </my-form-item>
-            <my-form-item label="条码编码" prop="region" v-if="multipleElementGetValue('contentType') == 'Barcode'">
+            
+            <my-form-item :label="i18n('handle.barCode.type')"
+                          v-if="multipleElementGetValue('contentType') == 'Barcode'">
                 <my-history-select class="width-120"
                                    :model-value="multipleElementGetValue('option.barCodeType')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.barCodeType', val)"
-                                   placeholder="条码类型"
                                    :data-list="barcodeTypes"
-                                   historyLabel="条码类型" />
-                <my-tooltip
-                    popper-class="barcode-type-tooltip"
-                    effect="dark"
+                                   :historyLabel="i18n('handle.barCode.type')" />
+                <!--popper-class="barcode-type-tooltip"-->
+<!--
                     :max-width="200"
+-->
+                <my-tooltip
                     :content="currentBarCodeEg"
                     placement="top">
                     <my-icon>
@@ -173,85 +178,83 @@
                     </my-icon>
                 </my-tooltip>
             </my-form-item>
-            <my-form-item label="条码值"
+            
+            <my-form-item :label="i18n('handle.barCode.value')"
                           v-if="multipleElementGetValue('contentType') == 'Barcode'">
                 <my-switch
                     :model-value="multipleElementGetValue('option.barCodeDisplayValIs')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.barCodeDisplayValIs', val)"
                     class="ml-2"
-                    inline-prompt
-                    active-text="显示"
-                    inactive-text="隐藏" />
+                    :active-text="i18n('common.show')"
+                    :inactive-text="i18n('common.hidden')" />
             </my-form-item>
             
-            <my-form-item label="换行"
+            <my-form-item :label="i18n('handle.line.break')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('lineBreak')">
                 <my-switch
                     :model-value="multipleElementGetValue('option.lineBreak')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.lineBreak', val)"
-                    class="ml-2"
-                    inline-prompt
-                    active-text="是"
-                    inactive-text="否" />
+                    class="ml-2" />
             </my-form-item>
             
-            <my-form-item label="行高" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
+            <my-form-item :label="i18n('handle.line.height')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
                 <my-group>
                     <my-history-input-number class="num-2"
                                              :min="0.01"
                                              :model-value="multipleElementGetValue('option.lineHeight')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.lineHeight', val)"
-                                             historyLabel="行高" />
+                                             :historyLabel="i18n('handle.line.height')" />
                     <my-unit />
                 </my-group>
             </my-form-item>
-            <my-form-item label="线宽" v-if="getElementSetting(multipleElementGetValue('type')).includes('lineWidth')">
+            <my-form-item :label="i18n('handle.line.width')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('lineWidth')">
                 <my-group>
                     <my-history-input-number class="num-2"
                                              :min="0.01"
                                              :model-value="multipleElementGetValue('option.lineWidth')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.lineWidth', val)"
-                                             historyLabel="线宽" />
+                                             :historyLabel="i18n('handle.line.width')" />
                     <my-unit />
                 </my-group>
             </my-form-item>
             
-            <my-form-item label="虚线样式" prop="region"
+            <my-form-item :label="i18n('handle.dotted.style')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('dottedStyle')">
                 <my-history-select :model-value="multipleElementGetValue('option.dottedStyle')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.dottedStyle', val)"
-                                   placeholder="请选择"
                                    class="width-120"
                                    :data-list="dottedStyleList"
-                                   historyLabel="虚线样式" />
+                                   :historyLabel="i18n('handle.dotted.style')" />
             </my-form-item>
-            <my-form-item label="内边距" prop="region"
+            <my-form-item :label="i18n('handle.padding')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('padding')">
                 <my-group>
                     <my-history-input-number class="num-4"
-                                             placeholder="顶"
-                                             historyLabel="顶内边距"
+                                             :placeholder="i18n('handle.top')"
+                                             :historyLabel="i18n('handle.padding.top')"
                                              :model-value="multipleElementGetValue('option.padding.top')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.padding.top', val)">
                         <template #append>mm</template>
                     </my-history-input-number>
                     <my-history-input-number class="num-4"
-                                             placeholder="底"
-                                             historyLabel="底内边距"
+                                             :placeholder="i18n('handle.bottom')"
+                                             :historyLabel="i18n('handle.padding.bottom')"
                                              :model-value="multipleElementGetValue('option.padding.bottom')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.padding.bottom', val)">
                         <template #append>mm</template>
                     </my-history-input-number>
                     <my-history-input-number class="num-4"
-                                             placeholder="左"
-                                             historyLabel="左内边距"
+                                             :placeholder="i18n('handle.left')"
+                                             :historyLabel="i18n('handle.padding.left')"
                                              :model-value="multipleElementGetValue('option.padding.left')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.padding.left', val)">
                         <template #append>mm</template>
                     </my-history-input-number>
                     <my-history-input-number class="num-4"
-                                             placeholder="右"
-                                             historyLabel="右内边距"
+                                             :placeholder="i18n('handle.right')"
+                                             :historyLabel="i18n('handle.padding.right')"
                                              :model-value="multipleElementGetValue('option.padding.right')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.padding.right', val)">
                         <template #append>mm</template>
@@ -259,33 +262,33 @@
                 </my-group>
             </my-form-item>
             
-            <my-form-item label="外边距" prop="region"
+            <my-form-item :label="i18n('handle.margin')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('margin')">
                 <my-group>
                     <my-history-input-number class="num-4"
-                                             placeholder="顶"
-                                             historyLabel="顶外边距"
+                                             :placeholder="i18n('handle.top')"
+                                             :historyLabel="i18n('handle.margin.top')"
                                              :model-value="multipleElementGetValue('option.margin.top')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.margin.top', val)">
                         <template #append>mm</template>
                     </my-history-input-number>
                     <my-history-input-number class="num-4"
-                                             placeholder="底"
-                                             historyLabel="底外边距"
+                                             :placeholder="i18n('handle.bottom')"
+                                             :historyLabel="i18n('handle.margin.bottom')"
                                              :model-value="multipleElementGetValue('option.margin.bottom')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.margin.bottom', val)">
                         <template #append>mm</template>
                     </my-history-input-number>
                     <my-history-input-number class="num-4"
-                                             placeholder="左"
-                                             historyLabel="左外边距"
+                                             :placeholder="i18n('handle.left')"
+                                             :historyLabel="i18n('handle.margin.left')"
                                              :model-value="multipleElementGetValue('option.margin.left')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.margin.left', val)">
                         <template #append>mm</template>
                     </my-history-input-number>
                     <my-history-input-number class="num-4"
-                                             placeholder="右"
-                                             historyLabel="右外边距"
+                                             :placeholder="i18n('handle.right')"
+                                             :historyLabel="i18n('handle.margin.right')"
                                              :model-value="multipleElementGetValue('option.margin.right')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('option.margin.right', val)">
                         <template #append>mm</template>
@@ -293,36 +296,33 @@
                 </my-group>
             </my-form-item>
             
-            <my-form-item label="固定位置">
+            <my-form-item :label="i18n('handle.fixed.position')">
                 <my-switch
                     :model-value="multipleElementGetValue('option.fixed')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.fixed', val)"
                     @change="changeOptionFixed"
-                    class="ml-2"
-                    inline-prompt
-                    active-text="是"
-                    inactive-text="否" />
+                    class="ml-2" />
             </my-form-item>
             
             <my-button size="small"
                        v-if="getElementSetting(multipleElementGetValue('type')).includes('clearDrawPanel')"
-                       @click="clearDrawPanel">清空画布</my-button>
+                       @click="clearDrawPanel">{{ i18n('handle.clear.canvas') }}
+            </my-button>
         
         </my-divider-panel>
         
         <my-divider-panel>
             <template #divider>
-                打印策略
+                {{ i18n('handle.print.strategy') }}
             </template>
             
-            <my-form-item label="显示策略" prop="region"
+            <my-form-item :label="i18n('handle.display.strategy')"
                           v-if="multipleElementGetValue('option.fixed') == true">
                 <my-history-select :model-value="multipleElementGetValue('option.displayStrategy')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.displayStrategy', val)"
-                                   placeholder="请选择"
                                    class="width-120"
                                    :data-list="displayStrategyList"
-                                   historyLabel="显示策略" />
+                                   :historyLabel="i18n('handle.display.strategy')" />
             </my-form-item>
         
         </my-divider-panel>
@@ -350,7 +350,8 @@ import {
     moveableMoveX,
     moveableMoveY,
     moveableResize,
-    moveableRotate, removeCanSelectElement
+    moveableRotate,
+    removeCanSelectElement
 } from '@myprint/design/plugins/moveable/moveable';
 import { MyElement } from '@myprint/design/types/entity';
 import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
@@ -365,6 +366,7 @@ import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
 import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
 import MyForm from '@myprint/design/components/my/form/my-form.vue';
 import MyButton from '@myprint/design/components/my/button/my-Button.vue';
+import { i18n } from '@myprint/design/locales';
 
 const mitt = inject(mittKey)!;
 

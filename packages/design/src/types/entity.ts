@@ -154,6 +154,7 @@ export interface Panel extends Container {
     height: number;
     pageSize: string;
     pageUnit: PageUnit;
+    fontSizeUnit: FontSizeUnit;
     watermark: boolean;
     watermarkContent: string;
     dragSnapPanelIs: number;
@@ -247,6 +248,7 @@ export const statisticsTypeFormat = {
 
 export type DisplayModel = 'design' | 'preview' | 'print'
 export type PageUnit = 'px' | 'mm' | 'cm' | 'in'
+export type FontSizeUnit = 'px' | 'pt'
 
 export type elementType = keyof typeof elementTypeFormat
 export type cellType = keyof typeof cellTypeFormat
@@ -423,6 +425,7 @@ export interface ElementOption {
     labelSplit: boolean;
     disableSort: boolean;
     disableEnable: boolean;
+    autoTextHeight: boolean;
     enable: boolean;
     padding: Position;
     margin: Position;

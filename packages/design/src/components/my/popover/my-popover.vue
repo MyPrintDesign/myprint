@@ -23,6 +23,8 @@ import { onClickOutside } from '@vueuse/core';
 //@ts-ignore
 import { Placement } from '@popperjs/core/lib/enums';
 
+defineExpose({close});
+
 const props = withDefaults(defineProps<{
     disabled?: boolean
     placement?: Placement
@@ -135,6 +137,10 @@ function onClose() {
     stopHandle?.();
     stopHandle = null! as any;
     data.visible = false;
+}
+
+function close() {
+    onClose();
 }
 
 watch(

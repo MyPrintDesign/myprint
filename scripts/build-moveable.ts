@@ -17,11 +17,12 @@ import path from 'path';
 // import typescript from 'rollup-plugin-typescript2'
 
 const overrides = {
-    compilerOptions: { declaration: true }, // 是否创建 typescript 声明文件
+    compilerOptions: { declaration: false }, // 是否创建 typescript 声明文件
     exclude: [
         // 排除项
         'node_modules',
-        'src/plugins'
+        'src/App.vue',
+        'src/main.ts'
     ]
 };
 
@@ -57,9 +58,7 @@ const build = async (pkgDirName: string) => {
         fs.rmSync(pkgDistPath, { recursive: true });
     }
 
-    const input = await glob(['**/*.{js,jsx,ts,tsx,vue}', '!node_modules',
-        '!**/moveable_local_tmp.ts', '!**/moveable_local.ts'
-    ], {
+    const input = await glob(['**/moveable_local.ts', '!node_modules'], {
         cwd: resolvePackagePath(pkgDirName, 'src'),
         absolute: true,
         onlyFiles: true
@@ -110,35 +109,34 @@ const build = async (pkgDirName: string) => {
 
     const options: OutputOptions[] = [
         {
-            format: 'cjs',
-            dir: resolvePackagePath(pkgDirName, 'dist', 'lib'),
-            exports: 'named',
-            preserveModules: true,
-            preserveModulesRoot: resolvePackagePath(pkgDirName, 'src'),
-            sourcemap: true,
-            entryFileNames: '[name].js'
-        },
-        {
             format: 'esm',
-            dir: resolvePackagePath(pkgDirName, 'dist', 'es'),
+            dir: resolvePackagePath(pkgDirName, 'moveable-dist'),
             exports: undefined,
             preserveModules: true,
             preserveModulesRoot: resolvePackagePath(pkgDirName, 'src'),
-            sourcemap: true,
+            sourcemap: false,
             entryFileNames: '[name].mjs'
         }
     ];
     return Promise.all(options.map((option) => bundle.write(option)));
 };
 
-let content = fs.readFileSync(resolvePackagePath('design', 'src', 'plugins', 'moveable', 'moveable_local.ts'), { encoding: 'utf8' });
+console.log('[TS] 开始编译moveable···');
+await build('design');
+// 处理文件
+let content = fs.readFileSync(resolvePackagePath('design', 'moveable-dist', 'plugins', 'moveable', 'moveable_local.mjs'), { encoding: 'utf8' });
 
-if (content != null && content.length > 0) {
-    console.log('moveable_local 必须要为空···');
-    throw new Error('moveable_local 必须要为空···');
+const regex = new RegExp('.mjs', 'g');
+content = content.replace(regex, '');
+content = content.replace('//# sourceMappingURL=moveable_local.map', '');
+// console.log(content);
+//更改内容
+fs.writeFileSync(resolvePackagePath('design', 'src', 'plugins', 'moveable', 'moveable_js.js'), content);
+
+const pkgDistPath = resolvePackagePath('design', 'moveable-dist');
+if (fs.existsSync(pkgDistPath) && fs.statSync(pkgDistPath).isDirectory()) {
+    fs.rmSync(pkgDistPath, { recursive: true });
 }
 
-console.log('[TS] 开始编译所有子模块···');
-await build('design');
 // await build('business');
-console.log('[TS] 编译所有子模块成功！');
+console.log('[TS] 开始编译moveable成功！');

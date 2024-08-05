@@ -3,6 +3,8 @@
   "compilerOptions": {
     /* Projects */
     //  ...
+    "allowJs": true,
+    "checkJs": false,
     "composite": true,
     /* Language and Environment */
     "target": "esnext",

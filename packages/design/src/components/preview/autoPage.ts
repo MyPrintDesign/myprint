@@ -102,8 +102,16 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
 
     // 计算每个元素距离上个元素的距离
     for (let previewWrapper of previewElementList) {
-        previewWrapper.offsetLastElementTop = numberUtil.subScale(previewWrapper.y, offsetLastElementTop);
-        offsetLastElementTop = numberUtil.sumScale(previewWrapper.y, previewWrapper.height);
+        try {
+            previewWrapper.offsetLastElementTop = numberUtil.subScale(previewWrapper.y, offsetLastElementTop);
+            if(previewWrapper.height == null){
+                debugger
+            }
+            offsetLastElementTop = numberUtil.sumScale(previewWrapper.y, previewWrapper.height);
+        }catch (e){
+            debugger
+        }
+
     }
 
     for (let previewData of previewDataList) {
@@ -292,6 +300,14 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         previewContext.currentPage.elementList.push(previewWrapper);
         await nextTick();
         const height = previewWrapper.target.clientHeight;
+
+        /**
+         * 非自动高度
+         */
+        if (previewWrapper.option.autoTextHeight == null || !previewWrapper.option.autoTextHeight) {
+            previewWrapper.heightIs = true;
+            return false;
+        }
 
         if (first && height < previewWrapper.runtimeOption.height) {
             previewWrapper.heightIs = true;

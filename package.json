@@ -4,6 +4,7 @@
     "build:design": "vite-node ./scripts/build-module.ts",
     "build:dts": "vite-node ./scripts/build-dts.ts",
     "build:css": "vite-node ./scripts/build-css.ts",
+    "build:moveable": "vite-node ./scripts/build-moveable.ts",
     "dev:design": "vite-node ./scripts/dev-components.ts",
     "dev:business": "vite-node ./scripts/dev-business.ts"
   },

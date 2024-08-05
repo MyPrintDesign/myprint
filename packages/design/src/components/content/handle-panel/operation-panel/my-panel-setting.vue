@@ -4,46 +4,48 @@
         
         <my-divider-panel>
             <template #divider>
-                面板
+                {{ i18n('common.panel') }}
             </template>
             
-            <my-form-item label="模版名称">
+            <my-form-item :label="i18n('handle.template.name')">
                 <my-history-input v-model="panel.name"
                                   type="textarea"
                                   :placeholder="i18n('common.width')"
-                                  size="small"
-                                  historyLabel="模版名称"
+                                  :historyLabel="i18n('handle.template.name')"
                                   style="margin-right: 18px" />
             </my-form-item>
             
-            <my-form-item label="单位" prop="region">
+            <my-form-item :label="i18n('common.unit')">
                 <my-history-select v-model="panel.pageUnit"
                                    @change="selectPageUnit"
                                    class="width-160"
-                                   placeholder="请选择"
-                                   size="small"
                                    :data-list="pageUnitList"
-                                   historyLabel="单位" />
+                                   :historyLabel="i18n('common.unit')" />
             </my-form-item>
             
-            <my-form-item label="纸张" prop="region">
+            <my-form-item :label="i18n('common.font.size.unit')">
+                <my-history-select v-model="panel.fontSizeUnit"
+                                   class="width-160"
+                                   :data-list="fontSizeUnitList"
+                                   :historyLabel="i18n('common.font.size.unit')" />
+            </my-form-item>
+            
+            <my-form-item :label="i18n('common.paper')">
                 <my-history-select v-model="panel.pageSize"
                                    class="width-160"
-                                   placeholder="请选择"
-                                   size="small"
                                    @change="selectPageSize"
                                    :data-list="pageSizeList"
-                                   historyLabel="纸张"/>
+                                   :historyLabel="i18n('common.paper')" />
             </my-form-item>
             
-            <my-form-item label="宽/高">
+            <my-form-item :label="i18n('handle.width&height')">
                 <my-group>
                     <my-history-input-number class="width-66" v-model="panel.width"
                                              @change="changePanelWidth"
-                                             historyLabel="纸张宽" />
+                                             :historyLabel="i18n('handle.page.width')" />
                     <my-history-input-number class="width-66" v-model="panel.height"
                                              @change="changePanelHeight"
-                                             historyLabel="纸张高" />
+                                             :historyLabel="i18n('handle.page.height')" />
                     <my-unit />
                 </my-group>
             </my-form-item>
@@ -61,38 +63,25 @@
             <!--          inactive-text="关闭"/>-->
             <!--    </el-form-item>-->
             
-            <my-form-item label="水印内容" v-if="panel.watermark">
+            <my-form-item :label="i18n('handle.watermark')" v-if="panel.watermark">
                 <my-history-input v-model="panel.watermarkContent"
-                                  :placeholder="i18n('common.width')"
+                                  :placeholder="i18n('handle.watermark')"
                                   size="small"
-                                  historyLabel="水印内容"
+                                  :historyLabel="i18n('handle.watermark')"
                                   style="margin-right: 20px" />
             </my-form-item>
             
-            <my-form-item label="边界限制">
+            <my-form-item :label="i18n('handle.drag.snap.panel')">
                 <my-switch
                     v-model="panel.dragSnapPanelIs"
-                    class="ml-2"
-                    inline-prompt
-                    :active-value="1"
-                    :inactive-value="0"
-                    active-text="开"
-                    inactive-text="关" />
+                    class="ml-2" />
             </my-form-item>
             
-            <my-form-item label="拖动磁吸">
-                <my-switch
-                    v-model="panel.dragSnapIs"
-                    class="ml-2"
-                    inline-prompt
-                    :active-value="1"
-                    :inactive-value="0"
-                    active-text="开"
-                    inactive-text="关" />
+            <my-form-item :label="i18n('handle.drag.snap')">
+                <my-switch v-model="panel.dragSnapIs"
+                           class="ml-2" />
             </my-form-item>
         </my-divider-panel>
-        
-    
     
     </my-form>
 
@@ -101,7 +90,7 @@
 import { inject } from 'vue-demi';
 import { i18n } from '@myprint/design/locales';
 
-import { pageSizeList, pageUnitList } from '@myprint/design/constants/common';
+import { fontSizeUnitList, pageSizeList, pageUnitList } from '@myprint/design/constants/common';
 import { panelKey } from '@myprint/design/constants/keys';
 import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
 import MyGroup from '@myprint/design/components/my/group/my-group.vue';
@@ -114,7 +103,7 @@ import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-pan
 const panel = inject(panelKey)!;
 
 function selectPageSize(val: any) {
-    console.log(123)
+    console.log(123);
     for (let valueElement of pageSizeList) {
         if (valueElement.value == val) {
             changePageSize(valueElement);

@@ -4,7 +4,7 @@
         
         <my-divider-panel class="divider-setting-layout">
             <template #divider>
-                布局
+                {{ i18n('common.layout') }}
                 <my-icon class="divider-setting-layout-lock iconfont"
                          :size="14"
                          :model-value="multipleElementGetValue('lock')"
@@ -14,50 +14,50 @@
                          @update:model-value="(val:any)=>multipleElementSetValue('lock', val)" />
             </template>
             
-            <my-form-item label="高度属性">
+            <my-form-item :label="i18n('handle.height.attr')">
                 <my-radio v-model="table.option.tableHeightType"
-                          :dataList="tableBodyHeightTypeList"
-                          size="small" />
+                          :dataList="tableBodyHeightTypeList" />
             </my-form-item>
             
-            <my-form-item label="坐标(x/y)">
+            <my-form-item :label="i18n('common.xy')">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :model-value="multipleElementGetValue('x')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('x', val)"
                                              @change="change"
-                                             historyLabel="位置" />
+                                             :historyLabel="i18n('common.position')" />
                     <my-history-input-number class="width-60"
                                              :model-value="multipleElementGetValue('y')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('y', val)"
-                                             historyLabel="位置" />
+                                             :historyLabel="i18n('common.position')" />
                     <my-unit />
                 </my-group>
             </my-form-item>
             
-            <my-form-item label="宽/高" v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
+            <my-form-item :label="i18n('handle.width&height')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :model-value="multipleElementGetValue('width')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('width', val)"
-                                             historyLabel="尺寸" />
+                                             :historyLabel="i18n('handle.page.width')" />
                     <my-history-input-number class="width-60"
                                              :disabled="table.option.tableHeightType == 'AUTO'"
                                              :model-value="multipleElementGetValue('height')"
                                              @update:model-value="(val:any)=>multipleElementSetValue('height', val)"
-                                             historyLabel="尺寸" />
+                                             :historyLabel="i18n('handle.page.height')" />
                     <my-unit />
                 </my-group>
             </my-form-item>
             
-            <my-form-item label="不透明度"
+            <my-form-item :label="i18n('handle.opacity')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
                 <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.opacity')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.opacity', val)"
                            :max="1" :min="0" :step="0.01"
                            :show-tooltip="false" size="small"
-                           historyLabel="不透明度" />
+                           :historyLabel="i18n('handle.opacity')" />
                 <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
             </my-form-item>
         </my-divider-panel>
@@ -65,12 +65,11 @@
         
         <my-divider-panel>
             <template #divider>
-                属性
+                {{ i18n('common.attr') }}
             </template>
-            <my-form-item label="行高">
+            <my-form-item :label="i18n('handle.line.height')">
                 <my-radio v-model="table.option.tableBodyHeightType"
-                          :dataList="tableBodyHeightTypeList"
-                          size="small" />
+                          :dataList="tableBodyHeightTypeList" />
                 
                 <my-group style="margin-top: 10px"
                           v-if="table.option.tableBodyHeightType == 'FIXED'">
@@ -79,25 +78,22 @@
                                              :min="0.01"
                                              :model-value="multipleElementGetValue('option.tableBodyHeight')"
                                              @change="changeTableBodyHeight"
-                                             historyLabel="行高" />
+                                             :historyLabel="i18n('handle.line.height')" />
                     <my-unit />
                 </my-group>
             </my-form-item>
             
             
-            <my-form-item label="分页表头">
+            <my-form-item :label="i18n('handle.table.page.head')">
                 <my-switch
                     :model-value="multipleElementGetValue('option.tablePageHeadIs')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.tablePageHeadIs', val)"
-                    class="ml-2"
-                    inline-prompt
-                    active-text="是"
-                    inactive-text="否" />
+                    class="ml-2" />
             </my-form-item>
         
         </my-divider-panel>
         
-        <my-button size="small" @click="handleAddStatisticsRow">新增统计行</my-button>
+        <my-button size="small" @click="handleAddStatisticsRow">{{ i18n('handle.add.statistics.row') }}</my-button>
         
         <!--        <el-divider>-->
         <!--            背景样式-->
@@ -141,6 +137,7 @@ import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
 import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
 import MyRadio from '@myprint/design/components/my/radio/my-radio.vue';
+import { i18n } from '@myprint/design/locales';
 
 const mitt = inject(mittKey)!;
 const appStore = useAppStoreHook();

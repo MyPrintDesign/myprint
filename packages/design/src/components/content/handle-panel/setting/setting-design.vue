@@ -1,14 +1,11 @@
 <template>
     <div class="printer-panel">
         
-        <my-form label-width="80px" size="small"
-                 label-position="right">
-            
-            <my-form-item label="自动对齐">
+        <my-form>
+            <my-form-item label-width="100px" label="显示元素边界">
                 <my-switch
                     v-model="configStore.settingDesign.autoAlign"
-                    class="ml-2"
-                    inline-prompt />
+                    class="ml-2" />
             
             </my-form-item>
         
@@ -23,6 +20,5 @@ import MyForm from '@myprint/design/components/my/form/my-form.vue';
 import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
 
 const configStore = useConfigStore();
-
 
 </script>

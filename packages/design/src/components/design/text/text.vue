@@ -12,15 +12,11 @@
         @keydown="handleKeydown($event)" />
 </template>
 <script setup lang="ts">
-import { computed, onMounted, watch, ref, reactive } from 'vue-demi';
+import { computed, onMounted, reactive, ref, watch } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
 import MyBarcode from '@myprint/design/components/design/barcode';
 import MyQrcode from '@myprint/design/components/design/qrcode';
-
-import {
-    elementCommonStyle,
-    formatter
-} from '@myprint/design/utils/elementUtil';
+import { elementCommonStyle, formatter } from '@myprint/design/utils/elementUtil';
 import { checkInput, freshMoveableOption, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
 import { elementHandleEditStatusList } from '@myprint/design/constants/common';
 import { br2n, n2br } from '@myprint/design/utils/utils';

@@ -1,6 +1,7 @@
 <template>
     <my-popover
         trigger="click"
+        ref="popoverRef"
         :disabled="disabled"
         placement="bottom">
         <template #reference>
@@ -37,8 +38,9 @@ import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-sty
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
 import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import { isNull } from 'lodash';
-import { onMounted, reactive } from 'vue-demi';
+import { isEmpty, isNull } from 'lodash';
+import { reactive, ref, watch } from 'vue-demi';
+import { i18n } from '@myprint/design/locales';
 
 const emit = defineEmits(['update:modelValue', 'change']);
 
@@ -56,14 +58,18 @@ const props = withDefaults(defineProps<{
         showSelectedStatus: false,
         height: '270px',
         size: 'small',
-        placeholder: '请选择'
+        placeholder: i18n('common.place.select')
     });
 
 const data = reactive({
     label: ''
 });
-
-onMounted(() => {
+const popoverRef = ref<InstanceType<typeof MyPopover>>();
+watch(() => props.modelValue, (newVal, _oldVal) => {
+    if (isEmpty(newVal)) {
+        data.label = '';
+        return;
+    }
     for (let itemList of props.dataList) {
         if (itemList instanceof Array) {
             for (let item of itemList) {
@@ -77,12 +83,12 @@ onMounted(() => {
             }
         }
     }
-});
-
+}, { immediate: true });
 
 function change(val: any) {
     emit('update:modelValue', val.value);
     emit('change', val.value);
     data.label = val.label;
+    popoverRef.value!.close();
 }
 </script>

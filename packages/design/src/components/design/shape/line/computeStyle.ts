@@ -25,7 +25,8 @@ export function computedStyle(element: MyElement, type: 'horizontal' | 'vertical
         style.width = valueUnit(element.width, panel);
         style.height = valueUnit(element.height, panel);
         style.left = 0;
-        style.borderLeft = `${valueUnit(lineHeight, panel)} ${lineStyle} ${element.option.color}`;
+        console.log(lineHeight, lineStyle);
+        style.border = `${valueUnit(lineHeight, panel)} ${lineStyle} ${element.option.color}`;
     }
 
     return style;

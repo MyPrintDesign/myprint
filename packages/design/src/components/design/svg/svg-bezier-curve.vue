@@ -104,7 +104,3 @@ function dragEnd() {
 }
 
 </script>
-
-<style scoped>
-
-</style>

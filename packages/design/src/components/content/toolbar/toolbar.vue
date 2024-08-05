@@ -45,7 +45,7 @@ import { inject } from 'vue-demi';
 import StyleDesign from './style-design.vue';
 import { designPropsKey, mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
 import { i18n } from '@myprint/design/locales';
-import { clearPanel, getCurrentPanel } from '@myprint/design/utils/elementUtil';
+import { clearPanel, defaultPreviewData, getCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
 import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
 import { MyPrinter } from '@myprint/design/printer';
@@ -99,7 +99,7 @@ function serverDownloadPdf() {
 }
 
 function preview() {
-    MyPrinter.chromePreview({ previewDataList: previewData.value });
+    MyPrinter.chromePreview({ previewDataList: defaultPreviewData(previewData.value) });
 }
 
 function save() {

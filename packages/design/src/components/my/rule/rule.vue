@@ -22,7 +22,7 @@ import { computed, CSSProperties, nextTick, onMounted, ref, watch, watchEffect }
 import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { scaleUtil } from '@myprint/design/utils/scaleUtil';
 import { getCurrentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
-import { generateUUID, getRatio } from '@myprint/design/utils/utils';
+import { _defaultVal, generateUUID, getRatio } from '@myprint/design/utils/utils';
 import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
 import { Container, MyAuxiliaryLine } from '@myprint/design/types/entity';
 import { Path } from 'd3-path';
@@ -215,7 +215,8 @@ function drawRuler() {
     const path = d3Path.path() as Path;
     
     const space = getRatio();
-    const pxLength = unit2unit(appStore.lastPageUnit, 'mm', props.length);
+    
+    const pxLength = unit2unit(_defaultVal(appStore.lastPageUnit, 'px'), _defaultVal(getCurrentPanel().pageUnit, 'px'), props.length);
     
     chartSvg.selectAll('text').remove();
     

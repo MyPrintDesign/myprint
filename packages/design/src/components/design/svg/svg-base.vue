@@ -211,6 +211,3 @@ function dragSubject(event) {
     return subject;
 }
 </script>
-<style scoped>
-
-</style>

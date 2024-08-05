@@ -770,6 +770,15 @@ export function handleElementType(element: Container) {
     return handlers;
 }
 
+function getFontSizeUnit(panel?: Panel) {
+    const currentPanel = getCurrentPanel(panel);
+    return currentPanel.fontSizeUnit == null ? 'px' : currentPanel.fontSizeUnit;
+}
+
+export function defaultPreviewData(previewData: any) {
+    return previewData == null || previewData.length == 0 ? [{}] : previewData;
+}
+
 export function elementCommonPositionStyle(element: MyElement): CSSProperties {
     return {
         // width: element.runtimeOption.width + 'px',
@@ -779,7 +788,7 @@ export function elementCommonPositionStyle(element: MyElement): CSSProperties {
         // height: element.runtimeOption.height + 'px',
         // maxHeight: heightValueUnit(element),
         fontFamily: element.option.fontFamily,
-        fontSize: element.option.fontSize + 'px'
+        fontSize: element.option.fontSize + getFontSizeUnit(getRecursionParentPanel(element))
     } as CSSProperties;
 }
 

@@ -101,7 +101,7 @@ const elementSetting: Record<elementType, Array<elementSettingType>> =
         Panel: [...commonElementSetting, 'common'],
         DataTable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
         FREETable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
-        Rect: [...commonElementSetting, 'common', 'borderRadius', 'color', 'background'],
+        Rect: [...commonElementSetting, 'common', 'borderRadius', 'color', 'background', 'lineWidth'],
         HorizontalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'lineWidth'],
         DottedHorizontalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'dottedStyle', 'lineWidth'],
         VerticalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'lineWidth'],
@@ -322,6 +322,16 @@ export const pageUnitList = [
     }, {
         label: 'cm',
         value: 'cm'
+    }]
+];
+
+export const fontSizeUnitList = [
+    [{
+        label: 'px',
+        value: 'px'
+    }, {
+        label: 'pt',
+        value: 'pt'
     }]
 ];
 

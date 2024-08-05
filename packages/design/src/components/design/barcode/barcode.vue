@@ -44,8 +44,8 @@ watch([() => barCode.value, () => props.element.data, () => props.element.option
     try {
         JsBarcode(barCode.value, props.element.data, {
             format: props.element.option.barCodeType,//选择要使用的条形码类型
-            width: 1,//设置条之间的宽度
-            height: unit2px(props.element.height, getRecursionParentPanel(props.element)) - (props.element.option.barCodeDisplayValIs ? _defaultNum(props.element.option.fontSize, 10) + 5 : 0),//高度
+            width: unit2px(props.element.width, getRecursionParentPanel(props.element)) / 100,//设置条之间的宽度
+            height: unit2px(props.element.height, getRecursionParentPanel(props.element)) - (props.element.option.barCodeDisplayValIs ? _defaultNum(props.element.option.fontSize, 10) : 0),//高度
             displayValue: props.element.option.barCodeDisplayValIs,//是否在条形码下方显示文字
             //   text:"456",//覆盖显示的文本
             //   fontOptions:"bold italic",//使文字加粗体或变斜体

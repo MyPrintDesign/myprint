@@ -59,8 +59,10 @@ function click(elementAlign: DownList) {
     if (elementAlign.click) {
         elementAlign.click();
     } else {
-        emit('update:modelValue', elementAlign.value);
-        emit('change', elementAlign);
+        if (props.modelValue != elementAlign.value) {
+            emit('update:modelValue', elementAlign.value);
+            emit('change', elementAlign);
+        }
     }
 }
 
