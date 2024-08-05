@@ -132,10 +132,16 @@ const build = async (pkgDirName: string) => {
 };
 
 let content = fs.readFileSync(resolvePackagePath('design', 'src', 'plugins', 'moveable', 'moveable_local.ts'), { encoding: 'utf8' });
+let moveable_js = fs.readFileSync(resolvePackagePath('design', 'src', 'plugins', 'moveable', 'moveable_js.js'), { encoding: 'utf8' });
 
 if (content != null && content.length > 0) {
     console.log('moveable_local 必须要为空···');
     throw new Error('moveable_local 必须要为空···');
+}
+
+if (moveable_js[0] != '(') {
+    console.log('moveable_js 未加密···');
+    throw new Error('moveable_js 未加密···');
 }
 
 console.log('[TS] 开始编译所有子模块···');
