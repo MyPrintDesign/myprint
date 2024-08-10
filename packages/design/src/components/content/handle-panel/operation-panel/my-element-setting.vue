@@ -167,9 +167,9 @@
                                    :data-list="barcodeTypes"
                                    :historyLabel="i18n('handle.barCode.type')" />
                 <!--popper-class="barcode-type-tooltip"-->
-<!--
-                    :max-width="200"
--->
+                <!--
+                                    :max-width="200"
+                -->
                 <my-tooltip
                     :content="currentBarCodeEg"
                     placement="top">
@@ -354,7 +354,12 @@ import {
     removeCanSelectElement
 } from '@myprint/design/plugins/moveable/moveable';
 import { MyElement } from '@myprint/design/types/entity';
-import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
+import {
+    getPositionX,
+    getPositionY,
+    multipleElementGetValue,
+    multipleElementSetValue
+} from '@myprint/design/utils/elementUtil';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
 import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
@@ -407,15 +412,15 @@ function rotatedPoint(_rotate: any) {
 }
 
 function changeLocationX(_val: any) {
-    moveableMoveX(unit2px(element.value.x));
+    moveableMoveX(unit2px(getPositionX(element.value)));
 }
 
 function changeLocationY(_val: any) {
-    moveableMoveY(unit2px(element.value.y));
+    moveableMoveY(unit2px(getPositionY(element.value)));
 }
 
 function changeElementWidth(_val) {
-    console.log(_val);
+    // console.log(_val);
     moveableResize(unit2px(element.value.width), unit2px(element.value.height), element.value.option.keepRatio);
 }
 

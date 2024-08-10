@@ -62,7 +62,6 @@
             </my-form-item>
         </my-divider-panel>
         
-        
         <my-divider-panel>
             <template #divider>
                 {{ i18n('common.attr') }}
@@ -82,7 +81,6 @@
                     <my-unit />
                 </my-group>
             </my-form-item>
-            
             
             <my-form-item :label="i18n('handle.table.page.head')">
                 <my-switch

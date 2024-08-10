@@ -206,7 +206,6 @@
   }
 }
 
-
 .sort-tips-line {
   width: 1px;
   height: 100px;
@@ -217,4 +216,11 @@
 
 .my-print-border-box {
   box-sizing: border-box;
+}
+
+.drag-wrapper {
+  position: absolute;
+  background: #f0f2f5;
+  //background: gray;
+  border: 1px solid gray;
 }

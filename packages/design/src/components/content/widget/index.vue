@@ -59,7 +59,7 @@ withDefaults(defineProps<{
     moduleName?: string
     showBackButton?: boolean
 }>(), {
-    moduleName: '默认名称',
+    moduleName: i18n('common.default.name'),
     showBackButton: true
 });
 

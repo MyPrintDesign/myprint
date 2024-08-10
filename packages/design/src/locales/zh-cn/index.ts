@@ -1,15 +1,17 @@
+import barcodeMsg from './barcodeMsg';
 import common from './common';
-import toolbar from './toolbar';
 import font from './font';
 import handelPanel from './handle-panel';
 import preview from './preview';
-import barcodeMsg from './barcodeMsg';
+import setting from './setting';
+import toolbar from './toolbar';
 
 export default {
+    ...barcodeMsg,
     ...common,
-    ...toolbar,
     ...font,
     ...handelPanel,
     ...preview,
-    ...barcodeMsg,
+    ...setting,
+    ...toolbar
 };

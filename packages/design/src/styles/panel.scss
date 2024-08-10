@@ -33,6 +33,10 @@
       overflow: hidden;
       height: calc(100% - 20px);
 
+      &:focus-visible {
+        outline: transparent;
+      }
+
       .design-content-scroll {
         position: relative;
         height: 100%;

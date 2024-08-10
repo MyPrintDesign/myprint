@@ -1,6 +1,4 @@
 <template>
-<!--
-  v-show="useAppStoreHook().displayModel == 'design'"-->
     <div class="design-panel-container">
         <Toolbar />
         <div class="display-flex design-panel-container-height">
@@ -28,14 +26,8 @@ import OperationPanel from '../handle-panel/operation-panel/index.vue';
 import SettingPanel from '../handle-panel/setting/setting-panel.vue';
 import { useConfigStore } from '@myprint/design/stores/config';
 import MinimapPanel from '@myprint/design/components/content/handle-panel/minimap-panel.vue';
-import { onMounted } from 'vue-demi';
 
 const configStore = useConfigStore();
-
-onMounted(()=>{
-    // console.log(printref.value);
-    // printref.value.design2Img()
-})
 
 function clickHandlePanelIcon(key: any) {
     configStore.settingPanel[key].visible = !configStore.settingPanel[key].visible;

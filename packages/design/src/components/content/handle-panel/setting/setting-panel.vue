@@ -5,7 +5,7 @@
                width="800">
         <div class="setting-body display-flex">
             <div class="setting-menu">
-                <div class="setting-menu-title">设置</div>
+                <div class="setting-menu-title">{{i18n('common.setting')}}</div>
                 <div v-for="(item, index) in settingItemList"
                      :class="[{ 'setting-item-item-active':item.active}]"
                      class="display-flex setting-item-item"
@@ -41,6 +41,7 @@ import SettingDesign from './setting-design.vue';
 import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
 import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 import CloseBold from '@myprint/design/components/my/icon/icons/CloseBold.vue';
+import { i18n } from '@myprint/design/locales';
 
 const configStore = useConfigStore();
 

@@ -5,6 +5,8 @@ import { getCurrentPanel, parentInitElement } from '@myprint/design/utils/elemen
 import { MyPrintOptions, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
 import { generateUUID } from '@myprint/design/utils/utils';
 import { myPrintClientService } from '@myprint/design/plugins/myprintClientService';
+import i18n from '@myprint/design/locales';
+import { useAppStoreHook } from '@myprint/design/stores/app';
 
 export const myPrintOptions: MyPrintOptions = {
     disabledClient: false
@@ -80,6 +82,10 @@ export const MyPrinter = {
     initMyPrinter(options: MyPrintOptions) {
         options.serverUrl && (myPrintOptions.serverUrl = options.serverUrl);
         options.disabledClient != null && (myPrintOptions.disabledClient = options.disabledClient);
+    },
+
+    setLocale<T extends typeof i18n.global.locale.value>(locale: T) {
+        useAppStoreHook().SET_LOCALE(locale);
     },
 
     clientConnectIs() {

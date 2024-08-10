@@ -16,7 +16,7 @@ import {
     TableCellElement,
     TableHeadProviderCellElement
 } from '@myprint/design/types/entity';
-import { elementTypeContainerList, elementTypeLineList } from '@myprint/design/constants/common';
+import { elementTypeContainerList, fontMap } from '@myprint/design/constants/common';
 import { _defaultVal, generateUUID, mitt, parse, stringify } from './utils';
 import { CSSProperties, reactive } from 'vue-demi';
 import { formatDate } from './timeUtil';
@@ -91,6 +91,20 @@ export function widthValueUnit(element: MyElement) {
 
 export function heightValueUnit(element: MyElement) {
     return element.runtimeOption.workEnvironment == 'DataTable' ? '100%' : (element.height + getCurrentPanel().pageUnit);
+}
+
+export function getPositionX(element: MyElement) {
+    if (element.runtimeOption.parent!.x) {
+        return element.x + element.runtimeOption.parent!.x;
+    }
+    return element.x;
+}
+
+export function getPositionY(element: MyElement) {
+    if (element.runtimeOption.parent!.y) {
+        return element.y + element.runtimeOption.parent!.y;
+    }
+    return element.y;
 }
 
 export function width(element: MyElement) {
@@ -402,20 +416,20 @@ export function initElement(panel: Panel, element: MyElement, index: number) {
         }
     }
 
-    if (elementTypeLineList.includes(element.type)) {
-        if (!element.option.lineHeight) {
-            element.option.lineHeight = 0.9;
-        }
-        if (!element.option.color) {
-            element.option.color = '#000';
-        }
-    }
+    // if (elementTypeLineList.includes(element.type)) {
+    //     if (!element.option.lineHeight) {
+    //         element.option.lineHeight = 0.9;
+    //     }
+    //     if (!element.option.color) {
+    //         element.option.color = '#000';
+    //     }
+    // }
 
-    if (['DottedHorizontalLine', 'DottedVerticalLine']) {
-        if (!element.option.dottedStyle) {
-            element.option.dottedStyle = 'dashed';
-        }
-    }
+    // if (['DottedHorizontalLine', 'DottedVerticalLine']) {
+    //     if (!element.option.dottedStyle) {
+    //         element.option.dottedStyle = 'dashed';
+    //     }
+    // }
 
     if (element.width == null) {
         element.width = initWidth;
@@ -780,6 +794,7 @@ export function defaultPreviewData(previewData: any) {
 }
 
 export function elementCommonPositionStyle(element: MyElement): CSSProperties {
+    const fontFamily = element.option.fontFamily || 'heiti';
     return {
         // width: element.runtimeOption.width + 'px',
         // left: element.runtimeOption.x + 'px',
@@ -787,7 +802,7 @@ export function elementCommonPositionStyle(element: MyElement): CSSProperties {
         // maxWidth: widthValueUnit(element),
         // height: element.runtimeOption.height + 'px',
         // maxHeight: heightValueUnit(element),
-        fontFamily: element.option.fontFamily,
+        fontFamily: fontMap[fontFamily],
         fontSize: element.option.fontSize + getFontSizeUnit(getRecursionParentPanel(element))
     } as CSSProperties;
 }
@@ -820,6 +835,10 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
         cssStyle.whiteSpace = 'nowrap';
     }
 
+    if (option.lineHeight == 0) {
+        cssStyle.lineHeight = valueUnit(option.lineHeight, panel);
+    }
+
     if (option.verticalAlign) {
         cssStyle.alignItems = option.verticalAlign;
     }
@@ -827,9 +846,9 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
     if (element.runtimeOption.workEnvironment == 'DataTable') {
         let extHeight = 0;
         const parent = (element.runtimeOption.parent as MyElement);
-        if (parent == null) {
-            console.log(element);
-        }
+        // if (parent == null) {
+        //     console.log(element);
+        // }
         if (parent.option.borderAll) {
             // 加上边框高度
             if ((element as TableCellElement).rowspan > 1) {

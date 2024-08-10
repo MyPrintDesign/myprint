@@ -7,7 +7,7 @@ const pkg = require('../package.json');
 
 export const zh = defineConfig({
     lang: 'zh-Hans',
-    description: '打印设计',
+    description: '打印设计器',
 
     themeConfig: {
         nav: nav(),

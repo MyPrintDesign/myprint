@@ -28,6 +28,7 @@ import { defaultPreviewData, initPanel, parentInitElement, setCurrentPanel } fro
 import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
 import { MyMessage } from '@myprint/design/components/my/message/my-message';
 import { MyPrinter } from '@myprint/design/printer';
+import { i18n } from '@myprint/design/locales';
 
 const appStore = useAppStoreHook();
 
@@ -190,9 +191,9 @@ function saveTemplate() {
         props.saveTemplate(template)
             .then(_res => {
                 // 保存成功
-                MyMessage.success('保存成功');
+                MyMessage.success(i18n('common.save.success'));
             }).catch(_e => {
-            MyMessage.success('保存失败');
+            MyMessage.success(i18n('common.save.fail'));
             // 保存失败
         });
     }

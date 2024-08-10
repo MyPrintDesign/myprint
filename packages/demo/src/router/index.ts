@@ -21,15 +21,15 @@ const routes: Array<RouteRecordRaw> = [
                 component: () => import('@/views/module/index.vue'),
                 'children': []
             },
-            {
-                'name': 'test',
-                'path': 'test',
-                meta: {
-                    keepAlive: true
-                },
-                component: () => import('@/views/test/index.vue'),
-                'children': []
-            },
+            // {
+            //     'name': 'test',
+            //     'path': 'test',
+            //     meta: {
+            //         keepAlive: true
+            //     },
+            //     component: () => import('@/views/test/index.vue'),
+            //     'children': []
+            // },
             {
                 'name': 'template',
                 'path': 'template',

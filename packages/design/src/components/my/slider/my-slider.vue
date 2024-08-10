@@ -123,6 +123,7 @@ function getSliderWidth() {
 }
 
 function getPosition() {
+    // console.log(props.modelValue);
     right.value = fixedDigit(((checkValue(props.modelValue as number) - props.min) / props.step) * pixelStep.value, 2);
 }
 

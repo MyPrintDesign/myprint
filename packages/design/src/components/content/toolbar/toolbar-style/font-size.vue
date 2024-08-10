@@ -16,7 +16,7 @@
                     ref="fontSizeRef"
                     :modelValue="fontSizeComputed"
                     @update:model-value="changeFontSize"
-                    placeholder="字体" />
+                    :placeholder="i18n('font')" />
             </template>
             <template #panel>
                 <element-align :model-value="fontSizeComputed" showSelectedStatus :elementAlignList="fontSizeList"
@@ -47,6 +47,7 @@ import { onClickOutside } from '@vueuse/core';
 import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-style/element-align.vue';
 import ToolIconPopover from '@myprint/design/components/my/icon/tool-icon-popover.vue';
 import MyInput from '@myprint/design/components/my/input/my-input.vue';
+import { i18n } from '@myprint/design/locales';
 
 // const appStore = useAppStoreHook()
 

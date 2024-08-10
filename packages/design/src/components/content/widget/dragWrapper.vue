@@ -27,7 +27,6 @@ onMounted(() => {
         // console.log('动画结束');
         props.data.visible = false;
         props.data.transitionAnime = false;
-        // 在这里执行你的代码
     }, false);
 });
 
@@ -49,12 +48,3 @@ const style = computed(() => {
     return iStyle;
 });
 </script>
-
-<style scoped lang="scss">
-.drag-wrapper {
-    position: absolute;
-    background: #f0f2f5;
-    //background: gray;
-    border: 1px solid gray;
-}
-</style>

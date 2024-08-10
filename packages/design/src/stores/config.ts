@@ -19,7 +19,8 @@ export const useConfigStore = defineStore({
                 miniMap: { visible: false, x: 20, y: 660, width: 200, height: 200 }
             } as any,
             settingDesign: {
-                autoAlign: 1
+                autoAlign: 1,
+                showElementDesignBorderIs: 1
             }
         };
     },

@@ -10,7 +10,8 @@
                   :highlight="highlightRule.horizontal.highlight"
                   :scroll="highlightRule.horizontal.scroll" />
         </div>
-        <div class="display-flex design-content_inner">
+        <div class="display-flex design-content_inner"
+             tabindex="0">
             <rule :direction="highlightRule.vertical.direction"
                   :length="panel.height"
                   :auxiliaryLineVisible="auxiliaryLineVisible"

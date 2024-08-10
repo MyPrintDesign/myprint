@@ -491,20 +491,21 @@ function handleDefaultPrinter() {
 
 ## 方法说明
 
-| 方法                  | 说明                       |                          参数                          |                                                 返回值 |
-|---------------------|--------------------------|:----------------------------------------------------:|----------------------------------------------------:|
-| chromePreview       | 预览页面，会在超时/用户进行打印时进行回调    | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| chromePrinter       | 浏览器打印(直接调用浏览器打印页面)       | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| clientPrinter       | 本地客户端打印                  | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| pdfChrome           | 浏览器构建pdf，清晰度较差           | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| pdfClient           | 从本地客户端获取pdf，返回Blob       | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| pdfServer           | 从服务器获取pdf，返回Blob         | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| imgChrome           | 从浏览器获取img，返回Blob         | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| imgServer           | 从服务器获取img，返回Blob         | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
-| asyncGetPrinterList | 打印机列表，异步返回               | (printProps: [PrintProps](./api-example#PrintProps)) |       [`Promise<Printer[]>`](./api-example#Printer) |
-| getPrinterList      | 打印机列表，同步返回，如果没获取到，返回null | (printProps: [PrintProps](./api-example#PrintProps)) |                [`Printer[]`](./api-example#Printer) |
-| getDefaultPrinter   | 获取操作系统默认的打印机             | (printProps: [PrintProps](./api-example#PrintProps)) |                  [`Printer`](./api-example#Printer) |
-| clientConnectIs     | 客户端是否连接                  |                          —                           |                                             boolean |
+| 方法                  | 说明                                                        |                          参数                          |                                                 返回值 |
+|---------------------|-----------------------------------------------------------|:----------------------------------------------------:|----------------------------------------------------:|
+| setLocale           | 设置多语言，页面加载会默认读取<br/>`window.localStorage.getItem('lang')` |               (string: 'zhCn'\|'enUs')               |                                                   — |
+| chromePreview       | 预览页面，会在超时/用户进行打印时进行回调                                     | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| chromePrinter       | 浏览器打印(直接调用浏览器打印页面)                                        | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| clientPrinter       | 本地客户端打印                                                   | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| pdfChrome           | 浏览器构建pdf，清晰度较差                                            | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| pdfClient           | 从本地客户端获取pdf，返回Blob                                        | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| pdfServer           | 从服务器获取pdf，返回Blob                                          | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| imgChrome           | 从浏览器获取img，返回Blob                                          | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| imgServer           | 从服务器获取img，返回Blob                                          | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
+| asyncGetPrinterList | 打印机列表，异步返回                                                | (printProps: [PrintProps](./api-example#PrintProps)) |       [`Promise<Printer[]>`](./api-example#Printer) |
+| getPrinterList      | 打印机列表，同步返回，如果没获取到，返回null                                  | (printProps: [PrintProps](./api-example#PrintProps)) |                [`Printer[]`](./api-example#Printer) |
+| getDefaultPrinter   | 获取操作系统默认的打印机                                              | (printProps: [PrintProps](./api-example#PrintProps)) |                  [`Printer`](./api-example#Printer) |
+| clientConnectIs     | 客户端是否连接                                                   |                          —                           |                                             boolean |
 
 ## Types
 

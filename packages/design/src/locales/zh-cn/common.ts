@@ -1,8 +1,10 @@
 export default {
     'common.custom': '自定义1',
+    'common.default.name': '默认名称1',
     'common.width': '宽1',
     'common.height': '高1',
     'common.close': '关闭1',
+    'common.setting': '设置1',
     'common.switch.open': '开1',
     'common.switch.close': '关1',
     'common.panel': '面板1',
@@ -21,5 +23,11 @@ export default {
 
     'common.business.widget': '业务字段1',
     'common.common.widget': '公共组件1',
+    'common.show.element.design.border': '显示元素边界1',
+    'common.panel.minimap.zoom.in': '放大1',
+    'common.panel.minimap.zoom.out': '缩小1',
+    'common.panel.minimap.navigation': '导航1',
+    'common.save.success': '保存成功1',
+    'common.save.fail': '保存失败1',
 
 }

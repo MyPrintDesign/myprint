@@ -3,7 +3,7 @@ import { getRecursionParentPanel, valueUnit } from '@myprint/design/utils/elemen
 import { _defaultNum } from '@myprint/design/utils/numberUtil';
 import { MyElement } from '@myprint/design/types/entity';
 
-export function computedStyle(element: MyElement, type: 'horizontal' | 'vertical' | 'rect', lineStyle: 'dotted' | 'solid' | 'dashed') {
+export function computedStyle(element: MyElement, type: 'horizontal' | 'vertical' | 'rect', lineStyle: 'dotted' | 'solid' | 'dashed' = 'dashed') {
     const style = <CSSProperties>{};
     const panel = getRecursionParentPanel(element);
     const lineHeight = _defaultNum(element.option.lineWidth, 0);
@@ -25,7 +25,6 @@ export function computedStyle(element: MyElement, type: 'horizontal' | 'vertical
         style.width = valueUnit(element.width, panel);
         style.height = valueUnit(element.height, panel);
         style.left = 0;
-        console.log(lineHeight, lineStyle);
         style.border = `${valueUnit(lineHeight, panel)} ${lineStyle} ${element.option.color}`;
     }
 

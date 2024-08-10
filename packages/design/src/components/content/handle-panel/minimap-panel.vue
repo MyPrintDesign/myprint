@@ -49,14 +49,15 @@
             <div class="mini-map-toolbar_control display-flex">
                 <!--        <div>手势</div>-->
                 <div class="display-flex space-between width-100-p mini-map-toolbar_control_scale">
-                    <tip-icon tips="缩小" @click="startScale(-0.1)"
+                    <tip-icon :tips="i18n('common.panel.minimap.zoom.out')" @click="startScale(-0.1)"
                               class="icon-suoxiao iconfont mini-map-toolbar-icon" />
                     <div class="mini-map-toolbar_control_ratio">
                         {{ MathCalc.mul(scaleUtil.miniMap.scale, 100) }}%
                     </div>
-                    <tip-icon tips="放大" @click="startScale(0.1)"
+                    <tip-icon :tips="i18n('common.panel.minimap.zoom.in')" @click="startScale(0.1)"
                               class="icon-fangda iconfont mini-map-toolbar-icon" />
-                    <tip-icon tips="导航" :modelValue="configStore.settingPanel.miniMap.visible"
+                    <tip-icon :tips="i18n('common.panel.minimap.navigation')"
+                              :modelValue="configStore.settingPanel.miniMap.visible"
                               @update:model-value="flag => configStore.settingPanel.miniMap.visible = flag"
                               class="icon-map iconfont mini-map-toolbar-icon" />
                 </div>
@@ -86,6 +87,7 @@ import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { useConfigStore } from '@myprint/design/stores/config';
 import { canRedo, canUndo, redoPanel, undoPanel } from '@myprint/design/utils/historyUtil';
 import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
+import { i18n } from '@myprint/design/locales';
 
 const appStore = useAppStoreHook();
 const configStore = useConfigStore();

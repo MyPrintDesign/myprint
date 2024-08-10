@@ -17,10 +17,10 @@ export const canMoveStatusList = ['SELECT', 'HANDLE'];
 
 export const fontMap = {
     heiti: '\'Microsoft YaHei\'', //微软雅黑
+    SimSun: '\'SimSun\'', //宋体
     kaiti: '\'KaiTi\'', // 楷体
     // heiti: "'Microsoft YaHei'", //微软雅黑
     FZShuTi: '\'FZShuTi\'', //华文舒体
-    SimSun: '\'SimSun\'', //宋体
     NSimSun: '\'NSimSun\'', //新宋体
     DengXian: '\'DengXian\'' //等线
 
@@ -29,33 +29,30 @@ export const fontMap = {
 
 
 export const fontList: DownList[][] = [
-    [{
-        label: i18n('font.default'),
-        value: 'default'
-    },
+    [
         {
-            label: '等线',
-            value: 'dengxian'
+            label: '微软雅黑',
+            value: 'heiti'
         },
         {
             label: '宋体',
-            value: 'songti'
+            value: 'SimSun'
         },
         {
             label: '楷体',
             value: 'kaiti'
         },
         {
-            label: '黑体',
-            value: 'heiti'
+            label: '华文舒体',
+            value: 'FZShuTi'
         },
         {
-            label: '方圆体',
-            value: 'fyt'
+            label: '新宋体',
+            value: 'NSimSun'
         },
         {
-            label: '数黑体',
-            value: 'sht'
+            label: '等线',
+            value: 'DengXian'
         }]
 ];
 
@@ -96,8 +93,8 @@ const styleElementSetting: Array<elementSettingType> = ['textAlign', 'verticalAl
 const elementSetting: Record<elementType, Array<elementSettingType>> =
     {
         Image: [...commonElementSetting, 'common', 'borderRadius'],
-        Text: [...commonElementSetting, ...styleElementSetting, 'common', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'lineBreak'],
-        TextTime: [...commonElementSetting, ...styleElementSetting, 'common', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'formatter', 'padding', 'margin', 'label'],
+        Text: [...commonElementSetting, ...styleElementSetting, 'common', 'lineHeight', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'lineBreak'],
+        TextTime: [...commonElementSetting, ...styleElementSetting, 'common', 'lineHeight', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'formatter', 'padding', 'margin', 'label'],
         Panel: [...commonElementSetting, 'common'],
         DataTable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
         FREETable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],

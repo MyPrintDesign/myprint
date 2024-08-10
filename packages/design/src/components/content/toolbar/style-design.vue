@@ -164,18 +164,18 @@ import { i18n } from '@myprint/design/locales';
 const elementAlignList = reactive([
     [
         {
-            label: '左对齐',
+            label: i18n('toolbar.style.textAlignLeft'),
             click: alignLeft,
             icon: 'icon-color-spz iconfont-color',
             enable: true
         },
         {
-            label: '居中对齐',
+            label: i18n('toolbar.style.alignHorizontalCenter'),
             click: alignHorizontalCenter,
             icon: 'icon-color-spjz iconfont-color',
             enable: true
         }, {
-        label: '右对齐',
+        label: i18n('toolbar.style.textAlignRight'),
         click: alignRight,
         icon: 'icon-color-spy iconfont-color',
         enable: true
@@ -183,31 +183,31 @@ const elementAlignList = reactive([
     ],
     [
         {
-            label: '顶端对齐',
+            label: i18n('toolbar.style.alignTop'),
             click: alignTop,
             icon: 'icon-color-czding iconfont-color',
             enable: true
         },
         {
-            label: '垂直居中对齐',
+            label: i18n('toolbar.style.alignVerticalCenter'),
             click: alignVerticalCenter,
             icon: 'icon-color-czjz iconfont-color',
             enable: true
         }, {
-        label: '底端对齐',
+        label: i18n('toolbar.style.alignBottom'),
         click: alignBottom,
         icon: 'icon-color-czd iconfont-color',
         enable: true
     }
     ], [
         {
-            label: '水平平均分布',
+            label: i18n('toolbar.style.arrangeHorizontalSpacing'),
             click: arrangeHorizontalSpacing,
             icon: 'icon-color-spdjfb iconfont-color',
             enable: true
         },
         {
-            label: '垂直平均分布',
+            label: i18n('toolbar.style.arrangeVerticalSpacing'),
             click: arrangeVerticalSpacing,
             icon: 'icon-color-czdjfb iconfont-color',
             enable: true
@@ -232,7 +232,7 @@ const elementAlignList = reactive([
 const elementLayerList = reactive([
     [
         {
-            label: '置于顶层',
+            label: i18n('toolbar.layer.top'),
             click: () => {
                 elementUp(appStore.currentElement, 999999);
             },
@@ -240,7 +240,7 @@ const elementLayerList = reactive([
             enable: true
         },
         {
-            label: '上移一层',
+            label: i18n('toolbar.layer.up.one'),
             click: () => {
                 elementUp(appStore.currentElement, 1);
             },
@@ -248,7 +248,7 @@ const elementLayerList = reactive([
             enable: true
         },
         {
-            label: '下移一层',
+            label: i18n('toolbar.layer.down.one'),
             click: () => {
                 elementDown(appStore.currentElement, 1);
             },
@@ -256,9 +256,9 @@ const elementLayerList = reactive([
             enable: true
         },
         {
-            label: '置于底层',
+            label: i18n('toolbar.layer.bottom'),
             click: () => {
-                elementDown(appStore.currentElement, 1);
+                elementDown(appStore.currentElement, 999999);
             },
             icon: 'icon-color-zydic iconfont-color',
             enable: true
