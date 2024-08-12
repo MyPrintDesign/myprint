@@ -65,14 +65,14 @@ import {
     recursionUpdateCellParentInitWidth,
     recursionUpdateCellParentWidth,
     setCurrentElement,
-    setElementHeightPx,
+    setElementHeightPx, setElementOffsetWidthPx,
     setElementWidthPx
 } from '@myprint/design/utils/elementUtil';
 import {
     computedTableCell,
     getChildByParent,
     getTableCell,
-    getTableCellDown,
+    getTableCellDown, initTableCell,
     lastHeadList,
     selectCell
 } from '@myprint/design/utils/table/dataTable';
@@ -128,6 +128,11 @@ const bodyList = computed(() => {
     nextTick(() => {
         data.tableRowHeightList = computedTableCell(tableRef.value.$el, bodyList);
         data.lastHeadList = lastHeadList(props.element.tableHeadList);
+        
+        console.log(123);
+        
+        initTableCell(bodyList);
+        
         computeColumn();
         computeColumnHeight();
     });
@@ -395,14 +400,13 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
     
     function resizeMouseMove(ev: MouseEvent) {
         const offsetX = ev.clientX - clientStartX;
-        // console.log(offsetX, col)
         const newWidth = columnOldWidth + offsetX;
         // console.log(offsetX);
         if (newWidth > 20) {
             setElementWidthPx(tableOldWidth + offsetX, props.element);
             recursionUpdateCellParentWidth(columnElement, offsetX, getRecursionParentPanel(props.element));
             // 更新body 的宽
-            setElementWidthPx(columnOldWidth + offsetX, props.element.tableBodyList[0][col]);
+            setElementOffsetWidthPx(offsetX, props.element.tableBodyList[0][col]);
             // 更新
             updateMoveableRect();
             // 更新resize位置
@@ -427,6 +431,7 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
         useApp.dataRotation = 'none';
         data.status = 'NONE';
         data.handleIng = false;
+        initTableCell(bodyList.value);
         recursionUpdateCellParentInitWidth(columnElement);
         document.removeEventListener('mousemove', resizeMouseMove);
         document.removeEventListener('mouseup', resizeMouseUp);

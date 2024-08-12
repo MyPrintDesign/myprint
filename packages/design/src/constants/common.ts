@@ -17,8 +17,8 @@ export const canMoveStatusList = ['SELECT', 'HANDLE'];
 
 export const fontMap = {
     heiti: '\'Microsoft YaHei\'', //微软雅黑
-    SimSun: '\'SimSun\'', //宋体
-    kaiti: '\'KaiTi\'', // 楷体
+    SimSun: '\'SimSun\',\'STSong\',\'Songti SC\'', //宋体
+    kaiti: '\'KaiTi\',\'SimKai\', \'STKaiti\', \'KaiTi SC\'', // 楷体
     // heiti: "'Microsoft YaHei'", //微软雅黑
     FZShuTi: '\'FZShuTi\'', //华文舒体
     NSimSun: '\'NSimSun\'', //新宋体

@@ -9,7 +9,7 @@ export const customProvider = {
             'label': '文本',
             'data': '滚滚长江东逝水',
             'width': 50,
-            'height': 10
+            'height': 8
         } as any,
         {
             'field': 'userList',
@@ -178,7 +178,7 @@ export const customProvider = {
             'label': '时间文本',
             option: { formatter: '{{yyyy-MM-dd hh:mm:ss}}' } as ElementOption,
             'width': 43,
-            'height': 5
+            'height': 8
         } as any,
         {
             'type': 'Image',

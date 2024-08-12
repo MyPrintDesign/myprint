@@ -102,6 +102,15 @@ watch(() => props.element.data, (_n, _o) => {
     }
 });
 
+watch(() => props.element.option.formatter, (_n, _o) => {
+    const elementData = formatter(props.element);
+    if (elementData != null) {
+        props.element.data = elementData;
+        data.content = n2br(elementData);
+        data.innerContent = elementData;
+    }
+});
+
 watch(() => props.element.contentType, (n, _o) => {
     if (n != 'QrCode') {
         props.element.option.keepRatio = undefined!;

@@ -9,7 +9,7 @@ const routes: Array<RouteRecordRaw> = [
         redirect: '/module',
         name: 'Layout',
         meta: {
-            keepAlive: true
+            // keepAlive: true
         },
         'children': [
             {
@@ -54,7 +54,7 @@ const routes: Array<RouteRecordRaw> = [
         'path': '/design',
         component: () => import('@/views/design/index.vue'),
         meta: {
-            keepAlive: true
+            // keepAlive: true
         },
         'children': []
     },

@@ -11,6 +11,7 @@ import {
     PointLabel,
     Position,
     PreviewWrapper,
+    Provider,
     RuntimeElementOption,
     SvgData,
     TableCellElement,
@@ -18,7 +19,7 @@ import {
 } from '@myprint/design/types/entity';
 import { elementTypeContainerList, fontMap } from '@myprint/design/constants/common';
 import { _defaultVal, generateUUID, mitt, parse, stringify } from './utils';
-import { CSSProperties, reactive } from 'vue-demi';
+import { CSSProperties, reactive, Ref } from 'vue-demi';
 import { formatDate } from './timeUtil';
 import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
 import { arrayRemove } from '@myprint/design/utils/arrays';
@@ -30,7 +31,7 @@ import {
     handleTableCellInitHeight,
     recursionHandleTableHead
 } from '@myprint/design/utils/table/dataTable';
-import numberUtil from '@myprint/design/utils/numberUtil';
+import numberUtil, { _defaultNum } from '@myprint/design/utils/numberUtil';
 import { isEmpty, isNil } from 'lodash';
 
 // export function displayModel(displayModel?: DisplayModel) {
@@ -128,12 +129,13 @@ export function clearPanel(panel: Panel) {
     panel.auxiliaryLineList = [];
 }
 
-export function initPanel(panel, provider) {
+export function initPanel(panel: Panel, provider: Ref<Provider>) {
     panel.name == null && (panel.name = '新模版');
-    panel.width == null && (panel.width = provider.value.width);
-    panel.height == null && (panel.height = provider.value.height);
-    panel.pageSize == null && (panel.pageSize = provider.value.pageSize);
-    panel.pageUnit == null && (panel.pageUnit = provider.value.pageUnit);
+    panel.width == null && (panel.width = _defaultNum(provider.value.width, 210));
+    panel.height == null && (panel.height = _defaultNum(provider.value.height, 297));
+    panel.pageSize == null && (panel.pageSize = _defaultVal(provider.value.pageSize, 'A4'));
+    panel.fontSizeUnit == null && (panel.fontSizeUnit = _defaultVal(provider.value.fontSizeUnit, 'px'));
+    panel.pageUnit == null && (panel.pageUnit = _defaultVal(provider.value.pageUnit, 'mm'));
     panel.dragSnapPanelIs == null && (panel.dragSnapPanelIs = provider.value.dragSnapPanelIs);
     panel.dragSnapIs == null && (panel.dragSnapIs = provider.value.dragSnapIs);
     panel.elementList == undefined && (panel.elementList = []);
@@ -835,7 +837,7 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
         cssStyle.whiteSpace = 'nowrap';
     }
 
-    if (option.lineHeight == 0) {
+    if (option.lineHeight != null) {
         cssStyle.lineHeight = valueUnit(option.lineHeight, panel);
     }
 
@@ -860,7 +862,7 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
             cssStyle.maxHeight = (element.runtimeOption.init.height + extHeight) + 'px';
             cssStyle.overflow = 'hidden';
         }
-        cssStyle.maxWidth = (element.runtimeOption.init.width - 1) + 'px';
+        // cssStyle.maxWidth = (element.runtimeOption.init.width - 1) + 'px';
     } else {
         if (option.borderAll) {
             cssStyle.border = '1px solid var(--tcolor)';
@@ -926,8 +928,7 @@ export function formatter(element: MyElement, variable: FormatterVariable = {} a
             } else {
                 try {
                     // todo 格式化时间
-                    const time = formatDate(variable.nowDate ? variable.nowDate : new Date(), variableNames[0]);
-                    variable[variableNames[0]] = time;
+                    variable[variableNames[0]] = formatDate(variable.nowDate ? variable.nowDate : new Date(), variableNames[0]);
                     contentData = replaceVariables(element.option.formatter, variable);
                 } catch (e) {
                     contentData = '不支持的变量';
@@ -1081,6 +1082,11 @@ export function setElementHeightPx(height: number, element: MyElement) {
     element.runtimeOption.height = height;
     element.runtimeOption.init.height = height;
     element.height = px2unit(height, getRecursionParentPanel(element));
+}
+
+export function setElementOffsetWidthPx(offsetWidth: number, element: MyElement) {
+    element.runtimeOption.width = element.runtimeOption.init.width + offsetWidth;
+    element.width = px2unit(element.runtimeOption.width, getRecursionParentPanel(element));
 }
 
 export function recursionUpdateCellParentWidth(columnElement: TableCellElement, offsetX: number, panel: Panel) {

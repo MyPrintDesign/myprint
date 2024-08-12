@@ -332,6 +332,21 @@ export function computedTableCell(target: HTMLElement, tableHeadListList: TableC
     return rowHeightList;
 }
 
+export function initTableCell(tableHeadListList: TableCellElement[][]) {
+
+    for (let row = 0; row < tableHeadListList.length; row++) {
+        const tableHeadListListElement = tableHeadListList[row];
+        for (let col = 0; col < tableHeadListListElement.length; col++) {
+            const tableCellElement = tableHeadListListElement[col];
+            if (tableCellElement == null) {
+                continue;
+            }
+            tableCellElement.runtimeOption.init.width = tableCellElement.runtimeOption.width;
+            tableCellElement.runtimeOption.init.height = tableCellElement.runtimeOption.height;
+        }
+    }
+}
+
 export function handleTableCellInitHeight(tableHeadListList: TableCellElement[][]) {
     for (let tableHeadListListElement of tableHeadListList) {
         let height = 0;

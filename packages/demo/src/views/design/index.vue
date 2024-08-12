@@ -15,7 +15,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { Module, Template } from '@/types/R';
 import { unGzip } from '@/utils/gzipUtil';
 import { moduleDetail } from '@/api/module';
-import { msgSuccess } from '@/utils/util';
 
 const route = useRoute();
 const router = useRouter();

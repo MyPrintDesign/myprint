@@ -317,7 +317,7 @@ function editElement(fieldEdit: FieldEdit) {
 
 function confirmImageUrl() {
     imageUrlRef.value.validate()
-        .then(res => {
+        .then(_res => {
             // console.log(res);
             data.elementForm.data = data.inputImageUrl;
             data.chooseImageVisible = false;
@@ -345,9 +345,9 @@ function addElement(fieldEdit: FieldEdit) {
         type: 'Text',
         contentType: 'Text',
         width: 50,
-        height: 10,
+        height: 8,
         option: {
-            fontFamily: 'default',
+            fontFamily: 'heiti',
             fontSize: 13
         }
     } as MyElement;
@@ -364,7 +364,7 @@ function cancelEdit() {
 }
 
 function confirmEdit() {
-    formRef.value.validate((valid, fields) => {
+    formRef.value.validate((valid, _fields) => {
         if (valid) {
             if (data.row == null) {
                 data.tmpElementList.push(data.elementForm);

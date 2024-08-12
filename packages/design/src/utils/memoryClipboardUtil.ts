@@ -1,6 +1,6 @@
 import { getSelectElement, removeSelectElement, updatePanel } from '@myprint/design/plugins/moveable/moveable';
 import { elementTypeContainerList, noCopyElementTypeList } from '@myprint/design/constants/common';
-import { Container, MyElement } from '@myprint/design/types/entity';
+import { Container, MyElement, Point, SvgData } from '@myprint/design/types/entity';
 import { addElement, getCurrentPanel } from '@myprint/design/utils/elementUtil';
 import { parse, stringify } from '@myprint/design/utils/utils';
 import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
@@ -46,6 +46,9 @@ export const memoryClipboardUtil = {
         this.clipboard.data = elementList;
         this.clipboard.type = 'COPY';
         this.clipboard.pasteNumMap = {};
+
+        console.log(elementList);
+
     },
 
     cut() {
@@ -121,6 +124,38 @@ export const memoryClipboardUtil = {
 
                 // 设置合适的位置
                 const newElement = parse(stringify(datum, 'parent', 'target'), {} as MyElement);
+
+                switch (newElement.type) {
+                    case 'SvgPolygonLine':
+                    case 'SvgBezierCurve':
+                    case 'SvgBezierCurveThree':
+                    case 'SvgLine':
+                        if (newElement.data) {
+                            const data = JSON.parse(newElement.data) as SvgData;
+                            const points = data.points as Point[];
+                            const controlPoints = data.controlPoints as Point[];
+                            const dataJson = {} as SvgData;
+                            if (points) {
+                                for (let point of points) {
+                                    point.x = px2unit(point.x, panel);
+                                    point.y = px2unit(point.y, panel);
+                                }
+                                dataJson.points = points;
+                            }
+
+                            if (controlPoints) {
+                                for (let point of controlPoints) {
+                                    point.x = px2unit(point.x, panel);
+                                    point.y = px2unit(point.y, panel);
+                                }
+                                dataJson.controlPoints = controlPoints;
+                            }
+
+                            // console.log(tmpDataList)
+                            newElement.data = JSON.stringify(dataJson);
+                        }
+                }
+
                 newElement.id = undefined!;
                 computePosition(newElement, parentTmp);
 

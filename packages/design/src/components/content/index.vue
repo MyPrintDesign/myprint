@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import widget from '@myprint/design/components/content/widget/index.vue';
 import PanelView from '@myprint/design/components/content/panel/index.vue';
-import { computed, CSSProperties, inject, onMounted, provide, reactive, Ref, ref, watch } from 'vue-demi';
+import { computed, CSSProperties, inject, onMounted, onUnmounted, provide, reactive, Ref, ref, watch } from 'vue-demi';
 import { Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
 import { to } from '@myprint/design/utils/utils';
 import { designPropsKey, mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
@@ -90,6 +90,10 @@ onMounted(() => {
     initModule();
     initTemplate();
     newSelecto();
+});
+
+onUnmounted(() => {
+    mitt.off('saveTemplate', saveTemplate);
 });
 
 const moduleWatchStop = watch(() => props.module, (_n, _o) => {

@@ -76,6 +76,7 @@ export interface Printer {
 export interface Provider {
     name: string;
     pageUnit: PageUnit;
+    fontSizeUnit: FontSizeUnit;
     pageSize: string;
     width: number;
     height: number;
@@ -371,7 +372,7 @@ export interface RuntimeElementOption extends Position {
     cellParent: TableCellElement;
     target: any;
     rotate: number;
-    // 组件实时位置
+    // 组件实时位置 单位px
     init: Container;
     status: elementStatus;
     auxiliaryLineStatus: auxiliaryLineStatus;

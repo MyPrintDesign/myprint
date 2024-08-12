@@ -124,6 +124,8 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
             await newPage();
             await installPreviewElement(previewElementList);
         }
+
+        previewContext.pagingRepetition = true
     }
 
     previewContext.autoPageIs = false;
