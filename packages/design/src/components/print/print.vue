@@ -87,10 +87,7 @@ function handleClientPrint(printProps: PrintProps) {
         handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
         data.panel = printProps.panel as Panel;
         await nextTick();
-        console.log(printProps.previewDataList.length);
-        console.log(printProps.previewDataList);
         await autoPage(data.pageList, data.panel, printProps.previewDataList);
-        console.log(data.pageList.length);
         await nextTick();
         let printer = printProps.printer;
         

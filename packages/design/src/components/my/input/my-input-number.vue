@@ -80,14 +80,12 @@ function onInput(value: any) {
     value = value.replace(/,/g, '');
     // console.log('onInput', value, parseFloat(value));
     if (!Number.isNaN(parseFloat(value))) {
-        console.log('onInput', value);
         // emitValue(value);
         innerValue.value = value
     }
 }
 
 function onChange(value: any) {
-    console.log('onChange', value);
     value = value.replace(/,/g, '');
     if (!Number.isNaN(parseFloat(value))) {
         // Number.isNaN() 判断传递的值是否为NaN，并检测器类型是否为 Number
@@ -100,16 +98,13 @@ function onChange(value: any) {
             return;
         }
         if (parseFloat(value) !== props.modelValue) {
-            console.log('onChange', parseFloat(value));
             emitValue(parseFloat(value));
         } else {
             // value = props.modelValue?.toFixed(precision.value);
-            console.log('onChange', parseFloat(value));
             emitValue(parseFloat(value));
         }
     } else {
         // numValue.value = props.modelValue?.toFixed(precision.value);
-        console.log('onChange', value);
         emitValue(parseFloat(value));
     }
     

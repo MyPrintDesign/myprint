@@ -69,7 +69,7 @@ service.interceptors.request.use(config => {
     }
     return config;
 }, error => {
-    console.log(error);
+    // console.log(error);
     Promise.reject(error);
 });
 
@@ -110,7 +110,7 @@ service.interceptors.response.use(res => {
         }
     },
     error => {
-        console.log('err' + error);
+        // console.log('err' + error);
         let { msg } = error;
         if (msg == 'Network Error') {
             msg = '后端接口连接异常';

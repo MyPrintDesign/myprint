@@ -60,7 +60,6 @@ watch([() => barCode.value, () => props.element.data, () => props.element.option
         });
         
     } catch (e) {
-        console.log('错误');
         data.errorMsg = '不支持的内容';
     }
     

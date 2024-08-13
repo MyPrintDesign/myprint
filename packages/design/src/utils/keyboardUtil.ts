@@ -88,49 +88,38 @@ export function mountedKeyboardEvent() {
             moveableMoveOffset(0, -10)
         })
         .subscribe([isShift, 'ArrowDown'], () => {
-            // console.log('ArrowDown')
             moveableMoveOffset(0, 10)
         })
         .subscribe([isShift, 'ArrowLeft'], () => {
-            // console.log('ArrowLeft')
             moveableMoveOffset(-10, 0)
         })
         .subscribe([isShift, 'ArrowRight'], () => {
-            // console.log('ArrowRight')
             moveableMoveOffset(10, 0)
         })
 
         .subscribe([isCtrl, 'ArrowUp'], () => {
-            // console.log('ArrowUp')
             moveableResizeOffset(0, -1)
         })
         .subscribe([isCtrl, 'ArrowDown'], () => {
-            // console.log('ArrowDown')
             moveableResizeOffset(0, 1)
         })
         .subscribe([isCtrl, 'ArrowLeft'], () => {
-            // console.log('ArrowLeft')
             moveableResizeOffset(-1, 0)
         })
         .subscribe([isCtrl, 'ArrowRight'], () => {
-            // console.log('ArrowRight')
             moveableResizeOffset(1, 0)
         })
 
         .subscribe(['ArrowUp'], () => {
-            // console.log('ArrowUp')
             moveableMoveOffset(0, -1)
         })
         .subscribe(['ArrowDown'], () => {
-            // console.log('ArrowDown')
             moveableMoveOffset(0, 1)
         })
         .subscribe(['ArrowLeft'], () => {
-            console.log('ArrowLeft')
             moveableMoveOffset(-1, 0)
         })
         .subscribe(['ArrowRight'], () => {
-            // console.log('ArrowRight')
             moveableMoveOffset(1, 0)
         })
 

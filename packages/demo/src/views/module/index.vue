@@ -188,7 +188,7 @@ const data = reactive({
                 data.deleteVisible = true;
                 data.deleteModuleName = template.name;
                 data.template = template;
-                console.log(template);
+                // console.log(template);
             }
         }
     
@@ -233,7 +233,7 @@ function getImgUrl(url: string) {
 }
 
 function filterChange() {
-    console.log(data.moduleGroupList);
+    // console.log(data.moduleGroupList);
 }
 
 function addModuleGroup() {

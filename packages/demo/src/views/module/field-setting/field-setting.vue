@@ -322,7 +322,7 @@ function confirmImageUrl() {
             data.elementForm.data = data.inputImageUrl;
             data.chooseImageVisible = false;
         }).catch(err => {
-        console.log(err);
+        // console.log(err);
     });
     
 }

@@ -7,6 +7,7 @@ export default {
     'handle.page.width': '纸张宽1',
     'handle.page.height': '纸张高1',
     'handle.template.name': '模版名称1',
+    'handle.please.template.name': '请输入模版名称1',
     'handle.formatter': '格式化器1',
     'handle.lock.edit': '锁定编辑1',
     'handle.border.radius': '圆角边框1',

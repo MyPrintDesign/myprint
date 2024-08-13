@@ -47,7 +47,7 @@ export const memoryClipboardUtil = {
         this.clipboard.type = 'COPY';
         this.clipboard.pasteNumMap = {};
 
-        console.log(elementList);
+        // console.log(elementList);
 
     },
 

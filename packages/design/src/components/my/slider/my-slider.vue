@@ -21,7 +21,7 @@
     </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue-demi';
+import { ref, computed, watch, onMounted, nextTick } from 'vue-demi';
 import { cancelRaf, rafTimeout } from '@myprint/design/utils/utils';
 
 const props = withDefaults(defineProps<{
@@ -104,8 +104,10 @@ watch(sliderValue, (to) => {
     emits('change', to);
 });
 onMounted(() => {
-    getSliderWidth();
-    getPosition();
+    nextTick(()=>{
+        getSliderWidth();
+        getPosition();
+    })
 });
 
 function checkValue(value: number): number {

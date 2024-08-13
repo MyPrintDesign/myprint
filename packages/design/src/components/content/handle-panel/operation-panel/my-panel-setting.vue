@@ -10,7 +10,7 @@
             <my-form-item :label="i18n('handle.template.name')">
                 <my-history-input v-model="panel.name"
                                   type="textarea"
-                                  :placeholder="i18n('common.width')"
+                                  :placeholder="i18n('handle.please.template.name')"
                                   :historyLabel="i18n('handle.template.name')"
                                   style="margin-right: 18px" />
             </my-form-item>
@@ -103,7 +103,6 @@ import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-pan
 const panel = inject(panelKey)!;
 
 function selectPageSize(val: any) {
-    console.log(123);
     for (let valueElement of pageSizeList) {
         if (valueElement.value == val) {
             changePageSize(valueElement);

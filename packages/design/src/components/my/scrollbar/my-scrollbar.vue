@@ -33,7 +33,7 @@ const props = withDefaults(defineProps<{
         height?: string
         options?: any,
         hoverBlod?: boolean,
-        disabledScrollBar: boolean
+        disabledScrollBar?: boolean
     }>(),
     {
         tag: 'div',

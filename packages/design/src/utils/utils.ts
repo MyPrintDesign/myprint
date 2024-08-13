@@ -20,7 +20,6 @@ export function sortColumn(myElement: MyElement, baseColIndex: number, row: numb
     // const source = myElement.tableHeadList[sourceIndex];
     // 删除原来的
     // console.log(myElement.tableHeadList[row]);
-    console.log(row, col, diffCol);
     const baseCell = myElement.tableHeadList[row][col];
     const { cell: targetCell, col: targetCol } = findFromLeftCell(myElement.tableHeadList, row, baseColIndex, diffCol)!;
     // console.log(targetCell, targetCol);

@@ -53,7 +53,6 @@ initPoint();
 
 function initPoint() {
     const data = JSON.parse(props.element.data);
-    console.log(data);
     svgOptions.linePoints = data.points;
     svgOptions.rotateLineEndDragPoint = { ...svgOptions.rotateLineEnd };
     

@@ -155,7 +155,6 @@ onMounted(() => {
                         }
                     }
                 } else {
-                    console.log('end');
                     props.dragEnd(subject!);
                 }
                 // event

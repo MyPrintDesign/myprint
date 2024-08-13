@@ -24,11 +24,10 @@ export function bezier2(p0, p1, p2) {
         bounds.maxY = Math.max(bounds.maxY, yAtT);
     }
 
-    console.log(p0, p1, p2)
-    console.log("左边界: " + bounds.minX);
-    console.log("右边界: " + bounds.maxX);
-    console.log("上边界: " + bounds.minY);
-    console.log("下边界: " + bounds.maxY);
+    // console.log("左边界: " + bounds.minX);
+    // console.log("右边界: " + bounds.maxX);
+    // console.log("上边界: " + bounds.minY);
+    // console.log("下边界: " + bounds.maxY);
     return {
         x: bounds.minX,
         y: bounds.minY,
@@ -53,11 +52,11 @@ export function bezier3(p0, p1, p2, p3) {
         maxY = Math.max(maxY, y);
     }
 
-    console.log(p0, p1, p2, p3)
-    console.log("左边界: " + minX);
-    console.log("右边界: " + maxX);
-    console.log("上边界: " + minY);
-    console.log("下边界: " + maxY);
+    // console.log(p0, p1, p2, p3)
+    // console.log("左边界: " + minX);
+    // console.log("右边界: " + maxX);
+    // console.log("上边界: " + minY);
+    // console.log("下边界: " + maxY);
     return {
         x: minX,
         y: minY,

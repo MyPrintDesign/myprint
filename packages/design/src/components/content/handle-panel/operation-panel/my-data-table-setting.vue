@@ -143,7 +143,6 @@ const appStore = useAppStoreHook();
 const table = appStore.currentElement[0];
 
 function changeTableBodyHeight(val: number) {
-    console.log(123);
     multipleElementSetValue('option.tableBodyHeight', val);
     for (let tableBodyListElement of table.tableBodyList) {
         for (let tableBodyListElementElement of tableBodyListElement) {

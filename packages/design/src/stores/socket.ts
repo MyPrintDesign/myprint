@@ -102,7 +102,6 @@ export const useSocket = defineStore('socket', {
                     stateThis.socket = new WebSocket(useConfigStore().clientUrl.replace('https', 'ws').replace('http', 'ws'));
                     init();
                 } catch (e) {
-                    console.log(e);
                     reconnect();
                 }
             };
@@ -130,7 +129,7 @@ export const useSocket = defineStore('socket', {
                         }));
                         // console.log('ping');
                         self.serverTimeoutObj = setTimeout(function() { // 如果超过一定时间还没重置，说明后端主动断开了
-                            console.log('关闭服务');
+                            // console.log('关闭服务');
                             stateThis.socket!.close();//如果onclose会执行reconnect，我们执行 websocket.close()就行了.如果直接执行 reconnect 会触发onclose导致重连两次
                         }, self.timeout);
                     }, this.timeout);

@@ -128,7 +128,6 @@
 <script setup lang="ts">
 import myColorPicker from '@myprint/design/components/my/color-picker/my-color-picker.vue';
 import MyStyleIcon from '@myprint/design/components/my/icon';
-// import {i18n} from "@myprint/design/locales";
 import { hasStyle, hasStyleByTypeList } from '@myprint/design/constants/common';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import {
@@ -296,11 +295,9 @@ const fontDisabledComputed = computed(() => {
     }
     for (let currentElementElement of appStore.currentElement) {
         if (!hasStyle(currentElementElement.type, 'fontFamily' as any)) {
-            // console.log(props.enableProps, 'false')
             return true;
         }
     }
-    // console.log(props.enableProps, 'true')
     return false;
 });
 

@@ -88,7 +88,6 @@ function dragEnd() {
     // console.log("Lowest point on Bezier curve: " + bezierProperties.minY);
     // console.log("Highest point on Bezier curve: " + bezierProperties.maxY);
     // const rect = computedShapeBound(svgOptions.linePoints)
-    console.log(bezierProperties);
     moveableDragOffsetResize(bezierProperties.x, bezierProperties.y, bezierProperties.width, bezierProperties.height, props.element);
     
     svgOptions.width = bezierProperties.width;

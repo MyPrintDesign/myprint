@@ -156,7 +156,6 @@ export function getChildByParent(tableHeadList: TableCellElement[][], row: numbe
             childByParentList.push(cell);
         } else {
             if (cell.runtimeOption.cellParent == null) {
-                console.log(cell);
             }
             if (cell.runtimeOption.cellParent!.id == baseCell.runtimeOption.cellParent.id) {
                 childByParentList.push(cell);

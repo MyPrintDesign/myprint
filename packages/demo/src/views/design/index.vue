@@ -109,7 +109,7 @@ function panelImg(blobList: Blob []) {
         formData.append('id', id as string);
         formData.append('imgType', 'TEMPLATE_COVER');
         templateCoverImgUpdate(formData).then(res => {
-            console.log(res);
+            // console.log(res);
         });
     } else {
         data.blobList = blobList;
