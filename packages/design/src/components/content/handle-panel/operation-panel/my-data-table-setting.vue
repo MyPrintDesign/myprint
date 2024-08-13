@@ -91,7 +91,7 @@
         
         </my-divider-panel>
         
-        <my-button size="small" @click="handleAddStatisticsRow">{{ i18n('handle.add.statistics.row') }}</my-button>
+<!--        <my-button size="small" @click="handleAddStatisticsRow">{{ i18n('handle.add.statistics.row') }}</my-button>-->
         
         <!--        <el-divider>-->
         <!--            背景样式-->
@@ -131,7 +131,7 @@ import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
 import MyForm from '@myprint/design/components/my/form/my-form.vue';
 import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
-import MyButton from '@myprint/design/components/my/button/my-Button.vue';
+// import MyButton from '@myprint/design/components/my/button/my-Button.vue';
 import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
 import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
 import MyRadio from '@myprint/design/components/my/radio/my-radio.vue';

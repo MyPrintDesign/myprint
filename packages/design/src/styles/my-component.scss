@@ -5,7 +5,7 @@
 }
 
 .my-tooltip_content {
-  box-shadow: 0px 6px 20px rgba(25, 25, 26, .06), 0px 2px 12px rgba(25, 25, 26, .04);;
+  box-shadow: 0 6px 20px rgba(25, 25, 26, .06), 0 2px 12px rgba(25, 25, 26, .04);;
   border-radius: 8px;
   background-color: white;
   padding: 4px;
@@ -146,6 +146,30 @@
   }
 
 }
+
+.disabled-scroll-bar {
+  .ps__rail-x {
+    pointer-events: none;
+
+    &:hover {
+      .ps__thumb-x {
+        height: 4px !important;
+      }
+    }
+  }
+
+  .ps__rail-y {
+    pointer-events: none;
+
+    &:hover {
+      .ps__thumb-y {
+        width: 4px !important;
+      }
+    }
+  }
+
+}
+
 
 .ps {
   height: 100%;
@@ -314,7 +338,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 12px 32px 4px rgba(0, 0, 0, .04), 0px 8px 20px rgba(0, 0, 0, .08);;
+    box-shadow: 0 12px 32px 4px rgba(0, 0, 0, .04), 0 8px 20px rgba(0, 0, 0, .08);;
 
     background: rgba(0, 0, 0, 0.5);
 

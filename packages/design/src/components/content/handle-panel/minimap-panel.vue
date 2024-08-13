@@ -76,7 +76,7 @@ import MyVerticalLine from '@myprint/design/components/design/shape/line/vertica
 import MyDottedVerticalLine from '@myprint/design/components/design/shape/line/dottedVerticalLine';
 import MyImage from '@myprint/design/components/design/image';
 import MyText from '@myprint/design/components/design/text';
-import DataTable from '@myprint/design/components/design/data-table/data-table.vue';
+import DataTable from '@myprint/design/components/design/table/data-table/data-table.vue';
 import { Container, ContentScaleVo } from '@myprint/design/types/entity';
 import { clearEventBubble } from '@myprint/design/utils/event';
 import MathCalc from '@myprint/design/utils/numberUtil';

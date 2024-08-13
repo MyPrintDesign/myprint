@@ -1,6 +1,6 @@
 <template>
     <component :is="tag" ref="scrollbar" :class="{
-        'hover-non-blod': !hoverBlod
+        'hover-non-blod': !hoverBlod, 'disabled-scroll-bar': disabledScrollBar
     }" :style="{maxHeight : height}" class="ps">
         <slot />
     </component>
@@ -32,13 +32,15 @@ const props = withDefaults(defineProps<{
         tag?: string
         height?: string
         options?: any,
-        hoverBlod?: boolean
+        hoverBlod?: boolean,
+        disabledScrollBar: boolean
     }>(),
     {
         tag: 'div',
         height: '100%',
         options: () => ({}),
-        hoverBlod: true
+        hoverBlod: true,
+        disabledScrollBar: false
     }
 );
 

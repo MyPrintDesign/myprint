@@ -80,6 +80,7 @@ function dragStart(ev: MouseEvent) {
                 if (columnCell.height == null) {
                     columnCell.height = 7;
                 }
+                debugger
                 if (!columnCell.data) {
                     columnCell.data = columnCell.label;
                 }
@@ -117,6 +118,19 @@ function dragStart(ev: MouseEvent) {
                 dataJson.controlPoints = controlPoints;
             }
             element.data = JSON.stringify(dataJson);
+        }
+    } else {
+        if (element.type == 'DataTable') {
+            // 转表格行
+            recursionForTableCell(element.columnList, providerCell => {
+                const columnCell = providerCell;
+                if (columnCell.height == null) {
+                    columnCell.height = 7;
+                }
+                if (!columnCell.data) {
+                    columnCell.data = columnCell.label;
+                }
+            });
         }
     }
     
@@ -216,13 +230,7 @@ function dragStart(ev: MouseEvent) {
                         }
                     }
                 }
-                if (parentElement) {
-                    // console.log('find', parentElement)
-                    panel.runtimeOption.dragInIs = false;
-                } else {
-                    // console.log('dd')
-                    panel.runtimeOption.dragInIs = true;
-                }
+                panel.runtimeOption.dragInIs = !parentElement;
             }
         } else {
             mouseTips.setData('松开取消');

@@ -21,7 +21,7 @@ import { computed, CSSProperties, onMounted, onUnmounted, ref } from 'vue-demi';
 import ElementView from '@myprint/design/components/design/element.vue';
 import { PreviewWrapper } from '@myprint/design/types/entity';
 import { getRecursionParentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
-import DataTable from '@myprint/design/components/design/data-table/data-table.vue';
+import DataTable from '@myprint/design/components/design/table/data-table/data-table.vue';
 import { MyContainer } from '@myprint/design/components/design/container';
 
 const style = computed(() => {

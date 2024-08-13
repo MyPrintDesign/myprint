@@ -48,7 +48,7 @@ import {
     elementHandleStatusList,
     elementTypeContainerList, elementTypeLineList
 } from '@myprint/design/constants/common';
-import TableDesign from '@myprint/design/components/design/data-table/table-design.vue';
+import TableDesign from '@myprint/design/components/design/table/data-table/table-design.vue';
 import {
     moveableClearDragTarget,
     moveableDragTarget,

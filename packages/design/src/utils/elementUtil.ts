@@ -226,8 +226,6 @@ export function initElement(panel: Panel, element: MyElement, index: number) {
                 }
 
                 if (element.tableBodyList == undefined) {
-
-
                     let indexView = {
                         type: 'Text',
                         field: 'autoIncrement',
@@ -589,12 +587,21 @@ function findGroup(idList: string[]) {
     return -1;
 }
 
-export function element2PreviewWrapper(element: MyElement): PreviewWrapper {
-    const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList'), reactive({}) as PreviewWrapper);
+export function element2PreviewWrapper(element: MyElement | PreviewWrapper): PreviewWrapper {
+    const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList', 'previewWrapperList'), reactive({}) as PreviewWrapper);
     previewWrapper.id = generateUUID();
     previewWrapper.heightIs = true;
     previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
     previewWrapper.runtimeOption.previewIs = true;
+
+    const oldPreviewWrapper = element as PreviewWrapper;
+    if (oldPreviewWrapper.previewWrapperList != null && oldPreviewWrapper.previewWrapperList.length > 0) {
+        // const pList: PreviewWrapper[] = []
+        previewWrapper.previewWrapperList = [];
+        for (let myElement of oldPreviewWrapper.previewWrapperList) {
+            previewWrapper.previewWrapperList.push(element2PreviewWrapper(myElement));
+        }
+    }
 
     if (element.elementList != null && element.elementList.length > 0) {
         // const pList: PreviewWrapper[] = []
@@ -603,8 +610,8 @@ export function element2PreviewWrapper(element: MyElement): PreviewWrapper {
             previewWrapper.previewWrapperList.push(element2PreviewWrapper(myElement));
         }
     }
+
     if (element.tableHeadList != null && element.tableHeadList.length > 0) {
-        // const pList: PreviewWrapper[] = []
         for (let i = 0; i < element.tableHeadList.length; i++) {
             const rowList = element.tableHeadList[i];
             for (let j = 0; j < rowList.length; j++) {
@@ -639,23 +646,6 @@ export function element2PreviewWrapper(element: MyElement): PreviewWrapper {
                 }
                 previewWrapper.statisticsList[i][j].runtimeOption.parent = rowList[j].runtimeOption.parent;
             }
-        }
-    }
-
-    return previewWrapper;
-}
-
-export function copyPreviewWrapper(element: PreviewWrapper): PreviewWrapper {
-    const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList'), reactive({}) as PreviewWrapper);
-    previewWrapper.id = generateUUID();
-    previewWrapper.heightIs = true;
-    // console.log(element.runtimeOption.parent);
-    previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
-    if (element.previewWrapperList != null && element.previewWrapperList.length > 0) {
-        // const pList: PreviewWrapper[] = []
-        previewWrapper.previewWrapperList = [];
-        for (let myElement of element.previewWrapperList) {
-            previewWrapper.previewWrapperList.push(copyPreviewWrapper(myElement));
         }
     }
     return previewWrapper;
@@ -851,17 +841,21 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
         // if (parent == null) {
         //     console.log(element);
         // }
-        if (parent.option.borderAll) {
-            // 加上边框高度
-            if ((element as TableCellElement).rowspan > 1) {
-                extHeight = (element as TableCellElement).rowspan - 1;
+        if (parent != null) {
+            if (parent.option.borderAll) {
+                // 加上边框高度
+                if ((element as TableCellElement).rowspan > 1) {
+                    extHeight = (element as TableCellElement).rowspan - 1;
+                }
             }
+            if (parent.option.tableBodyHeightType == 'FIXED') {
+                cssStyle.height = (element.runtimeOption.init.height + extHeight) + 'px';
+                cssStyle.maxHeight = (element.runtimeOption.init.height + extHeight) + 'px';
+                cssStyle.overflow = 'hidden';
+            }
+        } else {
         }
-        if (parent.option.tableBodyHeightType == 'FIXED') {
-            cssStyle.height = (element.runtimeOption.init.height + extHeight) + 'px';
-            cssStyle.maxHeight = (element.runtimeOption.init.height + extHeight) + 'px';
-            cssStyle.overflow = 'hidden';
-        }
+
         // cssStyle.maxWidth = (element.runtimeOption.init.width - 1) + 'px';
     } else {
         if (option.borderAll) {

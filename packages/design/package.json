@@ -8,9 +8,22 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "clean": "rimraf dist",
-    "build": "gulp --require @esbuild-kit/cjs-loader"
+  "description": "操作简单，组件丰富的一站式打印解决方案打印设计器",
+  "author": "chushenshen <504640003@qq.com>",
+  "keywords": [
+    "print",
+    "design",
+    "MyPrint",
+    "打印",
+    "设计"
+  ],
+  "homepage": "https://demo.myprint.top/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MyPrintDesign/myprint"
+  },
+  "bugs": {
+    "url": "https://github.com/MyPrintDesign/myprint/issues"
   },
   "exports": {
     ".": {
@@ -67,5 +80,6 @@
     "@types/d3-shape": "^3.1.6",
     "@types/lodash": "^4.17.6",
     "@types/qrcode": "^1.5.5"
-  }
+  },
+  "license": "Apache-2.0"
 }

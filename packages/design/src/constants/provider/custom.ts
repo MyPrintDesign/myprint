@@ -47,7 +47,7 @@ export const customProvider = {
                         'sort': 1,
                         'disableSort': false
                     }
-                    , childList: [
+                    , columnList: [
                         {
                             'field': 'nickname',
                             'type': 'Text',
@@ -77,7 +77,7 @@ export const customProvider = {
                                 'sort': 1,
                                 'disableSort': false
                             }
-                            , childList: [{
+                            , columnList: [{
                                 'field': 'height',
                                 'type': 'Text',
                                 'label': '身高',
@@ -257,7 +257,7 @@ export const customProvider = {
             contentType: 'Text',
             iconClass: 'iconfont-color icon-color-page',
             option: {
-                formatter: '第{{pageIndex:1}}页/共{{pageSize:1}}页',
+                formatter: '第{{pageIndex::1}}页/共{{pageSize::1}}页',
                 textAlign: 'end',
                 verticalAlign: 'center',
                 fixed: true

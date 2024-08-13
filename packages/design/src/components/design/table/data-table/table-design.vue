@@ -129,8 +129,6 @@ const bodyList = computed(() => {
         data.tableRowHeightList = computedTableCell(tableRef.value.$el, bodyList);
         data.lastHeadList = lastHeadList(props.element.tableHeadList);
         
-        console.log(123);
-        
         initTableCell(bodyList);
         
         computeColumn();
@@ -444,7 +442,7 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
 
 function tableMouseDown(ev: MouseEvent) {
     // console.log(data);
-    console.log(data.row, data.col);
+    // console.log(data.row, data.col);
     // console.log(data.tableRowHeightList);
     data.cellList = getTableCell(bodyList.value, data.row, data.col);
     // 选取范围
@@ -477,11 +475,11 @@ function tableMouseDown(ev: MouseEvent) {
 }
 
 function removeStatisticsRow(item: any) {
-    console.log('删除');
+    // console.log('删除');
     data.cellList = [];
     data.highlightColumn.visibility = 'hidden';
     setCurrentElement([props.element]);
-    console.log(bodyList.value.length);
+    // console.log(bodyList.value.length);
     props.element.statisticsList.splice(item.row, 1);
     // console.log(bodyList.value.length);
     bodyList.value;

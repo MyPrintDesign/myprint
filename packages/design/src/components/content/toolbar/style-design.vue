@@ -1,5 +1,5 @@
 <template>
-    <my-scrollbar class="my-style-design" :hover-blod="false">
+    <my-scrollbar class="my-style-design" disabledScrollBar :hover-blod="false">
         <font-family :disabled="fontDisabledComputed" />
         
         <font-size :disabled="fontDisabledComputed" />
