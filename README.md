@@ -2,15 +2,15 @@
 
 > 操作简单，组件丰富的一站式打印解决方案打印设计器
 
-| 项目               | 说明                               | 地址(github)                                       | 地址(gitee)                                                |
-|:-----------------|----------------------------------|--------------------------------------------------|----------------------------------------------------------|
-| MyPrint          | 主项目                              | [`前往`](https://github.com/MyPrintDesign/myprint) | [`前往`](https://gitee.com/MyPrintDesign/myprint)          |
-| MyPrint-server   | 服务端                              | `暂未开源`                                           | `暂未开源`                                                   |
-| MyPrint-desktop  | 客户端                              | `暂未开源`                                           | `暂未开源`                                                   |
+| 项目               | 说明                               | 地址(github)                                                | 地址(gitee)                                                |
+|:-----------------|----------------------------------|-----------------------------------------------------------|----------------------------------------------------------|
+| MyPrint          | 主项目                              | [`前往`](https://github.com/MyPrintDesign/myprint)          | [`前往`](https://gitee.com/MyPrintDesign/myprint)          |
+| MyPrint-server   | 服务端                              | `暂未开源`                                                    | `暂未开源`                                                   |
+| MyPrint-desktop  | 客户端                              | `暂未开源`                                                    | `暂未开源`                                                   |
 | MyPrint-examples | 客户端                              | [`前往`](https://github.com/MyPrintDesign/myprint-examples) | [`前往`](https://gitee.com/MyPrintDesign/myprint-examples) |
-| MyPrint-docker   | docker构建镜像                       | [`前往`](https://github.com/MyPrintDesign/myprint-docker) | [`前往`](https://gitee.com/MyPrintDesign/myprint-docker)   |
-| 文档               | [`前往`](https://doc.myprint.top)  | —                                                | —                                                        |
-| 体验服              | [`前往`](https://demo.myprint.top) | —                                                | —                                                        |
+| MyPrint-docker   | docker构建镜像                       | [`前往`](https://github.com/MyPrintDesign/myprint-docker)   | [`前往`](https://gitee.com/MyPrintDesign/myprint-docker)   |
+| 文档               | [`前往`](https://doc.myprint.top)  | —                                                         | —                                                        |
+| 体验服              | [`前往`](https://demo.myprint.top) | —                                                         | —                                                        |
 
 ## 说明
 
@@ -22,9 +22,20 @@
 * 多种安装方式支持`centos`、`debian`、`docker`、`k8s` 一键安装
 
 ## 有图有真相
+
 <img src="readme/demo_main.png"/>
-<img src="readme/order_design.png"/>
-<img src="readme/order_preview.png"/>
+<table width="100%" align="center">
+<tr>
+<td align="center"><img src="readme/order_design.png"/></td>
+<td align="center"><img src="readme/mail_design.png"/></td>
+<td align="center"><img src="readme/client_design.png"/></td>
+</tr>
+<tr>
+<td align="center"><img src="readme/order_preview.png"/></td>
+<td align="center"><img src="readme/mail_preview.png"/></td>
+<td align="center"><img src="readme/client_preview.png"/></td>
+</tr>
+</table>
 
 ## 如何使用
 
