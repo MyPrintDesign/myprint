@@ -46,6 +46,11 @@
                              v-for="(template, index) in data.templateList"
                              :key="index">
                         <div class="display-flex display-flex-column">
+                            <div v-if="template.lockIs == 1" class="module-item_card_lock">
+                                <el-icon>
+                                    <Lock />
+                                </el-icon>
+                            </div>
                             <el-image class="module-item_card_cover"
                                       :src="getImgUrl(template.coverImgUrl)"
                                       :zoom-rate="1.02"
@@ -157,7 +162,7 @@ import { templateDelete, templatePage, templateUpdate } from '@/api/template';
 import ModuleItem from '@/views/module/module-item.vue';
 import ModuleGroupView from '@/views/module/module-group.vue';
 import { moduleCreate, moduleDelete, moduleDetail, moduleUpdate } from '@/api/module';
-import { Coin, Edit, More, Plus, Setting } from '@element-plus/icons-vue';
+import { Coin, Edit, Lock, More, Plus, Setting } from '@element-plus/icons-vue';
 import RenameDialog from '@/components/dialog/rename-dialog.vue';
 import PopoverMenuList from '@/components/popover/popover-menu-list.vue';
 import { MenuItem } from '@/types/entity';

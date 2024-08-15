@@ -1,20 +1,21 @@
 import { HandlePanel } from '@myprint/design/types/entity';
 import { reactive } from 'vue-demi';
+import { i18n } from '@myprint/design/locales';
 
 export const handlePanelElementList = reactive({
     'setting': {
         icon: 'icon-setting',
-        label: '设置',
+        label: i18n('common.setting'),
         visible: false
     } as HandlePanel,
     'operation': {
         icon: 'icon-operation',
-        label: '属性',
+        label: i18n('common.attr'),
         visible: false
     } as HandlePanel,
     'history': {
         icon: 'icon-history',
-        label: '历史操作',
+        label: i18n('common.operation.history'),
         visible: false
     } as HandlePanel
     // 'elementList': {
@@ -23,12 +24,11 @@ export const handlePanelElementList = reactive({
     //     label: '历史操作',
     //     visible: false,
     // } as HandlePanel
-
 });
 
 export const miniMap = {
     // icon: 'icon-history',
 
-    label: '小地图',
+    label: i18n('common.mini.map'),
     visible: false
 } as HandlePanel;

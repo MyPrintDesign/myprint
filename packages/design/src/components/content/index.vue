@@ -3,7 +3,7 @@
              :style="style"
              :data-rotation="appStore.dataRotation">
         <aside class="my-aside display-flex-column" style="border-right: 1px #e9e9e9 solid; background: #f8f8f8">
-            <widget :module="props.module" :showBackButton="showBackButton" @back="back" />
+            <widget :module-name="props.module?.name" :showBackButton="showBackButton" @back="back" />
         </aside>
         <main class=" my-main design-container-root_main">
             <PanelView />

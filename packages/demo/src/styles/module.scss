@@ -54,6 +54,32 @@
   .module_item {
     width: 100%;
     height: 100%;
+    position: relative;
+
+    .module-item_lock {
+      position: absolute;
+      top: 0;
+      left: -35px;
+      width: 0;
+      height: 0;
+      border-top: 17px solid transparent; /* 左侧三角形边框 */
+      border-right: 17px solid transparent; /* 左侧三角形边框 */
+      border-left: 17px solid transparent; /* 左侧三角形边框 */
+      border-bottom: 17px solid red; /* 下侧透明三角形边框 */
+      color: white;
+      text-align: center;
+      transform: rotate(-45deg);
+      transform-origin: 0 0;
+      font-weight: bold;
+      z-index: 10; /* 确保标记位于其他内容上方 */
+
+      .el-icon {
+        position: absolute;
+        left: -5px;
+        top: 5px;
+        //transform: rotate(45deg); /* 旋转元素 */
+      }
+    }
 
     .module_item-title {
       flex: 1;
@@ -103,4 +129,9 @@
 
 .add_module_group_wrapper {
   margin-top: 30px;
+}
+
+.table_link {
+  margin-left: 5px;
+  margin-right: 5px;
 }

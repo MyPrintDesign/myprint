@@ -15,20 +15,20 @@
                     <!--                                  style="margin-right: 20px" />-->
                     <!--                    </el-form-item>-->
                     
-                    <el-form-item label="单位" prop="region">
+                    <el-form-item label="单位1">
                         <el-select v-model="data.provider.pageUnit"
                                    class="width-60"
                                    size="small">
                             <el-option
-                                v-for="item in pageUnitList"
-                                :key="item"
-                                :label="item"
-                                :value="item"
+                                v-for="item in pageUnitList[0]"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value"
                             />
                         </el-select>
                     </el-form-item>
                     
-                    <el-form-item label="纸张" prop="region">
+                    <el-form-item label="纸张">
                         <el-select v-model="data.provider.pageSize" class="width-80" placeholder="请选择" size="small"
                                    @change="changePageUnit">
                             <el-option
@@ -119,7 +119,7 @@ const router = useRouter();
 const formRef = ref<FormInstance>();
 
 const checkWidthHeight = (_rule: any, _value: any, callback: any) => {
-    if (data.elementForm.width == null || data.elementForm.height == null) {
+    if (data.provider.width == null || data.provider.height == null) {
         callback(new Error('请输入宽/高'));
     }
     callback();
@@ -137,7 +137,6 @@ const elementTypeConstList = ['Text', 'TextTime', 'Image', 'DataTable', 'Rect', 
 const data = reactive({
     module: null as Module,
     row: {} as MyElement,
-    elementForm: {} as MyElement,
     elementEditDialogVisible: false,
     chooseImageVisible: false,
     inputImageUrl: null,
@@ -180,7 +179,7 @@ function save() {
     data.module.provider = stringify(data.provider, 'id');
     data.module.previewData = null;
     moduleUpdate(data.module)
-        .then(res => {
+        .then(_res => {
             msgSuccess('保存成功');
         }).catch(e => {
         msgError(e.msg);

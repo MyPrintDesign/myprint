@@ -40,11 +40,66 @@ watch([() => barCode.value, () => props.element.data, () => props.element.option
         props.element.option.barCodeType = 'CODE128';
     }
     
-    // console.log(123)
     try {
+        // 计算条形码每个条的宽度
+        // const numBars = props.element.data.length * 7; // 条形码的条数，根据条码类型会有所不同
+        // const barWidth = unit2px(props.element.width, getRecursionParentPanel(props.element)) / numBars;
+        const codeLength = props.element.data.length;
+        let numBars: number;
+        
+        // 根据不同的条形码类型设置条数
+        switch (props.element.option.barCodeType) {
+            case 'EAN2':
+                numBars = 20;
+                break;
+            case 'EAN5':
+                numBars = 47;
+                break;
+            case 'EAN8':
+                numBars = 67;
+                break;
+            case 'EAN13':
+            case 'UPC':
+                numBars = 95;
+                break;
+            case 'UPC_E':
+                numBars = 57;
+                break;
+            case 'ITF':
+                numBars = codeLength * 3;
+                break;
+            case 'ITF14':
+                numBars = 94;
+                break;
+            case 'CODE39':
+            case 'codabar':
+                numBars = codeLength * 12;
+                break;
+            case 'CODE128':
+            case 'CODE128A':
+            case 'CODE128B':
+            case 'CODE128C':
+                numBars = codeLength * 11;
+                break;
+            case 'pharmacode':
+                numBars = codeLength * 10;
+                break;
+            case 'MSI':
+            case 'MSI10':
+            case 'MSI11':
+            case 'MSI1010':
+            case 'MSI1110':
+                numBars = codeLength * 2.5;
+                break;
+            default:
+                numBars = codeLength * 7;  // 默认设置
+        }
+        
+        const barWidth = unit2px(props.element.width, getRecursionParentPanel(props.element)) / numBars;
+        
         JsBarcode(barCode.value, props.element.data, {
             format: props.element.option.barCodeType,//选择要使用的条形码类型
-            width: unit2px(props.element.width, getRecursionParentPanel(props.element)) / 100,//设置条之间的宽度
+            width: barWidth, //设置条之间的宽度
             height: unit2px(props.element.height, getRecursionParentPanel(props.element)) - (props.element.option.barCodeDisplayValIs ? _defaultNum(props.element.option.fontSize, 10) : 0),//高度
             displayValue: props.element.option.barCodeDisplayValIs,//是否在条形码下方显示文字
             //   text:"456",//覆盖显示的文本

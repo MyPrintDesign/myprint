@@ -56,6 +56,7 @@ export interface Template {
     coverImgUrl?: any;
     coverImgList?: ArrayBuffer[];
     module?: Module;
+    lockIs?: number;
 
     moreVisible?: boolean;
 }

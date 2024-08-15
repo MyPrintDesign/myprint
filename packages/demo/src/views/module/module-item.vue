@@ -1,5 +1,10 @@
 <template>
     <div class="module_item display-flex" @click="click">
+        <div v-if="node.data.lockIs == 1" class="module-item_lock">
+            <el-icon :size="10">
+                <Lock />
+            </el-icon>
+        </div>
         <div class="module_item-title display-flex">{{ node.label }}</div>
         <popover-menu-list :menu-list="data.menuList"
                            :item="node.data"
@@ -22,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { More } from '@element-plus/icons-vue';
+import { Lock, More } from '@element-plus/icons-vue';
 import { reactive } from 'vue';
 import { Module } from '@/types/R';
 import RenameDialog from '@/components/dialog/rename-dialog.vue';

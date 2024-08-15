@@ -6,6 +6,7 @@ let defaultOptions = {
     name: new Date().getTime(),
     scale: window.devicePixelRatio,
     padding: 0,
+    useCORS: true,
     logging: true,
     dpi: 144, // 设置dpi，会使图片高清一些
     width: -1,
@@ -24,21 +25,40 @@ export function chrome2Img(pageDomList: any, options: any) {
             let pageDom = pageDomList[i] as HTMLDivElement;
             // console.log(pageDom)
             // pageDom.style.display = 'block';
-            html2canvas(pageDom, defaultOptions)
-                .then(canvas => {
-                    canvas.toBlob((blob: Blob) => {
-                        // console.log(URL.createObjectURL(blob));
-                        count++;
-                        imageMap[i] = blob;
-                        if (count == pageDomList.length) {
-                            for (let j = 0; j < count; j++) {
-                                imageList.push(imageMap[j]);
+            // 忽略无用节点（主要是这个）
+            // @ts-ignore
+            // defaultOptions.ignoreElements = e => {
+            //     if (
+            //         e.contains(pageDom) ||
+            //         pageDom.contains(e) ||
+            //         e.tagName === 'STYLE' ||
+            //         e.tagName === 'LINK' ||
+            //         e.getAttribute('data-html2canvas') != null // header里面的样式不能筛掉
+            //     ) {
+            //         console.log(e);
+            //         return false;
+            //     }
+            //     // console.log(e.tagName);
+            //     return true;
+            // };
+            requestAnimationFrame(() => {
+                html2canvas(pageDom, defaultOptions)
+                    .then(canvas => {
+                        canvas.toBlob((blob: Blob) => {
+                            // console.log(URL.createObjectURL(blob));
+                            count++;
+                            imageMap[i] = blob;
+                            if (count == pageDomList.length) {
+                                for (let j = 0; j < count; j++) {
+                                    imageList.push(imageMap[j]);
+                                }
+                                // imgListCallback(imageList);
+                                resolve(imageList);
                             }
-                            // imgListCallback(imageList);
-                            resolve(imageList);
-                        }
-                    }, 'image/jpeg', 1.0);
-                });
+                        }, 'image/jpeg', 1.0);
+                    });
+            });
+
             // 生成的画布元素宽高（需要收缩回原比例大小）
             // console.log(canvas.width,  canvas.height)
             // console.log(options.scale)

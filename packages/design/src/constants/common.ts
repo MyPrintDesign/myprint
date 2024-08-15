@@ -93,7 +93,7 @@ const styleElementSetting: Array<elementSettingType> = ['textAlign', 'verticalAl
 const elementSetting: Record<elementType, Array<elementSettingType>> =
     {
         Image: [...commonElementSetting, 'common', 'borderRadius'],
-        Text: [...commonElementSetting, ...styleElementSetting, 'common', 'lineHeight', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'lineBreak'],
+        Text: [...commonElementSetting, ...styleElementSetting, 'common', 'autoTextHeight', 'lineHeight', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'lineBreak'],
         TextTime: [...commonElementSetting, ...styleElementSetting, 'common', 'lineHeight', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'formatter', 'padding', 'margin', 'label'],
         Panel: [...commonElementSetting, 'common'],
         DataTable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
@@ -151,15 +151,15 @@ export function hasStyleByTypeList(typeList: elementType[], style: elementSettin
 
 export const textContentTypes = [
     {
-        'label': '文本',
+        'label': i18n('common.text'),
         'value': 'Text'
     },
     {
-        'label': '条码',
+        'label': i18n('common.barcode'),
         'value': 'Barcode'
     },
     {
-        'label': '二维码',
+        'label': i18n('common.qrcode'),
         'value': 'QrCode'
     }
 ];
@@ -300,13 +300,13 @@ export const statisticsTypeList: any[] = Object.keys(statisticsTypeFormat).map(k
 });
 
 export const chooseImgTypeList = reactive([
-    { value: 'localFile', label: '本地上传' },
-    { value: 'url', label: '图片链接' }
+    { value: 'localFile', label: i18n('common.local.upload') },
+    { value: 'url', label: i18n('common.image.url') }
 ]) as DownList[];
 
 export const tableBodyHeightTypeList = reactive([
-    { value: 'AUTO', label: '自动' },
-    { value: 'FIXED', label: '固定' }
+    { value: 'AUTO', label: i18n('common.auto') },
+    { value: 'FIXED', label: i18n('common.fixed') }
 ]) as DownList[];
 
 export const pageUnitList = [
@@ -439,11 +439,11 @@ export const pageSizeList = [
 
 export const dottedStyleList = [
     {
-        'label': '点',
+        'label': i18n('common.dotted'),
         'value': 'dotted'
     },
     {
-        'label': '线',
+        'label': i18n('common.dashed'),
         'value': 'dashed'
     }
 ];

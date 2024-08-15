@@ -1,5 +1,10 @@
 <template>
     <div class="module_item display-flex" @click="click">
+        <div v-if="node.data.lockIs == 1" class="module-item_lock">
+            <el-icon :size="8">
+                <Lock />
+            </el-icon>
+        </div>
         <div class="module_item-title display-flex">{{ node.label }}</div>
         
         <el-link :underline="false"
@@ -29,7 +34,7 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import { More, Plus } from '@element-plus/icons-vue';
+import { Lock, More, Plus } from '@element-plus/icons-vue';
 import PopoverMenuList from '@/components/popover/popover-menu-list.vue';
 import { MenuItem } from '@/types/entity';
 import { ModuleGroup } from '@/types/R';
@@ -55,7 +60,7 @@ const data = reactive({
             name: '重命名', click: clickRenameDialog
         },
         {
-            name: '删除', click: clickDeleteDialog, disabled: true
+            name: '删除', click: clickDeleteDialog
         }
     
     ] as MenuItem[]

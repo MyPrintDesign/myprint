@@ -60,7 +60,7 @@ export const tableColClone = {
 tableColClone.init();
 
 export function getPrintElementHtml(htmlElement: HTMLElement[], pageList: any[]) {
-    let html = '<div style="  --tcolor: black;">';
+    let html = '<div style="width: 60mm; overflow: hidden; background: black !important; --tcolor: black;">';
     for (let i = 0; i < htmlElement!.length; i++) {
         html += htmlElement![i].outerHTML;
     }

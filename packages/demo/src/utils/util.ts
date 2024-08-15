@@ -10,6 +10,12 @@ export function emptyIs(val: any) {
 
 }
 
+export function arraySwap(arr: any[], from: number, to: number) {
+    const obj = arr[from];
+    arr[from] = arr[to];
+    arr[to] = obj;
+}
+
 export function msgSuccess(msg: string) {
     ElMessage({
         message: msg,

@@ -1,4 +1,5 @@
 import { Module, SaveResult, Template } from '@myprint/design/types/R';
+import { i18n } from '@myprint/design/locales';
 
 export interface PrintProps {
     taskId?: string,
@@ -192,31 +193,28 @@ export interface DragWrapper {
 
 // 节点类型
 export const elementTypeFormat = {
-    Panel: '面板',
-    Text: '文本',
-    TextTime: '时间文本',
-    Image: '图片',
-    DataTable: '数据表格',
-    FREETable: '自由表格',
-    Rect: '矩形',
-    HorizontalLine: '横线',
-    DottedHorizontalLine: '横虚线',
-    VerticalLine: '竖线',
-    DottedVerticalLine: '竖虚线',
-    Container: '容器',
-    PageHeader: '页眉',
-    PageFooter: '页脚',
-    PageNum: '页数',
-
-    SvgPolygonLine: '多边形',
-    SvgLine: '线',
-    SvgBezierCurve: '曲线',
-    SvgBezierCurveThree: '曲线3',
-    SvgCircle: '圆',
-    SvgEllipse: '椭圆',
-
-    DrawPanel: '画板'
-
+    Panel: i18n('provider.panel'),
+    Text: i18n('provider.text'),
+    TextTime: i18n('provider.text.time'),
+    Image: i18n('provider.image'),
+    DataTable: i18n('provider.data.table'),
+    FREETable: i18n('provider.free.table'),
+    Rect: i18n('provider.rect'),
+    HorizontalLine: i18n('provider.horizontal.line'),
+    DottedHorizontalLine: i18n('provider.dotted.horizontal.line'),
+    VerticalLine: i18n('provider.vertical.line'),
+    DottedVerticalLine: i18n('provider.dotted.vertical.line'),
+    Container: i18n('provider.container'),
+    PageHeader: i18n('provider.page.header'),
+    PageFooter: i18n('provider.page.footer'),
+    PageNum: i18n('provider.page.num'),
+    SvgPolygonLine: i18n('provider.svg.polygon line'),
+    SvgLine: i18n('provider.svg.line'),
+    SvgBezierCurve: i18n('provider.svg.bezier.curve'),
+    SvgBezierCurveThree: i18n('provider.svg.bezier.curve.three'),
+    SvgCircle: i18n('provider.svg.circle'),
+    SvgEllipse: i18n('provider.svg.ellipse'),
+    DrawPanel: i18n('provider.draw.panel')
 
     // 私有类型
 };

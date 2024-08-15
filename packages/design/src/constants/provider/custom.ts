@@ -1,4 +1,5 @@
 import { MyElement, ElementOption, PageUnit } from '@myprint/design/types/entity';
+import { i18n } from '@myprint/design/locales';
 
 export const customProvider = {
     pageUnit: 'mm' as PageUnit,
@@ -6,176 +7,14 @@ export const customProvider = {
         {
             'type': 'Text',
             iconClass: 'iconfont icon-text',
-            'label': '文本',
-            'data': '滚滚长江东逝水',
+            'data': i18n('provider.text.default.data'),
             'width': 50,
             'height': 8
-        } as any,
-        {
-            'field': 'userList',
-            iconClass: 'iconfont icon-text',
-            'type': 'DataTable',
-            'label': '用户列表',
-            'columnList': [
-                {
-                    'field': 'username',
-                    'type': 'Text',
-                    'label': '用户',
-                    'data': 'UN001',
-                    'position': '',
-                    'width': 20.25,
-                    'height': 7,
-                    'option': {
-                        'fontSize': 14.25,
-                        'sort': 1,
-                        'disableSort': false
-                    },
-                    'columnBody': {
-                        'option': {
-                            'fontSize': 14.25
-                        }
-                    }
-                },
-                {
-                    'field': 'userInfo',
-                    'type': 'Text',
-                    'label': '用户信息',
-                    'width': 14.25,
-                    'height': 7,
-                    'fontSize': 14.25,
-                    'option': {
-                        'sort': 1,
-                        'disableSort': false
-                    }
-                    , columnList: [
-                        {
-                            'field': 'nickname',
-                            'type': 'Text',
-                            'label': '姓名',
-                            'data': '张三',
-                            'width': 14.25,
-                            'height': 7,
-                            'fontSize': 14.25,
-                            'option': {
-                                'sort': 1,
-                                'disableSort': false
-                            },
-                            'columnBody': {
-                                'option': {
-                                    'fontSize': 14.25
-                                }
-                            }
-                        },
-                        {
-                            'field': 'userAttr',
-                            'type': 'Text',
-                            'label': '用户属性',
-                            'width': 14.25,
-                            'height': 7,
-                            'fontSize': 14.25,
-                            'option': {
-                                'sort': 1,
-                                'disableSort': false
-                            }
-                            , columnList: [{
-                                'field': 'height',
-                                'type': 'Text',
-                                'label': '身高',
-                                'data': '175',
-                                'width': 14.25,
-                                'height': 7,
-                                'fontSize': 14.25,
-                                'option': {
-                                    'sort': 1,
-                                    'disableSort': false
-                                },
-                                'columnBody': {
-                                    'option': {
-                                        'fontSize': 14.25
-                                    }
-                                }
-                            }, {
-                                'field': 'weight',
-                                'type': 'Text',
-                                'label': '体重',
-                                'data': '45KG',
-                                'width': 14.25,
-                                'height': 7,
-                                'fontSize': 14.25,
-                                'option': {
-                                    'sort': 1,
-                                    'disableSort': false
-                                },
-                                'columnBody': {
-                                    'option': {
-                                        'fontSize': 14.25
-                                    }
-                                }
-                            }, {
-                                'field': 'age',
-                                'type': 'Text',
-                                'label': '年龄',
-                                'data': '18',
-                                'width': 14.25,
-                                'height': 7,
-                                'fontSize': 14.25,
-                                'option': {
-                                    'sort': 1,
-                                    'disableSort': false
-                                },
-                                'columnBody': {
-                                    'option': {
-                                        'fontSize': 14.25
-                                    }
-                                }
-                            }]
-                        }
-                    ]
-                },
-                {
-                    'field': 'sexFormat',
-                    'type': 'Text',
-                    'label': '性别',
-                    'data': '男',
-                    'position': '',
-                    'width': 14.25,
-                    'height': 7,
-                    'fontSize': 14.25,
-                    'option': {
-                        'sort': 1,
-                        'disableSort': false
-                    },
-                    'columnBody': {
-                        'type': 'Text',
-                        'option': {
-                            'fontSize': 14.25
-                        }
-                    }
-                },
-                {
-                    'field': 'createTime',
-                    'type': 'Text',
-                    'label': '注册时间',
-                    'data': '2023-01-01aaaaaaaaaaaaaaaaaaaaaaaaaaa',
-                    'position': '',
-                    'width': 30,
-                    'height': 7,
-                    'fontSize': 14.25,
-                    'option': {
-                        'sort': 1,
-                        'disableSort': false
-                    }
-                }
-            ],
-            'data': '自定义文本',
-            'width': 200,
-            'height': 14
         } as any,
         {
             'type': 'TextTime',
             contentType: 'Text',
             iconClass: 'iconfont-color icon-color-text-time',
-            'label': '时间文本',
             option: { formatter: '{{yyyy-MM-dd hh:mm:ss}}' } as ElementOption,
             'width': 43,
             'height': 8
@@ -183,15 +22,12 @@ export const customProvider = {
         {
             'type': 'Image',
             iconClass: 'iconfont-color icon-color-img',
-            'label': '图片',
-            'data': null,
             'width': 50.25,
             'height': 30
         } as any,
         {
             'type': 'HorizontalLine',
             iconClass: 'iconfont-color icon-color-vertical_solidline',
-            'label': '横实线',
             'width': 30.25,
             'option': {
                 lineWidth: 0.3
@@ -200,7 +36,6 @@ export const customProvider = {
         {
             'type': 'VerticalLine',
             iconClass: 'iconfont-color icon-color-crossrange_solidline',
-            'label': '竖实线',
             'height': 21,
             'option': {
                 lineWidth: 0.3
@@ -225,34 +60,29 @@ export const customProvider = {
         {
             type: 'Rect',
             iconClass: 'iconfont icon-rectangle_solidline',
-            'data': '',
             'width': 30,
+            'height': 30,
             option: {
                 lineWidth: 0.3
-            } as ElementOption,
-            'height': 30
+            } as ElementOption
         } as any,
         {
             type: 'Container',
             iconClass: 'iconfont-color icon-color-container',
-            'data': '容器',
             'width': 70,
             'height': 70
         } as any,
         {
             type: 'PageHeader',
             iconClass: 'iconfont-color icon-color-page_header',
-            'data': '',
             'height': 30
         } as any,
         {
             type: 'PageFooter',
             iconClass: 'iconfont-color icon-color-page_footer',
-            'data': '',
             'height': 30
         } as any,
         {
-            field: '',
             type: 'PageNum',
             contentType: 'Text',
             iconClass: 'iconfont-color icon-color-page',

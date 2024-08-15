@@ -9,6 +9,7 @@
         v-model="data.elementEditDialogVisible"
         :title="data.addIs == 1? '添加字段': '编辑字段'"
         width="600"
+        :close-on-press-escape="false"
         align-center>
         <el-form ref="formRef"
                  :model="data.elementForm"
@@ -131,6 +132,7 @@
         v-model="data.chooseImageVisible"
         width="520px"
         align-center
+        :close-on-press-escape="false"
         :show-close="false"
         :show-header="false"
         append-to-body>

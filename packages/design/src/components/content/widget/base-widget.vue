@@ -127,7 +127,7 @@ function dragStart(ev: MouseEvent) {
                 if (columnCell.height == null) {
                     columnCell.height = 7;
                 }
-                if (!columnCell.data) {
+                if (columnCell.columnList != null) {
                     columnCell.data = columnCell.label;
                 }
             });

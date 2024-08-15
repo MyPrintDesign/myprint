@@ -142,6 +142,27 @@
 
         .el-card__body {
           padding: 0 !important;
+          position: relative;
+
+          .module-item_card_lock {
+            position: absolute;
+            top: 10px;
+            left: -40px;
+            width: 120px;
+            height: 20px;
+            background-color: red;
+            color: white;
+            text-align: center;
+            line-height: 20px;
+            transform: rotate(-45deg); /* 旋转元素 */
+            box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            z-index: 10; /* 确保标记位于其他内容上方 */
+
+            //.el-icon {
+            //  transform: rotate(45deg); /* 旋转元素 */
+            //}
+          }
 
           .module-item_card_cover {
             width: 100%;

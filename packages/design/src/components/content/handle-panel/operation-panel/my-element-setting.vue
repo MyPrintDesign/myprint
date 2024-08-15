@@ -197,6 +197,14 @@
                     class="ml-2" />
             </my-form-item>
             
+            <my-form-item :label="i18n('handle.text.auto.height')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('autoTextHeight')">
+                <my-switch
+                    :model-value="multipleElementGetValue('option.autoTextHeight')"
+                    @update:model-value="(val:any)=>multipleElementSetValue('option.autoTextHeight', val)"
+                    class="ml-2" />
+            </my-form-item>
+            
             <my-form-item :label="i18n('handle.line.height')"
                           v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
                 <my-group>

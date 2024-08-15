@@ -16,17 +16,31 @@
                 </div>
             </template>
         </recursive-table-column>
-        <el-table-column label="操作" width="120">
+        <el-table-column label="操作" width="140">
             <template #default="scope">
-                <el-link @click="clickLinkCopyRow(scope)">复制</el-link>
-                <el-link @click="editRow(scope)">编辑</el-link>
-                <el-link @click="deleteRow(scope)">删除</el-link>
+                <el-link class="table_link" @click="clickLinkCopyRow(scope)">
+                    <el-icon>
+                        <CopyDocument />
+                    </el-icon>
+                </el-link>
+                <el-link class="table_link" @click="editRow(scope)">
+                    <el-icon>
+                        <Edit />
+                    </el-icon>
+                </el-link>
+                <el-link class="table_link" @click="deleteRow(scope)">
+                    <el-icon>
+                        <DeleteFilled />
+                    </el-icon>
+                </el-link>
             
             </template>
         </el-table-column>
     </el-table>
     
-    <el-dialog v-model="data.copyRow.dialogVisible" title="Shipping address" width="500">
+    <el-dialog v-model="data.copyRow.dialogVisible"
+               :close-on-press-escape="false"
+               title="Shipping address" width="500">
         <el-form-item label="复制份数">
             <el-input-number v-model="data.copyRow.copyNum" autocomplete="off" style="width: 100%" />
         </el-form-item>
@@ -41,7 +55,8 @@
         </template>
     </el-dialog>
     
-    <el-dialog v-model="data.tablePreviewDataVisible" title="Shipping address" width="90%">
+    <el-dialog v-model="data.tablePreviewDataVisible" title="Shipping address" width="90%"
+               :close-on-press-escape="false">
         <div>
             <el-button @click="addTablePreviewData">添加</el-button>
         </div>
@@ -63,6 +78,7 @@
 import { elementType, MyElement, Provider } from '@myprint/design/types/entity';
 import { reactive } from 'vue';
 import RecursiveTableColumn from '@/views/module/preview-data/recursive-table-column.vue';
+import { CopyDocument, DeleteFilled, Edit } from '@element-plus/icons-vue';
 
 const cantInputTypeList: elementType[] = ['Rect', 'HorizontalLine', 'DottedHorizontalLine', 'VerticalLine', 'DottedVerticalLine', 'DrawPanel'];
 

@@ -110,13 +110,54 @@ function addPreviewData() {
     data.previewData.unshift(row);
 }
 
+function recursiveHandleTableColumn(columnList: any[], callback: (column: any[]) => void) {
+    for (let columnListElement of columnList) {
+        if (columnListElement.childList != null) {
+            recursiveHandleTableColumn(columnListElement.childList, callback);
+        } else {
+            callback(columnListElement);
+        }
+    }
+}
+
+function recursiveHandleData(dataList: any[], columnList: any[]) {
+    const newPreviewData = [];
+    
+    for (let previewDatum of dataList) {
+        const tmp = {};
+        for (let column of columnList) {
+            if (column['type'] == 'DataTable') {
+                const tableData = previewDatum[column['prop']];
+                const tableDataTmpList = [];
+                for (let tableDatum of tableData) {
+                    const tableDataTmp = {};
+                    recursiveHandleTableColumn(column.columnList, (col: any) => {
+                        debugger
+                        tableDataTmp[col['prop']] = tableDatum[col['prop']];
+                    });
+                    tableDataTmpList.push(tableDataTmp);
+                }
+                tmp[column['prop']] = tableDataTmpList;
+            } else {
+                if (column.columnList != null) {
+                    tmp[column['prop']] = recursiveHandleData(previewDatum[column['prop']], column.columnList);
+                } else {
+                    tmp[column['prop']] = previewDatum[column['prop']];
+                }
+            }
+        }
+        newPreviewData.push(tmp);
+    }
+    return newPreviewData;
+}
+
 function save() {
     // 保存
-    data.module.previewDataByte = gzip(stringify(data.previewData, 'id', '$editIs'));
+    data.module.previewDataByte = gzip(stringify(recursiveHandleData(data.previewData, data.columnList), 'id', '$editIs'));
     // console.log(data.module.previewDataByte);
     data.module.provider = null;
     moduleUpdate(data.module)
-        .then(res => {
+        .then(_res => {
             msgSuccess('保存成功');
         }).catch(e => {
         msgError(e.msg());

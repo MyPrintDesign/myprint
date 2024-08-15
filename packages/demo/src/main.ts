@@ -27,6 +27,10 @@ initVisitorId();
 MyPrinter.initMyPrinter({
     serverUrl: import.meta.env.VITE_API_PDF_SERVER_URL
 });
+
+// MyPrinter.setLocale('enUs');
+MyPrinter.setLocale('zhCn');
+
 app.use(createPrint);
 
 app.provide(mittKey, mitt());

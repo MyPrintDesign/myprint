@@ -10,7 +10,7 @@ import { MyElement } from '@myprint/design/types/entity';
 import { computed, nextTick, ref, watch } from 'vue-demi';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import QRCode from 'qrcode';
-import { elementCommonStyle, getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
+import { displayDesign, elementCommonStyle, getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
 import { updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
 import _ from 'lodash';
 
@@ -26,7 +26,8 @@ const src = ref();
 const style = computed(() => {
     return elementCommonStyle(props.element);
 });
-const freshQrCode = _.throttle((resetHeight: boolean) => {
+
+function freshQrCode(resetHeight: boolean) {
     if (qrCode.value == null) {
         return;
     }
@@ -36,7 +37,6 @@ const freshQrCode = _.throttle((resetHeight: boolean) => {
     if (props.element.data == '') {
         return;
     }
-    
     QRCode.toDataURL(props.element.data, {
         // version: 1,
         errorCorrectionLevel: 'Q', // low, medium, quartile, high or L, M, Q, H
@@ -46,7 +46,6 @@ const freshQrCode = _.throttle((resetHeight: boolean) => {
         width: unit2px(Math.min(props.element.width, props.element.height), getRecursionParentPanel(props.element)), // 宽度
         color: {
             light: props.element.option.background, // 背景色
-            // light: 'gray', // 背景色
             dark: props.element.option.color // 二维码颜色
         }
     }, (error, url) => {
@@ -57,21 +56,36 @@ const freshQrCode = _.throttle((resetHeight: boolean) => {
         
         src.value = url;
     });
+    
     if (resetHeight && props.element.runtimeOption.workEnvironment !== 'DataTable') {
         props.element.height = props.element.width;
         props.element.runtimeOption.height = props.element.runtimeOption.width;
         props.element.runtimeOption.init.height = props.element.runtimeOption.width;
-        nextTick(() => {
-            updateMoveableRect();
-        });
+        if (displayDesign(props.element)) {
+            nextTick(() => {
+                updateMoveableRect();
+            });
+        }
     }
+}
+
+const freshQrCodeThrottle = _.throttle((resetHeight: boolean) => {
+    freshQrCode(resetHeight);
 }, 100);
 
 watch([() => qrCode.value, () => props.element.data, () => props.element.option.color, () => props.element.option.background], (_n, _o) => {
-    freshQrCode(true);
+    if (displayDesign(props.element)) {
+        freshQrCodeThrottle(true);
+    } else {
+        freshQrCode(true);
+    }
 }, { immediate: true });
 
 watch([() => props.element.width, () => props.element.height], (_n, _o) => {
-    freshQrCode(false);
+    if (displayDesign(props.element)) {
+        freshQrCodeThrottle(false);
+    } else {
+        freshQrCode(false);
+    }
 }, { immediate: true });
 </script>

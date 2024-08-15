@@ -8,7 +8,7 @@ export function computedStyle(element: MyElement, type: 'horizontal' | 'vertical
     const style = <CSSProperties>{};
     const panel = getRecursionParentPanel(element);
     const lineHeight = _defaultNum(element.option.lineWidth, 0);
-    const color = _defaultVal(element.option.color, '#000')
+    const color = _defaultVal(element.option.color, '#000');
     if (type == 'horizontal') {
         style.maxWidth = valueUnit(element.width, panel);
         style.width = valueUnit(element.width, panel);
@@ -28,6 +28,9 @@ export function computedStyle(element: MyElement, type: 'horizontal' | 'vertical
         style.height = valueUnit(element.height, panel);
         style.left = 0;
         style.border = `${valueUnit(lineHeight, panel)} ${lineStyle} ${color}`;
+    }
+    if (element.option.background) {
+        style.background = element.option.background;
     }
 
     return style;
