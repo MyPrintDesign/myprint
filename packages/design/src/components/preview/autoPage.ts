@@ -8,11 +8,10 @@ import {
     PreviewContainerWrapper,
     PreviewWrapper,
     RuntimeElementOption,
-    TableCellElement
+    TableCellElement, PreviewContext
 } from '@myprint/design/types/entity';
 import { element2PreviewWrapper, formatter } from '@myprint/design/utils/elementUtil';
 import numberUtil from '@myprint/design/utils/numberUtil';
-import { elementTypeContainerList } from '@myprint/design/constants/common';
 import {
     lastHeadList,
     previewRowStatisticsList,
@@ -20,18 +19,6 @@ import {
     statisticsData
 } from '@myprint/design/utils/table/dataTable';
 import { isEmpty } from 'lodash';
-
-interface PreviewContext {
-    autoPageIs: boolean,
-    currentPreview: PreviewWrapper
-    previewData: any
-    panel: Panel
-    pageList: PreviewContainerWrapper[]
-    currentPage: PreviewContainerWrapper
-    top: number
-    bottom: number
-    pagingRepetition: boolean
-}
 
 export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: Panel, previewDataList: any[]) {
     const variable = {
@@ -83,9 +70,9 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                 }
             }
         }
-        if (elementTypeContainerList.includes(previewElement.type)) {
-            previewElement.elementList = [];
-        }
+        // if (elementTypeContainerList.includes(previewElement.type)) {
+        // previewElement.previewWrapperList = [];
+        // }
 
         if (previewElement.option.fixed) {
             fixedPreviewElementList.push(previewElement);
@@ -131,6 +118,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
 
     async function installPreviewElement(previewElementList: PreviewWrapper[]) {
         for (let i = 0; i < previewElementList.length; i++) {
+            const oldPreviewWrapper = previewElementList[i];
             let previewWrapper = element2PreviewWrapper(previewElementList[i]);
 
             // 计算顶部需不需要偏移
@@ -151,7 +139,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                 // console.log(await isNeedNewPage(previewWrapper.y, previewContext.bottom));
                 // console.log(await isNeedNewPage(previewWrapper.y + previewWrapper.height, previewContext.bottom));
                 if (previewWrapper.type != 'PageFooter'
-                    && previewContext.currentPage.elementList.length > 0
+                    && previewContext.currentPage.previewWrapperList.length > 0
                     && (await isNeedNewPage(previewWrapper.y, previewContext.bottom) || await isNeedNewPage(previewWrapper.y + previewWrapper.height, previewContext.bottom))) {
                     previewWrapper.y = 1;
                     previewContext.currentPage!.offsetTop = 1;
@@ -216,7 +204,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                         previewWrapper.data = '图片加载错误';
                     }
                 }
-                previewContext.currentPage.elementList.push(previewWrapper);
+                previewContext.currentPage.previewWrapperList.push(previewWrapper);
                 await nextTick();
             } else if (previewWrapper.type == 'Text' || previewWrapper.type == 'PageNum' || previewWrapper.type == 'TextTime') {
 
@@ -230,36 +218,39 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                     await autoTextElement(previewDataTmp, true);
                 }
                 if (previewWrapper.contentType == 'QrCode') {
-                    previewContext.currentPage.elementList.push(previewWrapper);
+                    previewContext.currentPage.previewWrapperList.push(previewWrapper);
                     await nextTick();
                 }
                 if (previewWrapper.contentType == 'Barcode') {
-                    previewContext.currentPage.elementList.push(previewWrapper);
+                    previewContext.currentPage.previewWrapperList.push(previewWrapper);
                     await nextTick();
                 }
             } else if (previewWrapper.type == 'DataTable') {
                 let tableRowIndex = 0;
                 await autoTableRow(previewContext, previewDataTmp, tableRowIndex);
             } else if (previewWrapper.type == 'Container') {
-                previewContext.currentPage.elementList.push(previewWrapper);
+                previewContext.currentPage.previewWrapperList.push(previewWrapper);
                 const tmpPage = previewContext.currentPage;
                 previewContext.currentPage = previewWrapper;
-                await installPreviewElement(previewWrapper.previewWrapperList);
+                previewWrapper.previewWrapperList = [];
+                await installPreviewElement(oldPreviewWrapper.previewWrapperList);
                 previewContext.currentPage = tmpPage;
             } else if (previewWrapper.type == 'PageHeader') {
-                previewContext.currentPage.elementList.push(previewWrapper);
+                previewContext.currentPage.previewWrapperList.push(previewWrapper);
                 const tmpPage = previewContext.currentPage;
                 previewContext.currentPage = previewWrapper;
-                await installPreviewElement(previewWrapper.previewWrapperList);
+                previewWrapper.previewWrapperList = [];
+                await installPreviewElement(oldPreviewWrapper.previewWrapperList);
                 previewContext.currentPage = tmpPage;
             } else if (previewWrapper.type == 'PageFooter') {
-                previewContext.currentPage.elementList.push(previewWrapper);
+                previewContext.currentPage.previewWrapperList.push(previewWrapper);
                 const tmpPage = previewContext.currentPage;
                 previewContext.currentPage = previewWrapper;
-                await installPreviewElement(previewWrapper.previewWrapperList);
+                previewWrapper.previewWrapperList = [];
+                await installPreviewElement(oldPreviewWrapper.previewWrapperList);
                 previewContext.currentPage = tmpPage;
             } else {
-                previewContext.currentPage.elementList.push(previewWrapper);
+                previewContext.currentPage.previewWrapperList.push(previewWrapper);
             }
 
             if (!previewContext.currentPreview.heightIs) {
@@ -275,7 +266,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         let previewWrapper = previewContext.currentPreview;
         previewWrapper.data = previewData;
         previewWrapper.heightIs = false;
-        previewContext.currentPage.elementList.push(previewWrapper);
+        previewContext.currentPage.previewWrapperList.push(previewWrapper);
         await nextTick();
         const height = previewWrapper.target.clientHeight;
 
@@ -328,7 +319,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
             previewWrapper.heightIs = false;
         }
 
-        previewContext.currentPage.elementList.push(previewWrapper);
+        previewContext.currentPage.previewWrapperList.push(previewWrapper);
         await nextTick();
         const table = previewWrapper.target;
         if (!table) {
@@ -437,7 +428,6 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         }
 
         if (i >= previewDataList.length) {
-            // console.log('sss', previewDataTmpList, statisticsListWrapper);
             statisticsData(previewDataTmpList, statisticsListWrapper);
         }
         statisticsData(previewDataList, tableStaticsListWrapper);
@@ -464,18 +454,12 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
     }
 
     async function newPage() {
-
-        // if (previewContext.currentPage != undefined) {
-        //     previewContext.autoPageIs = false;
-        //     await installPreviewElement(fixedPreviewElementList);
-        // }
-
         previewContext.currentPage = reactive({
             id: generateUUID(),
             width: previewContext.panel.width,
             height: previewContext.panel.height,
             offsetTop: 0,
-            elementList: []
+            previewWrapperList: []
         } as any);
         previewContext.pageList.push(previewContext.currentPage);
         previewContext.autoPageIs = true;
@@ -487,12 +471,12 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
 
         if (previewContext.panel.pageHeader) {
             let preview = previewContext.panel.pageHeader as PreviewWrapper;
-            previewContext.currentPage!.elementList!.push(preview);
+            previewContext.currentPage!.previewWrapperList!.push(preview);
             previewContext.top = (await computeBottom(preview))!;
         }
         if (previewContext.panel.pageFooter) {
             let preview = previewContext.panel.pageFooter as PreviewWrapper;
-            previewContext.currentPage!.elementList!.push(preview);
+            previewContext.currentPage!.previewWrapperList!.push(preview);
             previewContext.bottom = (await computeTop(preview))!;
         }
     }
@@ -558,11 +542,6 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
             return -1;
         }
     }
-
-    // function getPanelDiv() {
-    //     // console.log(previewContent.value?.length);
-    //     return previewContent.value![previewContent.value!.length - 1];
-    // }
 }
 
 

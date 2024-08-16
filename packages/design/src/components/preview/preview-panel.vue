@@ -20,7 +20,7 @@
                     minHeight: valueUnit(page.height, panel),
                     }">
                                 <preview
-                                    v-for="(element, index) in page.elementList"
+                                    v-for="(element, index) in page.previewWrapperList"
                                     :ref="(el) => setItemRef(el, element)"
                                     :key="index"
                                     :preview="element" />

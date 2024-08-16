@@ -594,16 +594,16 @@ export function element2PreviewWrapper(element: MyElement | PreviewWrapper): Pre
     previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
     previewWrapper.runtimeOption.previewIs = true;
 
-    const oldPreviewWrapper = element as PreviewWrapper;
-    if (oldPreviewWrapper.previewWrapperList != null && oldPreviewWrapper.previewWrapperList.length > 0) {
-        // const pList: PreviewWrapper[] = []
-        previewWrapper.previewWrapperList = [];
-        for (let myElement of oldPreviewWrapper.previewWrapperList) {
-            previewWrapper.previewWrapperList.push(element2PreviewWrapper(myElement));
-        }
-    }
+    // const oldPreviewWrapper = element as PreviewWrapper;
+    // if (oldPreviewWrapper.previewWrapperList != null) {
+    //     // const pList: PreviewWrapper[] = []
+    //     previewWrapper.previewWrapperList = [];
+    //     for (let myElement of oldPreviewWrapper.previewWrapperList) {
+    //         previewWrapper.previewWrapperList.push(element2PreviewWrapper(myElement));
+    //     }
+    // }
 
-    if (element.elementList != null && element.elementList.length > 0) {
+    if (element.elementList != null) {
         // const pList: PreviewWrapper[] = []
         previewWrapper.previewWrapperList = [];
         for (let myElement of element.elementList) {
@@ -623,7 +623,7 @@ export function element2PreviewWrapper(element: MyElement | PreviewWrapper): Pre
         }
     }
 
-    if (element.tableBodyList != null && element.tableBodyList.length > 0) {
+    if (element.tableBodyList != null) {
         // const pList: PreviewWrapper[] = []
         for (let i = 0; i < element.tableBodyList.length; i++) {
             const rowList = element.tableBodyList[i];
@@ -636,7 +636,7 @@ export function element2PreviewWrapper(element: MyElement | PreviewWrapper): Pre
         }
     }
 
-    if (element.statisticsList != null && element.statisticsList.length > 0) {
+    if (element.statisticsList != null) {
         // const pList: PreviewWrapper[] = []
         for (let i = 0; i < element.statisticsList.length; i++) {
             const rowList = element.statisticsList[i];

@@ -170,17 +170,29 @@ export interface Panel extends Container {
     auxiliaryLineList: MyAuxiliaryLine[];
 }
 
+export interface PreviewContext {
+    autoPageIs: boolean,
+    currentPreview: PreviewWrapper
+    previewData: any
+    panel: Panel
+    pageList: PreviewContainerWrapper[]
+    currentPage: PreviewContainerWrapper
+    top: number
+    bottom: number
+    pagingRepetition: boolean
+}
+
 export interface PreviewWrapper extends MyElement, TableCellElement, PreviewContainerWrapper {
     offsetLastElementTop: number;
     heightIs: boolean;
     tableHeadHiddenIs: boolean;
     previewTableRowIndex: number;
     target: any;
-    previewWrapperList: PreviewWrapper[];
 }
 
 export interface PreviewContainerWrapper extends MyElement {
     offsetTop: number;
+    previewWrapperList: PreviewWrapper[];
 }
 
 export interface DragWrapper {
