@@ -58,7 +58,7 @@ const build = async (pkgDirName: string) => {
     }
 
     const input = await glob(['**/*.{js,jsx,ts,tsx,vue}', '!node_modules',
-        '!**/moveable_local_tmp.ts', '!**/moveable_local.ts'
+        '!**/moveable_local_tmp.ts', '!**/moveable_local.ts', '!**/moveable_js_tmp.js'
     ], {
         cwd: resolvePackagePath(pkgDirName, 'src'),
         absolute: true,

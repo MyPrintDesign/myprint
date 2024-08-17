@@ -44,16 +44,16 @@
 </template>
 
 <script setup lang="ts">
-import { useSocket } from '@myprint/design/stores/socket';
+import { useSocket } from '../../../../stores/socket';
 import { computed } from 'vue-demi';
-// import { clientProtocolList } from '@myprint/design/constants/common';
-import { useConfigStore } from '@myprint/design/stores/config';
-import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
-// import MySelect from '@myprint/design/components/my/select/my-select.vue';
-import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
-import MyForm from '@myprint/design/components/my/form/my-form.vue';
-import MyInput from '@myprint/design/components/my/input/my-input.vue';
-import { i18n } from '@myprint/design/locales';
+// import { clientProtocolList } from '../../../../constants/common';
+import { useConfigStore } from '../../../../stores/config';
+import MySwitch from '../../../../components/my/switch/my-switch.vue';
+// import MySelect from '../../../../components/my/select/my-select.vue';
+import MyFormItem from '../../../../components/my/form/my-form-item.vue';
+import MyForm from '../../../../components/my/form/my-form.vue';
+import MyInput from '../../../../components/my/input/my-input.vue';
+import { i18n } from '../../../../locales';
 
 const useSocketData = useSocket();
 const configStore = useConfigStore();

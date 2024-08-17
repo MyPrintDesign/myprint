@@ -10,11 +10,11 @@ import * as d3Selection from 'd3-selection';
 import * as d3Drag from 'd3-drag';
 import { DragBehavior, DraggedElementBaseType } from 'd3-drag';
 import { onMounted, reactive, ref, watch } from 'vue-demi';
-import { MyElement, PointClick } from '@myprint/design/types/entity';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { douglasPeucker } from '@myprint/design/utils/utils';
-import { checkInput, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
-import { displayPreview, getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
+import { MyElement, PointClick } from '../../../types/entity';
+import { unit2px } from '../../../utils/devicePixelRatio';
+import { douglasPeucker } from '../../../utils/utils';
+import { checkInput, moveableEditing } from '../../../plugins/moveable/moveable';
+import { displayPreview, getRecursionParentPanel } from '../../../utils/elementUtil';
 
 const canvasRef = ref();
 const data = reactive({

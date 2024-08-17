@@ -1,12 +1,12 @@
 import { clearEventBubble } from './event';
-import { MyElement, TableCellElement } from '@myprint/design/types/entity';
-import { displayRatio } from '@myprint/design/utils/devicePixelRatio';
+import { MyElement, TableCellElement } from '../types/entity';
+import { displayRatio } from '../utils/devicePixelRatio';
 // @ts-ignore
 import * as mittInit from 'mitt';
 import { Emitter } from 'mitt';
-import { fontList } from '@myprint/design/constants/common';
-import { EventTypes } from '@myprint/design/types/eventType';
-import { findFromLeftCell } from '@myprint/design/utils/table/dataTable';
+import { fontList } from '../constants/common';
+import { EventTypes } from '../types/eventType';
+import { findFromLeftCell } from '../utils/table/dataTable';
 
 let collapsePanelZIndex = 1000;
 

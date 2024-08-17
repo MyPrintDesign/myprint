@@ -1,6 +1,6 @@
-import { valueUnit } from '@myprint/design/utils/elementUtil';
-import { printCssStyle } from '@myprint/design/utils/utils';
-import { Panel, TableCellElement } from '@myprint/design/types/entity';
+import { valueUnit } from '../utils/elementUtil';
+import { printCssStyle } from '../utils/utils';
+import { Panel, TableCellElement } from '../types/entity';
 
 
 export const tableColClone = {

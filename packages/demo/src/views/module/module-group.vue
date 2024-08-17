@@ -1,6 +1,6 @@
 <template>
     <div class="module_item display-flex" @click="click">
-        <div v-if="node.data.lockIs == 1" class="module-item_lock">
+        <div v-if="node.data.lockIs == 1" style="left: -48px;" class="module-item_lock">
             <el-icon :size="8">
                 <Lock />
             </el-icon>

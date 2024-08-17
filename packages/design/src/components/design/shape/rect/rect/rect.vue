@@ -4,8 +4,8 @@
 </template>
 <script setup lang="ts">
 import { computed, PropType } from 'vue-demi';
-import { MyElement } from '@myprint/design/types/entity';
-import { computedStyle } from '@myprint/design/components/design/shape/line/computeStyle';
+import { MyElement } from '../../../../../types/entity';
+import { computedStyle } from '../../../../../components/design/shape/line/computeStyle';
 
 const props = defineProps({
     element: { type: Object as PropType<MyElement>, default: () => ({} as MyElement) }

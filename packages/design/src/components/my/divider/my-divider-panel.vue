@@ -8,10 +8,9 @@
 </template>
 
 <script setup lang="ts">
-
-import { inject, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue-demi';
-import { mittKey } from '@myprint/design/constants/keys';
-import MyDivider from '@myprint/design/components/my/divider/my-divider.vue';
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue-demi';
+import MyDivider from '../../../components/my/divider/my-divider.vue';
+import { mitt } from '../../../utils/utils';
 
 const props = withDefaults(defineProps<{
         class?: string,
@@ -24,7 +23,6 @@ const data = reactive({
     basicDividerShowIs: true
 });
 const basicDividerRef = ref<HTMLElement>();
-const mitt = inject(mittKey)!;
 mitt.on('changeElement', update);
 onUnmounted(() => {
     mitt.off('changeElement');

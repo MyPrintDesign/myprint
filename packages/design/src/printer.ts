@@ -1,12 +1,12 @@
 import { App, h, render, VNode } from 'vue-demi';
-import PrintView from '@myprint/design/components/print/print.vue';
-import previewPanelView from '@myprint/design/components/preview/preview-panel.vue';
-import { getCurrentPanel, parentInitElement } from '@myprint/design/utils/elementUtil';
-import { MyPrintOptions, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
-import { generateUUID } from '@myprint/design/utils/utils';
-import { myPrintClientService } from '@myprint/design/plugins/myprintClientService';
-import i18n from '@myprint/design/locales';
-import { useAppStoreHook } from '@myprint/design/stores/app';
+import PrintView from './components/print/print.vue';
+import previewPanelView from './components/preview/preview-panel.vue';
+import { getCurrentPanel, parentInitElement } from './utils/elementUtil';
+import { MyPrintOptions, Panel, PrintProps, PrintResult } from './types/entity';
+import { generateUUID } from './utils/utils';
+import { myPrintClientService } from './plugins/myprintClientService';
+import i18n from './locales';
+import { useAppStoreHook } from './stores/app';
 
 export const myPrintOptions: MyPrintOptions = {
     disabledClient: false

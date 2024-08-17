@@ -14,7 +14,7 @@
 <script setup lang="ts">
 
 import { computed } from 'vue-demi';
-import { i18n } from '@myprint/design/locales';
+import { i18n } from '../../../locales';
 
 const emit = defineEmits(['update:modelValue', 'click', 'change']);
 

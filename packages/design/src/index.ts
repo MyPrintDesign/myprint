@@ -1,11 +1,13 @@
-import DesignPanel from '@myprint/design/components/content';
-import { MyPrinter } from '@myprint/design/printer';
+import DesignPanel from './components/content';
+import { MyPrinter } from './printer';
+import { mount } from './design';
 import { install as createPrint } from './install';
 
-export * from '@myprint/design/types/entity';
-export * from '@myprint/design/types/R';
+export * from './types/entity';
+export * from './types/R';
 
 export {
+    mount,
     createPrint,
     MyPrinter,
     DesignPanel

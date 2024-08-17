@@ -41,28 +41,29 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue-demi';
 import StyleDesign from './style-design.vue';
-import { designPropsKey, mittKey, panelKey, previewDataKey } from '@myprint/design/constants/keys';
-import { i18n } from '@myprint/design/locales';
-import { clearPanel, defaultPreviewData, getCurrentPanel } from '@myprint/design/utils/elementUtil';
-import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
-import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
-import { MyPrinter } from '@myprint/design/printer';
-import { download } from '@myprint/design/utils/utils';
-import MyButton from '@myprint/design/components/my/button/my-Button.vue';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import Printer from '@myprint/design/components/my/icon/icons/Printer.vue';
-import { MyMessage } from '@myprint/design/components/my/message/my-message';
+import { i18n } from '../../../locales';
+import { clearPanel, defaultPreviewData, getCurrentPanel, getPreviewData } from '../../../utils/elementUtil';
+import { ActionEnum, record, Snapshot } from '../../../utils/historyUtil';
+import { updatePanel } from '../../../plugins/moveable/moveable';
+import { MyPrinter } from '../../../printer';
+import { download, mitt } from '../../../utils/utils';
+import MyButton from '../../../components/my/button/my-Button.vue';
+import MyIcon from '../../../components/my/icon/my-icon.vue';
+import Printer from '../../../components/my/icon/icons/Printer.vue';
+import { MyMessage } from '../../../components/my/message/my-message';
+//@ts-ignore
+import { DesignPanelProps } from '../../../types/entity';
 
-const panel = inject(panelKey);
-const mitt = inject(mittKey)!;
-const previewData = inject(previewDataKey)!;
-const designProps = inject(designPropsKey)!;
+withDefaults(defineProps<{
+    designProps: DesignPanelProps;
+}>(), {
+
+});
 
 function print() {
     const defaultPrinter = MyPrinter.getDefaultPrinter();
-    MyPrinter.clientPrinter({ previewDataList: previewData.value, printer: defaultPrinter?.name })
+    MyPrinter.clientPrinter({ previewDataList: getPreviewData(), printer: defaultPrinter?.name })
         .then(res => {
             switch (res.status) {
                 case 'SUCCESS':
@@ -80,7 +81,7 @@ function print() {
 }
 
 function serverDownloadPdf() {
-    MyPrinter.pdfServer({ previewDataList: previewData.value })
+    MyPrinter.pdfServer({ previewDataList: getPreviewData() })
         .then(res => {
             switch (res.status) {
                 case 'SUCCESS':
@@ -99,7 +100,7 @@ function serverDownloadPdf() {
 }
 
 function preview() {
-    MyPrinter.chromePreview({ previewDataList: defaultPreviewData(previewData.value) });
+    MyPrinter.chromePreview({ previewDataList: defaultPreviewData(getPreviewData()) });
 }
 
 function save() {
@@ -107,7 +108,7 @@ function save() {
 }
 
 function clearPanelClick() {
-    clearPanel(panel!);
+    clearPanel(getCurrentPanel());
     updatePanel();
     record(<Snapshot>{
         action: ActionEnum.CLEAR

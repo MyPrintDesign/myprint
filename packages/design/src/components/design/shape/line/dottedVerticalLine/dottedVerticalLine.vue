@@ -6,7 +6,7 @@
 <script setup lang="ts">
 
 import { computed } from 'vue-demi';
-import { MyElement } from '@myprint/design/types/entity';
+import { MyElement } from '../../../../../types/entity';
 import { computedStyle } from '../computeStyle';
 
 const props = withDefaults(defineProps<{

@@ -1,9 +1,10 @@
 {
   "scripts": {
-    "build:design": "npm run build:module && npm run build:dts && npm run build:css",
+    "build:design": "npm run build:module && npm run build:dts && npm run build:css && npm run build:full-bundle",
     "build:module": "vite-node ./scripts/build-module.ts",
     "build:dts": "vite-node ./scripts/build-dts.ts",
     "build:css": "vite-node ./scripts/build-css.ts",
+    "build:full-bundle": "vite-node ./scripts/build-full-bundle.ts",
     "build:moveable": "vite-node ./scripts/build-moveable.ts",
     "dev:design": "vite-node ./scripts/dev-components.ts",
     "dev:business": "vite-node ./scripts/dev-business.ts"

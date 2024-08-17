@@ -1,5 +1,5 @@
-import { Module, SaveResult, Template } from '@myprint/design/types/R';
-import { i18n } from '@myprint/design/locales';
+import { Module, SaveResult, Template } from '../types/R';
+import { i18n } from '../locales';
 
 export interface PrintProps {
     taskId?: string,

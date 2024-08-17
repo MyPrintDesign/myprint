@@ -10,9 +10,9 @@
 
 <script setup lang="ts">
 
-import MyInput from '@myprint/design/components/my/input/my-input.vue';
+import MyInput from '../../../components/my/input/my-input.vue';
 import { computed, ref, watch } from 'vue-demi';
-import numberUtil from '@myprint/design/utils/numberUtil';
+import numberUtil from '../../../utils/numberUtil';
 import { isEmpty } from 'lodash';
 
 const emit = defineEmits(['update:modelValue', 'change']);

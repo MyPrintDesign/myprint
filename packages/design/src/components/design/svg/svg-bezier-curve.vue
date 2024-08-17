@@ -14,13 +14,13 @@ import { reactive } from 'vue-demi';
 
 import * as d3Path from 'd3-path';
 import { Path } from 'd3-path';
-import { Line, MyElement, Point, PointLabel } from '@myprint/design/types/entity';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { moveableDragOffsetResize } from '@myprint/design/plugins/moveable/moveable';
-import SvgBase from '@myprint/design/components/design/svg/svg-base.vue';
-import { bezier2 } from '@myprint/design/utils/bezierUtil';
-import { stringify } from '@myprint/design/utils/utils';
-import { getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
+import { Line, MyElement, Point, PointLabel } from '../../../types/entity';
+import { unit2px } from '../../../utils/devicePixelRatio';
+import { moveableDragOffsetResize } from '../../../plugins/moveable/moveable';
+import SvgBase from '../../../components/design/svg/svg-base.vue';
+import { bezier2 } from '../../../utils/bezierUtil';
+import { stringify } from '../../../utils/utils';
+import { getRecursionParentPanel } from '../../../utils/elementUtil';
 
 const props = withDefaults(defineProps<{
     element?: MyElement

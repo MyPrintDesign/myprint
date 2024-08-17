@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import {DownList} from "@myprint/design/types/entity";
+import {DownList} from "../../../types/entity";
 
 const emit = defineEmits(['update:modelValue', 'click'])
 

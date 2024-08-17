@@ -19,16 +19,16 @@
 
 <script setup lang="ts">
 import { computed, CSSProperties, nextTick, onMounted, ref, watch, watchEffect } from 'vue-demi';
-import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
-import { scaleUtil } from '@myprint/design/utils/scaleUtil';
-import { getCurrentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
-import { _defaultVal, generateUUID, getRatio } from '@myprint/design/utils/utils';
-import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
-import { Container, MyAuxiliaryLine } from '@myprint/design/types/entity';
+import { unit2px, unit2unit } from '../../../utils/devicePixelRatio';
+import { scaleUtil } from '../../../utils/scaleUtil';
+import { getCurrentPanel, valueUnit } from '../../../utils/elementUtil';
+import { _defaultVal, generateUUID, getRatio } from '../../../utils/utils';
+import { useAppStoreHook as useAppStore } from '../../../stores/app';
+import { Container, MyAuxiliaryLine } from '../../../types/entity';
 import { Path } from 'd3-path';
 import * as d3Selection from 'd3-selection';
 import * as d3Path from 'd3-path';
-import { changeDragSnapIs } from '@myprint/design/plugins/moveable/moveable';
+import { changeDragSnapIs } from '../../../plugins/moveable/moveable';
 
 const appStore = useAppStore();
 

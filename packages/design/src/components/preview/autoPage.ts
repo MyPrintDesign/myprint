@@ -1,5 +1,5 @@
-import { downloadImg2Base64, generateUUID, parse, stringify } from '@myprint/design/utils/utils';
-import { px2unit, unit2px } from '@myprint/design/utils/devicePixelRatio';
+import { downloadImg2Base64, generateUUID, parse, stringify } from '../../utils/utils';
+import { px2unit, unit2px } from '../../utils/devicePixelRatio';
 import { nextTick, reactive } from 'vue-demi';
 import {
     FormatterVariable,
@@ -9,15 +9,15 @@ import {
     PreviewWrapper,
     RuntimeElementOption,
     TableCellElement, PreviewContext
-} from '@myprint/design/types/entity';
-import { element2PreviewWrapper, formatter } from '@myprint/design/utils/elementUtil';
-import numberUtil from '@myprint/design/utils/numberUtil';
+} from '../../types/entity';
+import { element2PreviewWrapper, formatter } from '../../utils/elementUtil';
+import numberUtil from '../../utils/numberUtil';
 import {
     lastHeadList,
     previewRowStatisticsList,
     previewTableStatisticsList,
     statisticsData
-} from '@myprint/design/utils/table/dataTable';
+} from '../../utils/table/dataTable';
 import { isEmpty } from 'lodash';
 
 export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: Panel, previewDataList: any[]) {

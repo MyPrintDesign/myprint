@@ -1,8 +1,8 @@
-import { useSocket } from '@myprint/design/stores/socket';
-import { ClientCmd, Printer, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
-import { generateUUID } from '@myprint/design/utils/utils';
-import { unit2unit } from '@myprint/design/utils/devicePixelRatio';
-import { getCurrentPanelUnit } from '@myprint/design/utils/elementUtil';
+import { useSocket } from '../stores/socket';
+import { ClientCmd, Printer, Panel, PrintProps, PrintResult } from '../types/entity';
+import { generateUUID } from '../utils/utils';
+import { unit2unit } from '../utils/devicePixelRatio';
+import { getCurrentPanelUnit } from '../utils/elementUtil';
 
 export const myPrintClientService = {
     print(option: ClientCmd, panel: Panel) {

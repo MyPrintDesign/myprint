@@ -34,13 +34,13 @@
 </template>
 
 <script setup lang="ts">
-import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-style/element-align.vue';
-import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
-import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import ElementAlign from '../../../components/content/toolbar/toolbar-style/element-align.vue';
+import MyScrollbar from '../../../components/my/scrollbar/my-scrollbar.vue';
+import MyPopover from '../../../components/my/popover/my-popover.vue';
+import MyIcon from '../../../components/my/icon/my-icon.vue';
 import { isEmpty, isNull } from 'lodash';
 import { reactive, ref, watch } from 'vue-demi';
-import { i18n } from '@myprint/design/locales';
+import { i18n } from '../../../locales';
 
 const emit = defineEmits(['update:modelValue', 'change']);
 

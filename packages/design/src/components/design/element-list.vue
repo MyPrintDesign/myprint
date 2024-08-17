@@ -3,8 +3,8 @@
 </template>
 
 <script setup lang="ts">
-import {MyElement} from "@myprint/design/types/entity";
-import Design from "@myprint/design/components/design/design.vue";
+import {MyElement} from "../../types/entity";
+import Design from "../../components/design/design.vue";
 
 withDefaults(defineProps<{
   elementList?: Array<MyElement>

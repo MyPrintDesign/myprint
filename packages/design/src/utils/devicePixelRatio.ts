@@ -1,6 +1,6 @@
-import numberUtil from '@myprint/design/utils/numberUtil';
-import { PageUnit, Panel } from '@myprint/design/types/entity';
-import { getCurrentPanelUnit } from '@myprint/design/utils/elementUtil';
+import numberUtil from '../utils/numberUtil';
+import { PageUnit, Panel } from '../types/entity';
+import { getCurrentPanelUnit } from '../utils/elementUtil';
 
 export let displayRatio = 3;
 const unitConvert = {

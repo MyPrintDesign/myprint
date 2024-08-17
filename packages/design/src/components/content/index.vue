@@ -6,29 +6,35 @@
             <widget :module-name="props.module?.name" :showBackButton="showBackButton" @back="back" />
         </aside>
         <main class=" my-main design-container-root_main">
-            <PanelView />
+            <PanelView :designProps="props" />
         </main>
     </section>
     <my-mouse-tips />
 </template>
 
 <script setup lang="ts">
-import widget from '@myprint/design/components/content/widget/index.vue';
-import PanelView from '@myprint/design/components/content/panel/index.vue';
-import { computed, CSSProperties, inject, onMounted, onUnmounted, provide, reactive, Ref, ref, watch } from 'vue-demi';
-import { Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
-import { to } from '@myprint/design/utils/utils';
-import { designPropsKey, mittKey, panelKey, previewDataKey, providerKey } from '@myprint/design/constants/keys';
-import { init } from '@myprint/design/utils/historyUtil';
+import widget from '../../components/content/widget/index.vue';
+import PanelView from '../../components/content/panel/index.vue';
+import { computed, CSSProperties, onMounted, onUnmounted, reactive, Ref, ref, watch } from 'vue-demi';
+import { Panel, Provider, RuntimeElementOption } from '../../types/entity';
+import { mitt, to } from '../../utils/utils';
+import { init } from '../../utils/historyUtil';
 // @ts-ignore
-import { Module, SaveResult, Template } from '@myprint/design/types/R';
-import { useAppStoreHook } from '@myprint/design/stores/app';
-import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
-import { defaultPreviewData, initPanel, parentInitElement, setCurrentPanel } from '@myprint/design/utils/elementUtil';
-import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
-import { MyMessage } from '@myprint/design/components/my/message/my-message';
-import { MyPrinter } from '@myprint/design/printer';
-import { i18n } from '@myprint/design/locales';
+import { Module, SaveResult, Template } from '../../types/R';
+import { useAppStoreHook } from '../../stores/app';
+import MyMouseTips from '../../components/my/mouse-tips/my-mouse-tips.vue';
+import {
+    defaultPreviewData,
+    initPanel,
+    parentInitElement,
+    setCurrentPanel,
+    setPreviewData,
+    setProvider
+} from '../../utils/elementUtil';
+import { newSelecto } from '../../plugins/moveable/selecto';
+import { MyMessage } from '../../components/my/message/my-message';
+import { MyPrinter } from '../../printer';
+import { i18n } from '../../locales';
 
 const appStore = useAppStoreHook();
 
@@ -50,13 +56,10 @@ const panel = reactive({
     dragSnapPanelIs: 1,
     dragSnapIs: 1
 }) as Panel;
-const mitt = inject(mittKey)!;
 const previewData = ref<any[]>([]);
-provide(panelKey, panel);
-provide(providerKey, provider);
-provide(previewDataKey, previewData);
-
-mitt.on('saveTemplate', saveTemplate);
+setCurrentPanel(panel);
+setPreviewData(previewData.value);
+setProvider(provider.value);
 
 const props = withDefaults(defineProps<{
     module?: Module;
@@ -78,7 +81,6 @@ const props = withDefaults(defineProps<{
     showClearButton: true,
     showSaveButton: true
 });
-provide(designPropsKey, props);
 
 const style = computed(() => {
     return <CSSProperties>{
@@ -87,6 +89,7 @@ const style = computed(() => {
 });
 
 onMounted(() => {
+    mitt.on('saveTemplate', saveTemplate);
     initModule();
     initTemplate();
     newSelecto();

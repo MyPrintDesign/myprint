@@ -1,6 +1,6 @@
 import { InjectionKey, Ref } from 'vue-demi';
-import { DesignPanelProps, MyElement, Panel, Provider } from '@myprint/design/types/entity';
-import { EventTypes } from '@myprint/design/types/eventType';
+import { DesignPanelProps, MyElement, Panel, Provider } from '../types/entity';
+import { EventTypes } from '../types/eventType';
 
 // @ts-ignore
 import { Emitter } from 'mitt';

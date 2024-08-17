@@ -1,9 +1,9 @@
 <template>
     <div class="option-container display-flex-column">
         <div class="header display-flex">
-            <my-icon size="25" v-if="showBackButton" class="header-back-icon">
-                <ArrowLeft @click="back" />
-            </my-icon>
+<!--            <my-icon size="25" v-if="showBackButton" class="header-back-icon">-->
+<!--                <ArrowLeft @click="back" />-->
+<!--            </my-icon>-->
             <div style="flex: 1;"> {{ moduleName }}</div>
         </div>
         <div class="option-container display-flex-column">
@@ -43,18 +43,14 @@
 <script setup lang="ts">
 import business from './business.vue';
 import basic from './basic.vue';
-import { inject } from 'vue-demi';
-import { providerKey } from '@myprint/design/constants/keys';
-import { customProvider } from '@myprint/design/constants/provider/custom';
-import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
-import MyWidgetCollapse from '@myprint/design/components/my/collapse/my-widget-collapse.vue';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import ArrowLeft from '@myprint/design/components/my/icon/icons/ArrowLeft.vue';
-import { i18n } from '@myprint/design/locales';
+import { customProvider } from '../../../constants/provider/custom';
+import MyScrollbar from '../../../components/my/scrollbar/my-scrollbar.vue';
+import MyWidgetCollapse from '../../../components/my/collapse/my-widget-collapse.vue';
+import { i18n } from '../../../locales';
+import { getProvider } from '../../../utils/elementUtil';
 
 const $emit = defineEmits(['back']);
-
-const provider = inject(providerKey)!;
+const provider = getProvider()
 withDefaults(defineProps<{
     moduleName?: string
     showBackButton?: boolean

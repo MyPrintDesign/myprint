@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import { cancelRaf, rafTimeout } from '@myprint/design/utils/utils';
+import { cancelRaf, rafTimeout } from '../../../utils/utils';
 
 // @ts-ignore
 interface Props {

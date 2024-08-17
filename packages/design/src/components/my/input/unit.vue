@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import {useAppStoreHook as appStore} from "@myprint/design/stores/app";
+import {useAppStoreHook as appStore} from "../../../stores/app";
 
 defineOptions({name: 'MyUnit'})
 

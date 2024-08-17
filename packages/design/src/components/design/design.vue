@@ -38,8 +38,8 @@
 </template>
 
 <script setup lang="ts">
-import ElementView from '@myprint/design/components/design/element.vue';
-import { MyElement } from '@myprint/design/types/entity';
+import ElementView from '../../components/design/element.vue';
+import { MyElement } from '../../types/entity';
 import { computed, CSSProperties, onMounted, ref } from 'vue-demi';
 import { MyContainer } from './container';
 import ElementList from './element-list.vue';
@@ -47,15 +47,15 @@ import {
     elementHandleHandleStatusList,
     elementHandleStatusList,
     elementTypeContainerList, elementTypeLineList
-} from '@myprint/design/constants/common';
-import TableDesign from '@myprint/design/components/design/table/data-table/table-design.vue';
+} from '../../constants/common';
+import TableDesign from '../../components/design/table/data-table/table-design.vue';
 import {
     moveableClearDragTarget,
     moveableDragTarget,
     setSelectedTargets
-} from '@myprint/design/plugins/moveable/moveable';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
+} from '../../plugins/moveable/moveable';
+import { unit2px } from '../../utils/devicePixelRatio';
+import { getRecursionParentPanel } from '../../utils/elementUtil';
 
 const designRef = ref();
 const containerMoveIconRef = ref();

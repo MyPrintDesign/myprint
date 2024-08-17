@@ -4,8 +4,8 @@
 
 <script setup lang="ts">
 
-import {definePropType} from "@myprint/design/constants/common";
-import {changeWrapper} from "@myprint/design/utils/historyUtil";
+import {definePropType} from "../../../constants/common";
+import {changeWrapper} from "../../../utils/historyUtil";
 
 // const emit = defineEmits(['update:modelValue'])
 

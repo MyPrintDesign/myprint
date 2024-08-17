@@ -22,7 +22,7 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick } from 'vue-demi';
-import { cancelRaf, rafTimeout } from '@myprint/design/utils/utils';
+import { cancelRaf, rafTimeout } from '../../../utils/utils';
 
 const props = withDefaults(defineProps<{
     width?: string | number; // 宽度

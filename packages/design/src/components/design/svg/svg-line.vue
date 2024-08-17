@@ -13,13 +13,13 @@ import { reactive } from 'vue-demi';
 
 import * as d3Path from 'd3-path';
 import { Path } from 'd3-path';
-import { MyElement, PointLabel } from '@myprint/design/types/entity';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { moveableDragOffsetResize } from '@myprint/design/plugins/moveable/moveable';
-import SvgBase from '@myprint/design/components/design/svg/svg-base.vue';
-import { computedShapeBound, getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
-import { D3DragEvent } from '@myprint/design/types/d3Type';
-import { stringify } from '@myprint/design/utils/utils';
+import { MyElement, PointLabel } from '../../../types/entity';
+import { unit2px } from '../../../utils/devicePixelRatio';
+import { moveableDragOffsetResize } from '../../../plugins/moveable/moveable';
+import SvgBase from '../../../components/design/svg/svg-base.vue';
+import { computedShapeBound, getRecursionParentPanel } from '../../../utils/elementUtil';
+import { D3DragEvent } from '../../../types/d3Type';
+import { stringify } from '../../../utils/utils';
 
 const props = withDefaults(defineProps<{
     element?: MyElement

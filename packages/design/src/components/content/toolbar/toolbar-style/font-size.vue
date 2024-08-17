@@ -39,15 +39,15 @@
 </template>
 <script setup lang="ts">
 
-import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
-import { fontSizeList } from '@myprint/design/constants/common';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import { multipleElementGetValue, multipleElementSetValue } from '../../../../utils/elementUtil';
+import { fontSizeList } from '../../../../constants/common';
+import MyIcon from '../../../../components/my/icon/my-icon.vue';
 import { computed, onMounted, reactive, ref } from 'vue-demi';
 import { onClickOutside } from '@vueuse/core';
-import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-style/element-align.vue';
-import ToolIconPopover from '@myprint/design/components/my/icon/tool-icon-popover.vue';
-import MyInput from '@myprint/design/components/my/input/my-input.vue';
-import { i18n } from '@myprint/design/locales';
+import ElementAlign from '../../../../components/content/toolbar/toolbar-style/element-align.vue';
+import ToolIconPopover from '../../../../components/my/icon/tool-icon-popover.vue';
+import MyInput from '../../../../components/my/input/my-input.vue';
+import { i18n } from '../../../../locales';
 
 // const appStore = useAppStoreHook()
 

@@ -17,7 +17,7 @@
                            }">
                 
                 <div style="position: absolute;"
-                     v-for="(element, index) in panel.elementList"
+                     v-for="(element, index) in getCurrentPanel().elementList"
                      :key="index"
                      class="pointer-events"
                      :style="{left : valueUnit(element.x), top: valueUnit(element.y), width: valueUnit(element.width), height: valueUnit(element.height)}">
@@ -67,33 +67,33 @@
 </template>
 
 <script setup lang="ts">
-import { mittKey, panelKey } from '@myprint/design/constants/keys';
-import { computed, inject, reactive, ref } from 'vue-demi';
-import MyHorizontalLine from '@myprint/design/components/design/shape/line/horizontalLine';
-import MyRect from '@myprint/design/components/design/shape/rect/rect';
-import MyDottedHorizontalLine from '@myprint/design/components/design/shape/line/dottedHorizontalLine';
-import MyVerticalLine from '@myprint/design/components/design/shape/line/verticalLine';
-import MyDottedVerticalLine from '@myprint/design/components/design/shape/line/dottedVerticalLine';
-import MyImage from '@myprint/design/components/design/image';
-import MyText from '@myprint/design/components/design/text';
-import DataTable from '@myprint/design/components/design/table/data-table/data-table.vue';
-import { Container, ContentScaleVo } from '@myprint/design/types/entity';
-import { clearEventBubble } from '@myprint/design/utils/event';
-import MathCalc from '@myprint/design/utils/numberUtil';
-import { scaleUtil } from '@myprint/design/utils/scaleUtil';
-import { useAppStoreHook } from '@myprint/design/stores/app';
-import { valueUnit } from '@myprint/design/utils/elementUtil';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { useConfigStore } from '@myprint/design/stores/config';
-import { canRedo, canUndo, redoPanel, undoPanel } from '@myprint/design/utils/historyUtil';
-import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
-import { i18n } from '@myprint/design/locales';
+import { computed, reactive, ref } from 'vue-demi';
+import MyHorizontalLine from '../../../components/design/shape/line/horizontalLine';
+import MyRect from '../../../components/design/shape/rect/rect';
+import MyDottedHorizontalLine from '../../../components/design/shape/line/dottedHorizontalLine';
+import MyVerticalLine from '../../../components/design/shape/line/verticalLine';
+import MyDottedVerticalLine from '../../../components/design/shape/line/dottedVerticalLine';
+import MyImage from '../../../components/design/image';
+import MyText from '../../../components/design/text';
+import DataTable from '../../../components/design/table/data-table/data-table.vue';
+import { Container, ContentScaleVo } from '../../../types/entity';
+import { clearEventBubble } from '../../../utils/event';
+import MathCalc from '../../../utils/numberUtil';
+import { scaleUtil } from '../../../utils/scaleUtil';
+import { useAppStoreHook } from '../../../stores/app';
+import { getCurrentPanel, valueUnit } from '../../../utils/elementUtil';
+import { unit2px } from '../../../utils/devicePixelRatio';
+import { useConfigStore } from '../../../stores/config';
+import { canRedo, canUndo, redoPanel, undoPanel } from '../../../utils/historyUtil';
+import TipIcon from '../../../components/my/icon/tip-icon.vue';
+import { i18n } from '../../../locales';
+import { mitt } from '../../../utils/utils';
 
 const appStore = useAppStoreHook();
 const configStore = useConfigStore();
 const designContentRef = ref<HTMLDivElement>();
-const panel = inject(panelKey)!;
-const mitt = inject(mittKey)!;
+// const panel = inject(panelKey)!;
+// const mitt = inject(mittKey)!;
 const data = reactive({
     viewport: {
         x: 0,
@@ -124,8 +124,8 @@ function minimapViewportScroll(size: Container) {
 mitt.on('changePageSize', changePageSize);
 
 function changePageSize() {
-    data.width = unit2px(panel.width);
-    data.height = unit2px(panel.height);
+    data.width = unit2px(getCurrentPanel().width);
+    data.height = unit2px(getCurrentPanel().height);
     let widthCalc = (scaleContainerWidth) / (data.width);
     let heightCalc = (scaleContainerHeight) / data.height;
     let min = Math.min(widthCalc, heightCalc);

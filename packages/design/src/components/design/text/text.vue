@@ -13,13 +13,13 @@
 </template>
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref, watch } from 'vue-demi';
-import { MyElement } from '@myprint/design/types/entity';
-import MyBarcode from '@myprint/design/components/design/barcode';
-import MyQrcode from '@myprint/design/components/design/qrcode';
-import { elementCommonStyle, formatter } from '@myprint/design/utils/elementUtil';
-import { checkInput, freshMoveableOption, moveableEditing } from '@myprint/design/plugins/moveable/moveable';
-import { elementHandleEditStatusList } from '@myprint/design/constants/common';
-import { br2n, n2br } from '@myprint/design/utils/utils';
+import { MyElement } from '../../../types/entity';
+import MyBarcode from '../../../components/design/barcode';
+import MyQrcode from '../../../components/design/qrcode';
+import { elementCommonStyle, formatter } from '../../../utils/elementUtil';
+import { checkInput, freshMoveableOption, moveableEditing } from '../../../plugins/moveable/moveable';
+import { elementHandleEditStatusList } from '../../../constants/common';
+import { br2n, n2br } from '../../../utils/utils';
 
 const props = withDefaults(defineProps<{
     element: MyElement

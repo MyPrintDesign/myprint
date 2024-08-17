@@ -48,24 +48,23 @@
 </template>
 
 <script setup lang="ts">
-import Rule from '@myprint/design/components/my/rule/rule.vue';
-import { scaleUtil } from '@myprint/design/utils/scaleUtil';
-import { inject, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue-demi';
-import { Container, ContentScaleVo, MyElement } from '@myprint/design/types/entity';
-import { mittKey, panelKey } from '@myprint/design/constants/keys';
-import { record, Snapshot } from '@myprint/design/utils/historyUtil';
-import { handle, none, valueUnit } from '@myprint/design/utils/elementUtil';
-import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
-import ElementList from '@myprint/design/components/design/element-list.vue';
-import { mountedKeyboardEvent, unMountedKeyboardEvent } from '@myprint/design/utils/keyboardUtil';
-import { changeDragSnapIs, initMoveable, updatePanel } from '@myprint/design/plugins/moveable/moveable';
-import Design from '@myprint/design/components/design/design.vue';
-import { initSelecto, selecto } from '@myprint/design/plugins/moveable/selecto';
-import AuxiliaryLine from '@myprint/design/components/design/auxiliary/auxiliary-line.vue';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import Rule from '../../../components/my/rule/rule.vue';
+import { scaleUtil } from '../../../utils/scaleUtil';
+import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue-demi';
+import { Container, ContentScaleVo, MyElement } from '../../../types/entity';
+import { record, Snapshot } from '../../../utils/historyUtil';
+import { getCurrentPanel, handle, none, valueUnit } from '../../../utils/elementUtil';
+import { useAppStoreHook as useAppStore } from '../../../stores/app';
+import ElementList from '../../../components/design/element-list.vue';
+import { mountedKeyboardEvent, unMountedKeyboardEvent } from '../../../utils/keyboardUtil';
+import { changeDragSnapIs, initMoveable, updatePanel } from '../../../plugins/moveable/moveable';
+import Design from '../../../components/design/design.vue';
+import { initSelecto, selecto } from '../../../plugins/moveable/selecto';
+import AuxiliaryLine from '../../../components/design/auxiliary/auxiliary-line.vue';
+import MyIcon from '../../../components/my/icon/my-icon.vue';
+import { mitt } from '../../../utils/utils';
 
-const panel = inject(panelKey)!;
-const mitt = inject(mittKey)!;
+const panel = getCurrentPanel();
 const designContentRef = ref<InstanceType<any>>();
 const appStore = useAppStore();
 const contentScale = reactive({
@@ -89,9 +88,6 @@ const highlightRule = reactive({
 const designScrollRef = ref<HTMLElement>()!;
 // 事件绑定
 mitt.on('elementClick', elementClick);
-// mitt.on('elementMove', elementMove)
-// mitt.on('elementUp', elementUp);
-// mitt.on('elementRemove', elementRemove)
 mitt.on('scaleEvent', scaleEvent);
 mitt.on('panelSnapshot', panelSnapshot);
 mitt.on('updatePanel', updatePanel);
@@ -101,8 +97,10 @@ mitt.on('scaleMove', scaleMove);
 onMounted(() => {
     // 挂载键盘事件
     mountedKeyboardEvent();
-    initSelecto();
-    initMoveable(selecto.value, highlightRule);
+    nextTick(() => {
+        initSelecto();
+        initMoveable(selecto.value, highlightRule);
+    });
     mitt.emit('minimapViewportSize', {
         width: designScrollRef.value!.clientWidth,
         height: designScrollRef.value!.clientHeight

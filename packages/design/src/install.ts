@@ -10,11 +10,11 @@ import VueCropper from 'vue-cropper';
 import 'vue-cropper/dist/index.css';
 // import i18n from "./locales";
 import { useSocket } from './stores/socket';
-import { mitt } from '@myprint/design/utils/utils';
-import { useConfigStore } from '@myprint/design/stores/config';
-import { installPrinter } from '@myprint/design/printer';
-import { initDisplayRatio } from '@myprint/design/utils/devicePixelRatio';
-import { installMessage } from '@myprint/design/components/my/message/my-message';
+import { mitt } from './utils/utils';
+import { useConfigStore } from './stores/config';
+import { installPrinter } from './printer';
+import { initDisplayRatio } from './utils/devicePixelRatio';
+import { installMessage } from './components/my/message/my-message';
 
 const install = {
     install(app: App<any>): any {
@@ -39,9 +39,7 @@ const install = {
             // @ts-ignore
             .use(Vue3ColorPicker);
         app.provide(mittKey, mitt);
-
         useSocket().INIT_SOCKET();
-
         useConfigStore().initConfig();
 
         installPrinter(app);

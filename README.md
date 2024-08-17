@@ -25,15 +25,27 @@
 
 <img src="readme/demo_main.png"/>
 <table width="100%" align="center">
+
+<tr>
+<td align="center">设计</td>
+<td align="center">预览</td>
+</tr>
+
 <tr>
 <td align="center"><img src="readme/order_design.png"/></td>
-<td align="center"><img src="readme/mail_design.png"/></td>
-<td align="center"><img src="readme/client_design.png"/></td>
+<td align="center"><img src="readme/order_preview.png"/></td>
 </tr>
 <tr>
-<td align="center"><img src="readme/order_preview.png"/></td>
+<td align="center"><img src="readme/mail_design.png"/></td>
 <td align="center"><img src="readme/mail_preview.png"/></td>
+</tr>
+<tr>
+<td align="center"><img src="readme/client_design.png"/></td>
 <td align="center"><img src="readme/client_preview.png"/></td>
+</tr>
+<tr>
+<td align="center"><img src="readme/jj_design.png"/></td>
+<td align="center"><img src="readme/jj_preview.png"/></td>
 </tr>
 </table>
 

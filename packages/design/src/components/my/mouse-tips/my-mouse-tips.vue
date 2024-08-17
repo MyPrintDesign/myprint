@@ -10,5 +10,5 @@
 </template>
 
 <script setup lang="ts">
-import {mouseTips} from "@myprint/design/utils/mouseTips";
+import {mouseTips} from "../../../utils/mouseTips";
 </script>

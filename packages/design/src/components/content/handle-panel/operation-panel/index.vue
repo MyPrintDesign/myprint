@@ -19,18 +19,18 @@
 </template>
 
 <script setup lang="ts">
-import { handlePanelElementList } from '@myprint/design/constants/settingPanel';
-import MyCollapse from '@myprint/design/components/my/collapse/my-collapse.vue';
+import { handlePanelElementList } from '../../../../constants/settingPanel';
+import MyCollapse from '../../../../components/my/collapse/my-collapse.vue';
 import MyElementSetting from './my-element-setting.vue';
 import MyPanelSetting from './my-panel-setting.vue';
-import { elementTypeFormat } from '@myprint/design/types/entity';
+import { elementTypeFormat } from '../../../../types/entity';
 import { computed } from 'vue-demi';
-import { useConfigStore } from '@myprint/design/stores/config';
-import { useAppStoreHook } from '@myprint/design/stores/app';
+import { useConfigStore } from '../../../../stores/config';
+import { useAppStoreHook } from '../../../../stores/app';
 import MyDataTableSetting
-    from '@myprint/design/components/content/handle-panel/operation-panel/my-data-table-setting.vue';
+    from '../../../../components/content/handle-panel/operation-panel/my-data-table-setting.vue';
 import MyDataTableColumnSetting
-    from '@myprint/design/components/content/handle-panel/operation-panel/my-data-table-column-setting.vue';
+    from '../../../../components/content/handle-panel/operation-panel/my-data-table-column-setting.vue';
 
 const appStore = useAppStoreHook();
 const configStore = useConfigStore();

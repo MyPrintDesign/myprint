@@ -1,8 +1,8 @@
 import { CSSProperties } from 'vue-demi';
-import { getRecursionParentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
-import { _defaultNum } from '@myprint/design/utils/numberUtil';
-import { MyElement } from '@myprint/design/types/entity';
-import { _defaultVal } from '@myprint/design/utils/utils';
+import { getRecursionParentPanel, valueUnit } from '../../../../utils/elementUtil';
+import { _defaultNum } from '../../../../utils/numberUtil';
+import { MyElement } from '../../../../types/entity';
+import { _defaultVal } from '../../../../utils/utils';
 
 export function computedStyle(element: MyElement, type: 'horizontal' | 'vertical' | 'rect', lineStyle: 'dotted' | 'solid' | 'dashed' = 'dashed') {
     const style = <CSSProperties>{};

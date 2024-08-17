@@ -1,11 +1,6 @@
 <template>
-  <div class="group-container">
+  <div class="groupsss-container">
     <slot/>
   </div>
 
 </template>
-
-<script setup lang="ts">
-defineOptions({name: 'MyGroup'})
-
-</script>
