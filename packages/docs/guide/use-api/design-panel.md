@@ -35,5 +35,6 @@ previewData: '[{}]'
 <style lang="css">
 .design-panel_tmp{
     height: calc(100vh - 64px) !important;
+    color: black;
 }
 </style>

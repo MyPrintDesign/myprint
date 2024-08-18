@@ -106,9 +106,19 @@ export default defineConfig({
 
 ## 配套服务
 
-### 客户端（本地调用打印机进行打印）[`去下载`](.)
+### 客户端（本地调用打印机进行打印）
 
 > 本地客户端支持局域网连接，可以做到同一局域网内别的机器的浏览器提交任务，由同一个打印机进行打印
+
+### 下载客户端
+
+|         | 架构      |                                  地址                                  |
+|---------|---------|:--------------------------------------------------------------------:|
+| Windows | 64位     |    [下载地址](https://file.myprint.top/MyPrint-Windows-x64-1.0.0.exe)    |
+| Windows | 32位     |   [下载地址](https://file.myprint.top/MyPrint-Windows-ia32-1.0.0.exe)    |
+| Linux   | x86     | [下载地址](https://file.myprint.top/MyPrint-Linux-x86_64-1.0.0.AppImage) |
+| Macos   | Intel芯片 |      [下载地址](https://file.myprint.top/MyPrint-Mac-x64-1.0.0.dmg)      |
+| Macos   | Apple芯片 |     [下载地址](https://file.myprint.top/MyPrint-Mac-arm64-1.0.0.dmg)     |
 
 ### 服务端（服务端生成pdf）[`去下载`](https://myprint.top/myprint-server.zip)
 
