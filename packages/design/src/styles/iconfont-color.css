@@ -1,11 +1,10 @@
 @font-face {
   font-family: "iconfont-color"; /* Project id 4272312 */
   /* Color fonts */
-  src: url('../assets/fonts/iconfont-color.woff2?t=1696341118895') format('woff2');
+  src: url('../assets/fonts/iconfont-color.woff2') format('woff2');
 }
 
 .iconfont-color {
-  color: var(--tcolor);
   font-family: "iconfont-color" !important;
   font-size: 16px;
   font-style: normal;

@@ -61,7 +61,22 @@ npm install myprint-design
 yarn add -D myprint-design
 ```
 
-### 直接引用(仅支持ts) {#my-anchor}
+### 浏览器直接引入
+直接通过浏览器的 HTML 标签导入 MyPrint，然后就可以使用全局变量 MyPrint 了。
+
+```html
+<link rel="stylesheet" href="//jsd.onmicrosoft.cn/npm/myprint-design@0.0.24/css/styles/index.css" />
+<!-- Import Vue 3 -->
+<script src="//jsd.onmicrosoft.cn/npm/vue@3"></script>
+<!-- Import component library -->
+<script src="//jsd.onmicrosoft.cn/npm/myprint-design@0.0.24"></script>
+
+```
+
+### 在线示例
+通过 CDN 的方式我们可以很容易地使用 MyPrint 写出一个 设计 页面。 [在线演示](https://codepen.io/chushenshen/pen/BagYjLo)
+
+### 直接引用(仅支持ts)
 
 > 下载本项目(参考package/demo)
 
@@ -153,3 +168,4 @@ npm run build:design
 
 ## 交流群
 
+<img src="readme/qq.png"/>

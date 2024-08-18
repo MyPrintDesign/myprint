@@ -1,9 +1,9 @@
 {
   "name": "myprint-design",
-  "version": "0.0.15",
-  "main": "dist/lib/index.js",
-  "module": "dist/es/index.mjs",
-  "types": "dist/es/index.d.ts",
+  "version": "0.0.24",
+  "main": "lib/index.js",
+  "module": "es/index.mjs",
+  "types": "es/index.d.ts",
   "private": false,
   "publishConfig": {
     "access": "public"
@@ -27,23 +27,23 @@
   },
   "exports": {
     ".": {
-      "require": "./dist/lib/index.js",
-      "import": "./dist/es/index.mjs",
-      "types": "./dist/es/index.d.ts"
+      "require": "./lib/index.js",
+      "import": "./es/index.mjs",
+      "types": "./es/index.d.ts"
     },
     "./es/*": {
-      "import": "./dist/es/*/index.mjs",
-      "types": "./dist/es/*/index.d.ts"
+      "import": "./es/*/index.mjs",
+      "types": "./es/*/index.d.ts"
     },
     "./lib/*": {
-      "require": "./dist/lib/*/index.js",
-      "types": "./dist/lib/*/index.d.ts"
+      "require": "./lib/*/index.js",
+      "types": "./lib/*/index.d.ts"
     },
-    "./css/*": "./dist/css/styles/*"
+    "./css/*": "./css/styles/*"
   },
-  "files": [
-    "dist"
-  ],
+  "unpkg": "dist/index.full.js",
+  "jsdelivr": "dist/index.full.js",
+  "style": "dist/index.css",
   "dependencies": {
     "@egjs/children-differ": "^1.0.1",
     "@moveable/helper": "^0.1.3",

@@ -9,7 +9,7 @@
                     <el-link @click="clickLinkTablePreviewData(scope, item)">编辑表格数据</el-link>
                 </div>
                 <div v-else-if="scope.row.$editIs && !cantInputByType(item.type)">
-                    <el-input v-model="scope.row[item.prop]" />
+                    <el-input type="textarea" v-model="scope.row[item.prop]" />
                 </div>
                 <div v-else>
                     {{ scope.row[item.prop] }}

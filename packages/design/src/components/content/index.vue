@@ -58,8 +58,6 @@ const panel = reactive({
 }) as Panel;
 const previewData = ref<any[]>([]);
 setCurrentPanel(panel);
-setPreviewData(previewData.value);
-setProvider(provider.value);
 
 const props = withDefaults(defineProps<{
     module?: Module;
@@ -112,6 +110,8 @@ function initModule() {
     }
     provider.value = JSON.parse(props.module.provider!);
     previewData.value = JSON.parse(props.module.previewData!);
+    setPreviewData(previewData.value);
+    setProvider(provider.value);
     initPanel(panel, provider);
     setCurrentPanel(panel);
 }

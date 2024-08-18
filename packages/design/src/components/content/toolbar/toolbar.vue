@@ -54,7 +54,8 @@ import Printer from '../../../components/my/icon/icons/Printer.vue';
 import { MyMessage } from '../../../components/my/message/my-message';
 //@ts-ignore
 import { DesignPanelProps } from '../../../types/entity';
-
+import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
+const useApp = appStore()
 withDefaults(defineProps<{
     designProps: DesignPanelProps;
 }>(), {
@@ -63,7 +64,7 @@ withDefaults(defineProps<{
 
 function print() {
     const defaultPrinter = MyPrinter.getDefaultPrinter();
-    MyPrinter.clientPrinter({ previewDataList: getPreviewData(), printer: defaultPrinter?.name })
+    MyPrinter.clientPrinter({ previewDataList: useApp.previewData, printer: defaultPrinter?.name })
         .then(res => {
             switch (res.status) {
                 case 'SUCCESS':
@@ -81,7 +82,7 @@ function print() {
 }
 
 function serverDownloadPdf() {
-    MyPrinter.pdfServer({ previewDataList: getPreviewData() })
+    MyPrinter.pdfServer({ previewDataList: useApp.previewData })
         .then(res => {
             switch (res.status) {
                 case 'SUCCESS':
@@ -100,7 +101,7 @@ function serverDownloadPdf() {
 }
 
 function preview() {
-    MyPrinter.chromePreview({ previewDataList: defaultPreviewData(getPreviewData()) });
+    MyPrinter.chromePreview({ previewDataList: defaultPreviewData(useApp.previewData) });
 }
 
 function save() {

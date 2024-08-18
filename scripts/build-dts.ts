@@ -202,7 +202,7 @@ async function generateTypesDefinitions(
 }
 
 async function build(pkgDirName: string) {
-    const outDir = resolveProjectPath('dist', 'types');
+    const outDir = resolveProjectPath('packages', 'design', 'dist', 'types');
     const pkgDir = resolvePackagePath(pkgDirName);
     const pkgSrcDir = resolvePackagePath(pkgDirName, 'src');
     // console.log(pkgSrcDir);

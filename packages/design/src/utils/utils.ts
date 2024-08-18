@@ -149,22 +149,174 @@ export function printCssStyle() {
             print-color-adjust: exact;
         }
     }
+
+.my-print-text_container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  //word-break: break-all;
+  outline: 0;
+  box-sizing: border-box;
+  // tmp
+  color: var(--tcolor);
+  caret-color: var(--tcolor);
+
+  vertical-align: top;
+  word-break: break-all;
+  flex-grow: 1;
+}
+
+
+.my-print-text_content {
+  vertical-align: top;
+  word-break: break-all;
+  box-sizing: border-box;
+  outline: 0;
+  flex-grow: 1;
+}
+
+.my-print-horizontal-line__wrapper {
+  width: 100%;
+  word-break: break-all;
+  cursor: move;
+  outline: none;
+}
+
+.my-print-horizontal-line {
+  cursor: move;
+  position: absolute;
+}
+
+.my-print-rect__wrapper {
+  word-break: break-all;
+  border: 1px #000 solid;
+  box-sizing: border-box;
+  position: absolute;
+  cursor: text;
+}
+
+.my-print-dotted-rect__wrapper {
+  word-break: break-all;
+  outline: #000 dotted;
+  position: absolute;
+  cursor: text;
+}
+
+.my-print-table {
+  text-indent: initial;
+  border-collapse: collapse;
+  border-spacing: 0;
+  padding: 0;
+  word-break: break-all;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.my-print-columnHead {
+  position: relative;
+  word-break: break-all;
+  height: 100%;
+  color: var(--tcolor);
+
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.my-print-columnHead__content {
+  height: 100%;
+}
+
+.my-print-container {
+  width: var(--design-width);
+  max-width: var(--design-width);
+  height: var(--design-height);
+  max-height: var(--design-height);
+}
+
+.my-print-table-column_body {
+  word-break: break-all;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 0;
+  color: var(--tcolor);
+}
+
+.my-print-container_over {
+  z-index: 1;
+  opacity: 0.6;
+  background: var(--page-header-drop-color);
+  outline: 4px solid var(--drag-h-color);
+}
+
+.my-print-preview-wrap {
+  position: absolute;
+}
+
+.my-print-preview-wrap_container {
+}
+
+.my-print-print_hidden {
+  position: absolute;
+  top: -99999px;
+}
+
+.my-print-preview-panel__wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.my-print-preview-panel__content {
+  position: relative;
+
+}
+
+.my-print-preview-panel__content_page {
+  position: relative;
+  overflow: hidden;
+  //border: var(--tcolor) 1px solid;
+  //box-sizing: border-box;
+  background: white;
+}
+
+.my-print-draw_panel {
+  width: 100%;
+  height: 100%;
+}
+
+.my-print-draw_panel_img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.my-print-chart {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
 `;
-    let styleSheets = document.styleSheets;
-    // console.log(styleSheets)
-    for (let i = 0; i < styleSheets.length; i++) {
-        let styleSheet = styleSheets[i];
-        let cssRules = styleSheet.cssRules || styleSheet.rules;
-        // let isCss = false
-        for (let j = 0; j < cssRules.length; j++) {
-            let cssRule = cssRules[j];
-            let selectorText = (cssRule as CSSStyleRule).selectorText;
-            if (selectorText && selectorText.startsWith('.my-print-')) {
-                // console.log(cssRule.cssText)
-                cssRuleList = cssRuleList + cssRule.cssText;
-            }
-        }
-    }
+    // let styleSheets = document.styleSheets;
+    // // console.log(styleSheets)
+    // for (let i = 0; i < styleSheets.length; i++) {
+    //     let styleSheet = styleSheets[i];
+    //     let cssRules = styleSheet.cssRules || styleSheet.rules;
+    //     // let isCss = false
+    //     for (let j = 0; j < cssRules.length; j++) {
+    //         let cssRule = cssRules[j];
+    //         let selectorText = (cssRule as CSSStyleRule).selectorText;
+    //         if (selectorText && selectorText.startsWith('.my-print-')) {
+    //             // console.log(cssRule.cssText)
+    //             cssRuleList = cssRuleList + cssRule.cssText;
+    //         }
+    //     }
+    // }
     return printCssStyleCache = cssRuleList;
 }
 

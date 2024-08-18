@@ -1,5 +1,5 @@
 <template>
-  <div class="groupsss-container">
+  <div class="group-container">
     <slot/>
   </div>
 

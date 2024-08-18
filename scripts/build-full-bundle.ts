@@ -73,9 +73,9 @@ export const generateExternal = async (options: { full: boolean }) => {
         const ss =  [...new Set(packages)].some(
             (pkg) => id === pkg || id.startsWith(`${pkg}/`)
         )
-        if(ss){
-            console.log('sss', id);
-        }
+        // if(ss){
+        //     console.log('sss', id);
+        // }
         return ss;
     };
 };
@@ -120,7 +120,7 @@ export const epPackage = resolve(pkgRoot, 'design', 'package.json');
 
 // export const PKG_PREFIX = '@element-plus';
 // export const PKG_NAME = 'element-plus';
-export const PKG_CAMELCASE_NAME = 'MyPrinter';
+export const PKG_CAMELCASE_NAME = 'MyPrinterDesign';
 // export const PKG_CAMELCASE_LOCAL_NAME = 'ElementPlusLocale';
 // export const PKG_BRAND_NAME = 'Element Plus';
 
@@ -196,7 +196,7 @@ async function buildFullEntry(minify: boolean) {
             globals: {
                 vue: 'Vue'
             },
-            sourcemap: minify
+            sourcemap: minify,
             // banner,
         },
         {

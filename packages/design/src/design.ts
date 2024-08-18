@@ -2,12 +2,15 @@ import { App, h, render } from 'vue-demi';
 import DesignPanel from './components/content';
 import { DesignPanelProps } from '@myprint/design/types/entity';
 
-export function mount(app: App<any>, props: DesignPanelProps, element?: HTMLDivElement) {
+export function mountDesign(app: App<any>, props: DesignPanelProps, element?: HTMLDivElement) {
     const printNode = h(DesignPanel, props == null ? {} : props);
-    if (element == null) {
-        element = document.createElement('div');
+    let elementTmp = element!;
+    if (elementTmp == null) {
+        elementTmp = document.createElement('div');
     }
     printNode.appContext = app._context;
-    render(printNode, element);
-    document.body.appendChild(element.firstElementChild!);
+    render(printNode, elementTmp);
+    if (element == null) {
+        document.body.appendChild(elementTmp.firstElementChild!);
+    }
 }

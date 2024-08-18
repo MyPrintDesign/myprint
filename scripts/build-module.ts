@@ -14,6 +14,7 @@ import glob from 'fast-glob';
 import type { OutputOptions } from 'rollup';
 import { resolvePackagePath } from './util';
 import path from 'path';
+import { readFile, writeFileSync } from './utils';
 // import typescript from 'rollup-plugin-typescript2'
 
 const overrides = {
@@ -111,7 +112,7 @@ const build = async (pkgDirName: string) => {
     const options: OutputOptions[] = [
         {
             format: 'cjs',
-            dir: resolvePackagePath(pkgDirName, 'dist', 'lib'),
+            dir: resolvePackagePath(pkgDirName, 'dist', 'myprint-design', 'lib'),
             exports: 'named',
             preserveModules: true,
             preserveModulesRoot: resolvePackagePath(pkgDirName, 'src'),
@@ -120,7 +121,7 @@ const build = async (pkgDirName: string) => {
         },
         {
             format: 'esm',
-            dir: resolvePackagePath(pkgDirName, 'dist', 'es'),
+            dir: resolvePackagePath(pkgDirName, 'dist', 'myprint-design', 'es'),
             exports: undefined,
             preserveModules: true,
             preserveModulesRoot: resolvePackagePath(pkgDirName, 'src'),
@@ -130,6 +131,11 @@ const build = async (pkgDirName: string) => {
     ];
     return Promise.all(options.map((option) => bundle.write(option)));
 };
+
+async function copyFile() {
+    writeFileSync(resolvePackagePath('design', 'dist', 'myprint-design', 'package.json'), readFile(resolvePackagePath('design', 'package.json')));
+    writeFileSync(resolvePackagePath('design', 'dist', 'myprint-design', 'README.md'), readFile(resolvePackagePath('..', 'README.md')));
+}
 
 let content = fs.readFileSync(resolvePackagePath('design', 'src', 'plugins', 'moveable', 'moveable_local.ts'), { encoding: 'utf8' });
 let moveable_js = fs.readFileSync(resolvePackagePath('design', 'src', 'plugins', 'moveable', 'moveable_js.js'), { encoding: 'utf8' });
@@ -146,5 +152,7 @@ if (moveable_js[0] != '(') {
 
 console.log('[TS] 开始编译所有子模块···');
 await build('design');
+
+await copyFile();
 // await build('business');
 console.log('[TS] 编译所有子模块成功！');

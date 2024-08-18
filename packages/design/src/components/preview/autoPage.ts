@@ -215,6 +215,9 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                 }
 
                 if (previewWrapper.contentType == 'Text') {
+                    if(previewDataTmp){
+                        previewDataTmp = previewDataTmp.replaceAll(' ', '&nbsp;')
+                    }
                     await autoTextElement(previewDataTmp, true);
                 }
                 if (previewWrapper.contentType == 'QrCode') {

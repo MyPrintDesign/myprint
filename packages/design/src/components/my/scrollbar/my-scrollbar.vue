@@ -144,6 +144,3 @@ defineExpose({
     ps
 });
 </script>
-<style>
-@import 'perfect-scrollbar/css/perfect-scrollbar.css';
-</style>

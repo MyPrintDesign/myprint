@@ -80,7 +80,13 @@ function convertPrintProps(printProps: PrintProps) {
 
 export const MyPrinter = {
     initMyPrinter(options: MyPrintOptions) {
-        options.serverUrl && (myPrintOptions.serverUrl = options.serverUrl);
+        if (options.serverUrl) {
+            if (options.serverUrl.endsWith('/')) {
+                myPrintOptions.serverUrl = options.serverUrl.slice(0, -1);
+            } else {
+                myPrintOptions.serverUrl = options.serverUrl;
+            }
+        }
         options.disabledClient != null && (myPrintOptions.disabledClient = options.disabledClient);
     },
 
