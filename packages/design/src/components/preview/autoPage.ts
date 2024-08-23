@@ -18,7 +18,7 @@ import {
     previewTableStatisticsList,
     statisticsData
 } from '../../utils/table/dataTable';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash-es';
 
 export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: Panel, previewDataList: any[]) {
     const variable = {

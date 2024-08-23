@@ -199,9 +199,13 @@ function saveTemplate() {
             .then(_res => {
                 // 保存成功
                 MyMessage.success(i18n('common.save.success'));
-            }).catch(_e => {
-            MyMessage.success(i18n('common.save.fail'));
+            }).catch(e => {
             // 保存失败
+            let failMsg = i18n('common.save.fail');
+            if (e.msg) {
+                failMsg = failMsg + ': ' + e.msg;
+            }
+            MyMessage.success(failMsg);
         });
     }
 }

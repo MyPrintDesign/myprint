@@ -27,7 +27,7 @@
 
 <script setup lang="ts">
 import { computed, nextTick, onMounted, reactive, ref, watch } from 'vue-demi';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 const emit = defineEmits(['update:modelValue', 'change', 'input']);
 

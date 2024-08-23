@@ -5,12 +5,12 @@
 | 项目               | 说明                               | 地址(github)                                                | 地址(gitee)                                                |
 |:-----------------|----------------------------------|-----------------------------------------------------------|----------------------------------------------------------|
 | MyPrint          | 主项目                              | [`前往`](https://github.com/MyPrintDesign/myprint)          | [`前往`](https://gitee.com/MyPrintDesign/myprint)          |
-| MyPrint-server   | 服务端                              | `暂未开源`                                                    | `暂未开源`                                                   |
-| MyPrint-desktop  | 客户端                              | `暂未开源`                                                    | `暂未开源`                                                   |
+| MyPrint-server   | 服务端                              | —                                                         | —                                                        |
+| MyPrint-desktop  | 客户端                              | —                                                         | —                                                        |
 | MyPrint-examples | 客户端                              | [`前往`](https://github.com/MyPrintDesign/myprint-examples) | [`前往`](https://gitee.com/MyPrintDesign/myprint-examples) |
 | MyPrint-docker   | docker构建镜像                       | [`前往`](https://github.com/MyPrintDesign/myprint-docker)   | [`前往`](https://gitee.com/MyPrintDesign/myprint-docker)   |
 | 文档               | [`前往`](https://doc.myprint.top)  | —                                                         | —                                                        |
-| 体验服              | [`前往`](https://demo.myprint.top) | —                                                         | —                                                        |
+| 体验服(demo)        | [`前往`](https://demo.myprint.top) | —                                                         | —                                                        |
 
 ## 说明
 
@@ -62,18 +62,20 @@ yarn add -D myprint-design
 ```
 
 ### 浏览器直接引入
-直接通过浏览器的 HTML 标签导入 MyPrint，然后就可以使用全局变量 MyPrint 了。
+
+直接通过浏览器的 HTML 标签导入 MyPrint，然后就可以使用全局变量 MyPrintDesign 了。
 
 ```html
-<link rel="stylesheet" href="//jsd.onmicrosoft.cn/npm/myprint-design@0.0.24/css/styles/index.css" />
+<link rel="stylesheet" href="//jsd.onmicrosoft.cn/npm/myprint-design/css/styles/index.css" />
 <!-- Import Vue 3 -->
 <script src="//jsd.onmicrosoft.cn/npm/vue@3"></script>
 <!-- Import component library -->
-<script src="//jsd.onmicrosoft.cn/npm/myprint-design@0.0.24"></script>
+<script src="//jsd.onmicrosoft.cn/npm/myprint-design"></script>
 
 ```
 
 ### 在线示例
+
 通过 CDN 的方式我们可以很容易地使用 MyPrint 写出一个 设计 页面。 [在线演示](https://codepen.io/chushenshen/pen/BagYjLo)
 
 ### 直接引用(仅支持ts)

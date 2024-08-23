@@ -32,7 +32,7 @@ import {
     recursionHandleTableHead
 } from '../utils/table/dataTable';
 import numberUtil, { _defaultNum } from '../utils/numberUtil';
-import { isEmpty, isNil } from 'lodash';
+import { isEmpty, isNil } from 'lodash-es';
 
 // export function displayModel(displayModel?: DisplayModel) {
 //     if (displayModel) {
@@ -937,7 +937,6 @@ export function formatter(element: MyElement, variable: FormatterVariable = {} a
                 contentData = '不支持的变量';
             } else {
                 try {
-                    // todo 格式化时间
                     variable[variableNames[0]] = formatDate(variable.nowDate ? variable.nowDate : new Date(), variableNames[0]);
                     contentData = replaceVariables(element.option.formatter, variable);
                 } catch (e) {

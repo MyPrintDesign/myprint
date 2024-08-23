@@ -46,9 +46,6 @@ export const memoryClipboardUtil = {
         this.clipboard.data = elementList;
         this.clipboard.type = 'COPY';
         this.clipboard.pasteNumMap = {};
-
-        // console.log(elementList);
-
     },
 
     cut() {
@@ -109,6 +106,7 @@ export const memoryClipboardUtil = {
                 addElement(getCurrentPanel(), parentTmp, datum);
                 newElementList.push(datum);
             }
+
             // 记录历史
             record(<Snapshot>{
                 type: 'Element',
@@ -151,7 +149,6 @@ export const memoryClipboardUtil = {
                                 dataJson.controlPoints = controlPoints;
                             }
 
-                            // console.log(tmpDataList)
                             newElement.data = JSON.stringify(dataJson);
                         }
                 }

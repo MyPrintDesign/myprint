@@ -10,7 +10,7 @@ import { parallel } from 'gulp';
 import nodePolyfills from 'rollup-plugin-polyfill-node';
 import glob from 'fast-glob';
 import replace from '@rollup/plugin-replace';
-import { camelCase, upperFirst } from 'lodash';
+// import { camelCase, upperFirst } from 'lodash';
 // import {
 //   PKG_BRAND_NAME,
 //   PKG_CAMELCASE_LOCAL_NAME,

@@ -13,7 +13,7 @@
 import MyInput from '../../../components/my/input/my-input.vue';
 import { computed, ref, watch } from 'vue-demi';
 import numberUtil from '../../../utils/numberUtil';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash-es';
 
 const emit = defineEmits(['update:modelValue', 'change']);
 

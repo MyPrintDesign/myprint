@@ -37,7 +37,7 @@ import {
     myPrintClientService,
     printResult
 } from '../../plugins/myprintClientService';
-import { isEmpty } from 'lodash';
+import { isEmpty } from 'lodash-es';
 
 defineExpose({
     handleChromePrint,

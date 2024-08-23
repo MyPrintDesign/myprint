@@ -69,7 +69,11 @@ const totalWidth = computed(() => {
 const sliderValue = computed(() => {
     let high: number;
     if (right.value === sliderWidth.value) {
-        high = props.max;
+        if (sliderWidth.value == 0) {
+            high = props.modelValue as number
+        } else {
+            high = props.max;
+        }
     } else {
         high = fixedDigit((right.value / pixelStep.value) * props.step + props.min, precision.value);
         if (props.step > 1) {
@@ -121,6 +125,7 @@ function checkValue(value: number): number {
 }
 
 function getSliderWidth() {
+    console.log(slider.value.offsetWidth);
     sliderWidth.value = slider.value.offsetWidth;
 }
 

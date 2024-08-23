@@ -12,7 +12,7 @@ import { unit2px } from '../../../utils/devicePixelRatio';
 import QRCode from 'qrcode';
 import { displayDesign, elementCommonStyle, getRecursionParentPanel } from '../../../utils/elementUtil';
 import { updateMoveableRect } from '../../../plugins/moveable/moveable';
-import _ from 'lodash';
+import {throttle} from 'lodash-es';
 
 const props = withDefaults(defineProps<{
     element?: MyElement
@@ -69,7 +69,7 @@ function freshQrCode(resetHeight: boolean) {
     }
 }
 
-const freshQrCodeThrottle = _.throttle((resetHeight: boolean) => {
+const freshQrCodeThrottle = throttle((resetHeight: boolean) => {
     freshQrCode(resetHeight);
 }, 100);
 

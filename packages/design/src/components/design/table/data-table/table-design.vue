@@ -59,7 +59,7 @@ import { defaultElement, elementHandleStatusList } from '../../../../constants/c
 import { useAppStoreHook } from '../../../../stores/app';
 import { sortColumn } from '../../../../utils/utils';
 import { freshMoveableOption, updateMoveableRect } from '../../../../plugins/moveable/moveable';
-import _ from 'lodash';
+import {throttle} from 'lodash-es';
 import {
     getRecursionParentPanel,
     recursionUpdateCellParentInitWidth,
@@ -507,7 +507,7 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
     }
 });
 
-const computeColumn = _.throttle(() => {
+const computeColumn = throttle(() => {
     data.controlPointList.length = 0;
     data.resizeControlList.length = 0;
     
@@ -536,7 +536,7 @@ const computeColumn = _.throttle(() => {
     }
 }, 10);
 
-const computeColumnHeight = _.throttle(() => {
+const computeColumnHeight = throttle(() => {
     // console.log('---')
     data.rowControlPointList.length = 0;
     data.rowResizeControlList.length = 0;

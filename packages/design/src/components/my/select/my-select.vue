@@ -38,7 +38,7 @@ import ElementAlign from '../../../components/content/toolbar/toolbar-style/elem
 import MyScrollbar from '../../../components/my/scrollbar/my-scrollbar.vue';
 import MyPopover from '../../../components/my/popover/my-popover.vue';
 import MyIcon from '../../../components/my/icon/my-icon.vue';
-import { isEmpty, isNull } from 'lodash';
+import { isEmpty, isNull } from 'lodash-es';
 import { reactive, ref, watch } from 'vue-demi';
 import { i18n } from '../../../locales';
 

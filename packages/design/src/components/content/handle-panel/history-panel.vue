@@ -15,13 +15,13 @@
         <div class="history-list">
             <div v-for="(item) in redoStack.slice().reverse()" :key="item.timestamp"
                  class="history-list-item">
-                <history-line-text :content="item.snapshot.action" />
+                <history-line-text :content="item.snapshot.label" />
             </div>
             <history-line-text
                 v-for="(item, index) in history"
                 :class="[{'currentHistory': index == 0, 'history-list-item': index != 0}]"
                 :key="item.timestamp"
-                :content="item.snapshot.action" />
+                :content="item.snapshot.label" />
         </div>
     </my-collapse>
 </template>

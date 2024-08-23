@@ -1,12 +1,10 @@
-import { nextTick, ref } from 'vue-demi';
-import { MyElement, elementTypeFormat, Panel } from '../types/entity';
+import { ref } from 'vue-demi';
+import { elementTypeFormat, MyElement, Panel } from '../types/entity';
 import { useManualRefHistory } from '@vueuse/core';
-import {
-    getCurrentPanel,
-    installPanelParentElement
-} from './elementUtil';
+import { getCurrentPanel, installPanelParentElement } from './elementUtil';
 import { useAppStoreHook as appStore } from '../stores/app';
 import { updatePanel } from '../plugins/moveable/moveable';
+import { parse } from '@myprint/design/utils/utils';
 
 export enum ActionEnum {
     INIT = '加载',
@@ -25,6 +23,11 @@ export enum ActionEnum {
 
 let max = 50;
 
+export interface History {
+    label: string,
+    content: string
+}
+
 export interface Snapshot {
     panel?: Panel
     elementList?: MyElement[]
@@ -33,7 +36,7 @@ export interface Snapshot {
     type?: 'Element' | 'PANEL'
 }
 
-const historyRecord = ref<Snapshot>({} as Snapshot);
+const historyRecord = ref<History>({} as History);
 const {
     undoStack,
     redoStack,
@@ -45,18 +48,14 @@ const {
     canUndo,
     canRedo
 } = useManualRefHistory(historyRecord, { capacity: max });
-let current = ref(0);
 
-// let snapshotList = reactive<Array<Snapshot>>([])
 function init() {
-    // console.log(history)
     record(<Snapshot>{
         type: 'PANEL',
         action: ActionEnum.INIT,
         elementList: appStore().currentElement
     });
     clear();
-    // console.log(panel.elementList)
 }
 
 function record(snapshot: Snapshot) {
@@ -66,21 +65,19 @@ function record(snapshot: Snapshot) {
         for (let myElement of snapshot.elementList) {
             label = label + (myElement.label ? myElement.label : elementTypeFormat[myElement.type]) + ',';
         }
+        label = label.slice(0, -1);
     } else {
         label = '面板';
     }
 
     snapshot.panel = getCurrentPanel();
     if (action == ActionEnum.UPDATE_STYLE) {
-
-        // console.log('修改', title)
         if (snapshot.elementList != null) {
             action = action.replace('{element}', label).replace('{content}', snapshot.content);
         } else {
             action = action.replace('{element}', label).replace('{content}', snapshot.content);
         }
-    } else if ([ActionEnum.REMOVE, ActionEnum.ADD, ActionEnum.RESIZE, ActionEnum.ROTATE, ActionEnum.MOVE].includes(action)) {
-        // console.log('删除', label)
+    } else if ([ActionEnum.REMOVE, ActionEnum.ADD, ActionEnum.RESIZE, ActionEnum.ROTATE, ActionEnum.MOVE, ActionEnum.CUT, ActionEnum.PASTE].includes(action)) {
         action = action.replace('{element}', label);
     }
 
@@ -88,76 +85,47 @@ function record(snapshot: Snapshot) {
     delete snapshot.content;
 
     snapshot.action = action;
-    // console.log(snapshot)
-    historyRecord.value = JSON.parse(JSON.stringify(snapshot, (key, value) => {
-        if ('parent' == key) return undefined;
-        if ('target' == key) return undefined;
-        // if ("runtimeOption" == key) return undefined
-        return value;
-    }));
+    historyRecord.value = {
+        content: JSON.stringify(snapshot, (key, value) => {
+            if ('parent' == key) return undefined;
+            if ('target' == key) return undefined;
+            return value;
+        }),
+        label: action
+    };
     commit();
 }
-
-// function undoPanel(): Snapshot {
-//     // hUndo()
-//     // return historyRecord.value
-//     if (snapshotList.length <= 0) return;
-//     if (current.value <= 0) return;
-//
-//     return snapshotList[snapshotList.length - current.value--];
-// }
-
-// function redo(): Snapshot {
-//     if (current.value >= snapshotList.length) return;
-//     return snapshotList[snapshotList.length - ++current.value];
-// }
 
 function undoPanel() {
     if (!canUndo.value) {
         return;
     }
     undo();
-    // console.log(history)
-    // console.log(historyRecord)
-    // console.log(history)
+    const snapshot = {} as Snapshot;
+    parse(historyRecord.value.content, snapshot);
     const panel = getCurrentPanel();
-    panel.elementList = [];
-    nextTick(() => {
-        panel.elementList = (historyRecord.value.panel as Panel).elementList;
-        panel.pageHeader = (historyRecord.value.panel as Panel).pageHeader;
-        panel.pageFooter = (historyRecord.value.panel as Panel).pageFooter;
-        installPanelParentElement(panel);
-        updatePanel();
-    });
-    // console.log(redoStack)
-    // copyBasicType(historyRecord.value.target, panel)
-    // if (!snapshot) {
-    //     return
-    // }
-    // reset(snapshot, panel)
+    // panel.elementList = [];
+    panel.elementList = snapshot.panel!.elementList;
+    panel.pageHeader = snapshot.panel!.pageHeader;
+    panel.pageFooter = snapshot.panel!.pageFooter;
+    installPanelParentElement(panel);
+    updatePanel();
 }
 
 function redoPanel() {
     if (!canRedo.value) {
         return;
     }
-    // const snapshot = redo()
-    // if (!snapshot) {
-    //     return
-    // }
-    // reset(snapshot, panel)
     const panel = getCurrentPanel();
     redo();
-    panel.elementList = [];
-    nextTick(() => {
-        panel.elementList = (historyRecord.value.panel as Panel).elementList;
-        panel.pageHeader = (historyRecord.value.panel as Panel).pageHeader;
-        panel.pageFooter = (historyRecord.value.panel as Panel).pageFooter;
-        installPanelParentElement(panel);
-        updatePanel();
-    });
+    const snapshot = {} as Snapshot;
+    parse(historyRecord.value.content, snapshot);
+    // panel.elementList = [];
+    panel.elementList = snapshot.panel!.elementList;
+    panel.pageHeader = snapshot.panel!.pageHeader;
+    panel.pageFooter = snapshot.panel!.pageFooter;
+    installPanelParentElement(panel);
     updatePanel();
-    // copyBasicType(historyRecord.value.target, panel)
 }
 
 export function changeWrapper(val: string | number, title?: string, callback?: (arg: typeof val) => void) {
@@ -171,58 +139,6 @@ export function changeWrapper(val: string | number, title?: string, callback?: (
     }
 }
 
-export function changeLog(_action: ActionEnum, _element: MyElement) {
-    // record(<Snapshot>{
-    //     elementList: element,
-    //     action: action,
-    //     panel: getCurrentPanel()
-    // })
-}
-
-// function reset(snapshot: Snapshot, panel: Panel) {
-// if (snapshot.type == 'PANEL') {
-//     // switch (h.action) {
-//     //     case ActionEnum.RESIZE:
-//     //         panel.width =
-//     //         break
-//     //
-//     // }
-// } else if (snapshot.type == 'ELEMENT') {
-//     switch (snapshot.action) {
-//         case ActionEnum.ADD:
-//             for (let i = 0; i < snapshot.target.length; i++) {
-//                 arrayRemove(panel.elementList, snapshot.target[i])
-//             }
-//             break
-//         case ActionEnum.REMOVE:
-//             for (let i = 0; i < snapshot.target.length; i++) {
-//                 panel.elementList.push(toElement(snapshot.target[i]))
-//             }
-//             break
-//         case ActionEnum.RESIZE:
-//         case ActionEnum.MOVE:
-//             for (let i = 0; i < snapshot.target.length; i++) {
-//                 for (let j = 0; j < panel.elementList.length; j++) {
-//                     if (panel.elementList[j].id == snapshot.target[i].id) {
-//                         // console.log(snapshot.target[i])
-//                         // console.log(panel.elementList[j])
-//                         swap(snapshot.target[i], panel.elementList[j])
-//                         // console.log(panel.elementList[j])
-//                         break
-//                     }
-//                 }
-//             }
-//             break
-//
-//     }
-// }
-// }
-
-// function clear() {
-//     current.value = 0
-//     // snapshotList = []
-// }
-
 export {
     init,
     record,
@@ -234,6 +150,5 @@ export {
     redoPanel,
     redo,
     history,
-    current,
     clear
 };
