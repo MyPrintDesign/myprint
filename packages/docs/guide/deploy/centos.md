@@ -6,6 +6,8 @@
 1核1GB
 :::
 
+服务端是用来作为后台服务下载`pdf`或者`图片`的
+
 ## 下载
 
 [下载地址](https://file.myprint.top/myprint-server.zip)
