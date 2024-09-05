@@ -54,6 +54,7 @@
                             <el-image class="module-item_card_cover"
                                       :src="getImgUrl(template.coverImgUrl)"
                                       :zoom-rate="1.02"
+                                      hide-on-click-modal
                                       :preview-src-list="[getImgUrl(template.coverImgUrl)]"
                                       fit="cover" />
                             
