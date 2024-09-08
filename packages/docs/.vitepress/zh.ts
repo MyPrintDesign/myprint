@@ -62,10 +62,10 @@ function nav(): DefaultTheme.NavItem[] {
         {
             text: pkg.version,
             items: [
-                // {
-                //     text: '更新日志',
-                //     link: 'https://github.com/vuejs/vitepress/blob/main/CHANGELOG.md'
-                // },
+                {
+                    text: '更新日志',
+                    link: 'https://github.com/MyPrintDesign/myprint/CHANGELOG.md'
+                },
                 // {
                 //     text: '参与贡献',
                 //     link: 'https://github.com/vuejs/vitepress/blob/main/.github/contributing.md'

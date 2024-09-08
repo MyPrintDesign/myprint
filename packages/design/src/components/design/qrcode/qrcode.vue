@@ -12,7 +12,7 @@ import { unit2px } from '../../../utils/devicePixelRatio';
 import QRCode from 'qrcode';
 import { displayDesign, elementCommonStyle, getRecursionParentPanel } from '../../../utils/elementUtil';
 import { updateMoveableRect } from '../../../plugins/moveable/moveable';
-import {throttle} from 'lodash-es';
+import {throttle} from 'lodash';
 
 const props = withDefaults(defineProps<{
     element?: MyElement

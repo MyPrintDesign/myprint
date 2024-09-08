@@ -45,6 +45,9 @@ import { inBrowser } from 'vitepress';
     const printerList = ref([]);
     const asyncPrinterList = ref([]);
     const defaultPrinter = ref({});
+    const pdfToPrinterFileUrl = ref('http://file.myprint.top/myprint.pdf');
+    const selectedPrinter = ref(undefined);
+    const clientUrl = ref('ws://127.0.0.1:9898');
 
     let MyPrinter = null;
     let MyPrinterRef = ref(null);
@@ -52,6 +55,7 @@ import { inBrowser } from 'vitepress';
          import('@myprint/design').then(module=>{
                 MyPrinter = module.MyPrinter;
             MyPrinterRef.value = MyPrinter;
+            clickAsyncGetPrinterList();
          });
     }
 
@@ -219,6 +223,32 @@ import { inBrowser } from 'vitepress';
       document.body.removeChild(a);
       URL.revokeObjectURL(blobUrl);
     }
+
+    function sendPdfToPrinter(){
+        fetch(pdfToPrinterFileUrl.value, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/pdf'
+                }
+            }).then(res => {
+                res.blob().then(data => {
+                    MyPrinter.clientPrinter({
+                        file: data,
+                        scale: 'fit',
+                        orientation: 'portrait',
+                        printer: selectedPrinter.value
+                    }).then(s=>{
+                        clientPrintResult.value = s
+                        console.log(s);
+                    }).catch(e=>{
+                        console.log(e);
+                    });
+                });
+            });
+    }
+    function changeClientUrl() {
+        MyPrinter.setClientUrl(clientUrl.value)
+    }
 </script>
 
 ## 客户端连接状态
@@ -228,6 +258,19 @@ import { inBrowser } from 'vitepress';
 ```
 
 <span>客户端连接状态: {{MyPrinterRef == null? '未连接': MyPrinterRef.clientConnectIs()? '已连接': '未连接'}}</span>
+
+
+
+## 修改客户端地址
+
+调用本地客户端进行打印，可以指定打印机，后台静默打印，可以获得打印结果
+
+```ts
+MyPrinter.setClientUrl('ws://192.168.1.45:9898')
+```
+
+<div>客户端: <input style="border: black 1px solid; padding: 3px; width: 300px" v-model="clientUrl"/></div>
+<button class="doc_open_preview_panel" @click="changeClientUrl()">修改</button>
 
 ## MyPrint预览面板
 
@@ -489,11 +532,51 @@ function handleDefaultPrinter() {
 <br/>
 <span>默认打印机：{{defaultPrinter.displayName}}</span>
 
+## 发送文件到打印机打印
+
+调用本地客户端进行打印，可以指定打印机，后台静默打印，可以获得打印结果
+
+```ts
+fetch('http://file.myprint.top/myprint.pdf', {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/pdf'
+    }
+}).then(res => {
+    res.blob().then(data => {
+        MyPrinter.clientPrinter({
+            file: data,
+            scale: 'fit',
+            orientation: 'portrait',
+            printer: selectedPrinter.value
+        }).then(s => {
+            console.log(s);
+        }).catch(e => {
+            console.log(e);
+        });
+    });
+});
+```
+
+<div>pdf测试URL: <input style="border: black 1px solid; padding: 3px; width: 300px" v-model="pdfToPrinterFileUrl"/></div>
+请选择打印机 <select v-model="selectedPrinter" id="fruits">
+      <option :value="undefined">请选择</option>
+      <option v-for="fruit in asyncPrinterList" :key="fruit.name" :value="fruit.displayName">
+        {{ fruit.displayName }}
+      </option>
+    </select>
+<br/>
+<button class="doc_open_preview_panel" @click="sendPdfToPrinter()">打印</button>
+
+<span>打印结果: {{clientPrintResult}}</span>
+
 ## 方法说明
 
 | 方法                  | 说明                                                        |                          参数                          |                                                 返回值 |
 |---------------------|-----------------------------------------------------------|:----------------------------------------------------:|----------------------------------------------------:|
-| setLocale           | 设置多语言，页面加载会默认读取<br/>`window.localStorage.getItem('lang')` |               (string: 'zhCn'\|'enUs')               |                                                   — |
+| setLocale           | 设置多语言，页面加载会默认读取<br/>`window.localStorage.getItem('lang')` |            (string: 'zhCn'\|'enUs')=>void            |                                                   — |
+| setClientUrl        | 设置客户端地址                                                   |              (clientUrl: string)=>void               |                                                   — |
+| setServerUrl        | 设置服务端地址                                                   |              (serverUrl: string)=>void               |                                                   — |
 | chromePreview       | 预览页面，会在超时/用户进行打印时进行回调                                     | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
 | chromePrinter       | 浏览器打印(直接调用浏览器打印页面)                                        | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
 | clientPrinter       | 本地客户端打印                                                   | (printProps: [PrintProps](./api-example#PrintProps)) | [`Promise<PrintResult>`](./api-example#PrintResult) |
@@ -516,11 +599,23 @@ function handleDefaultPrinter() {
  * 打印请求参数
  */
 export interface PrintProps {
+    taskId?: string,
+    title?: string,
     panel?: Panel | string,
     // appointChannel?: 'SERVER' | 'CHROME' | 'CLIENT',
     previewDataList: any[],
     // 如果 是 null/-1 不设置超时时间
     timeout?: number
+
+    file?: Blob | ArrayBuffer | Uint8Array | string, // 要发送给打印机的文件，这个参数合上面的panel 只能二选一
+    previewDataList?: any[],
+    printer?: string, // 打印机
+    orientation?: 'portrait' | 'landscape', // 打印方向
+    paperSize?: string, // 打印file 时使用
+    copies?: number, // 打印份数
+    scale?: 'fit', // 是否缩放
+    //双面打印 | 单面打印
+    side?: 'duplex' | 'simplex',
 }
 
 ```

@@ -1,6 +1,6 @@
 {
   "name": "myprint-design",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "lib/index.js",
   "module": "es/index.mjs",
   "types": "es/index.d.ts",
@@ -15,7 +15,8 @@
     "design",
     "MyPrint",
     "打印",
-    "设计"
+    "设计",
+    "可视化"
   ],
   "homepage": "https://demo.myprint.top/",
   "repository": {
@@ -58,7 +59,7 @@
     "html2canvas": "^1.4.1",
     "jsbarcode": "^3.11.5",
     "jspdf": "^2.5.1",
-    "lodash-es": "^4.17.21",
+    "lodash": "^4.17.21",
     "mitt": "^3.0.0",
     "moveable": "^0.53.0",
     "perfect-scrollbar": "^1.5.5",

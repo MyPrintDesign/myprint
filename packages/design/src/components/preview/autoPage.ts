@@ -18,9 +18,12 @@ import {
     previewTableStatisticsList,
     statisticsData
 } from '../../utils/table/dataTable';
-import { isEmpty } from 'lodash-es';
+import { isEmpty } from 'lodash';
 
-export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: Panel, previewDataList: any[]) {
+export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: Panel, previewDataList?: any[]) {
+    if (previewDataList == null) {
+        previewDataList = [{}];
+    }
     const variable = {
         pageIndex: 0,
         pageSize: 0,
@@ -215,8 +218,8 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                 }
 
                 if (previewWrapper.contentType == 'Text') {
-                    if(previewDataTmp){
-                        previewDataTmp = previewDataTmp.replaceAll(' ', '&nbsp;')
+                    if (previewDataTmp) {
+                        previewDataTmp = previewDataTmp.replaceAll(' ', '&nbsp;');
                     }
                     await autoTextElement(previewDataTmp, true);
                 }

@@ -25,6 +25,7 @@ app.use(ElementPlus, { locale: zhCn });
 initVisitorId();
 
 MyPrinter.initMyPrinter({
+    clientUrl: 'ws://127.0.0.1:9898',
     serverUrl: import.meta.env.VITE_API_PDF_SERVER_URL
 });
 

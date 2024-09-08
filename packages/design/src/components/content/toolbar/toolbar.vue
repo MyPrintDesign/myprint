@@ -43,7 +43,7 @@
 <script setup lang="ts">
 import StyleDesign from './style-design.vue';
 import { i18n } from '../../../locales';
-import { clearPanel, defaultPreviewData, getCurrentPanel, getPreviewData } from '../../../utils/elementUtil';
+import { clearPanel, defaultPreviewData, getCurrentPanel } from '../../../utils/elementUtil';
 import { ActionEnum, record, Snapshot } from '../../../utils/historyUtil';
 import { updatePanel } from '../../../plugins/moveable/moveable';
 import { MyPrinter } from '../../../printer';
@@ -55,6 +55,7 @@ import { MyMessage } from '../../../components/my/message/my-message';
 //@ts-ignore
 import { DesignPanelProps } from '../../../types/entity';
 import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
+
 const useApp = appStore()
 withDefaults(defineProps<{
     designProps: DesignPanelProps;

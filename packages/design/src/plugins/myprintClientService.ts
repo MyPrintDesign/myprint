@@ -6,9 +6,10 @@ import { getCurrentPanelUnit } from '../utils/elementUtil';
 
 export const myPrintClientService = {
     print(option: ClientCmd, panel: Panel) {
-        option.width = unit2unit(getCurrentPanelUnit(panel), 'mm', panel.width);
-        option.height = unit2unit(getCurrentPanelUnit(panel), 'mm', panel.height);
-
+        if (option.content.html != null) {
+            option.width = unit2unit(getCurrentPanelUnit(panel), 'mm', panel.width);
+            option.height = unit2unit(getCurrentPanelUnit(panel), 'mm', panel.height);
+        }
         return new Promise<ClientCmd>((resolve, _reject) => {
             useSocket().SEND(option.taskId, JSON.stringify({
                 ...option

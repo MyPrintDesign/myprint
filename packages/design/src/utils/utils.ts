@@ -340,16 +340,60 @@ export function download(blob: Blob, fileName: string) {
 export function downloadImg2Base64(url: string) {
     return new Promise((resolve, reject) => {
         fetch(url)
-            .then(async res => {
-                const blob = res.blob();
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    resolve(reader.result);
-                };
-                reader.readAsDataURL(await blob);
+            .then(res => {
+                res.blob()
+                    .then(blob => {
+                        blob2Base64(blob)
+                            .then(resolve);
+                    });
             }).catch(e => {
             reject(e);
         });
+    });
+}
+
+export function isBlob(obj: any) {
+    return obj instanceof Blob;
+}
+
+export function isArrayBuffer(obj: any) {
+    return obj instanceof ArrayBuffer;
+}
+
+export function isUint8Array(obj: any) {
+    return obj instanceof Uint8Array;
+}
+
+export function arrayBuffer2Base64(buffer: ArrayBuffer) {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+
+    // 将每个字节转换为相应的二进制字符
+    bytes.forEach((byte) => {
+        binary += String.fromCharCode(byte);
+    });
+    // 使用btoa()将二进制字符串编码为Base64
+    return btoa(binary);
+}
+
+export function uint8Array2Base64(bytes: Uint8Array) {
+    let binary = '';
+
+    // 将每个字节转换为相应的二进制字符
+    bytes.forEach((byte) => {
+        binary += String.fromCharCode(byte);
+    });
+    // 使用btoa()将二进制字符串编码为Base64
+    return btoa(binary);
+}
+
+export function blob2Base64(blob: Blob) {
+    return new Promise<string>((resolve, _reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            resolve(reader.result as string);
+        };
+        reader.readAsDataURL(blob);
     });
 }
 

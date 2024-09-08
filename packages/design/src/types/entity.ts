@@ -3,11 +3,19 @@ import { i18n } from '../locales';
 
 export interface PrintProps {
     taskId?: string,
+    title?: string,
     panel?: Panel | string,
-    printer?: string,
-    // appointChannel?: 'SERVER' | 'CHROME' | 'CLIENT',
-    previewDataList: any[],
+    file?: Blob | ArrayBuffer | Uint8Array | string,
     timeout?: number,
+    // appointChannel?: 'SERVER' | 'CHROME' | 'CLIENT',
+    previewDataList?: any[],
+    printer?: string,
+    orientation?: 'portrait' | 'landscape',
+    paperSize?: string, // 打印file 时使用
+    copies?: number,
+    scale?: 'fit',
+    //双面打印 | 单面打印
+    side?: 'duplex' | 'simplex',
 }
 
 export interface DesignPanelProps {
@@ -26,6 +34,7 @@ export interface DesignPanelProps {
 
 export interface MyPrintOptions {
     serverUrl?: string;
+    clientUrl?: string;
     disabledClient?: boolean;
 }
 

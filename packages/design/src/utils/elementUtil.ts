@@ -32,7 +32,7 @@ import {
     recursionHandleTableHead
 } from '../utils/table/dataTable';
 import numberUtil, { _defaultNum } from '../utils/numberUtil';
-import { isEmpty, isNil } from 'lodash-es';
+import { isEmpty, isNil } from 'lodash';
 
 // export function displayModel(displayModel?: DisplayModel) {
 //     if (displayModel) {

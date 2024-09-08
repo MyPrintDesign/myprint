@@ -3,10 +3,20 @@ import PrintView from './components/print/print.vue';
 import previewPanelView from './components/preview/preview-panel.vue';
 import { getCurrentPanel, parentInitElement } from './utils/elementUtil';
 import { MyPrintOptions, Panel, PrintProps, PrintResult } from './types/entity';
-import { generateUUID } from './utils/utils';
+import {
+    arrayBuffer2Base64,
+    blob2Base64,
+    generateUUID,
+    isArrayBuffer,
+    isBlob,
+    isUint8Array,
+    uint8Array2Base64
+} from './utils/utils';
 import { myPrintClientService } from './plugins/myprintClientService';
 import i18n from './locales';
 import { useAppStoreHook } from './stores/app';
+import { useConfigStore } from '@myprint/design/stores/config';
+import { useSocket } from '@myprint/design/stores/socket';
 
 export const myPrintOptions: MyPrintOptions = {
     disabledClient: false
@@ -66,16 +76,36 @@ function initPanel(panel: Panel) {
 }
 
 function convertPrintProps(printProps: PrintProps) {
-    let panel = printProps.panel;
-    if (typeof printProps.panel == 'string') {
-        panel = JSON.parse(printProps.panel);
-        initPanel(panel as Panel);
-    }
-    printProps.taskId = generateUUID();
-    return {
-        ...printProps,
-        panel: panel == null ? getCurrentPanel() : panel
-    };
+    return new Promise<PrintProps>(async (resolve, _reject) => {
+        let panel = printProps.panel;
+        if (printProps.file) { // 打印pdf
+            if (isBlob(printProps.file)) {
+                printProps.file = await blob2Base64(printProps.file as Blob);
+            }
+            if (isArrayBuffer(printProps.file)) {
+                printProps.file = arrayBuffer2Base64(printProps.file as ArrayBuffer);
+            }
+            if (isUint8Array(printProps.file)) {
+                printProps.file = uint8Array2Base64(printProps.file as Uint8Array);
+            }
+        } else { // 打印panel
+            if (panel == null) {
+                panel = getCurrentPanel();
+            } else {
+                if (typeof printProps.panel == 'string') {
+                    panel = JSON.parse(printProps.panel);
+                    initPanel(panel as Panel);
+                }
+            }
+        }
+
+        printProps.taskId = generateUUID();
+        resolve(
+            {
+                ...printProps,
+                panel
+            });
+    });
 }
 
 export const MyPrinter = {
@@ -87,11 +117,38 @@ export const MyPrinter = {
                 myPrintOptions.serverUrl = options.serverUrl;
             }
         }
+        if (options.clientUrl) {
+            if (options.clientUrl.endsWith('/')) {
+                useConfigStore().clientUrl = options.clientUrl.slice(0, -1);
+            } else {
+                useConfigStore().clientUrl = options.clientUrl;
+            }
+        }
         options.disabledClient != null && (myPrintOptions.disabledClient = options.disabledClient);
     },
 
     setLocale<T extends typeof i18n.global.locale.value>(locale: T) {
         useAppStoreHook().SET_LOCALE(locale);
+    },
+
+    setClientUrl(clientUrl: string) {
+        if (!clientUrl) {
+            return;
+        }
+        if (clientUrl.endsWith('/')) {
+            useConfigStore().clientUrl = clientUrl.slice(0, -1);
+        } else {
+            useConfigStore().clientUrl = clientUrl;
+        }
+        useSocket().INIT_SOCKET()
+    },
+
+    setServerUrl(serverUrl: string) {
+        if (serverUrl.endsWith('/')) {
+            myPrintOptions.serverUrl = serverUrl.slice(0, -1);
+        } else {
+            myPrintOptions.serverUrl = serverUrl;
+        }
     },
 
     clientConnectIs() {
@@ -120,35 +177,35 @@ export const MyPrinter = {
     },
 
     chromePreview(printProps: PrintProps) {
-        return handleChromePreview(convertPrintProps(printProps));
+        return convertPrintProps(printProps).then(handleChromePreview);
     },
 
     chromePrinter(printProps: PrintProps) {
-        return handleChromePrint(convertPrintProps(printProps));
+        return convertPrintProps(printProps).then(handleChromePrint);
     },
 
     clientPrinter(printProps: PrintProps) {
-        return handleClientPrint(convertPrintProps(printProps));
+        return convertPrintProps(printProps).then(handleClientPrint);
     },
 
     pdfChrome(printProps: PrintProps) {
-        return handleChromeDownloadPdf(convertPrintProps(printProps));
+        return convertPrintProps(printProps).then(handleChromeDownloadPdf);
     },
 
     pdfClient(printProps: PrintProps) {
-        return handleClientDownloadPdf(convertPrintProps(printProps));
+        return convertPrintProps(printProps).then(handleClientDownloadPdf);
     },
 
     pdfServer(printProps: PrintProps) {
-        return handleServerDownloadPdf(convertPrintProps(printProps));
+        return convertPrintProps(printProps).then(handleServerDownloadPdf);
     },
 
     imgChrome(printProps: PrintProps) {
-        return handleChromeDownloadImg(convertPrintProps(printProps));
+        return convertPrintProps(printProps).then(handleChromeDownloadImg);
     },
 
     imgServer(printProps: PrintProps) {
-        return handleServerDownloadImg(convertPrintProps(printProps));
+        return convertPrintProps(printProps).then(handleServerDownloadImg);
     }
 
 };

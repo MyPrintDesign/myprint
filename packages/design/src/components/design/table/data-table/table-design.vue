@@ -59,7 +59,7 @@ import { defaultElement, elementHandleStatusList } from '../../../../constants/c
 import { useAppStoreHook } from '../../../../stores/app';
 import { sortColumn } from '../../../../utils/utils';
 import { freshMoveableOption, updateMoveableRect } from '../../../../plugins/moveable/moveable';
-import {throttle} from 'lodash-es';
+import {throttle} from 'lodash';
 import {
     getRecursionParentPanel,
     recursionUpdateCellParentInitWidth,

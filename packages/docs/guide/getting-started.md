@@ -30,7 +30,8 @@ const app = createApp(App);
 
 // 设置pdf服务器地址(可选)
 MyPrinter.initMyPrinter({
-    serverUrl: 'http://q-jiang.com:19898/', // 服务器地址
+    clientUrl: 'ws://127.0.0.1:9898',// 可选参数
+    serverUrl: 'http://q-jiang.com:19898/' // 服务器地址
     // disabledClient: true // 是否禁用客户端连接
 });
 

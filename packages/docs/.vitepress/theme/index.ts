@@ -36,7 +36,9 @@ export default {
         if (inBrowser) {
             //@ts-ignore
             const module = await import('@myprint/design/index');
-            module.MyPrinter.initMyPrinter({ serverUrl: 'http://q-jiang.com:19898', disabledClient: true });
+            module.MyPrinter.initMyPrinter({
+                // clientUrl: 'ws://192.168.1.45:9898',
+                serverUrl: 'http://q-jiang.com:19898', disabledClient: true });
             app.use(module.createPrint);
         }
         // import('@myprint/design/index').then(module => {

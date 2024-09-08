@@ -2,7 +2,7 @@
 
 set -e
 
-pnpm i --frozen-lockfile
+#pnpm i --frozen-lockfile
 #pnpm update:version
 cd ..
 

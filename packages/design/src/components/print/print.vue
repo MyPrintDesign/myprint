@@ -37,7 +37,6 @@ import {
     myPrintClientService,
     printResult
 } from '../../plugins/myprintClientService';
-import { isEmpty } from 'lodash-es';
 
 defineExpose({
     handleChromePrint,
@@ -66,13 +65,13 @@ function handleChromePrint(printProps: PrintProps) {
     return new Promise<PrintResult>(async (resolve, _reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         
-        handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
         data.panel = printProps.panel as Panel;
         await nextTick();
         await autoPage(data.pageList, data.panel, printProps.previewDataList);
         await nextTick();
+        handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
         printArea();
-        data.pageList.length = 0
+        data.pageList.length = 0;
         printResult(printProps.taskId!, {
             status: 'SUCCESS',
             type: 'CHROME_PRINT'
@@ -83,13 +82,15 @@ function handleChromePrint(printProps: PrintProps) {
 function handleClientPrint(printProps: PrintProps) {
     return new Promise<PrintResult>(async (resolve, _reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
+        if (printProps.panel) {
+            data.panel = printProps.panel as Panel;
+            await nextTick();
+            await autoPage(data.pageList, data.panel, printProps.previewDataList);
+            await nextTick();
+        }
         
         handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
-        data.panel = printProps.panel as Panel;
-        await nextTick();
-        await autoPage(data.pageList, data.panel, printProps.previewDataList);
-        await nextTick();
-        let printer = printProps.printer;
+        // let printer = printProps.printer;
         
         if (!myPrintClientService.connectIs()) {
             printResult(printProps.taskId!, {
@@ -100,17 +101,24 @@ function handleClientPrint(printProps: PrintProps) {
             return;
         }
         
-        if (isEmpty(printer)) {
-            printResult(printProps.taskId!, {
-                status: 'ERROR',
-                msg: '未指定打印机',
-                type: 'CLIENT_PRINT'
-            }, data.previewTimeOutMap, data.resolveMap);
-            return;
-        }
+        // if (isEmpty(printer)) {
+        // printResult(printProps.taskId!, {
+        //     status: 'ERROR',
+        //     msg: '未指定打印机',
+        //     type: 'CLIENT_PRINT'
+        // }, data.previewTimeOutMap, data.resolveMap);
+        // return;
+        // }
         
         myPrintClientService.print({
-            content: { html: getPrintElementHtml(previewContentRef.value!, data.pageList), printer: printProps.printer },
+            content: {
+                title: printProps.title ? printProps.title : (printProps.panel ? (printProps.panel as Panel).name : undefined),
+                html: printProps.panel ? getPrintElementHtml(previewContentRef.value!, data.pageList) : undefined,
+                fileBase64: printProps.file ? printProps.file as string : undefined,
+                printer: printProps.printer,
+                ...printProps,
+                panel: undefined
+            },
             cmd: 'print',
             taskId: printProps.taskId!
         }, data.panel).then(res => {
@@ -183,14 +191,14 @@ function handleChromeDownloadPdf(printProps: PrintProps) {
         toPdf(previewContentRef.value, {
             width: unit2px(data.panel.width, data.panel), height: unit2px(data.panel.height, data.panel)
         }).then(blob => {
-            data.pageList.length = 0
+            data.pageList.length = 0;
             printResult(printProps.taskId!, {
                 status: 'SUCCESS',
                 blob,
                 type: 'CHROME_GENERATE_PDF'
             }, data.previewTimeOutMap, data.resolveMap);
         }).catch(e => {
-            data.pageList.length = 0
+            data.pageList.length = 0;
             reject({
                 status: 'ERROR',
                 msg: e.msg,
