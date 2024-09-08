@@ -21,6 +21,9 @@
 * 操作简单，内置快捷键：Ctrl+c、Ctrl+v快速复制粘贴、Ctrl+s保存、Ctrl+z回滚、Ctrl+y重做、方向键微调位置。
 * 多种安装方式支持`centos`、`debian`、`docker`、`k8s` 一键安装
 
+## 更新日志
+[查看更新日志](https://github.com/MyPrintDesign/myprint/blob/main/CHANGELOG.md)
+
 ## 有图有真相
 
 <img src="readme/demo_main.png"/>

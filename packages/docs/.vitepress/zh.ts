@@ -64,7 +64,7 @@ function nav(): DefaultTheme.NavItem[] {
             items: [
                 {
                     text: '更新日志',
-                    link: 'https://github.com/MyPrintDesign/myprint/CHANGELOG.md'
+                    link: 'https://github.com/MyPrintDesign/myprint/blob/main/CHANGELOG.md'
                 },
                 // {
                 //     text: '参与贡献',
