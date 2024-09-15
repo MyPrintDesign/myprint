@@ -4,7 +4,7 @@ import { useManualRefHistory } from '@vueuse/core';
 import { getCurrentPanel, installPanelParentElement } from './elementUtil';
 import { useAppStoreHook as appStore } from '../stores/app';
 import { updatePanel } from '../plugins/moveable/moveable';
-import { parse } from '@myprint/design/utils/utils';
+import { parse } from '../utils/utils';
 
 export enum ActionEnum {
     INIT = '加载',

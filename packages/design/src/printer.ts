@@ -15,8 +15,8 @@ import {
 import { myPrintClientService } from './plugins/myprintClientService';
 import i18n from './locales';
 import { useAppStoreHook } from './stores/app';
-import { useConfigStore } from '@myprint/design/stores/config';
-import { useSocket } from '@myprint/design/stores/socket';
+import { useConfigStore } from './stores/config';
+import { useSocket } from './stores/socket';
 
 export const myPrintOptions: MyPrintOptions = {
     disabledClient: false

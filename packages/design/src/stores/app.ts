@@ -3,7 +3,7 @@ import { DisplayModel, MyAuxiliaryLine, PageUnit, Panel, Provider } from '../typ
 import { defaultElement } from '../constants/common';
 import i18n from '../locales';
 
-export const useAppStoreHook = defineStore('app', {
+export const useAppStoreHook = defineStore('myPrintApp', {
     state: () => {
         return {
             locale: localStorage.getItem('lang') || 'zhCn',

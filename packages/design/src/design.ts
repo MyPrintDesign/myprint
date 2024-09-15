@@ -1,6 +1,6 @@
 import { App, h, render } from 'vue-demi';
 import DesignPanel from './components/content';
-import { DesignPanelProps } from '@myprint/design/types/entity';
+import { DesignPanelProps } from './types/entity';
 
 export function mountDesign(app: App<any>, props: DesignPanelProps, element?: HTMLDivElement) {
     const printNode = h(DesignPanel, props == null ? {} : props);

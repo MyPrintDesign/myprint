@@ -261,7 +261,7 @@ import { inBrowser } from 'vitepress';
 
 
 
-## 修改客户端地址
+## 修改客户端地址<Badge type="tip" text="1.0.1" />
 
 调用本地客户端进行打印，可以指定打印机，后台静默打印，可以获得打印结果
 
@@ -532,7 +532,7 @@ function handleDefaultPrinter() {
 <br/>
 <span>默认打印机：{{defaultPrinter.displayName}}</span>
 
-## 发送文件到打印机打印
+## 发送文件到打印机打印<Badge type="tip" text="1.0.1" />
 
 调用本地客户端进行打印，可以指定打印机，后台静默打印，可以获得打印结果
 

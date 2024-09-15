@@ -1,3 +1,4 @@
+//@ts-nocheck
 import path, { resolve } from 'path';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { OutputOptions, rollup, RollupBuild } from 'rollup';

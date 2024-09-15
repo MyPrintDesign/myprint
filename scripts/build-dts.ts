@@ -73,27 +73,27 @@ async function copyDtsTest(pkgDirName: string) {
 
 /** 将*.d.ts文件复制到指定格式模块目录里 */
 async function copyDts(pkgDirName: string) {
+    // console.log(pkgDirName);
+    // console.log(resolveProjectPath('packages', 'design', 'dist', 'types', 'packages', pkgDirName, 'src'));
     const dtsPaths = await glob(['**/*.d.ts'], {
-        cwd: resolveProjectPath('dist', 'types', 'packages', pkgDirName, 'src'),
+        cwd: resolveProjectPath('packages', 'design', 'dist', 'types', 'packages', pkgDirName, 'src'),
         absolute: false,
         onlyFiles: true
     });
-    console.log(dtsPaths);
-    const baseDir = resolveProjectPath('dist', 'types', 'packages', pkgDirName, 'src');
+    // console.log(dtsPaths);
+    const baseDir = resolveProjectPath('packages', 'design', 'dist', 'types', 'packages', pkgDirName, 'src');
 
     dtsPaths.forEach((dts: string) => {
         const dtsPath = resolveProjectPath(
-            'dist',
-            'types',
-            'packages',
+            'packages', 'design', 'dist', 'types', 'packages',
             pkgDirName,
             'src',
             dts
         );
-        const cjsPath = resolvePackagePath(pkgDirName, 'dist', 'lib', dts);
-        const esmPath = resolvePackagePath(pkgDirName, 'dist', 'es', dts);
+        const cjsPath = resolvePackagePath(pkgDirName, 'dist','myprint-design', 'lib', dts);
+        const esmPath = resolvePackagePath(pkgDirName, 'dist', 'myprint-design', 'es', dts);
         let content = fs.readFileSync(dtsPath, { encoding: 'utf8' });
-
+        // console.log(cjsPath);
         // 替换路径
         content = replacePaths(content, '@myprint/design', baseDir, dtsPath);
 
@@ -107,7 +107,7 @@ async function addSourceFiles(project: Project, pkgSrcDir: string) {
     project.addSourceFileAtPath(resolveProjectPath('env.d.ts'));
 
     const globSourceFile = '**/*.{js?(x),ts?(x),vue}';
-    const filePaths = await glob([globSourceFile], {
+    const filePaths = await glob([globSourceFile, '!dist'], {
         cwd: pkgSrcDir,
         absolute: true,
         onlyFiles: true
@@ -212,6 +212,6 @@ async function build(pkgDirName: string) {
 
 console.log('[Dts] 开始编译d.ts文件···');
 await build('design');
-// await copyDtsTest('design')
+await copyDtsTest('design')
 // await build('business');
 console.log('[Dts] 编译d.ts文件成功！');

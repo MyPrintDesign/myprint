@@ -4,7 +4,7 @@ import { useConfigStore } from './config';
 import { ClientCmd, Printer } from '../types/entity';
 
 let lockReconnect: any;
-export const useSocket = defineStore('socket', {
+export const useSocket = defineStore('myPrintSocket', {
     state: () => {
         return {
             socket: undefined as any,

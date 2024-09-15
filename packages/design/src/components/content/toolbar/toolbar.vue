@@ -54,7 +54,7 @@ import Printer from '../../../components/my/icon/icons/Printer.vue';
 import { MyMessage } from '../../../components/my/message/my-message';
 //@ts-ignore
 import { DesignPanelProps } from '../../../types/entity';
-import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
+import { useAppStoreHook as appStore } from '../../../stores/app';
 
 const useApp = appStore()
 withDefaults(defineProps<{
