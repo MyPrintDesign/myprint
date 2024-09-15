@@ -1,3 +1,3 @@
-import MyStyleIcon from './style-icon.vue'
+import MyStyleIcon from './style-icon.vue';
 
-export default MyStyleIcon
+export default MyStyleIcon;

@@ -1,5 +1,7 @@
 # 在k8s中部署
-
+::: danger 注意
+pdf服务端是用来作为后台服务下载`pdf`或者`图片`的，不是demo的后端服务
+:::
 ```yaml
 kind: Deployment
 apiVersion: apps/v1

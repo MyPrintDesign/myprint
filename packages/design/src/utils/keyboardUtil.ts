@@ -3,10 +3,10 @@ import {
     removeSelectElement,
     selectAllElement,
     selectTabNext
-} from '../plugins/moveable/moveable';
-import { redoPanel, undoPanel } from '../utils/historyUtil';
-import { mitt } from '../utils/utils';
-import { memoryClipboardUtil } from '../utils/memoryClipboardUtil';
+} from '@myprint/design/plugins/moveable/moveable';
+import { redoPanel, undoPanel } from '@myprint/design/utils/historyUtil';
+import { mitt } from '@myprint/design/utils/utils';
+import { memoryClipboardUtil } from '@myprint/design/utils/memoryClipboardUtil';
 
 
 const keyConvert = {
@@ -43,89 +43,89 @@ export function mountedKeyboardEvent() {
         })
         .subscribe([isCtrl, 'c'], () => {
             // console.log('isCtrl+c 复制')
-            memoryClipboardUtil.copy()
+            memoryClipboardUtil.copy();
         })
         .subscribe([isCtrl, 'x'], () => {
             // console.log('isCtrl+c 剪切')
-            memoryClipboardUtil.cut()
+            memoryClipboardUtil.cut();
         })
         .subscribe([isCtrl, 'v'], () => {
             // console.log('isCtrl+v 粘贴')
-            memoryClipboardUtil.paste()
+            memoryClipboardUtil.paste();
         })
         .subscribe([isCtrl, 'd'], () => {
             // console.log('isCtrl+d 副本')
         })
         .subscribe([isCtrl, 's'], () => {
             // console.log('isCtrl+s 保存')
-            mitt.emit('saveTemplate', {} as any)
+            mitt.emit('saveTemplate', {} as any);
         })
 
         .subscribe(['Tab'], () => {
             // console.log('Tab切换')
-            selectTabNext()
+            selectTabNext();
         })
 
         .subscribe([isCtrlShift, 'ArrowUp'], () => {
             // console.log('ArrowUp')
-            moveableResizeOffset(0, -10)
+            moveableResizeOffset(0, -10);
         })
         .subscribe([isCtrlShift, 'ArrowDown'], () => {
             // console.log('ArrowDown')
-            moveableResizeOffset(0, 10)
+            moveableResizeOffset(0, 10);
         })
         .subscribe([isCtrlShift, 'ArrowLeft'], () => {
             // console.log('ArrowLeft')
-            moveableResizeOffset(-10, 0)
+            moveableResizeOffset(-10, 0);
         })
         .subscribe([isCtrlShift, 'ArrowRight'], () => {
             // console.log('ArrowRight')
-            moveableResizeOffset(10, 0)
+            moveableResizeOffset(10, 0);
         })
 
         .subscribe([isShift, 'ArrowUp'], () => {
             // console.log('ArrowUp')
-            moveableMoveOffset(0, -10)
+            moveableMoveOffset(0, -10);
         })
         .subscribe([isShift, 'ArrowDown'], () => {
-            moveableMoveOffset(0, 10)
+            moveableMoveOffset(0, 10);
         })
         .subscribe([isShift, 'ArrowLeft'], () => {
-            moveableMoveOffset(-10, 0)
+            moveableMoveOffset(-10, 0);
         })
         .subscribe([isShift, 'ArrowRight'], () => {
-            moveableMoveOffset(10, 0)
+            moveableMoveOffset(10, 0);
         })
 
         .subscribe([isCtrl, 'ArrowUp'], () => {
-            moveableResizeOffset(0, -1)
+            moveableResizeOffset(0, -1);
         })
         .subscribe([isCtrl, 'ArrowDown'], () => {
-            moveableResizeOffset(0, 1)
+            moveableResizeOffset(0, 1);
         })
         .subscribe([isCtrl, 'ArrowLeft'], () => {
-            moveableResizeOffset(-1, 0)
+            moveableResizeOffset(-1, 0);
         })
         .subscribe([isCtrl, 'ArrowRight'], () => {
-            moveableResizeOffset(1, 0)
+            moveableResizeOffset(1, 0);
         })
 
         .subscribe(['ArrowUp'], () => {
-            moveableMoveOffset(0, -1)
+            moveableMoveOffset(0, -1);
         })
         .subscribe(['ArrowDown'], () => {
-            moveableMoveOffset(0, 1)
+            moveableMoveOffset(0, 1);
         })
         .subscribe(['ArrowLeft'], () => {
-            moveableMoveOffset(-1, 0)
+            moveableMoveOffset(-1, 0);
         })
         .subscribe(['ArrowRight'], () => {
-            moveableMoveOffset(1, 0)
+            moveableMoveOffset(1, 0);
         })
 
         .subscribe([isDelete], () => {
             // console.log('ArrowRight')
-            removeSelectElement()
+            removeSelectElement();
         });
 }
 

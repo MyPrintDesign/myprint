@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { DisplayModel, MyAuxiliaryLine, PageUnit, Panel, Provider } from '../types/entity';
-import { defaultElement } from '../constants/common';
-import i18n from '../locales';
+import { DisplayModel, MyAuxiliaryLine, PageUnit, Panel, Provider } from '@myprint/design/types/entity';
+import { defaultElement } from '@myprint/design/constants/common';
+import i18n from '@myprint/design/locales';
 
 export const useAppStoreHook = defineStore('myPrintApp', {
     state: () => {

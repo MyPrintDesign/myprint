@@ -25,4 +25,4 @@ export default {
     'MSI1110': 'MSI or Modified Plessey is a barcode developed by the MSI Data Corporation and is primarily used for inventory control, marking storage containers and shelves in warehouse environments. It supports digits 0-9. Provides automatic checksum calculation of Mod 10, Mod 11, Mod 1010 and Mod 1110. Example: 1234',
     'codabar': 'CODE39 is an old barcode type that can encode numbers, uppercase letters and a number of special characters (-, ., $, /, +, %, and space). It has been a common barcode type in the past but CODE128 is recommended if not for legacy reasons. Example: 1234567890, C1234567890D',
     'pharmacode': 'Pharmacode is a barcode used in the pharmaceutical industry. It can encode numbers 3 to 131070. Example: 1234'
-}
+};

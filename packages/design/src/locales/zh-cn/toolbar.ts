@@ -39,9 +39,9 @@ export default {
     'toolbar.layer.top': '置于顶层',
     'toolbar.layer.up.one': '上移一层',
     'toolbar.layer.bottom': '置于底层',
-    'toolbar.layer.down.one': '下移一层',
+    'toolbar.layer.down.one': '下移一层'
 
-}
+};
 
 
 

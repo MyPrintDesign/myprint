@@ -7,7 +7,7 @@ import glob from 'fast-glob';
 import { Project } from 'ts-morph';
 import type { CompilerOptions, SourceFile } from 'ts-morph';
 import { resolveProjectPath, resolvePackagePath } from './util';
-import { getPatternsOutsideCurrentDirectory } from 'fast-glob/out/utils/pattern';
+// import { getPatternsOutsideCurrentDirectory } from 'fast-glob/out/utils/pattern';
 
 const tsWebBuildConfigPath = resolveProjectPath('tsconfig.web.build.json');
 
@@ -30,45 +30,45 @@ function getRelativePath(from: string, to: string): string {
 
 /** 替换.d.ts文件中的路径为相对路径 */
 /** 替换.d.ts文件中的路径为相对路径 */
-function replacePaths(content: string, oldPath: string, baseDir: string, dtsPath: string): string {
+export function replacePaths(content: string, oldPath: string, baseDir: string, dtsPath: string): string {
     const newPath = path.resolve(baseDir); // 目标目录的绝对路径
     const relativeNewPath = getRelativePath(dtsPath, newPath);
     const regex = new RegExp(oldPath, 'g');
     return content.replace(regex, relativeNewPath);
 }
 
-async function copyDtsTest(pkgDirName: string) {
-    const dtsPaths = await glob(['**/*.ts', '**/*.vue'], {
-        cwd: resolveProjectPath('packages', 'design','src'),
-        absolute: false,
-        onlyFiles: true
-    });
-    console.log(dtsPaths);
-    const baseDir = resolveProjectPath('packages', 'design','src');
-
-    dtsPaths.forEach((dts: string) => {
-        const dtsPath = resolveProjectPath(
-            'packages', 'design','src',
-            dts
-        );
-        // const cjsPath = resolvePackagePath(pkgDirName, 'dist', 'lib', dts);
-        // const esmPath = resolvePackagePath(pkgDirName, 'dist', 'es', dts);
-        let content = fs.readFileSync(dtsPath, { encoding: 'utf8' });
-        console.log(dtsPath);
-        // if(dtsPath == '/Users/css/code/webstorm/self/myprint/myprint/packages/design/src/utils/myprint.ts'){
-            content = replacePaths(content, '@myprint/design', baseDir, dtsPath);
-            // console.log(content);
-            fs.writeFileSync(dtsPath, content);
-        // }
-
-
-        // 替换路径
-        // content = replacePaths(content, '@myprint/design', baseDir, dtsPath);
-
-        // fs.writeFileSync(cjsPath, content);
-        // fs.writeFileSync(esmPath, content);
-    });
-}
+// async function copyDtsTest(pkgDirName: string) {
+//     const dtsPaths = await glob(['**/*.ts', '**/*.vue'], {
+//         cwd: resolveProjectPath('packages', 'design','src'),
+//         absolute: false,
+//         onlyFiles: true
+//     });
+//     console.log(dtsPaths);
+//     const baseDir = resolveProjectPath('packages', 'design','src');
+//
+//     dtsPaths.forEach((dts: string) => {
+//         const dtsPath = resolveProjectPath(
+//             'packages', 'design','src',
+//             dts
+//         );
+//         // const cjsPath = resolvePackagePath(pkgDirName, 'dist', 'lib', dts);
+//         // const esmPath = resolvePackagePath(pkgDirName, 'dist', 'es', dts);
+//         let content = fs.readFileSync(dtsPath, { encoding: 'utf8' });
+//         console.log(dtsPath);
+//         // if(dtsPath == '/Users/css/code/webstorm/self/myprint/myprint/packages/design/src/utils/myprint.ts'){
+//             content = replacePaths(content, '@myprint/design', baseDir, dtsPath);
+//             // console.log(content);
+//             fs.writeFileSync(dtsPath, content);
+//         // }
+//
+//
+//         // 替换路径
+//         // content = replacePaths(content, '@myprint/design', baseDir, dtsPath);
+//
+//         // fs.writeFileSync(cjsPath, content);
+//         // fs.writeFileSync(esmPath, content);
+//     });
+// }
 
 
 /** 将*.d.ts文件复制到指定格式模块目录里 */
@@ -212,6 +212,6 @@ async function build(pkgDirName: string) {
 
 console.log('[Dts] 开始编译d.ts文件···');
 await build('design');
-await copyDtsTest('design')
+// await copyDtsTest('design')
 // await build('business');
 console.log('[Dts] 编译d.ts文件成功！');

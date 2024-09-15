@@ -48,21 +48,21 @@
 </template>
 
 <script setup lang="ts">
-import Rule from '../../../components/my/rule/rule.vue';
-import { scaleUtil } from '../../../utils/scaleUtil';
+import Rule from '@myprint/design/components/my/rule/rule.vue';
+import { scaleUtil } from '@myprint/design/utils/scaleUtil';
 import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue-demi';
-import { Container, ContentScaleVo, MyElement } from '../../../types/entity';
-import { record, Snapshot } from '../../../utils/historyUtil';
-import { getCurrentPanel, handle, none, valueUnit } from '../../../utils/elementUtil';
-import { useAppStoreHook as useAppStore } from '../../../stores/app';
-import ElementList from '../../../components/design/element-list.vue';
-import { mountedKeyboardEvent, unMountedKeyboardEvent } from '../../../utils/keyboardUtil';
-import { changeDragSnapIs, initMoveable, updatePanel } from '../../../plugins/moveable/moveable';
-import Design from '../../../components/design/design.vue';
-import { initSelecto, selecto } from '../../../plugins/moveable/selecto';
-import AuxiliaryLine from '../../../components/design/auxiliary/auxiliary-line.vue';
-import MyIcon from '../../../components/my/icon/my-icon.vue';
-import { mitt } from '../../../utils/utils';
+import { Container, ContentScaleVo, MyElement } from '@myprint/design/types/entity';
+import { record, Snapshot } from '@myprint/design/utils/historyUtil';
+import { getCurrentPanel, handle, none, valueUnit } from '@myprint/design/utils/elementUtil';
+import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
+import ElementList from '@myprint/design/components/design/element-list.vue';
+import { mountedKeyboardEvent, unMountedKeyboardEvent } from '@myprint/design/utils/keyboardUtil';
+import { changeDragSnapIs, initMoveable, updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import Design from '@myprint/design/components/design/design.vue';
+import { initSelecto, selecto } from '@myprint/design/plugins/moveable/selecto';
+import AuxiliaryLine from '@myprint/design/components/design/auxiliary/auxiliary-line.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import { mitt } from '@myprint/design/utils/utils';
 
 const panel = getCurrentPanel();
 const designContentRef = ref<InstanceType<any>>();

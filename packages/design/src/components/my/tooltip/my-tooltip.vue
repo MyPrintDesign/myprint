@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang="ts">
-import MyPopover from '../../../components/my/popover/my-popover.vue';
+import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 
 withDefaults(defineProps<{
     disabled?: boolean

@@ -1,3 +1,3 @@
-import MyRect from './rect.vue'
+import MyRect from './rect.vue';
 
-export default MyRect
+export default MyRect;

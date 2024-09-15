@@ -16,22 +16,22 @@ import {
     SvgData,
     TableCellElement,
     TableHeadProviderCellElement
-} from '../types/entity';
-import { elementTypeContainerList, fontMap } from '../constants/common';
+} from '@myprint/design/types/entity';
+import { elementTypeContainerList, fontMap } from '@myprint/design/constants/common';
 import { _defaultVal, generateUUID, mitt, parse, stringify } from './utils';
 import { CSSProperties, reactive, Ref } from 'vue-demi';
 import { formatDate } from './timeUtil';
-import { px2unit, unit2px, unit2unit } from '../utils/devicePixelRatio';
-import { arrayRemove } from '../utils/arrays';
-import { useAppStoreHook as appStore } from '../stores/app';
-import { updatePanel } from '../plugins/moveable/moveable';
+import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
+import { arrayRemove } from '@myprint/design/utils/arrays';
+import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
+import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
 import {
     findTableHeadDeep,
     findUpperCell,
     handleTableCellInitHeight,
     recursionHandleTableHead
-} from '../utils/table/dataTable';
-import numberUtil, { _defaultNum } from '../utils/numberUtil';
+} from '@myprint/design/utils/table/dataTable';
+import numberUtil, { _defaultNum } from '@myprint/design/utils/numberUtil';
 import { isEmpty, isNil } from 'lodash';
 
 // export function displayModel(displayModel?: DisplayModel) {

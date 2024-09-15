@@ -1,11 +1,11 @@
-import { getSelectElement, removeSelectElement, updatePanel } from '../plugins/moveable/moveable';
-import { elementTypeContainerList, noCopyElementTypeList } from '../constants/common';
-import { Container, MyElement, Point, SvgData } from '../types/entity';
-import { addElement, getCurrentPanel } from '../utils/elementUtil';
-import { parse, stringify } from '../utils/utils';
-import { ActionEnum, record, Snapshot } from '../utils/historyUtil';
+import { getSelectElement, removeSelectElement, updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import { elementTypeContainerList, noCopyElementTypeList } from '@myprint/design/constants/common';
+import { Container, MyElement, Point, SvgData } from '@myprint/design/types/entity';
+import { addElement, getCurrentPanel } from '@myprint/design/utils/elementUtil';
+import { parse, stringify } from '@myprint/design/utils/utils';
+import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
 import { nextTick } from 'vue-demi';
-import { px2unit } from '../utils/devicePixelRatio';
+import { px2unit } from '@myprint/design/utils/devicePixelRatio';
 
 type memoryClipboardType = 'COPY' | 'CUT'
 

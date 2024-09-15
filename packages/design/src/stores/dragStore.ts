@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { MyElement, DragWrapper } from '../types/entity';
+import { MyElement, DragWrapper } from '@myprint/design/types/entity';
 
 export const dragDataStore = defineStore('myPrintDragData', {
     state: () => {

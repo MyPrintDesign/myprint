@@ -22,7 +22,7 @@
 </template>
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick } from 'vue-demi';
-import { cancelRaf, rafTimeout } from '../../../utils/utils';
+import { cancelRaf, rafTimeout } from '@myprint/design/utils/utils';
 
 const props = withDefaults(defineProps<{
     width?: string | number; // 宽度
@@ -70,7 +70,7 @@ const sliderValue = computed(() => {
     let high: number;
     if (right.value === sliderWidth.value) {
         if (sliderWidth.value == 0) {
-            high = props.modelValue as number
+            high = props.modelValue as number;
         } else {
             high = props.max;
         }
@@ -108,10 +108,10 @@ watch(sliderValue, (to) => {
     emits('change', to);
 });
 onMounted(() => {
-    nextTick(()=>{
+    nextTick(() => {
         getSliderWidth();
         getPosition();
-    })
+    });
 });
 
 function checkValue(value: number): number {
@@ -125,7 +125,7 @@ function checkValue(value: number): number {
 }
 
 function getSliderWidth() {
-    console.log(slider.value.offsetWidth);
+    // console.log(slider.value.offsetWidth);
     sliderWidth.value = slider.value.offsetWidth;
 }
 

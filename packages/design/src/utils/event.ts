@@ -1,4 +1,4 @@
-export function clearEventBubble(evt:any) {
+export function clearEventBubble(evt: any) {
     // if (evt.stopPropagation)
     //     evt.stopPropagation();
     // else

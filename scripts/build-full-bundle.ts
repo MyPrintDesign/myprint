@@ -28,6 +28,9 @@ import replace from '@rollup/plugin-replace';
 // } from '../utils'
 // import { target } from '../build-info'
 import type { Plugin } from 'rollup';
+import { resolveProjectPath } from './util';
+import fs from 'node:fs';
+import { replacePaths } from './build-dts';
 
 export const target = 'es2018';
 
@@ -71,9 +74,9 @@ export const generateExternal = async (options: { full: boolean }) => {
             return true;
         }
 
-        const ss =  [...new Set(packages)].some(
+        const ss = [...new Set(packages)].some(
             (pkg) => id === pkg || id.startsWith(`${pkg}/`)
-        )
+        );
         // if(ss){
         //     console.log('sss', id);
         // }
@@ -124,6 +127,88 @@ export const epPackage = resolve(pkgRoot, 'design', 'package.json');
 export const PKG_CAMELCASE_NAME = 'MyPrinterDesign';
 // export const PKG_CAMELCASE_LOCAL_NAME = 'ElementPlusLocale';
 // export const PKG_BRAND_NAME = 'Element Plus';
+function cleanFilePath(id: string) {
+    // 去掉文件路径中的查询参数，例如 `?vue&type=script&setup=true&lang.ts`
+    return id.split('?')[0];
+}
+
+async function copyDtsTest(pkgDirName: string) {
+    const dtsPaths = await glob(['**/*.ts', '**/*.vue'], {
+        cwd: resolveProjectPath('packages', 'design', 'src'),
+        absolute: false,
+        onlyFiles: true
+    });
+    console.log(dtsPaths);
+    const baseDir = resolveProjectPath('packages', 'design', 'src');
+
+    dtsPaths.forEach((dts: string) => {
+        const dtsPath = resolveProjectPath(
+            'packages', 'design', 'src',
+            dts
+        );
+        // const cjsPath = resolvePackagePath(pkgDirName, 'dist', 'lib', dts);
+        // const esmPath = resolvePackagePath(pkgDirName, 'dist', 'es', dts);
+        let content = fs.readFileSync(dtsPath, { encoding: 'utf8' });
+        console.log(dtsPath);
+        // if(dtsPath == '/Users/css/code/webstorm/self/myprint/myprint/packages/design/src/utils/myprint.ts'){
+        content = replacePaths(content, '@myprint/design', baseDir, dtsPath);
+        // console.log(content);
+        fs.writeFileSync(dtsPath, content);
+        // }
+
+
+        // 替换路径
+        // content = replacePaths(content, '@myprint/design', baseDir, dtsPath);
+
+        // fs.writeFileSync(cjsPath, content);
+        // fs.writeFileSync(esmPath, content);
+    });
+}
+
+function customReplacePlugin(): Plugin {
+    return {
+        name: 'custom-replace',
+
+        // 拦截并修改文件内容
+        load(id) {
+            if (id.includes('\x00')) {
+                console.log('00-' + id);
+                return null;
+            }
+            if (id.includes('node_modules')) {
+                return null;
+            }
+            // const filePath = path.resolve(epRoot, 'design.ts'); // 需要替换的文件
+            // if (id === filePath) {
+            console.log(cleanFilePath(id));
+            let content = fs.readFileSync(cleanFilePath(id), 'utf8');
+
+            // 进行临时的内容替换
+            const baseDir = resolveProjectPath('packages', 'design', 'src');
+            // const dtsPath = resolveProjectPath(
+            //     'packages', 'design','src',
+            //     id
+            // );
+            // console.log(id);
+            // console.log(baseDir);
+            // console.log(dtsPath);
+            // code = code.replace(/originalText/g, 'temporaryReplacement');
+            // console.log(content);
+            if(id == '/Users/css/code/webstorm/self/myprint/myprint/packages/design/src/components/preview/preview-panel.vue?vue&type=script&setup=true&lang.ts'){
+                console.log(content);
+            }
+            content = replacePaths(content, '@myprint/design', baseDir, id);
+            // console.log(content);
+            if(id == '/Users/css/code/webstorm/self/myprint/myprint/packages/design/src/components/preview/preview-panel.vue?vue&type=script&setup=true&lang.ts'){
+                console.log(content);
+            }
+            // 返回修改后的代码
+            return content;
+            // }
+            // return null;
+        }
+    };
+}
 
 async function buildFullEntry(minify: boolean) {
     const plugins: Plugin[] = [
@@ -135,16 +220,17 @@ async function buildFullEntry(minify: boolean) {
                 vue: vue({
                     isProduction: true
                 }),
-                vueJsx: vueJsx(),
+                vueJsx: vueJsx()
             }
         }),
         nodeResolve({
             extensions: ['.mjs', '.js', '.json', '.ts']
         }),
+        customReplacePlugin(),  // 临时替换插件
         //@ts-ignore
         replace({
             'process.env.NODE_ENV': JSON.stringify('production'),
-            preventAssignment: true,
+            preventAssignment: true
         }),
         commonjs(),
         esbuild({
@@ -152,7 +238,7 @@ async function buildFullEntry(minify: boolean) {
             sourceMap: minify,
             target,
             loaders: {
-                '.vue': 'ts',
+                '.vue': 'ts'
             },
             define: {
                 'process.env.NODE_ENV': JSON.stringify('production')
@@ -161,7 +247,7 @@ async function buildFullEntry(minify: boolean) {
             legalComments: 'eof'
         }),
         //@ts-ignore
-        nodePolyfills(),
+        nodePolyfills()
 
     ];
     if (minify) {
@@ -197,7 +283,7 @@ async function buildFullEntry(minify: boolean) {
             globals: {
                 vue: 'Vue'
             },
-            sourcemap: minify,
+            sourcemap: minify
             // banner,
         },
         {

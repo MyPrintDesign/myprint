@@ -18,16 +18,16 @@
 </template>
 
 <script setup lang="ts">
-import Toolbar from '../../../components/content/toolbar/toolbar.vue';
+import Toolbar from '@myprint/design/components/content/toolbar/toolbar.vue';
 import MyPanel from './my-panel.vue';
-import { handlePanelElementList } from '../../../constants/settingPanel';
+import { handlePanelElementList } from '@myprint/design/constants/settingPanel';
 import HistoryPanel from '../handle-panel/history-panel.vue';
 import OperationPanel from '../handle-panel/operation-panel/index.vue';
 import SettingPanel from '../handle-panel/setting/setting-panel.vue';
-import { useConfigStore } from '../../../stores/config';
-import MinimapPanel from '../../../components/content/handle-panel/minimap-panel.vue';
+import { useConfigStore } from '@myprint/design/stores/config';
+import MinimapPanel from '@myprint/design/components/content/handle-panel/minimap-panel.vue';
 //@ts-ignore
-import { DesignPanelProps } from '../../../types/entity';
+import { DesignPanelProps } from '@myprint/design/types/entity';
 
 withDefaults(defineProps<{
     designProps: DesignPanelProps;

@@ -126,10 +126,10 @@
 </template>
 
 <script setup lang="ts">
-import myColorPicker from '../../../components/my/color-picker/my-color-picker.vue';
-import MyStyleIcon from '../../../components/my/icon';
-import { hasStyle, hasStyleByTypeList } from '../../../constants/common';
-import { useAppStoreHook } from '../../../stores/app';
+import myColorPicker from '@myprint/design/components/my/color-picker/my-color-picker.vue';
+import MyStyleIcon from '@myprint/design/components/my/icon';
+import { hasStyle, hasStyleByTypeList } from '@myprint/design/constants/common';
+import { useAppStoreHook } from '@myprint/design/stores/app';
 import {
     alignBottom,
     alignHorizontalCenter,
@@ -141,24 +141,24 @@ import {
     arrangeVerticalSpacing,
     group,
     ungroup
-} from '../../../plugins/moveable/moveable';
+} from '@myprint/design/plugins/moveable/moveable';
 import {
     elementDown,
     elementUp,
     multipleElementGetValue,
     multipleElementGetValueList,
     multipleElementSetValue
-} from '../../../utils/elementUtil';
+} from '@myprint/design/utils/elementUtil';
 import { computed, reactive } from 'vue-demi';
-import ToolIconPopover from '../../../components/my/icon/tool-icon-popover.vue';
-import ElementAlign from '../../../components/content/toolbar/toolbar-style/element-align.vue';
+import ToolIconPopover from '@myprint/design/components/my/icon/tool-icon-popover.vue';
+import ElementAlign from '@myprint/design/components/content/toolbar/toolbar-style/element-align.vue';
 //@ts-ignore
-import { DownList, elementType } from '../../../types/entity';
-import FontSize from '../../../components/content/toolbar/toolbar-style/font-size.vue';
-import FontFamily from '../../../components/content/toolbar/toolbar-style/font-family.vue';
-import MyIcon from '../../../components/my/icon/my-icon.vue';
-import MyScrollbar from '../../../components/my/scrollbar/my-scrollbar.vue';
-import { i18n } from '../../../locales';
+import { DownList, elementType } from '@myprint/design/types/entity';
+import FontSize from '@myprint/design/components/content/toolbar/toolbar-style/font-size.vue';
+import FontFamily from '@myprint/design/components/content/toolbar/toolbar-style/font-family.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
+import { i18n } from '@myprint/design/locales';
 
 const elementAlignList = reactive([
     [

@@ -23,7 +23,7 @@ import { onClickOutside } from '@vueuse/core';
 //@ts-ignore
 import { Placement } from '@popperjs/core/lib/enums';
 
-defineExpose({close});
+defineExpose({ close });
 
 const props = withDefaults(defineProps<{
     disabled?: boolean

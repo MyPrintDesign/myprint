@@ -18,11 +18,11 @@
 
 <script setup lang="ts">
 import { computed, CSSProperties, onMounted, onUnmounted, ref } from 'vue-demi';
-import ElementView from '../../components/design/element.vue';
-import { PreviewWrapper } from '../../types/entity';
-import { getRecursionParentPanel, valueUnit } from '../../utils/elementUtil';
-import DataTable from '../../components/design/table/data-table/data-table.vue';
-import { MyContainer } from '../../components/design/container';
+import ElementView from '@myprint/design/components/design/element.vue';
+import { PreviewWrapper } from '@myprint/design/types/entity';
+import { getRecursionParentPanel, valueUnit } from '@myprint/design/utils/elementUtil';
+import DataTable from '@myprint/design/components/design/table/data-table/data-table.vue';
+import { MyContainer } from '@myprint/design/components/design/container';
 
 const style = computed(() => {
     const _style = {

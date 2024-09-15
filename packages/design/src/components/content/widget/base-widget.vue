@@ -12,23 +12,23 @@
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue-demi';
 // @ts-ignore
-import { Container, MyElement, PageUnit, Point, SvgData } from '../../../types/entity';
-import { px2unit, unit2px, unit2unit } from '../../../utils/devicePixelRatio';
-import Design from '../../../components/design/design.vue';
+import { Container, MyElement, PageUnit, Point, SvgData } from '@myprint/design/types/entity';
+import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
+import Design from '@myprint/design/components/design/design.vue';
 import {
     addElement, getCurrentPanel,
     handleElementType,
     initElement,
     innerElementIs,
     installParentElement
-} from '../../../utils/elementUtil';
-import { clearEventBubble } from '../../../utils/event';
-import { dragNewElement, dragNewElementCancel, updatePanel } from '../../../plugins/moveable/moveable';
-import { useAppStoreHook as useAppStore } from '../../../stores/app';
-import DragWrapper from '../../../components/content/widget/dragWrapper.vue';
-import { mouseTips } from '../../../utils/mouseTips';
-import { ActionEnum, record, Snapshot } from '../../../utils/historyUtil';
-import { recursionForTableCell } from '../../../utils/table/dataTable';
+} from '@myprint/design/utils/elementUtil';
+import { clearEventBubble } from '@myprint/design/utils/event';
+import { dragNewElement, dragNewElementCancel, updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import { useAppStoreHook as useAppStore } from '@myprint/design/stores/app';
+import DragWrapper from '@myprint/design/components/content/widget/dragWrapper.vue';
+import { mouseTips } from '@myprint/design/utils/mouseTips';
+import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
+import { recursionForTableCell } from '@myprint/design/utils/table/dataTable';
 
 const appStore = useAppStore();
 

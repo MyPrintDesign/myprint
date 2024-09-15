@@ -39,8 +39,8 @@
 import ColumnView from './column-view.vue';
 import TextView from '../../text';
 import { CSSProperties, onMounted, watch } from 'vue-demi';
-import { MyElement } from '../../../../types/entity';
-import { useAppStoreHook } from '../../../../stores/app';
+import { MyElement } from '@myprint/design/types/entity';
+import { useAppStoreHook } from '@myprint/design/stores/app';
 
 const props = withDefaults(defineProps<{
     element: MyElement

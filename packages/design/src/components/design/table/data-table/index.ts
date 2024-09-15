@@ -1,4 +1,4 @@
-import TablePreview from './data-table.vue'
-import TableDesign from './table-design.vue'
+import TablePreview from './data-table.vue';
+import TableDesign from './table-design.vue';
 
-export {TablePreview, TableDesign}
+export { TablePreview, TableDesign };

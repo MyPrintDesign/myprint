@@ -1,5 +1,5 @@
 import { App, h, render, VNode } from 'vue-demi';
-import MessageView from '../../../components/my/message/my-message.vue';
+import MessageView from '@myprint/design/components/my/message/my-message.vue';
 
 let messageNode: VNode = null!;
 let handleSuccess: (content: string) => void = null!;
@@ -26,5 +26,5 @@ export const MyMessage = {
     },
     error(msg: string) {
         handleError(msg);
-    },
+    }
 };

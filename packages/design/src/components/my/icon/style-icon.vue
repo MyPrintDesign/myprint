@@ -9,12 +9,12 @@
 
 <script setup lang="ts">
 import { computed } from 'vue-demi';
-import { useAppStoreHook } from '../../../stores/app';
-import TipIcon from '../../../components/my/icon/tip-icon.vue';
-import { hasStyle } from '../../../constants/common';
-import { ActionEnum, Snapshot } from '../../../utils/historyUtil';
-import { multipleElementGetValue, multipleElementSetValue } from '../../../utils/elementUtil';
-import { mitt } from '../../../utils/utils';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
+import { hasStyle } from '@myprint/design/constants/common';
+import { ActionEnum, Snapshot } from '@myprint/design/utils/historyUtil';
+import { multipleElementGetValue, multipleElementSetValue } from '@myprint/design/utils/elementUtil';
+import { mitt } from '@myprint/design/utils/utils';
 
 const appStore = useAppStoreHook();
 const emit = defineEmits(['update:modelValue']);

@@ -44,9 +44,13 @@
                     </my-button>
                 </template>
                 
-                <my-button class="preview-panel__tool_button" @click="printChromePdf">{{ i18n('toolbar.chrome.print') }}</my-button>
-                <my-button class="preview-panel__tool_button" @click="downloadPdf">{{ i18n('preview.download.pdf') }}</my-button>
-                <my-button class="preview-panel__tool_button" @click="()=>data.dialogVisible = false">{{ i18n('common.close') }}
+                <my-button class="preview-panel__tool_button" @click="printChromePdf">{{ i18n('toolbar.chrome.print')
+                    }}
+                </my-button>
+                <my-button class="preview-panel__tool_button" @click="downloadPdf">{{ i18n('preview.download.pdf') }}
+                </my-button>
+                <my-button class="preview-panel__tool_button" @click="()=>data.dialogVisible = false">
+                    {{ i18n('common.close') }}
                 </my-button>
             </div>
         </div>
@@ -56,27 +60,27 @@
 
 <script setup lang="ts">
 import { computed, nextTick, reactive, ref } from 'vue-demi';
-import { toPdf } from '../../utils/pdfUtil';
-import { download } from '../../utils/utils';
-import { unit2px } from '../../utils/devicePixelRatio';
+import { toPdf } from '@myprint/design/utils/pdfUtil';
+import { download } from '@myprint/design/utils/utils';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import Preview from './preview.vue';
-import { MyElement, Panel, PrintProps, PrintResult } from '../../types/entity';
-import { i18n } from '../../locales';
-import { valueUnit } from '../../utils/elementUtil';
-import { useConfigStore } from '../../stores/config';
+import { MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
+import { i18n } from '@myprint/design/locales';
+import { valueUnit } from '@myprint/design/utils/elementUtil';
+import { useConfigStore } from '@myprint/design/stores/config';
 import { autoPage } from './autoPage';
-import MyScrollbar from '../../components/my/scrollbar/my-scrollbar.vue';
-import MyButton from '../../components/my/button/my-Button.vue';
-import MyDialog from '../../components/my/dialog/my-dialog.vue';
-import MySelect from '../../components/my/select/my-select.vue';
-import { getPrintElementHtml, iFramePrint } from '../../utils/myprint';
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
+import MyButton from '@myprint/design/components/my/button/my-Button.vue';
+import MyDialog from '@myprint/design/components/my/dialog/my-dialog.vue';
+import MySelect from '@myprint/design/components/my/select/my-select.vue';
+import { getPrintElementHtml, iFramePrint } from '@myprint/design/utils/myprint';
 import {
     handleClientResult,
     handleTimeOut,
     myPrintClientService,
     printResult
-} from '../../plugins/myprintClientService';
-import { MyPrinter } from '../../printer';
+} from '@myprint/design/plugins/myprintClientService';
+import { MyPrinter } from '@myprint/design/printer';
 
 defineExpose({ handleChromePreview });
 

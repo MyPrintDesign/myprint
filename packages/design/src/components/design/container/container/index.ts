@@ -1,3 +1,3 @@
-import MyContainer from './containerView.vue'
+import MyContainer from './containerView.vue';
 
-export default MyContainer
+export default MyContainer;

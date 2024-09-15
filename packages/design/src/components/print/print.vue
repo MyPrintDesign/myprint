@@ -23,20 +23,20 @@
 
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue-demi';
-import { MyElement, Panel, PrintProps, PrintResult } from '../../types/entity';
-import { getCurrentPanelUnit, valueUnit } from '../../utils/elementUtil';
-import Preview from '../../components/preview/preview.vue';
-import { autoPage } from '../../components/preview/autoPage';
-import { chrome2Img, toPdf } from '../../utils/pdfUtil';
-import { unit2px, unit2unit } from '../../utils/devicePixelRatio';
-import { downloadImg, downloadPdf } from '../../api/pdfServer';
-import { getPrintElementHtml, iFramePrint } from '../../utils/myprint';
+import { MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
+import { getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
+import Preview from '@myprint/design/components/preview/preview.vue';
+import { autoPage } from '@myprint/design/components/preview/autoPage';
+import { chrome2Img, toPdf } from '@myprint/design/utils/pdfUtil';
+import { unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
+import { downloadImg, downloadPdf } from '@myprint/design/api/pdfServer';
+import { getPrintElementHtml, iFramePrint } from '@myprint/design/utils/myprint';
 import {
     handleClientResult,
     handleTimeOut,
     myPrintClientService,
     printResult
-} from '../../plugins/myprintClientService';
+} from '@myprint/design/plugins/myprintClientService';
 
 defineExpose({
     handleChromePrint,

@@ -23,8 +23,8 @@
 </template>
 
 <script setup lang="ts">
-import MyIcon from '../../../components/my/icon/my-icon.vue';
-import MyPopover from '../../../components/my/popover/my-popover.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 
 withDefaults(defineProps<{
     disabled?: boolean

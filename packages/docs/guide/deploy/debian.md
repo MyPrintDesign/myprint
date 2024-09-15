@@ -2,6 +2,10 @@
 
 在Debian中部署
 
+::: danger 注意
+pdf服务端是用来作为后台服务下载`pdf`或者`图片`的，不是demo的后端服务
+:::
+
 ## 下载
 
 [下载地址](https://file.myprint.top/myprint-server.tar.gz)

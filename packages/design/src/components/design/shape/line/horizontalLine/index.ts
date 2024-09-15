@@ -1,3 +1,3 @@
-import MyHorizontalLine from './horizontalLine.vue'
+import MyHorizontalLine from './horizontalLine.vue';
 
-export default MyHorizontalLine
+export default MyHorizontalLine;

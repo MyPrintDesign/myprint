@@ -4,10 +4,10 @@
                  :position="configStore.settingPanel.history">
         <template #head>
             <div class="display-flex">
-                <div @mousedown="($event)=>$event.stopPropagation()" @click="undoPanel"
+                <div @mousedown="clearEventBubble($event)" @click="undoPanel"
                      :class="[{'my-icon-disabled': !canUndo}]"
                      class="my-icon iconfont icon-undo my-handle-panel-icon" />
-                <div @mousedown="($event)=>$event.stopPropagation()" @click="redoPanel"
+                <div @mousedown="clearEventBubble($event)" @click="redoPanel"
                      :class="[{'my-icon-disabled': !canRedo}]"
                      class="my-icon iconfont icon-redo my-handle-panel-icon" />
             </div>
@@ -28,11 +28,12 @@
 
 <script setup lang="ts">
 
-import { redoStack, undoPanel, redoPanel, history, canRedo, canUndo } from '../../../utils/historyUtil';
-import { handlePanelElementList } from '../../../constants/settingPanel';
-import MyCollapse from '../../../components/my/collapse/my-collapse.vue';
-import { useConfigStore } from '../../../stores/config';
-import HistoryLineText from '../../../components/content/handle-panel/history-line-text.vue';
+import { redoStack, undoPanel, redoPanel, history, canRedo, canUndo } from '@myprint/design/utils/historyUtil';
+import { handlePanelElementList } from '@myprint/design/constants/settingPanel';
+import MyCollapse from '@myprint/design/components/my/collapse/my-collapse.vue';
+import { useConfigStore } from '@myprint/design/stores/config';
+import HistoryLineText from '@myprint/design/components/content/handle-panel/history-line-text.vue';
+import { clearEventBubble } from '@myprint/design/utils/event';
 
 const configStore = useConfigStore();
 

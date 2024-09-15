@@ -13,16 +13,16 @@
 </template>
 
 <script setup lang="ts">
-import widget from '../../components/content/widget/index.vue';
-import PanelView from '../../components/content/panel/index.vue';
+import widget from '@myprint/design/components/content/widget/index.vue';
+import PanelView from '@myprint/design/components/content/panel/index.vue';
 import { computed, CSSProperties, onMounted, onUnmounted, reactive, Ref, ref, watch } from 'vue-demi';
-import { Panel, Provider, RuntimeElementOption } from '../../types/entity';
-import { mitt, to } from '../../utils/utils';
-import { init } from '../../utils/historyUtil';
+import { Panel, Provider, RuntimeElementOption } from '@myprint/design/types/entity';
+import { mitt, to } from '@myprint/design/utils/utils';
+import { init } from '@myprint/design/utils/historyUtil';
 // @ts-ignore
-import { Module, SaveResult, Template } from '../../types/R';
-import { useAppStoreHook } from '../../stores/app';
-import MyMouseTips from '../../components/my/mouse-tips/my-mouse-tips.vue';
+import { Module, SaveResult, Template } from '@myprint/design/types/R';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import MyMouseTips from '@myprint/design/components/my/mouse-tips/my-mouse-tips.vue';
 import {
     defaultPreviewData,
     initPanel,
@@ -30,11 +30,11 @@ import {
     setCurrentPanel,
     setPreviewData,
     setProvider
-} from '../../utils/elementUtil';
-import { newSelecto } from '../../plugins/moveable/selecto';
-import { MyMessage } from '../../components/my/message/my-message';
-import { MyPrinter } from '../../printer';
-import { i18n } from '../../locales';
+} from '@myprint/design/utils/elementUtil';
+import { newSelecto } from '@myprint/design/plugins/moveable/selecto';
+import { MyMessage } from '@myprint/design/components/my/message/my-message';
+import { MyPrinter } from '@myprint/design/printer';
+import { i18n } from '@myprint/design/locales';
 
 const appStore = useAppStoreHook();
 

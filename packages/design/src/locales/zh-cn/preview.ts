@@ -1,4 +1,4 @@
 export default {
-    'preview.download.pdf': '下载PDF',
+    'preview.download.pdf': '下载PDF'
 
-}
+};

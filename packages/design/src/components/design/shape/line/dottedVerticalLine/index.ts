@@ -1,3 +1,3 @@
-import MyDottedVerticalLine from './dottedVerticalLine.vue'
+import MyDottedVerticalLine from './dottedVerticalLine.vue';
 
-export default MyDottedVerticalLine
+export default MyDottedVerticalLine;

@@ -1,3 +1,3 @@
-import MyVerticalLine from './verticalLine.vue'
+import MyVerticalLine from './verticalLine.vue';
 
-export default MyVerticalLine
+export default MyVerticalLine;

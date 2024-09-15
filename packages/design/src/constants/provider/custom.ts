@@ -1,5 +1,5 @@
-import { MyElement, ElementOption, PageUnit } from '../../types/entity';
-import { i18n } from '../../locales';
+import { MyElement, ElementOption, PageUnit } from '@myprint/design/types/entity';
+import { i18n } from '@myprint/design/locales';
 
 export const customProvider = {
     pageUnit: 'mm' as PageUnit,

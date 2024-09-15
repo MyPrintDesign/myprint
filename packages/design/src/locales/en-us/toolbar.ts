@@ -39,5 +39,5 @@ export default {
     'toolbar.layer.top': 'Bring to Front',
     'toolbar.layer.up.one': 'Bring Forward',
     'toolbar.layer.bottom': 'Send to Back',
-    'toolbar.layer.down.one': 'Send Backward',
-}
+    'toolbar.layer.down.one': 'Send Backward'
+};

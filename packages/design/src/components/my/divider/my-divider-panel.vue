@@ -9,8 +9,8 @@
 
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, reactive, ref } from 'vue-demi';
-import MyDivider from '../../../components/my/divider/my-divider.vue';
-import { mitt } from '../../../utils/utils';
+import MyDivider from '@myprint/design/components/my/divider/my-divider.vue';
+import { mitt } from '@myprint/design/utils/utils';
 
 const props = withDefaults(defineProps<{
         class?: string,

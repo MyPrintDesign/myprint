@@ -16,8 +16,8 @@
 </template>
 
 <script setup lang="ts">
-import MyIcon from '../../../components/my/icon/my-icon.vue';
-import MyTooltip from '../../../components/my/tooltip/my-tooltip.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
 
 const emit = defineEmits(['update:modelValue', 'click']);
 

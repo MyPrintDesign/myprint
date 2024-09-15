@@ -41,8 +41,8 @@
 <script setup lang="ts">
 
 import { computed, nextTick, reactive, ref, watch } from 'vue-demi';
-import CloseBold from '../../../components/my/icon/icons/CloseBold.vue';
-import MyIcon from '../../../components/my/icon/my-icon.vue';
+import CloseBold from '@myprint/design/components/my/icon/icons/CloseBold.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 
 const emit = defineEmits(['update:modelValue', 'close']);
 

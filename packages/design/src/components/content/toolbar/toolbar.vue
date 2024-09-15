@@ -42,19 +42,19 @@
 
 <script setup lang="ts">
 import StyleDesign from './style-design.vue';
-import { i18n } from '../../../locales';
-import { clearPanel, defaultPreviewData, getCurrentPanel } from '../../../utils/elementUtil';
-import { ActionEnum, record, Snapshot } from '../../../utils/historyUtil';
-import { updatePanel } from '../../../plugins/moveable/moveable';
-import { MyPrinter } from '../../../printer';
-import { download, mitt } from '../../../utils/utils';
-import MyButton from '../../../components/my/button/my-Button.vue';
-import MyIcon from '../../../components/my/icon/my-icon.vue';
-import Printer from '../../../components/my/icon/icons/Printer.vue';
-import { MyMessage } from '../../../components/my/message/my-message';
+import { i18n } from '@myprint/design/locales';
+import { clearPanel, defaultPreviewData, getCurrentPanel } from '@myprint/design/utils/elementUtil';
+import { ActionEnum, record, Snapshot } from '@myprint/design/utils/historyUtil';
+import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import { MyPrinter } from '@myprint/design/printer';
+import { download, mitt } from '@myprint/design/utils/utils';
+import MyButton from '@myprint/design/components/my/button/my-Button.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import Printer from '@myprint/design/components/my/icon/icons/Printer.vue';
+import { MyMessage } from '@myprint/design/components/my/message/my-message';
 //@ts-ignore
-import { DesignPanelProps } from '../../../types/entity';
-import { useAppStoreHook as appStore } from '../../../stores/app';
+import { DesignPanelProps } from '@myprint/design/types/entity';
+import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
 
 const useApp = appStore()
 withDefaults(defineProps<{

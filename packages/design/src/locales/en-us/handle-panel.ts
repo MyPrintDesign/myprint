@@ -44,5 +44,5 @@ export default {
     'handle.column': 'Column',
     'handle.table.statistics.type': 'Statistics Type',
     'handle.table.every.page.statistics': 'Per-Page Statistics',
-    'handle.table.all.table.statistics': 'Entire Table Statistics',
+    'handle.table.all.table.statistics': 'Entire Table Statistics'
 };

@@ -1,3 +1,3 @@
-import MyDottedRect from './dottedRect.vue'
+import MyDottedRect from './dottedRect.vue';
 
-export default MyDottedRect
+export default MyDottedRect;

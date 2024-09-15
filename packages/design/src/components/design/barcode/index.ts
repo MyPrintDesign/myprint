@@ -1,3 +1,3 @@
-import MyBarcode from './barcode.vue'
+import MyBarcode from './barcode.vue';
 
-export default MyBarcode
+export default MyBarcode;

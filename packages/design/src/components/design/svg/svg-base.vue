@@ -3,12 +3,12 @@
         <path class="u-path" d="" />
         
         <template v-if="displayDesign(element)">
-            <line class="u-line" v-for="(_index, _item) in svgOptions.controlLine" />
+            <line class="u-line" v-for="(index) in svgOptions.controlLine" :key="index"/>
             
-            <g class="u-point" style="display: none" v-for="(_index, _item) in svgOptions.allPoint">
+            <g class="u-point" style="display: none" v-for="(index) in svgOptions.allPoint" :key="index">
                 <circle r="3" />
             </g>
-            <g class="uv-point" style="display: none" v-for="(_index, _item) in svgOptions.virtualPoint">
+            <g class="uv-point" style="display: none" v-for="(index) in svgOptions.virtualPoint" :key="index">
                 <circle r="3" />
             </g>
         </template>
@@ -21,12 +21,12 @@ import { onMounted, ref, watch } from 'vue-demi';
 import * as d3Array from 'd3-array';
 import * as d3Selection from 'd3-selection';
 import * as d3Drag from 'd3-drag';
-import { Line, MyElement, Point, PointClick, PointLabel } from '../../../types/entity';
-import { dist, updateSvg } from '../../../utils/svgUtil';
+import { Line, MyElement, Point, PointClick, PointLabel } from '@myprint/design/types/entity';
+import { dist, updateSvg } from '@myprint/design/utils/svgUtil';
 import { Path } from 'd3-path';
-import { elementHandleHandleStatusList } from '../../../constants/common';
-import { D3DragEvent } from '../../../types/d3Type';
-import { displayDesign } from '../../../utils/elementUtil';
+import { elementHandleHandleStatusList } from '@myprint/design/constants/common';
+import { D3DragEvent } from '@myprint/design/types/d3Type';
+import { displayDesign } from '@myprint/design/utils/elementUtil';
 
 const props = withDefaults(defineProps<{
     element?: MyElement,

@@ -33,7 +33,7 @@ export function bezier2(p0, p1, p2) {
         y: bounds.minY,
         width: bounds.maxX - bounds.minX,
         height: bounds.maxY - bounds.minY
-    }
+    };
 }
 
 export function bezier3(p0, p1, p2, p3) {
@@ -62,6 +62,6 @@ export function bezier3(p0, p1, p2, p3) {
         y: minY,
         width: maxX - minX,
         height: maxY - minY
-    }
+    };
 
 }

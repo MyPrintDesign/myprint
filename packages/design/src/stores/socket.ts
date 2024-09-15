@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { printCssStyle } from '../utils/utils';
+import { printCssStyle } from '@myprint/design/utils/utils';
 import { useConfigStore } from './config';
-import { ClientCmd, Printer } from '../types/entity';
+import { ClientCmd, Printer } from '@myprint/design/types/entity';
 
 let lockReconnect: any;
 export const useSocket = defineStore('myPrintSocket', {

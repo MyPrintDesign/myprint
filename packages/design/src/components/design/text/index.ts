@@ -1,3 +1,3 @@
-import MyText from './text.vue'
+import MyText from './text.vue';
 
-export default MyText
+export default MyText;

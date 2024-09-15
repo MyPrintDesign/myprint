@@ -1,4 +1,4 @@
-import { MyElement, Line, Point } from '../types/entity'
+import { MyElement, Line, Point } from '@myprint/design/types/entity'
 import * as d3Selection from 'd3-selection'
 
 // import {unit2px} from "../utils/devicePixelRatio";

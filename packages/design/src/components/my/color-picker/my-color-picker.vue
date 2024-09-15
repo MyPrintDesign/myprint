@@ -31,9 +31,9 @@
 <script setup lang="ts">
 // import "vue3-colorpicker/style.css";
 // import {ColorPicker} from "vue3-colorpicker";
-import MyPopover from '../../../components/my/popover/my-popover.vue';
-import { rgbaToHex } from '../../../utils/utils';
-import MyIcon from '../../../components/my/icon/my-icon.vue';
+import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
+import { rgbaToHex } from '@myprint/design/utils/utils';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 
 export interface Props {
     disabled?: boolean;

@@ -1,10 +1,10 @@
 import { ref } from 'vue-demi';
-import { elementTypeFormat, MyElement, Panel } from '../types/entity';
+import { elementTypeFormat, MyElement, Panel } from '@myprint/design/types/entity';
 import { useManualRefHistory } from '@vueuse/core';
 import { getCurrentPanel, installPanelParentElement } from './elementUtil';
-import { useAppStoreHook as appStore } from '../stores/app';
-import { updatePanel } from '../plugins/moveable/moveable';
-import { parse } from '../utils/utils';
+import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
+import { updatePanel } from '@myprint/design/plugins/moveable/moveable';
+import { parse } from '@myprint/design/utils/utils';
 
 export enum ActionEnum {
     INIT = '加载',

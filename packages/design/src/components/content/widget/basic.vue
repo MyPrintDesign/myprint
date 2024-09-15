@@ -12,8 +12,8 @@ import {
     elementTypeFormat, MyElement,
 // @ts-ignore
     PageUnit
-} from '../../../types/entity';
-import baseWidget from '../../../components/content/widget/base-widget.vue';
+} from '@myprint/design/types/entity';
+import baseWidget from '@myprint/design/components/content/widget/base-widget.vue';
 
 withDefaults(defineProps<{
     data?: MyElement

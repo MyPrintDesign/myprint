@@ -45,8 +45,9 @@ import {
     updateMoveableRect as updateMoveableRectJs,
     updatePanel as updatePanelJs
     //@ts-ignore
-} from '../../plugins/moveable/moveable_js';
-import { elementStatus, MyElement, MyHtmlElement } from '../../types/entity';
+} from '@myprint/design/plugins/moveable/moveable_js';
+import { elementStatus, MyElement, MyHtmlElement } from '@myprint/design/types/entity';
+
 const defineFun = () => {
 };
 

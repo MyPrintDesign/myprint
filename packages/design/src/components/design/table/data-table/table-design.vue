@@ -53,12 +53,12 @@
 </template>
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue-demi';
-import { Container, MyElement, TableCellElement } from '../../../../types/entity';
+import { Container, MyElement, TableCellElement } from '@myprint/design/types/entity';
 import DataTable from './data-table.vue';
-import { defaultElement, elementHandleStatusList } from '../../../../constants/common';
-import { useAppStoreHook } from '../../../../stores/app';
-import { sortColumn } from '../../../../utils/utils';
-import { freshMoveableOption, updateMoveableRect } from '../../../../plugins/moveable/moveable';
+import { defaultElement, elementHandleStatusList } from '@myprint/design/constants/common';
+import { useAppStoreHook } from '@myprint/design/stores/app';
+import { sortColumn } from '@myprint/design/utils/utils';
+import { freshMoveableOption, updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
 import {throttle} from 'lodash';
 import {
     getRecursionParentPanel,
@@ -67,7 +67,7 @@ import {
     setCurrentElement,
     setElementHeightPx, setElementOffsetWidthPx,
     setElementWidthPx
-} from '../../../../utils/elementUtil';
+} from '@myprint/design/utils/elementUtil';
 import {
     computedTableCell,
     getChildByParent,
@@ -75,8 +75,8 @@ import {
     getTableCellDown, initTableCell,
     lastHeadList,
     selectCell
-} from '../../../../utils/table/dataTable';
-import { tableColClone } from '../../../../utils/myprint';
+} from '@myprint/design/utils/table/dataTable';
+import { tableColClone } from '@myprint/design/utils/myprint';
 
 type MyRow = Record<number, number[]>
 

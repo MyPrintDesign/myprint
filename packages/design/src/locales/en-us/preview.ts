@@ -1,3 +1,3 @@
 export default {
-    'preview.download.pdf': 'Download PDF',
-}
+    'preview.download.pdf': 'Download PDF'
+};

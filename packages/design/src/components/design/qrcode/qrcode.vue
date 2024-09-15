@@ -6,12 +6,12 @@
 </template>
 
 <script setup lang="ts">
-import { MyElement } from '../../../types/entity';
+import { MyElement } from '@myprint/design/types/entity';
 import { computed, nextTick, ref, watch } from 'vue-demi';
-import { unit2px } from '../../../utils/devicePixelRatio';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import QRCode from 'qrcode';
-import { displayDesign, elementCommonStyle, getRecursionParentPanel } from '../../../utils/elementUtil';
-import { updateMoveableRect } from '../../../plugins/moveable/moveable';
+import { displayDesign, elementCommonStyle, getRecursionParentPanel } from '@myprint/design/utils/elementUtil';
+import { updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
 import {throttle} from 'lodash';
 
 const props = withDefaults(defineProps<{

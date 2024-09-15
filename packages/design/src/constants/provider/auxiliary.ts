@@ -1,4 +1,4 @@
-import {MyElement} from "../../types/entity";
+import { MyElement } from '@myprint/design/types/entity';
 
 export const auxiliaryProvider: Array<MyElement> = [
     // {
@@ -8,4 +8,4 @@ export const auxiliaryProvider: Array<MyElement> = [
     //     width: 30.25,
     //     height: 14.25
     // } as Element
-]
+];

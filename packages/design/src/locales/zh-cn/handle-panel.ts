@@ -44,5 +44,5 @@ export default {
     'handle.column': '列',
     'handle.table.statistics.type': '统计方式',
     'handle.table.every.page.statistics': '每页统计',
-    'handle.table.all.table.statistics': '整表统计',
+    'handle.table.all.table.statistics': '整表统计'
 };

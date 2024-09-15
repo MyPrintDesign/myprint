@@ -1,4 +1,4 @@
-import { myPrintOptions } from '../printer';
+import { myPrintOptions } from '@myprint/design/printer';
 
 export async function downloadPdf(data: any) {
     const options = {

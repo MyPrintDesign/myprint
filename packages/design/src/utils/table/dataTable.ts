@@ -6,11 +6,11 @@ import {
     TableCellElement,
     TableHeadProviderCellElement,
     TableStatisticsCellElement
-} from '../../types/entity';
-import numberUtil from '../../utils/numberUtil';
-import { parse, stringify } from '../../utils/utils';
+} from '@myprint/design/types/entity';
+import numberUtil from '@myprint/design/utils/numberUtil';
+import { parse, stringify } from '@myprint/design/utils/utils';
 import { reactive } from 'vue-demi';
-import { installParentElement, setCurrentElement } from '../../utils/elementUtil';
+import { installParentElement, setCurrentElement } from '@myprint/design/utils/elementUtil';
 
 
 export function recursionForTableCell(tableHeadList: TableHeadProviderCellElement[], callback: (providerCell: TableHeadProviderCellElement) => void) {
