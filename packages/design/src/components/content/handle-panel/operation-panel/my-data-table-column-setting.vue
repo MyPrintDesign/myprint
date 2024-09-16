@@ -68,11 +68,8 @@
                                    :data-list="barcodeTypes"
                                    :historyLabel="i18n('handle.barCode.type')" />
                 <my-tooltip
-                    popper-class="barcode-type-tooltip"
-                    effect="dark"
-                    :max-width="200"
-                    placement="top"
-                >
+                    :content="currentBarCodeEg"
+                    placement="top">
                     <my-icon style="margin-left: 5px" :size="14">
                         <QuestionFilled />
                     </my-icon>
@@ -177,9 +174,20 @@ const element = computed(() => {
     }
 });
 
+const currentBarCodeEg = computed(() => {
+    if (element.value.option && element.value.option.barCodeType) {
+        return changeBarCodeType(element.value.option.barCodeType);
+    }
+});
+
 function changeStatistics() {
     const statisticsType = multipleElementGetValue('statisticsType') as statisticsType;
     multipleElementSetValue('data', statisticsTypeFormat[statisticsType]);
 }
 
+function changeBarCodeType(val: any) {
+    // record()
+    // console.log('change', val)
+    return barcodeTypes.find(v => v.value == val)!.eg;
+}
 </script>

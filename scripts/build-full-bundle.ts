@@ -138,7 +138,6 @@ async function copyDtsTest(pkgDirName: string) {
         absolute: false,
         onlyFiles: true
     });
-    console.log(dtsPaths);
     const baseDir = resolveProjectPath('packages', 'design', 'src');
 
     dtsPaths.forEach((dts: string) => {
@@ -149,7 +148,6 @@ async function copyDtsTest(pkgDirName: string) {
         // const cjsPath = resolvePackagePath(pkgDirName, 'dist', 'lib', dts);
         // const esmPath = resolvePackagePath(pkgDirName, 'dist', 'es', dts);
         let content = fs.readFileSync(dtsPath, { encoding: 'utf8' });
-        console.log(dtsPath);
         // if(dtsPath == '/Users/css/code/webstorm/self/myprint/myprint/packages/design/src/utils/myprint.ts'){
         content = replacePaths(content, '@myprint/design', baseDir, dtsPath);
         // console.log(content);
@@ -172,7 +170,7 @@ function customReplacePlugin(): Plugin {
         // 拦截并修改文件内容
         load(id) {
             if (id.includes('\x00')) {
-                console.log('00-' + id);
+                // console.log('00-' + id);
                 return null;
             }
             if (id.includes('node_modules')) {
@@ -180,7 +178,7 @@ function customReplacePlugin(): Plugin {
             }
             // const filePath = path.resolve(epRoot, 'design.ts'); // 需要替换的文件
             // if (id === filePath) {
-            console.log(cleanFilePath(id));
+            // console.log(cleanFilePath(id));
             let content = fs.readFileSync(cleanFilePath(id), 'utf8');
 
             // 进行临时的内容替换
@@ -194,14 +192,8 @@ function customReplacePlugin(): Plugin {
             // console.log(dtsPath);
             // code = code.replace(/originalText/g, 'temporaryReplacement');
             // console.log(content);
-            if(id == '/Users/css/code/webstorm/self/myprint/myprint/packages/design/src/components/preview/preview-panel.vue?vue&type=script&setup=true&lang.ts'){
-                console.log(content);
-            }
             content = replacePaths(content, '@myprint/design', baseDir, id);
             // console.log(content);
-            if(id == '/Users/css/code/webstorm/self/myprint/myprint/packages/design/src/components/preview/preview-panel.vue?vue&type=script&setup=true&lang.ts'){
-                console.log(content);
-            }
             // 返回修改后的代码
             return content;
             // }

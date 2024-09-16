@@ -1,9 +1,9 @@
 <template>
     <div class="option-container display-flex-column">
         <div class="header display-flex">
-<!--            <my-icon size="25" v-if="showBackButton" class="header-back-icon">-->
-<!--                <ArrowLeft @click="back" />-->
-<!--            </my-icon>-->
+            <my-icon size="25" v-if="showBackButton" class="header-back-icon">
+                <ArrowLeft @click="back" />
+            </my-icon>
             <div style="flex: 1;"> {{ moduleName }}</div>
         </div>
         <div class="option-container display-flex-column">
@@ -33,7 +33,7 @@
         </div>
         <div class="option-bottom">
             <!--      <img class="my-logo" src="../../../assets/myprint-logo.png" alt="my-logo"/>-->
-            <div class="my-version">v1.0.0</div>
+            <div class="my-version">{{ _package.version }}</div>
         </div>
     
     </div>
@@ -41,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+import _package from '../../../../package.json';
 import business from './business.vue';
 import basic from './basic.vue';
 import { customProvider } from '@myprint/design/constants/provider/custom';
@@ -48,6 +49,8 @@ import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vu
 import MyWidgetCollapse from '@myprint/design/components/my/collapse/my-widget-collapse.vue';
 import { i18n } from '@myprint/design/locales';
 import { getProvider } from '@myprint/design/utils/elementUtil';
+import ArrowLeft from '@myprint/design/components/my/icon/icons/ArrowLeft.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
 
 const $emit = defineEmits(['back']);
 const provider = getProvider()

@@ -18,7 +18,7 @@ import {
     TableHeadProviderCellElement
 } from '@myprint/design/types/entity';
 import { elementTypeContainerList, fontMap } from '@myprint/design/constants/common';
-import { _defaultVal, generateUUID, mitt, parse, stringify } from './utils';
+import { _defaultVal, generateUUID, mitt, parse, stringify, to } from './utils';
 import { CSSProperties, reactive, Ref } from 'vue-demi';
 import { formatDate } from './timeUtil';
 import { px2unit, unit2px, unit2unit } from '@myprint/design/utils/devicePixelRatio';
@@ -71,11 +71,15 @@ export function getPreviewData() {
 }
 
 export function setProvider(provider?: Provider) {
-    appStore().provider = provider == null ? {}  as Provider: provider;
+    if (provider == null) {
+        to({}, appStore().provider);
+    } else {
+        to(provider, appStore().provider);
+    }
 }
 
 export function getProvider() {
-    return appStore().provider == null ? {}  as Provider : appStore().provider;
+    return appStore().provider == null ? {} as Provider : appStore().provider;
 }
 
 export function getRecursionParentPanel(element: MyElement): Panel {
