@@ -2,6 +2,7 @@
     <textarea v-if="type == 'textarea'"
               ref="textareaRef"
               :disabled="disabled"
+              :placeholder="placeholder"
               @blur="inputBlur"
               @focus="inputFocus"
               @input="onInput"
@@ -18,6 +19,7 @@
                    :disabled="disabled"
                    @blur="inputBlur"
                    @focus="inputFocus"
+                   :placeholder="placeholder"
                    @input="onInput"
                    @change="onChange" />
         </div>
@@ -36,6 +38,7 @@ const textareaRef = ref<HTMLInputElement>(null!);
 
 const props = withDefaults(defineProps<{
     modelValue: string | number | null | undefined,
+    placeholder?: string,
     type?: string,
     disabled?: boolean,
 }>(), {

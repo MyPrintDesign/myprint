@@ -1,4 +1,10 @@
-import { downloadImg2Base64, generateUUID, parse, stringify } from '@myprint/design/utils/utils';
+import {
+    downloadImg2Base64,
+    generateUUID,
+    parse,
+    replaceSpacesOutsideHTMLTags,
+    stringify
+} from '@myprint/design/utils/utils';
 import { px2unit, unit2px } from '@myprint/design/utils/devicePixelRatio';
 import { nextTick, reactive } from 'vue-demi';
 import {
@@ -219,7 +225,7 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
 
                 if (previewWrapper.contentType == 'Text') {
                     if (previewDataTmp) {
-                        previewDataTmp = previewDataTmp.replaceAll(' ', '&nbsp;');
+                        previewDataTmp = replaceSpacesOutsideHTMLTags(previewDataTmp);
                     }
                     await autoTextElement(previewDataTmp, true);
                 }

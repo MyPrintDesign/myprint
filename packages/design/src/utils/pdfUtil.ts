@@ -45,7 +45,6 @@ export function chrome2Img(pageDomList: any, options: any) {
                 html2canvas(pageDom, defaultOptions)
                     .then(canvas => {
                         canvas.toBlob((blob: Blob) => {
-                            // console.log(URL.createObjectURL(blob));
                             count++;
                             imageMap[i] = blob;
                             if (count == pageDomList.length) {

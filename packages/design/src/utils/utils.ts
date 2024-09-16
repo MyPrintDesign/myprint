@@ -341,11 +341,20 @@ export function downloadImg2Base64(url: string) {
     return new Promise((resolve, reject) => {
         fetch(url)
             .then(res => {
-                res.blob()
-                    .then(blob => {
-                        blob2Base64(blob)
-                            .then(resolve);
-                    });
+                const contentType = res.headers.get('content-type');
+                if (contentType!.includes('image/svg+xml')) {
+                    res.blob()
+                        .then(blob => {
+                            blob2Base64(blob)
+                                .then(resolve);
+                        });
+                } else {
+                    res.blob()
+                        .then(blob => {
+                            blob2Base64(blob)
+                                .then(resolve);
+                        });
+                }
             }).catch(e => {
             reject(e);
         });
@@ -496,6 +505,27 @@ export function n2br(val: any) {
 
 export function br2n(val: any) {
     return typeof val === 'string' ? val.replaceAll('<br>', '\n') : val;
+}
+
+export function replaceSpacesOutsideHTMLTags(input) {
+    // 匹配所有 HTML 标签
+    const regex = /<[^>]*>/g;
+
+    // 保存所有匹配的 HTML 标签
+    const tags = input.match(regex) || [];
+
+    // 用占位符替换掉 HTML 标签
+    let tempStr = input.replace(regex, '__HTML_TAG__');
+
+    // 替换占位符以外的空格为 &nbsp;
+    tempStr = tempStr.replace(/ /g, '&nbsp;');
+
+    // 将占位符替换回原来的 HTML 标签
+    tags.forEach(tag => {
+        tempStr = tempStr.replace('__HTML_TAG__', tag);
+    });
+
+    return tempStr;
 }
 
 

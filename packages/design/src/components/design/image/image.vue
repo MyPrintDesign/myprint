@@ -83,6 +83,7 @@
             class="choose-image-type-dialog"
             :show-header="false"
             v-model="data.chooseImageVisible"
+            @close="handleCloseChooseImageDialog"
             width="520px">
             
             <div class="choose-image-type-dialog-header display-flex">
@@ -101,8 +102,13 @@
                 <div class="choose-image-localFile-btn" @click="chooseImage">上传本地图片</div>
             </div>
             
-            <div class="choose-image-url-panel display-flex" v-if="data.chooseImageType == 'url'">
-                <div class="choose-image-url-btn">上传网络图片</div>
+            <div class="choose-image-url-panel display-flex display-flex-column" v-if="data.chooseImageType == 'url'">
+                <my-input class="choose-image-url-input" placeholder="请输入网络地址http/https"
+                          v-model="imageHttpUrlInput" />
+                
+                <div class="choose-image-url-btn" @click="clickSureImageHttpUrl">
+                    确认
+                </div>
             </div>
         </my-dialog>
         
@@ -136,6 +142,9 @@ import RefreshRight from '@myprint/design/components/my/icon/icons/RefreshRight.
 import Check from '@myprint/design/components/my/icon/icons/Check.vue';
 import CloseBold from '@myprint/design/components/my/icon/icons/CloseBold.vue';
 import { downloadImg2Base64 } from '@myprint/design/utils/utils';
+import MyInput from '@myprint/design/components/my/input/my-input.vue';
+import { isEmpty } from 'lodash';
+import { MyMessage } from '@myprint/design/components/my/message/my-message';
 
 const props = withDefaults(defineProps<{
     element?: MyElement
@@ -147,6 +156,8 @@ const cropper = ref({} as InstanceType<any>);
 const uploadFileRef = ref<HTMLInputElement>();
 const sourceBase64 = ref();
 const contentBase64 = ref();
+const imageHttpUrlInput = ref('');
+
 const option = reactive({
     outputSize: 1, //裁剪生成图片的质量(可选0.1 - 1)
     outputType: 'png', //裁剪生成图片的格式（jpeg || png || webp）
@@ -263,6 +274,21 @@ function selectImg(event: any) {
     reader.readAsDataURL(file);
 }
 
+function clickSureImageHttpUrl() {
+    if (isEmpty(imageHttpUrlInput.value)) {
+        MyMessage.error('请输入图片地址');
+    }
+    if (!imageHttpUrlInput.value.startsWith('http') && !imageHttpUrlInput.value.startsWith('https')) {
+        MyMessage.error('图片地址需要以http/https开头');
+    }
+    props.element.data = imageHttpUrlInput.value;
+    loadData();
+}
+
+function handleCloseChooseImageDialog() {
+    imageHttpUrlInput.value = ''
+}
+
 function clickPlus(_ev: any) {
     data.chooseImageVisible = true;
     // uploadFileRef.value!.click()
@@ -274,6 +300,10 @@ function chooseImage(_ev: any) {
 
 const imgRef = ref<HTMLImageElement>();
 onMounted(() => {
+    loadData();
+});
+
+function loadData() {
     if (!props.element.data) {
         return;
     }
@@ -289,8 +319,7 @@ onMounted(() => {
         sourceBase64.value = props.element.data;
         contentBase64.value = props.element.data;
     }
-    
-});
+}
 
 function loadImg() {
     const ratioTmp = imgRef.value!.width / imgRef.value!.height;
