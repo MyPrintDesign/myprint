@@ -56,12 +56,10 @@ import { MyMessage } from '@myprint/design/components/my/message/my-message';
 import { DesignPanelProps } from '@myprint/design/types/entity';
 import { useAppStoreHook as appStore } from '@myprint/design/stores/app';
 
-const useApp = appStore()
+const useApp = appStore();
 withDefaults(defineProps<{
     designProps: DesignPanelProps;
-}>(), {
-
-});
+}>(), {});
 
 function print() {
     const defaultPrinter = MyPrinter.getDefaultPrinter();

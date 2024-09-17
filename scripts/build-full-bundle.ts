@@ -28,14 +28,12 @@ import replace from '@rollup/plugin-replace';
 // } from '../utils'
 // import { target } from '../build-info'
 import type { Plugin } from 'rollup';
-import { resolveProjectPath } from './util';
+import { replacePaths, resolveProjectPath } from './util';
 import fs from 'node:fs';
-import { replacePaths } from './build-dts';
 
 export const target = 'es2018';
 
 // import type { ProjectManifest } from '@pnpm/types'
-const epOutput = '/Users/css/code/webstorm/self/myprint/myprint/packages/design/dist/myprint-design';
 export const withTaskName = <T extends TaskFunction>(name: string, fn: T) =>
     Object.assign(fn, { displayName: name });
 
@@ -120,6 +118,7 @@ export const pkgRoot = resolve(projRoot, 'packages');
 // export const localeRoot = resolve(pkgRoot, 'locale');
 export const epRoot = resolve(pkgRoot, 'design', 'src');
 export const epPackage = resolve(pkgRoot, 'design', 'package.json');
+const epOutput =resolve(pkgRoot, 'design', 'dist', 'myprint-design')
 
 
 // export const PKG_PREFIX = '@element-plus';
@@ -345,6 +344,8 @@ export const buildFull = (minify: boolean) => async () =>
     ]);
 
 await buildFullEntry(false);
+console.log('build-full-bundle 打包完成！');
+
 export const buildFullBundle = parallel(
     withTaskName('buildFullMinified', buildFull(true)),
     withTaskName('buildFull', buildFull(false))

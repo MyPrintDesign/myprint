@@ -42,7 +42,6 @@
     "skipLibCheck": true
   },
   "include": [
-    "package.json",
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",

@@ -432,7 +432,6 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                 previewWrapper.runtimeOption = parse(stringify(previewWrapper.runtimeOption, 'parent'), {} as RuntimeElementOption);
                 previewWrapper.tableBodyList = [bodyList];
                 previewWrapper.y = previewContext.top + 1;
-                debugger
                 await autoTableRow(previewContext, previewDataList, i);
                 // data.currentPage.offsetTop = await computeBottom({previewWrapper: previewWrapper} as PreviewWrapper)
                 break;

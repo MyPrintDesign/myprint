@@ -76,7 +76,11 @@ export function iFramePrint(panel: Panel, html: string) {
     iframe.setAttribute('id', 'print-box');
     iframe.setAttribute(
         'style',
-        `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; display: none; position: absolute; left: 99999; top: 0;border: 0;
+        `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; 
+        display: none; 
+        position: absolute; 
+        left: 99999; 
+        top: 0;border: 0;
       z-index: 10000;`
     );
     // 在页面插入iframe

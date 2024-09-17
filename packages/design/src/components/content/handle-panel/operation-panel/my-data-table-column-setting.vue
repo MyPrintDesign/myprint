@@ -130,6 +130,74 @@
                     :active-text="i18n('common.show')"
                     :inactive-text="i18n('common.hidden')" />
             </my-form-item>
+            
+            <my-form-item :label="i18n('handle.padding')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('padding')">
+                <my-group>
+                    <my-history-input-number class="num-4"
+                                             :placeholder="i18n('handle.top')"
+                                             :historyLabel="i18n('handle.padding.top')"
+                                             :model-value="multipleElementGetValue('option.padding.top')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('option.padding.top', val)">
+                        <template #append>mm</template>
+                    </my-history-input-number>
+                    <my-history-input-number class="num-4"
+                                             :placeholder="i18n('handle.bottom')"
+                                             :historyLabel="i18n('handle.padding.bottom')"
+                                             :model-value="multipleElementGetValue('option.padding.bottom')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('option.padding.bottom', val)">
+                        <template #append>mm</template>
+                    </my-history-input-number>
+                    <my-history-input-number class="num-4"
+                                             :placeholder="i18n('handle.left')"
+                                             :historyLabel="i18n('handle.padding.left')"
+                                             :model-value="multipleElementGetValue('option.padding.left')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('option.padding.left', val)">
+                        <template #append>mm</template>
+                    </my-history-input-number>
+                    <my-history-input-number class="num-4"
+                                             :placeholder="i18n('handle.right')"
+                                             :historyLabel="i18n('handle.padding.right')"
+                                             :model-value="multipleElementGetValue('option.padding.right')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('option.padding.right', val)">
+                        <template #append>mm</template>
+                    </my-history-input-number>
+                </my-group>
+            </my-form-item>
+            
+            <my-form-item :label="i18n('handle.margin')"
+                          v-if="getElementSetting(multipleElementGetValue('type')).includes('margin')">
+                <my-group>
+                    <my-history-input-number class="num-4"
+                                             :placeholder="i18n('handle.top')"
+                                             :historyLabel="i18n('handle.margin.top')"
+                                             :model-value="multipleElementGetValue('option.margin.top')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('option.margin.top', val)">
+                        <template #append>mm</template>
+                    </my-history-input-number>
+                    <my-history-input-number class="num-4"
+                                             :placeholder="i18n('handle.bottom')"
+                                             :historyLabel="i18n('handle.margin.bottom')"
+                                             :model-value="multipleElementGetValue('option.margin.bottom')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('option.margin.bottom', val)">
+                        <template #append>mm</template>
+                    </my-history-input-number>
+                    <my-history-input-number class="num-4"
+                                             :placeholder="i18n('handle.left')"
+                                             :historyLabel="i18n('handle.margin.left')"
+                                             :model-value="multipleElementGetValue('option.margin.left')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('option.margin.left', val)">
+                        <template #append>mm</template>
+                    </my-history-input-number>
+                    <my-history-input-number class="num-4"
+                                             :placeholder="i18n('handle.right')"
+                                             :historyLabel="i18n('handle.margin.right')"
+                                             :model-value="multipleElementGetValue('option.margin.right')"
+                                             @update:model-value="(val:any)=>multipleElementSetValue('option.margin.right', val)">
+                        <template #append>mm</template>
+                    </my-history-input-number>
+                </my-group>
+            </my-form-item>
         </my-divider-panel>
     </my-form>
 

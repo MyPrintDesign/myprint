@@ -6,7 +6,7 @@ import * as vueCompiler from 'vue/compiler-sfc';
 import glob from 'fast-glob';
 import { Project } from 'ts-morph';
 import type { CompilerOptions, SourceFile } from 'ts-morph';
-import { resolveProjectPath, resolvePackagePath } from './util';
+import { resolveProjectPath, resolvePackagePath, replacePaths } from './util';
 // import { getPatternsOutsideCurrentDirectory } from 'fast-glob/out/utils/pattern';
 
 const tsWebBuildConfigPath = resolveProjectPath('tsconfig.web.build.json');
@@ -20,21 +20,6 @@ function checkPackageType(project: Project) {
         console.error(err);
         throw err;
     }
-}
-
-/** 生成相对路径 */
-function getRelativePath(from: string, to: string): string {
-    const relativePath = path.relative(path.dirname(from), to);
-    return relativePath == '' ? '.' : relativePath;
-}
-
-/** 替换.d.ts文件中的路径为相对路径 */
-/** 替换.d.ts文件中的路径为相对路径 */
-export function replacePaths(content: string, oldPath: string, baseDir: string, dtsPath: string): string {
-    const newPath = path.resolve(baseDir); // 目标目录的绝对路径
-    const relativeNewPath = getRelativePath(dtsPath, newPath);
-    const regex = new RegExp(oldPath, 'g');
-    return content.replace(regex, relativeNewPath);
 }
 
 // async function copyDtsTest(pkgDirName: string) {

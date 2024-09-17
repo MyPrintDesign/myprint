@@ -150,6 +150,19 @@ export function printCssStyle() {
         }
     }
 
+.display-flex {
+  display: flex;
+}
+
+.display-flex-wrap {
+  flex-wrap: wrap;
+}
+
+.display-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
 .my-print-text_container {
   width: 100%;
   height: 100%;
@@ -166,6 +179,11 @@ export function printCssStyle() {
   flex-grow: 1;
 }
 
+.my-print-barcode_svg_wrapper {
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+}
 
 .my-print-text_content {
   vertical-align: top;

@@ -818,13 +818,51 @@ export function elementCommonPositionStyle(element: MyElement): CSSProperties {
         fontSize: element.option.fontSize + getFontSizeUnit(getRecursionParentPanel(element))
     } as CSSProperties;
 }
+export function elementBarCodeValueStyle(element: MyElement, cssStyle?: CSSProperties): CSSProperties {
+    if (cssStyle == null) {
+        cssStyle = {} as CSSProperties
+    }
+
+    const option = element.option!;
+    const panel = element.runtimeOption.parent as Panel;
+    let textDecoration = '';
+    if (option.underline) {
+        textDecoration = textDecoration + 'underline ';
+    }
+    if (option.lineThrough) {
+        textDecoration = textDecoration + 'line-through ';
+    }
+
+    option.opacity != null && (cssStyle.opacity = option.opacity);
+    option.color && (cssStyle.color = option.color);
+    option.background && (cssStyle.background = option.background);
+    option.bold && (cssStyle.fontWeight = option.bold ? 'bold' : 'normal');
+    textDecoration && (cssStyle.textDecoration = textDecoration);
+    option.italic && (cssStyle.fontStyle = option.italic ? 'italic' : 'normal');
+    if (option.textAlign) {
+        cssStyle.justifyContent = option.textAlign;
+    }
+
+    if (option.lineBreak == 0) {
+        cssStyle.whiteSpace = 'nowrap';
+    }
+
+    if (option.lineHeight != null) {
+        cssStyle.lineHeight = valueUnit(option.lineHeight, panel);
+    }
+
+    if (option.verticalAlign) {
+        cssStyle.alignItems = option.verticalAlign;
+    }
+    return cssStyle;
+}
 
 export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties): CSSProperties {
     if (cssStyle == null) {
         cssStyle = elementCommonPositionStyle(element);
     }
     const option = element.option!;
-    const panel = element.runtimeOption.parent as Panel;
+    const panel = getRecursionParentPanel(element) as Panel;
     let textDecoration = '';
     if (option.underline) {
         textDecoration = textDecoration + 'underline ';
@@ -876,6 +914,10 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
         } else {
         }
 
+        if (element.type == 'Text' && element.contentType == 'Barcode') {
+            cssStyle.width = element.runtimeOption.width + 'px';
+            cssStyle.maxWidth = element.runtimeOption.width + 'px';
+        }
         // cssStyle.maxWidth = (element.runtimeOption.init.width - 1) + 'px';
     } else {
         if (option.borderAll) {

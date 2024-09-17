@@ -22,3 +22,18 @@ export const writeFile = (file: string, text: string) => {
   }
   fs.writeFileSync(file, text);
 };
+
+/** 生成相对路径 */
+function getRelativePath(from: string, to: string): string {
+  const relativePath = path.relative(path.dirname(from), to);
+  return relativePath == '' ? '.' : relativePath;
+}
+
+/** 替换.d.ts文件中的路径为相对路径 */
+/** 替换.d.ts文件中的路径为相对路径 */
+export function replacePaths(content: string, oldPath: string, baseDir: string, dtsPath: string): string {
+  const newPath = path.resolve(baseDir); // 目标目录的绝对路径
+  const relativeNewPath = getRelativePath(dtsPath, newPath);
+  const regex = new RegExp(oldPath, 'g');
+  return content.replace(regex, relativeNewPath);
+}

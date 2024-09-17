@@ -37,10 +37,9 @@
 <script setup lang="ts">
 
 import ColumnView from './column-view.vue';
-import TextView from '../../text';
-import { CSSProperties, onMounted, watch } from 'vue-demi';
+import TextView from '@myprint/design/components/design/text';
+import { CSSProperties } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
-import { useAppStoreHook } from '@myprint/design/stores/app';
 
 const props = withDefaults(defineProps<{
     element: MyElement
@@ -67,8 +66,15 @@ const bodyStyle = (column: MyElement) => {
         // maxHeight: column.runtimeOption.init.height + 'px'
     } as CSSProperties;
     
-    if (useAppStoreHook().displayModel == 'preview' || useAppStoreHook().displayModel == 'print') {
-        style.width = column.runtimeOption.width + 'px';
+    // if (useAppStoreHook().displayModel == 'preview' || useAppStoreHook().displayModel == 'print') {
+    //
+    // }
+    style.width = column.runtimeOption.width + 'px';
+    if (column.contentType == 'Barcode') {
+        style.maxWidth = column.runtimeOption.width + 'px';
+    }
+    if (column.runtimeOption.height != null) {
+        style.minHeight = column.runtimeOption.height + 'px';
     }
     
     if (column.option.borderAll) {
@@ -83,15 +89,15 @@ const bodyStyle = (column: MyElement) => {
     return style;
 };
 
-watch(() => props.element.width, (_newQuestion, _oldQuestion) => {
-    // computedWidth();
-});
-
-// const copyOption = ['font', 'fontSize', 'blob', 'italic', 'underline', 'lineThrough', 'color', 'background',
-//   'textAlign', 'verticalAlign']
-
-onMounted(() => {
-    // initTable();
-});
+// watch(() => props.element.width, (_newQuestion, _oldQuestion) => {
+//     // computedWidth();
+// });
+//
+// // const copyOption = ['font', 'fontSize', 'blob', 'italic', 'underline', 'lineThrough', 'color', 'background',
+// //   'textAlign', 'verticalAlign']
+//
+// onMounted(() => {
+//     // initTable();
+// });
 
 </script>

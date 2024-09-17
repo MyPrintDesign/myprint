@@ -33,7 +33,7 @@
         </div>
         <div class="option-bottom">
             <!--      <img class="my-logo" src="../../../assets/myprint-logo.png" alt="my-logo"/>-->
-            <div class="my-version">{{ _package.version }}</div>
+<!--            <div class="my-version">{{ _package.version }}</div>-->
         </div>
     
     </div>
@@ -41,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import _package from '../../../../package.json';
 import business from './business.vue';
 import basic from './basic.vue';
 import { customProvider } from '@myprint/design/constants/provider/custom';

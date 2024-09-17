@@ -383,7 +383,6 @@ import { mitt } from '@myprint/design/utils/utils';
 
 const appStore = useAppStoreHook();
 
-
 const currentBarCodeEg = computed(() => {
     if (element.value.option && element.value.option.barCodeType) {
         return changeBarCodeType(element.value.option.barCodeType);
