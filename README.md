@@ -50,6 +50,10 @@
 <td align="center"><img src="readme/jj_design.png"/></td>
 <td align="center"><img src="readme/jj_preview.png"/></td>
 </tr>
+<tr>
+<td align="center">QQ交流群</td>
+<td align="center"><img src="readme/qq.png"/></td>
+</tr>
 </table>
 
 ## 如何使用
