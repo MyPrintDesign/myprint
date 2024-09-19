@@ -234,7 +234,7 @@ function getImgUrl(url: string) {
     if (url == null || url == '') {
         return 'https://fastly.picsum.photos/id/519/200/200.jpg?hmac=7MwcBjyXrRX5GB6GuDATVm_6MFDRmZaSK7r5-jqDNS0';
     } else {
-        return import.meta.env.VITE_API_BASE_URL + url;
+        return url;
     }
 }
 

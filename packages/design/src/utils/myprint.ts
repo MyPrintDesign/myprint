@@ -107,17 +107,18 @@ export function iFramePrint(panel: Panel, html: string) {
   </style>
   <meta http-equiv="content-type" content="text/html;charset=utf-8">`;
     iframeDocument.head.appendChild(linkElement);
-    iframe.onload = function() {
-        // 关闭iframe
-        iframeDocument.close();
-        // 使iframe失去焦点
-        iframe.contentWindow!.focus();
-        // 调用iframe的打印方法
-        iframe.contentWindow!.print();
-        // 移除iframe
-        setTimeout(function() {
-            document.body.removeChild(iframe);
-            //     // data.pageList = [];
-        }, 50);
-    };
+    // iframe.onload = function() {
+    //
+    // };
+    // 关闭iframe
+    iframeDocument.close();
+    // 使iframe失去焦点
+    iframe.contentWindow!.focus();
+    // 调用iframe的打印方法
+    iframe.contentWindow!.print();
+    // 移除iframe
+    setTimeout(function() {
+        document.body.removeChild(iframe);
+        //     // data.pageList = [];
+    }, 10000);
 }

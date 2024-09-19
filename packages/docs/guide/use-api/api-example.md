@@ -45,7 +45,7 @@ import { inBrowser } from 'vitepress';
     const printerList = ref([]);
     const asyncPrinterList = ref([]);
     const defaultPrinter = ref({});
-    const pdfToPrinterFileUrl = ref('http://file.myprint.top/myprint.pdf');
+    const pdfToPrinterFileUrl = ref('http://file.cfcss.top/myprint.pdf');
     const selectedPrinter = ref(undefined);
     const clientUrl = ref('ws://127.0.0.1:9898');
 
@@ -537,7 +537,7 @@ function handleDefaultPrinter() {
 调用本地客户端进行打印，可以指定打印机，后台静默打印，可以获得打印结果
 
 ```ts
-fetch('http://file.myprint.top/myprint.pdf', {
+fetch('http://file.cfcss.top/myprint.pdf', {
     method: 'GET',
     headers: {
         'Content-Type': 'application/pdf'

@@ -8,17 +8,17 @@ pdf服务端是用来作为后台服务下载`pdf`或者`图片`的，不是demo
 
 ## 下载
 
-[下载地址](https://file.myprint.top/myprint-server.tar.gz)
+[下载地址](https://file.cfcss.top/myprint-server.tar.gz)
 
 ```shell
 # 进入目录
 cd /opt
 # 下载文件
-wget https://file.myprint.top/myprint-server.tar.gz
+wget https://file.cfcss.top/myprint-server.tar.gz
 # 解压文件
 tar -zvxf myprint-server.tar.gz
 # 或者 下载.zip压缩包
-wget https://file.myprint.top/myprint-server.zip
+wget https://file.cfcss.top/myprint-server.zip
 unzip myprint-server.zip
 
 # 进入目录
