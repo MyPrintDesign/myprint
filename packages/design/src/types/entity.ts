@@ -1,21 +1,45 @@
 import { Module, SaveResult, Template } from '@myprint/design/types/R';
 import { i18n } from '@myprint/design/locales';
 
-export interface PrintProps {
+export interface PrintOptions {
     taskId?: string,
-    title?: string,
     panel?: Panel | string,
-    file?: Blob | ArrayBuffer | Uint8Array | string,
-    timeout?: number,
-    // appointChannel?: 'SERVER' | 'CHROME' | 'CLIENT',
     previewDataList?: any[],
+
+    title?: string,
+    timeout?: number,
+
+    file?: Blob | ArrayBuffer | Uint8Array | string,
+    html?: string,
+    css?: string,
     printer?: string,
-    orientation?: 'portrait' | 'landscape',
-    paperSize?: string, // 打印file 时使用
-    copies?: number,
+
+    // 支持MyPrint客户端、windows原生、windows直连
+    orientation?: 'portrait' | 'landscape' | 'auto', // 打印方向
+    // 支持MyPrint客户端、windows直连，macos直连
+    swapWidthHeight?: boolean, // 是否交换宽高
+    // 支持MyPrint客户端、windows直连，macos直连
+    pageSize?: string, // 打印file 时使用
+    // 支持MyPrint客户端
+    width?: number,// 单位毫米
+    // 支持MyPrint客户端
+    height?: number, //高 单位毫米
+    // 支持MyPrint客户端、windows直连，macos直连
+    copies?: number, //打印份数
+    // 打印文件时使用（例如pdf）
     scale?: 'fit',
-    //双面打印 | 单面打印
-    side?: 'duplex' | 'simplex',
+    // 支持MyPrint客户端、windows直连，macos直连
+    scaleFactor?: number,
+    printBackground?: boolean, // 是否打印背景
+    color?: boolean, // 是否打印颜色
+
+    /**
+     * 支持MyPrint客户端、windows直连，macos直连
+     * 双面打印 | 单面打印
+     */
+    duplexMode?: 'duplex' | 'simplex',
+    // 支持MyPrint客户端
+    dpi?: any
 }
 
 export interface DesignPanelProps {
@@ -32,7 +56,7 @@ export interface DesignPanelProps {
     showSaveButton?: boolean;
 }
 
-export interface MyPrintOptions {
+export interface MyPrintConfig {
     serverUrl?: string;
     clientUrl?: string;
     disabledClient?: boolean;
@@ -48,11 +72,16 @@ export interface PrintResult {
 
 export interface ClientCmd {
     taskId: string;
+    cmd: 'print' | 'printerList' | 'generatePdf' | 'generatePdfResult' | 'printResult' | 'ping' | 'text/css',
+    options?: PrintOptions
+}
+
+export interface ClientResult {
+    taskId: string;
     cmd: 'print' | 'printerList' | 'generatePdf' | 'generatePdfResult' | 'printResult' | 'pong',
-    pdf?: Buffer,
-    content?: any,
-    width?: number,
-    height?: number
+    data?: Buffer | any,
+    status?: 'SUCCESS' | 'ERROR',
+    msg?: string
 }
 
 export interface Printer {

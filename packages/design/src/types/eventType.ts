@@ -1,6 +1,6 @@
 import { Container, MyElement, Panel } from './entity';
 import { Snapshot } from '@myprint/design/utils/historyUtil';
-import { PrintProps } from '@myprint/design/types/entity';
+import { PrintOptions } from '@myprint/design/types/entity';
 
 export type EventTypes = {
     preview: string;
@@ -14,9 +14,9 @@ export type EventTypes = {
     elementMove: any;
     elementUp: any;
     elementRemove: MyElement;
-    printPanel: PrintProps;
-    design2Img: PrintProps;
-    previewPanel: PrintProps;
+    printPanel: PrintOptions;
+    design2Img: PrintOptions;
+    previewPanel: PrintOptions;
     clearPanel: Panel;
     panelSnapshot: Snapshot;
     sortColumn: any;

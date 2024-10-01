@@ -9,8 +9,13 @@ cd ..
 pnpm run build:design
 
 cd packages/design/dist/myprint-design
+
 pwd
+
+npm config set registry https://registry.npmjs.org/
 npm publish
+npm config set registry=http://registry.npm.taobao.org/
+
 cd -
 #
 #cd internal/eslint-config

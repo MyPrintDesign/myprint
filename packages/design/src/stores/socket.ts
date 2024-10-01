@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { printCssStyle } from '@myprint/design/utils/utils';
 import { useConfigStore } from './config';
-import { ClientCmd, Printer } from '@myprint/design/types/entity';
+import { ClientCmd, ClientResult, Printer } from '@myprint/design/types/entity';
 
 let lockReconnect: any;
 export const useSocket = defineStore('myPrintSocket', {
@@ -28,7 +28,7 @@ export const useSocket = defineStore('myPrintSocket', {
                     lockReconnect = false;
                 }, 4000);
             };
-            const onMessage = (msgData: ClientCmd) => {
+            const onMessage = (msgData: ClientResult) => {
                 // 遍历onMessage集合并触发
                 if (this.resolveMap[msgData.taskId]) {
                     this.resolveMap[msgData.taskId](msgData);
@@ -45,24 +45,24 @@ export const useSocket = defineStore('myPrintSocket', {
                     heartCheck.reset().start();
                     // 发送css样式过去
                     stateThis.socket!.send(JSON.stringify({
-                        content: printCssStyle(),
+                        options: { css: printCssStyle() },
                         cmd: 'text/css'
-                    }));
+                    } as ClientCmd));
                 };
 
                 //接收到消息的回调方法
                 this.socket!.onmessage = function(event: any) {
-                    const msgData = JSON.parse(event.data) as ClientCmd;
-                    switch (msgData.cmd) {
+                    const clientResult = JSON.parse(event.data) as ClientResult;
+                    switch (clientResult.cmd) {
                         case 'printerList':
-                            stateThis.printerList = (msgData.content as any[]).map(res => (res));
-                            onMessage(msgData);
+                            stateThis.printerList = (clientResult.data as any[]).map(res => (res));
+                            onMessage(clientResult);
                             break;
                         case 'printResult':
-                            onMessage(msgData);
+                            onMessage(clientResult);
                             break;
                         case 'generatePdfResult':
-                            onMessage(msgData);
+                            onMessage(clientResult);
                             break;
                         case 'pong':
                             break;
@@ -142,7 +142,7 @@ export const useSocket = defineStore('myPrintSocket', {
             this.printerList = list;
         },
         SEND(taskId: string, msg: any) {
-            return new Promise<ClientCmd>((resolve, _reject) => {
+            return new Promise<ClientResult>((resolve, _reject) => {
                 this.resolveMap[taskId] = resolve;
                 this.socket!.send(msg);
             });

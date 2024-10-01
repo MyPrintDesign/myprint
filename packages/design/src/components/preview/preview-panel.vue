@@ -64,7 +64,7 @@ import { toPdf } from '@myprint/design/utils/pdfUtil';
 import { download } from '@myprint/design/utils/utils';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
 import Preview from './preview.vue';
-import { MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
+import { MyElement, Panel, PrintOptions, PrintResult } from '@myprint/design/types/entity';
 import { i18n } from '@myprint/design/locales';
 import { valueUnit } from '@myprint/design/utils/elementUtil';
 import { useConfigStore } from '@myprint/design/stores/config';
@@ -108,16 +108,18 @@ const printList = computed(() => {
 
 function print() {
     myPrintClientService.print({
-        content: { html: getPrintElementHtml(previewContentRef.value!, []), printer: data.printer },
+        options: {
+            title: (panel.value ? (panel.value as Panel).name : undefined),
+            html: getPrintElementHtml(previewContentRef.value!, []),
+            printer: data.printer
+        },
         cmd: 'print',
         taskId: data.taskId
     }, panel.value)
         .then(res => {
-            // console.log(res);
             handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap);
         })
         .catch(e => {
-            // console.log(e);
             printResult(data.taskId, {
                 status: 'ERROR',
                 msg: e.msg,
@@ -129,7 +131,7 @@ function print() {
 function downloadPdf() {
     if (MyPrinter.clientConnectIs()) {
         myPrintClientService.print({
-            content: { html: getPrintElementHtml(previewContentRef.value!, []) },
+            options: { html: getPrintElementHtml(previewContentRef.value!, []) },
             cmd: 'generatePdf',
             taskId: data.taskId
         }, panel.value).then(res => {
@@ -176,7 +178,7 @@ function setItemRef(el: any, item: MyElement) {
     itemRefs[item.id] = el;
 }
 
-function handleChromePreview(printProps: PrintProps) {
+function handleChromePreview(printProps: PrintOptions) {
     data.dialogVisible = true;
     panel.value = printProps.panel as Panel;
     data.taskId = printProps.taskId;

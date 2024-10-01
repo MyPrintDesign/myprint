@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { nextTick, reactive, ref } from 'vue-demi';
-import { MyElement, Panel, PrintProps, PrintResult } from '@myprint/design/types/entity';
+import { MyElement, Panel, PrintOptions, PrintResult } from '@myprint/design/types/entity';
 import { getCurrentPanelUnit, valueUnit } from '@myprint/design/utils/elementUtil';
 import Preview from '@myprint/design/components/preview/preview.vue';
 import { autoPage } from '@myprint/design/components/preview/autoPage';
@@ -61,7 +61,7 @@ function setItemRef(el: any, item: MyElement) {
     itemRefs[item.id] = el;
 }
 
-function handleChromePrint(printProps: PrintProps) {
+function handleChromePrint(printProps: PrintOptions) {
     return new Promise<PrintResult>(async (resolve, _reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         
@@ -79,7 +79,7 @@ function handleChromePrint(printProps: PrintProps) {
     });
 }
 
-function handleClientPrint(printProps: PrintProps) {
+function handleClientPrint(printProps: PrintOptions) {
     return new Promise<PrintResult>(async (resolve, _reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         if (printProps.panel) {
@@ -111,23 +111,23 @@ function handleClientPrint(printProps: PrintProps) {
         // }
         
         myPrintClientService.print({
-            content: {
+            cmd: 'print',
+            taskId: printProps.taskId!,
+            options: {
+                ...printProps,
                 title: printProps.title ? printProps.title : (printProps.panel ? (printProps.panel as Panel).name : undefined),
                 html: printProps.panel ? getPrintElementHtml(previewContentRef.value!, data.pageList) : undefined,
-                fileBase64: printProps.file ? printProps.file as string : undefined,
-                printer: printProps.printer,
-                ...printProps,
-                panel: undefined
-            },
-            cmd: 'print',
-            taskId: printProps.taskId!
-        }, data.panel).then(res => {
-            handleClientResult(res, printResult, data.previewTimeOutMap, data.resolveMap);
+                file: printProps.file ? printProps.file as string : undefined,
+                panel: undefined!,
+                previewDataList: undefined!
+            }
+        }, data.panel).then(clientCmd => {
+            handleClientResult(clientCmd, printResult, data.previewTimeOutMap, data.resolveMap);
         });
     });
 }
 
-function handleChromeDownloadImg(printProps: PrintProps) {
+function handleChromeDownloadImg(printProps: PrintOptions) {
     return new Promise<PrintResult>(async (resolve, _reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         
@@ -149,7 +149,7 @@ function handleChromeDownloadImg(printProps: PrintProps) {
     });
 }
 
-function handleServerDownloadImg(printProps: PrintProps) {
+function handleServerDownloadImg(printProps: PrintOptions) {
     return new Promise<Blob>(async (resolve, reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         
@@ -179,7 +179,7 @@ function handleServerDownloadImg(printProps: PrintProps) {
     });
 }
 
-function handleChromeDownloadPdf(printProps: PrintProps) {
+function handleChromeDownloadPdf(printProps: PrintOptions) {
     return new Promise<PrintResult>(async (resolve, reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         
@@ -208,7 +208,7 @@ function handleChromeDownloadPdf(printProps: PrintProps) {
     });
 }
 
-function handleClientDownloadPdf(printProps: PrintProps) {
+function handleClientDownloadPdf(printProps: PrintOptions) {
     return new Promise<PrintResult>(async (resolve, reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         
@@ -219,7 +219,7 @@ function handleClientDownloadPdf(printProps: PrintProps) {
         await autoPage(data.pageList, data.panel, printProps.previewDataList);
         
         myPrintClientService.print({
-            content: { html: getPrintElementHtml(previewContentRef.value!, data.pageList) },
+            options: { html: getPrintElementHtml(previewContentRef.value!, data.pageList) },
             cmd: 'generatePdf',
             taskId: printProps.taskId!
         }, data.panel).then(res => {
@@ -234,7 +234,7 @@ function handleClientDownloadPdf(printProps: PrintProps) {
     });
 }
 
-function handleServerDownloadPdf(printProps: PrintProps) {
+function handleServerDownloadPdf(printProps: PrintOptions) {
     return new Promise<PrintResult>(async (resolve, reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
         

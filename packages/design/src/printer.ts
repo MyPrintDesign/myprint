@@ -2,7 +2,7 @@ import { App, h, render, VNode } from 'vue-demi';
 import PrintView from './components/print/print.vue';
 import previewPanelView from './components/preview/preview-panel.vue';
 import { getCurrentPanel, parentInitElement } from './utils/elementUtil';
-import { MyPrintOptions, Panel, PrintProps, PrintResult } from './types/entity';
+import { MyPrintConfig, Panel, PrintResult, PrintOptions } from './types/entity';
 import {
     arrayBuffer2Base64,
     blob2Base64,
@@ -18,20 +18,20 @@ import { useAppStoreHook } from './stores/app';
 import { useConfigStore } from './stores/config';
 import { useSocket } from './stores/socket';
 
-export const myPrintOptions: MyPrintOptions = {
+export const myPrintOptions: MyPrintConfig = {
     disabledClient: false
 };
 
 let printNode: VNode = null!;
 let previewNode: VNode = null!;
-let handleChromePrint: (printProps: PrintProps) => Promise<PrintResult> = null!;
-let handleClientPrint: (printProps: PrintProps) => Promise<PrintResult> = null!;
-let handleChromeDownloadPdf: (printProps: PrintProps) => Promise<PrintResult> = null!;
-let handleClientDownloadPdf: (printProps: PrintProps) => Promise<PrintResult> = null!;
-let handleServerDownloadPdf: (printProps: PrintProps) => Promise<PrintResult> = null!;
-let handleChromeDownloadImg: (printProps: PrintProps) => Promise<PrintResult> = null!;
-let handleServerDownloadImg: (printProps: PrintProps) => Promise<PrintResult> = null!;
-let handleChromePreview: (printProps: PrintProps) => Promise<PrintResult> = null!;
+let handleChromePrint: (printProps: PrintOptions) => Promise<PrintResult> = null!;
+let handleClientPrint: (printProps: PrintOptions) => Promise<PrintResult> = null!;
+let handleChromeDownloadPdf: (printProps: PrintOptions) => Promise<PrintResult> = null!;
+let handleClientDownloadPdf: (printProps: PrintOptions) => Promise<PrintResult> = null!;
+let handleServerDownloadPdf: (printProps: PrintOptions) => Promise<PrintResult> = null!;
+let handleChromeDownloadImg: (printProps: PrintOptions) => Promise<PrintResult> = null!;
+let handleServerDownloadImg: (printProps: PrintOptions) => Promise<PrintResult> = null!;
+let handleChromePreview: (printProps: PrintOptions) => Promise<PrintResult> = null!;
 
 export function installPrinter(app: App<any>) {
     if (!printNode) {
@@ -75,8 +75,8 @@ function initPanel(panel: Panel) {
     panel.pageFooter && parentInitElement(panel, panel, panel.pageFooter, 0);
 }
 
-function convertPrintProps(printProps: PrintProps) {
-    return new Promise<PrintProps>(async (resolve, _reject) => {
+function convertPrintProps(printProps: PrintOptions) {
+    return new Promise<PrintOptions>(async (resolve, _reject) => {
         let panel = printProps.panel;
         if (printProps.file) { // 打印pdf
             if (isBlob(printProps.file)) {
@@ -99,17 +99,18 @@ function convertPrintProps(printProps: PrintProps) {
             }
         }
 
-        printProps.taskId = generateUUID();
-        resolve(
-            {
-                ...printProps,
-                panel
-            });
+        if (!printProps.taskId) {
+            printProps.taskId = generateUUID();
+        }
+        resolve({
+            ...printProps,
+            panel
+        });
     });
 }
 
 export const MyPrinter = {
-    initMyPrinter(options: MyPrintOptions) {
+    initMyPrinter(options: MyPrintConfig) {
         if (options.serverUrl) {
             if (options.serverUrl.endsWith('/')) {
                 myPrintOptions.serverUrl = options.serverUrl.slice(0, -1);
@@ -140,7 +141,7 @@ export const MyPrinter = {
         } else {
             useConfigStore().clientUrl = clientUrl;
         }
-        useSocket().INIT_SOCKET()
+        useSocket().INIT_SOCKET();
     },
 
     setServerUrl(serverUrl: string) {
@@ -176,35 +177,35 @@ export const MyPrinter = {
         return myPrintClientService.asyncGetPrinterList();
     },
 
-    chromePreview(printProps: PrintProps) {
+    chromePreview(printProps: PrintOptions) {
         return convertPrintProps(printProps).then(handleChromePreview);
     },
 
-    chromePrinter(printProps: PrintProps) {
+    chromePrinter(printProps: PrintOptions) {
         return convertPrintProps(printProps).then(handleChromePrint);
     },
 
-    clientPrinter(printProps: PrintProps) {
+    clientPrinter(printProps: PrintOptions) {
         return convertPrintProps(printProps).then(handleClientPrint);
     },
 
-    pdfChrome(printProps: PrintProps) {
+    pdfChrome(printProps: PrintOptions) {
         return convertPrintProps(printProps).then(handleChromeDownloadPdf);
     },
 
-    pdfClient(printProps: PrintProps) {
+    pdfClient(printProps: PrintOptions) {
         return convertPrintProps(printProps).then(handleClientDownloadPdf);
     },
 
-    pdfServer(printProps: PrintProps) {
+    pdfServer(printProps: PrintOptions) {
         return convertPrintProps(printProps).then(handleServerDownloadPdf);
     },
 
-    imgChrome(printProps: PrintProps) {
+    imgChrome(printProps: PrintOptions) {
         return convertPrintProps(printProps).then(handleChromeDownloadImg);
     },
 
-    imgServer(printProps: PrintProps) {
+    imgServer(printProps: PrintOptions) {
         return convertPrintProps(printProps).then(handleServerDownloadImg);
     }
 

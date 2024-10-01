@@ -11,6 +11,8 @@ export default defineConfig({
         root: { label: '简体中文', ...zh },
         // en: { label: 'English', ...en }
     },
+    base: '/',
+    outDir: './dist',
     markdown: {
         // markdown-it-anchor 的选项
         // https://github.com/valeriangalliat/markdown-it-anchor#usage

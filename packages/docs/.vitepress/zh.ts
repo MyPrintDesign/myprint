@@ -7,7 +7,7 @@ const pkg = require('../package.json');
 
 export const zh = defineConfig({
     lang: 'zh-Hans',
-    description: '打印设计器',
+    description: '操作简单，组件丰富的一站式打印解决方案打印设计器',
 
     themeConfig: {
         nav: nav(),
@@ -23,7 +23,7 @@ export const zh = defineConfig({
 
         footer: {
             message: '本文档内容版权属于 MyPrint 作者，保留所有权利 ',
-            copyright: `版权所有 © 2019-${new Date().getFullYear()} css <a href="https://beian.miit.gov.cn/" target="_blank" class="beian_a"></a>`
+            copyright: `版权所有 © 2019-${new Date().getFullYear()} css <a href="https://beian.miit.gov.cn/" target="_blank" class="beian_a">皖ICP备18011566号-4</a>`
         },
 
         docFooter: {

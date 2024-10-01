@@ -7,7 +7,7 @@ export const useConfigStore = defineStore({
             // cursor: null,
             init: false,
             printer: null,
-            defaultPrinter: null,
+            defaultPrinter: undefined,
             clientProtocol: 'myprint',
             clientUrl: 'ws://127.0.0.1:9898',
             autoConnect: 1,

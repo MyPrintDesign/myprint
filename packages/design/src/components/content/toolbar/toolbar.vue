@@ -63,7 +63,7 @@ withDefaults(defineProps<{
 
 function print() {
     const defaultPrinter = MyPrinter.getDefaultPrinter();
-    MyPrinter.clientPrinter({ previewDataList: useApp.previewData, printer: defaultPrinter?.name })
+    MyPrinter.clientPrinter({ previewDataList: defaultPreviewData(useApp.previewData), printer: defaultPrinter?.name })
         .then(res => {
             switch (res.status) {
                 case 'SUCCESS':
@@ -81,7 +81,7 @@ function print() {
 }
 
 function serverDownloadPdf() {
-    MyPrinter.pdfServer({ previewDataList: useApp.previewData })
+    MyPrinter.pdfServer({ previewDataList: defaultPreviewData(useApp.previewData) })
         .then(res => {
             switch (res.status) {
                 case 'SUCCESS':
