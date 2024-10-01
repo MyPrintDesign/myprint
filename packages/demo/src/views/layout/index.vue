@@ -88,7 +88,7 @@ const handleSelect = (key: string, _keyPath: string[]) => {
             activeIndex.value = lastIndex;
         }, 10);
         
-        window.open('https://doc.cfcss.top');
+        window.open('https://doc.myprint.top');
         return;
     }
     router.push({ path: key });

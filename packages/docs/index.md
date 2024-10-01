@@ -12,7 +12,7 @@ hero:
       link: /guide/getting-started
     - theme: brand
       text: demo
-      link: https://demo.cfcss.top
+      link: https://demo.myprint.top
     - theme: alt
       text: github
       link: https://github.com/MyPrintDesign/myprint

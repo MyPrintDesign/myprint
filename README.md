@@ -5,12 +5,12 @@
 | 项目               | 说明                               | 地址(github)                                                | 地址(gitee)                                                |
 |:-----------------|----------------------------------|-----------------------------------------------------------|----------------------------------------------------------|
 | MyPrint          | 主项目                              | [`前往`](https://github.com/MyPrintDesign/myprint)          | [`前往`](https://gitee.com/MyPrintDesign/myprint)          |
-| MyPrint-server   | 服务端[`(去下载)`](https://doc.cfcss.top/guide/deploy/centos)                   | —                                                         | —                                                        |
-| MyPrint-desktop  | 客户端[`(去下载)`](https://doc.cfcss.top/guide/deploy/client)                   | —                                                         | —                                                        |
+| MyPrint-server   | 服务端[`(去下载)`](https://doc.myprint.top/guide/deploy/centos)                   | —                                                         | —                                                        |
+| MyPrint-desktop  | 客户端[`(去下载)`](https://doc.myprint.top/guide/deploy/client)                   | —                                                         | —                                                        |
 | MyPrint-examples | 客户端                              | [`前往`](https://github.com/MyPrintDesign/myprint-examples) | [`前往`](https://gitee.com/MyPrintDesign/myprint-examples) |
 | MyPrint-docker   | docker构建镜像                       | [`前往`](https://github.com/MyPrintDesign/myprint-docker)   | [`前往`](https://gitee.com/MyPrintDesign/myprint-docker)   |
-| 文档               | [`前往`](https://doc.cfcss.top)  | —                                                         | —                                                        |
-| 体验服(demo)        | [`前往`](https://demo.cfcss.top) | —                                                         | —                                                        |
+| 文档               | [`前往`](https://doc.myprint.top)  | —                                                         | —                                                        |
+| 体验服(demo)        | [`前往`](https://demo.myprint.top) | —                                                         | —                                                        |
 
 ## 说明
 
@@ -121,15 +121,15 @@ export default defineConfig({
 
 ### 下载客户端
 
-|         | 架构      |                                  地址                                  |
-|---------|---------|:--------------------------------------------------------------------:|
-| Windows | 64位     |    [下载地址](https://file.cfcss.top/MyPrint-Windows-x64-1.0.0.exe)    |
-| Windows | 32位     |   [下载地址](https://file.cfcss.top/MyPrint-Windows-ia32-1.0.0.exe)    |
-| Linux   | x86     | [下载地址](https://file.cfcss.top/MyPrint-Linux-x86_64-1.0.0.AppImage) |
-| Macos   | Intel芯片 |      [下载地址](https://file.cfcss.top/MyPrint-Mac-x64-1.0.0.dmg)      |
-| Macos   | Apple芯片 |     [下载地址](https://file.cfcss.top/MyPrint-Mac-arm64-1.0.0.dmg)     |
+|         | 架构      |                                 地址                                  |
+|---------|---------|:-------------------------------------------------------------------:|
+| Windows | 64位     |       [下载地址](https://file.cfcss.top/MyPrint-Windows-x64-latest.exe)       |
+| Windows | 32位     |    [下载地址](https://file.cfcss.top/MyPrint-Windows-ia32-latest.exe)    |
+| Linux   | x86     | [下载地址](https://file.cfcss.top/MyPrint-Linux-x86_64-latest.AppImage)  |
+| Macos   | Intel芯片 |      [下载地址](https://file.cfcss.top/MyPrint-Mac-x64-latest.dmg)       |
+| Macos   | Apple芯片 |     [下载地址](https://file.cfcss.top/MyPrint-Mac-arm64-latest.dmg)      |
 
-### 服务端（服务端生成pdf）[`去下载`](https://cfcss.top/myprint-server.zip)
+### 服务端（服务端生成pdf）[`去下载`](https://file.cfcss.top/myprint-server.zip)
 
 > 在服务器生成pdf或者图片
 

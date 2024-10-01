@@ -29,7 +29,7 @@
                 </template>
             </el-tree>
             
-            <div>123</div>
+            <div class="main_left_version">版本：{{ version }}</div>
         </el-aside>
         <el-main class="module-right_main">
             <div class="module-header display-flex">
@@ -158,6 +158,7 @@
 import { moduleGroupDelete, moduleGroupList, moduleGroupSave, moduleGroupUpdate } from '@/api/moduleGroup';
 import { nextTick, onMounted, reactive, ref } from 'vue';
 import { Module, ModuleGroup, PageParam, R, Template } from '@/types/R';
+import { version } from '@myprint/design/index';
 import { useRouter } from 'vue-router';
 import { templateDelete, templatePage, templateUpdate } from '@/api/template';
 import ModuleItem from '@/views/module/module-item.vue';

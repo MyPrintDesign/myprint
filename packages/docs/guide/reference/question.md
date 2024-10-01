@@ -22,4 +22,4 @@ qq群：456845432
 二维码加群：
 ![img.png](/weixin.png)
 
-[//]: # (https://weixinqr.cfcss.top/)
+[//]: # (https://weixinqr.myprint.top/)

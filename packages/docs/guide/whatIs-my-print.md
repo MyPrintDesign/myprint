@@ -25,7 +25,7 @@ outline: deep
 本地客户端支持局域网连接，可以做到同一局域网内别的机器的浏览器提交任务，由同一个打印机进行打印
 :::
 
-### 服务端（服务端生成pdf）[`去下载`](https://cfcss.top/myprint-server.zip)
+### 服务端（服务端生成pdf）[`去下载`](https://myprint.top/myprint-server.zip)
 
 :::tip
 在服务器生成pdf或者图片
