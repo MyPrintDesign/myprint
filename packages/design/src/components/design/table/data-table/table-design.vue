@@ -72,7 +72,7 @@
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue-demi';
 import { Container, MyElement, TableCellElement } from '@myprint/design/types/entity';
 import DataTable from './data-table.vue';
-import { defaultElement, elementHandleStatusList } from '@myprint/design/constants/common';
+import { elementHandleStatusList } from '@myprint/design/constants/common';
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import { sortColumn } from '@myprint/design/utils/utils';
 import { freshMoveableOption, updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
