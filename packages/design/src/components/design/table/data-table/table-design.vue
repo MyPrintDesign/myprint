@@ -23,8 +23,7 @@
         top: (data.highlightColumn.y)+'px',
         width: (data.highlightColumn.width+2)+'px',
         height: (data.highlightColumn.height + 3)+'px'
-           }"
-        />
+           }" />
         
         <template v-for="(rowList, row) in data.controlPointList">
             <div class="my-table-control-head-point iconfont icon-sigedian" v-for="(item, col) in rowList"
@@ -563,7 +562,7 @@ watch(() => props.element.runtimeOption.status, (n, _o) => {
         tableRef.value.$el.removeEventListener('mousedown', tableMouseDown);
         data.highlightColumn.visibility = 'hidden';
         // data.highlightColumn.rowList = {};
-        setCurrentElement(defaultElement);
+        // setCurrentElement(defaultElement);
     }
 });
 

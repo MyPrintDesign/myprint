@@ -41,5 +41,9 @@ export default {
     'common.dotted': 'Dotted',
     'common.dashed': 'Dashed',
     'common.operation.history': 'Operation History',
-    'common.mini.map': 'Minimap'
+    'common.mini.map': 'Minimap',
+    'common.qr.errorCorrectionLevel.low': 'Low',
+    'common.qr.errorCorrectionLevel.medium': 'Medium',
+    'common.qr.errorCorrectionLevel.quartile': 'Quartile',
+    'common.qr.errorCorrectionLevel.high': 'High'
 };

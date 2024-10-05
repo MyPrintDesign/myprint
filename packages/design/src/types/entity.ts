@@ -248,7 +248,7 @@ export const elementTypeFormat = {
     TextTime: i18n('provider.text.time'),
     Image: i18n('provider.image'),
     DataTable: i18n('provider.data.table'),
-    FREETable: i18n('provider.free.table'),
+    FreeTable: i18n('provider.free.table'),
     Rect: i18n('provider.rect'),
     HorizontalLine: i18n('provider.horizontal.line'),
     DottedHorizontalLine: i18n('provider.dotted.horizontal.line'),
@@ -447,6 +447,8 @@ export interface RuntimeElementOption extends Position {
 export interface ElementOption {
     barCodeType: string;
     barCodeDisplayValIs: boolean;
+    qrCodeScale: number, // 二维码缩放倍数
+    qrErrorCorrectionLevel: 'low' | 'medium' | 'quartile' | 'high' | 'L' | 'M' | 'Q' | 'H', // 二维码容错等级
     // aspectRatio: number;
     keepRatio: boolean;
     // 固定位置打印

@@ -116,7 +116,7 @@ export function heightValueUnit(element: MyElement) {
 
 export function getPositionX(element: MyElement) {
     if (element.runtimeOption.parent!.x) {
-        return element.x + element.runtimeOption.parent!.x;
+        return numberUtil.sum(element.x, element.runtimeOption.parent!.x);
     }
     return element.x;
 }

@@ -9,7 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     Barcode: typeof import('./src/components/design/barcode/barcode.vue')['default']
     Basic: typeof import('./src/components/content/widget/basic.vue')['default']
-    ColumnView: typeof import('@myprint/design/components/design/table/data-table/columnView.vue')['default']
+    ColumnView: typeof import('./src/components/design/table/data-table/columnView.vue')['default']
     Container: typeof import('./src/components/design/container/container/container.vue')['default']
     Content: typeof import('./src/components/content/panel/index.vue')['default']
     ContentScale: typeof import('./src/components/content/handle-panel/contentScale.vue')['default']

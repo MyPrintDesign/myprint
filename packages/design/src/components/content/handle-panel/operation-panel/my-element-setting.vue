@@ -2,10 +2,12 @@
     <my-form label-width="80px" size="small"
              label-position="right">
         <my-divider-panel>
-            <template #divider>
+            <template #divider v-if="noWorkInTableIs">
                 {{ i18n('common.basics') }}
             </template>
-            
+            <template #divider v-else>
+                {{ i18n('handle.column') }}
+            </template>
             <!--    <my-button class="my-element-setting-choose-img" v-if="multipleElementGetValue('type') == 'Image'">-->
             <!--      更换图片-->
             <!--    </my-button>-->
@@ -66,8 +68,14 @@
                           @update:model-value="(val:any)=>multipleElementSetValue('lock', val)" />
             </template>
             
+            <my-form-item :label="i18n('handle.height.attr')"
+                          v-if="includeProps('type','tableHeightAttr')">
+                <my-radio v-model="element.option.tableHeightType"
+                          :dataList="tableBodyHeightTypeList" />
+            </my-form-item>
+            
             <my-form-item :label="i18n('common.xy')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('x')">
+                          v-if="includeProps('type','x') && noWorkInTableIs">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :disabled="multipleElementGetValue('lock')"
@@ -86,7 +94,7 @@
             </my-form-item>
             
             <my-form-item :label="i18n('handle.width&height')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('width')">
+                          v-if="includeProps('type','width')">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :disabled="multipleElementGetValue('lock')"
@@ -112,7 +120,7 @@
             </my-form-item>
             
             <my-form-item :label="i18n('handle.border.radius')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('borderRadius')">
+                          v-if="includeProps('type', 'borderRadius') && noWorkInTableIs">
                 <my-group>
                     <my-history-input-number class="width-60"
                                              :model-value="multipleElementGetValue('option.borderRadius')"
@@ -123,7 +131,7 @@
             </my-form-item>
             
             <my-form-item :label="i18n('handle.opacity')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('opacity')">
+                          v-if="includeProps('type','opacity')">
                 <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.opacity')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.opacity', val)"
@@ -133,7 +141,7 @@
                 <div style="margin-left: 20px">{{ multipleElementGetValue('option.opacity') }}</div>
             </my-form-item>
             <my-form-item :label="i18n('handle.rotate')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('rotate')">
+                          v-if="includeProps('type','rotate') && noWorkInTableIs">
                 <my-slider class="width-120"
                            :model-value="multipleElementGetValue('option.rotate')"
                            @update:model-value="(val:any)=>multipleElementSetValue('option.rotate', val)"
@@ -151,7 +159,7 @@
             </template>
             
             <my-form-item :label="i18n('handle.content.type')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('contentType')">
+                          v-if="includeProps('type','contentType')">
                 <my-history-select :model-value="multipleElementGetValue('contentType')"
                                    class="width-140"
                                    @update:model-value="(val:any)=>multipleElementSetValue('contentType', val)"
@@ -189,8 +197,27 @@
                     :inactive-text="i18n('common.hidden')" />
             </my-form-item>
             
+            <my-form-item :label="i18n('handle.qrCode.errorCorrectionLevel')"
+                          v-if="multipleElementGetValue('contentType') == 'QrCode'">
+                <my-history-select :model-value="multipleElementGetValue('option.qrErrorCorrectionLevel')"
+                                   @update:model-value="(val:any)=>multipleElementSetValue('option.qrErrorCorrectionLevel', val)"
+                                   class="width-140"
+                                   :data-list="qrCodeErrorCorrectionLevel"
+                                   :historyLabel="i18n('handle.qrCode.errorCorrectionLevel')" />
+            </my-form-item>
+            
+            <my-form-item :label="i18n('handle.qrCode.qrCodeScale')"
+                          v-if="multipleElementGetValue('contentType') == 'QrCode'">
+                <my-history-input-number class="width-140"
+                                         :min="0.01"
+                                         :model-value="multipleElementGetValue('option.qrCodeScale')"
+                                         @update:model-value="(val:any)=>multipleElementSetValue('option.qrCodeScale', val)"
+                                         :historyLabel="i18n('handle.qrCode.qrCodeScale')"
+                                         :placeholder="i18n('handle.qrCode.qrCodeScale.tips')" />
+            </my-form-item>
+            
             <my-form-item :label="i18n('handle.line.break')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('lineBreak')">
+                          v-if="includeProps('type','lineBreak') && noWorkInTableIs">
                 <my-switch
                     :model-value="multipleElementGetValue('option.lineBreak')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.lineBreak', val)"
@@ -198,7 +225,7 @@
             </my-form-item>
             
             <my-form-item :label="i18n('handle.text.auto.height')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('autoTextHeight')">
+                          v-if="includeProps('type','autoTextHeight') && noWorkInTableIs">
                 <my-switch
                     :model-value="multipleElementGetValue('option.autoTextHeight')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.autoTextHeight', val)"
@@ -206,7 +233,7 @@
             </my-form-item>
             
             <my-form-item :label="i18n('handle.line.height')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('lineHeight')">
+                          v-if="includeProps('type','lineHeight')">
                 <my-group>
                     <my-history-input-number class="num-2"
                                              :min="0.01"
@@ -217,7 +244,7 @@
                 </my-group>
             </my-form-item>
             <my-form-item :label="i18n('handle.line.width')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('lineWidth')">
+                          v-if="includeProps('type','lineWidth')">
                 <my-group>
                     <my-history-input-number class="num-2"
                                              :min="0.01"
@@ -229,7 +256,7 @@
             </my-form-item>
             
             <my-form-item :label="i18n('handle.dotted.style')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('dottedStyle')">
+                          v-if="includeProps('type','dottedStyle')">
                 <my-history-select :model-value="multipleElementGetValue('option.dottedStyle')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.dottedStyle', val)"
                                    class="width-120"
@@ -237,7 +264,7 @@
                                    :historyLabel="i18n('handle.dotted.style')" />
             </my-form-item>
             <my-form-item :label="i18n('handle.padding')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('padding')">
+                          v-if="includeProps('type','padding')">
                 <my-group>
                     <my-history-input-number class="num-4"
                                              :placeholder="i18n('handle.top')"
@@ -271,7 +298,7 @@
             </my-form-item>
             
             <my-form-item :label="i18n('handle.margin')"
-                          v-if="getElementSetting(multipleElementGetValue('type')).includes('margin')">
+                          v-if="includeProps('type','margin')">
                 <my-group>
                     <my-history-input-number class="num-4"
                                              :placeholder="i18n('handle.top')"
@@ -304,7 +331,8 @@
                 </my-group>
             </my-form-item>
             
-            <my-form-item :label="i18n('handle.fixed.position')">
+            <my-form-item :label="i18n('handle.fixed.position')"
+                          v-if="multipleElementGetValue('type') != 'DataTable' && noWorkInTableIs">
                 <my-switch
                     :model-value="multipleElementGetValue('option.fixed')"
                     @update:model-value="(val:any)=>multipleElementSetValue('option.fixed', val)"
@@ -313,9 +341,35 @@
             </my-form-item>
             
             <my-button size="small"
-                       v-if="getElementSetting(multipleElementGetValue('type')).includes('clearDrawPanel')"
+                       v-if="includeProps('type','clearDrawPanel')"
                        @click="clearDrawPanel">{{ i18n('handle.clear.canvas') }}
             </my-button>
+            
+            <!--表格-->
+            <my-form-item :label="i18n('handle.line.height')"
+                          v-if="includeProps('type','tableBodyHeightType')">
+                <my-radio v-model="element.option.tableBodyHeightType"
+                          :dataList="tableBodyHeightTypeList" />
+                
+                <my-group style="margin-top: 10px"
+                          v-if="element.option.tableBodyHeightType == 'FIXED'">
+                    
+                    <my-history-input-number class="num-2"
+                                             :min="0.01"
+                                             :model-value="multipleElementGetValue('option.tableBodyHeight')"
+                                             @change="changeTableBodyHeight"
+                                             :historyLabel="i18n('handle.line.height')" />
+                    <my-unit />
+                </my-group>
+            </my-form-item>
+            
+            <my-form-item :label="i18n('handle.table.page.head')"
+                          v-if="includeProps('type','tablePageHead')">
+                <my-switch
+                    :model-value="multipleElementGetValue('option.tablePageHeadIs')"
+                    @update:model-value="(val:any)=>multipleElementSetValue('option.tablePageHeadIs', val)"
+                    class="ml-2" />
+            </my-form-item>
         
         </my-divider-panel>
         
@@ -325,7 +379,7 @@
             </template>
             
             <my-form-item :label="i18n('handle.display.strategy')"
-                          v-if="multipleElementGetValue('option.fixed') == true">
+                          v-if="multipleElementGetValue('option.fixed')">
                 <my-history-select :model-value="multipleElementGetValue('option.displayStrategy')"
                                    @update:model-value="(val:any)=>multipleElementSetValue('option.displayStrategy', val)"
                                    class="width-120"
@@ -339,19 +393,36 @@
 
 </template>
 <script setup lang="ts">
-import { computed } from 'vue-demi';
-
 import {
     barcodeTypes,
     displayStrategyList,
-    dottedStyleList,
-    getElementSetting,
+    dottedStyleList, elementSettingType,
+    getElementSetting, qrCodeErrorCorrectionLevel, tableBodyHeightTypeList,
     textContentTypes
 } from '@myprint/design/constants/common';
-import MyGroup from '@myprint/design/components/my/group/my-group.vue';
 import { MyHistoryInput, MyHistoryInputNumber, MyHistorySelect, MyUnit } from '@myprint/design/components/my/input';
+import {
+    getPositionX,
+    getPositionY,
+    multipleElementGetValue,
+    multipleElementSetValue, setElementHeightPx
+} from '@myprint/design/utils/elementUtil';
+import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
+import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
+import MyForm from '@myprint/design/components/my/form/my-form.vue';
+import { i18n } from '@myprint/design/locales';
+import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
+import MyButton from '@myprint/design/components/my/button/my-Button.vue';
+import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
+import MyGroup from '@myprint/design/components/my/group/my-group.vue';
+import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
+import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
+import QuestionFilled from '@myprint/design/components/my/icon/icons/QuestionFilled.vue';
+import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
 import { useAppStoreHook } from '@myprint/design/stores/app';
-import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+import { computed } from 'vue-demi';
+import { MyElement } from '@myprint/design/types/entity';
+import { mitt } from '@myprint/design/utils/utils';
 import {
     addCanSelectElement,
     freshMoveableOption,
@@ -361,25 +432,8 @@ import {
     moveableRotate,
     removeCanSelectElement
 } from '@myprint/design/plugins/moveable/moveable';
-import { MyElement } from '@myprint/design/types/entity';
-import {
-    getPositionX,
-    getPositionY,
-    multipleElementGetValue,
-    multipleElementSetValue
-} from '@myprint/design/utils/elementUtil';
-import MyIcon from '@myprint/design/components/my/icon/my-icon.vue';
-import TipIcon from '@myprint/design/components/my/icon/tip-icon.vue';
-import MyDividerPanel from '@myprint/design/components/my/divider/my-divider-panel.vue';
-import MySwitch from '@myprint/design/components/my/switch/my-switch.vue';
-import MyTooltip from '@myprint/design/components/my/tooltip/my-tooltip.vue';
-import QuestionFilled from '@myprint/design/components/my/icon/icons/QuestionFilled.vue';
-import MySlider from '@myprint/design/components/my/slider/my-slider.vue';
-import MyFormItem from '@myprint/design/components/my/form/my-form-item.vue';
-import MyForm from '@myprint/design/components/my/form/my-form.vue';
-import MyButton from '@myprint/design/components/my/button/my-Button.vue';
-import { i18n } from '@myprint/design/locales';
-import { mitt } from '@myprint/design/utils/utils';
+import { unit2px } from '@myprint/design/utils/devicePixelRatio';
+import MyRadio from '@myprint/design/components/my/radio/my-radio.vue';
 
 const appStore = useAppStoreHook();
 
@@ -396,6 +450,30 @@ const element = computed(() => {
         return {} as MyElement;
     }
 });
+
+// 是否在表格中
+const noWorkInTableIs = computed(() => {
+    const workEnvironment = multipleElementGetValue('runtimeOption.workEnvironment');
+    return workEnvironment != 'DataTable';
+});
+
+function includeProps(props: string, attr: elementSettingType) {
+    //  'borderRadius'
+    //  'type'
+    return getElementSetting(multipleElementGetValue(props)).includes(attr);
+}
+
+function changeTableBodyHeight(val: number) {
+    multipleElementSetValue('option.tableBodyHeight', val);
+    for (let tableBodyListElement of element.value.tableBodyList) {
+        for (let tableBodyListElementElement of tableBodyListElement) {
+            if (tableBodyListElementElement == null) {
+                continue;
+            }
+            setElementHeightPx(unit2px(val), tableBodyListElementElement);
+        }
+    }
+}
 
 function changeOptionFixed() {
     mitt.emit('changeElement');

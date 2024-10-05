@@ -42,5 +42,9 @@ export default {
     'common.dotted': '点',
     'common.dashed': '线',
     'common.operation.history': '历史操作',
-    'common.mini.map': '小地图'
+    'common.mini.map': '小地图',
+    'common.qr.errorCorrectionLevel.low': '低',
+    'common.qr.errorCorrectionLevel.medium': '中等',
+    'common.qr.errorCorrectionLevel.quartile': '四分之一',
+    'common.qr.errorCorrectionLevel.high': '高',
 };

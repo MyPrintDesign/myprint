@@ -79,7 +79,7 @@ export const fontSizeList: DownList[][] = [
 
 
 export const definePropType = <T>(val: any): PropType<T> => val;
-type elementSettingType =
+export type elementSettingType =
     keyof ElementOption
     | (keyof Container)
     | 'contentType'
@@ -87,17 +87,22 @@ type elementSettingType =
     | 'label'
     | 'common'
     | 'clearDrawPanel'
+    | 'tableBodyHeightType' //表格表体行高类型
+    | 'tablePageHead' // 分页表头
+    | 'tableHeightAttr' // 表格高度属性
+
+
 // "x", 'y', "width", 'height', "font", 'fontSize', "color", 'hiddenLabel', 'opacity', "rotate"
 const commonElementSetting: Array<elementSettingType> = ['x', 'y', 'width', 'height', 'opacity', 'rotate'];
 const styleElementSetting: Array<elementSettingType> = ['textAlign', 'verticalAlign', 'borderAll', 'color', 'background', 'bold', 'italic', 'underline', 'lineThrough', 'fontFamily', 'fontSize'];
 const elementSetting: Record<elementType, Array<elementSettingType>> =
     {
         Image: [...commonElementSetting, 'common', 'borderRadius'],
-        Text: [...commonElementSetting, ...styleElementSetting, 'common', 'autoTextHeight', 'lineHeight', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'lineBreak'],
+        Text: [...commonElementSetting, ...styleElementSetting, 'common', 'autoTextHeight', 'lineHeight', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'contentType', 'padding', 'margin', 'data', 'label', 'lineBreak', 'qrCodeScale', 'qrErrorCorrectionLevel'],
         TextTime: [...commonElementSetting, ...styleElementSetting, 'common', 'lineHeight', 'fontFamily', 'fontSize', 'borderRadius', 'color', 'hiddenLabel', 'formatter', 'padding', 'margin', 'label'],
         Panel: [...commonElementSetting, 'common'],
-        DataTable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
-        FREETable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
+        DataTable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'tableHeightAttr', 'tableBodyHeightType', 'tablePageHead', 'common'],
+        FreeTable: [...(commonElementSetting.filter(item => item !== 'rotate')), ...styleElementSetting, 'common'],
         Rect: [...commonElementSetting, 'common', 'borderRadius', 'color', 'background', 'lineWidth'],
         HorizontalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'lineWidth'],
         DottedHorizontalLine: [...commonElementSetting, 'common', 'color', 'lineHeight', 'dottedStyle', 'lineWidth'],
@@ -445,5 +450,23 @@ export const dottedStyleList = [
     {
         'label': i18n('common.dashed'),
         'value': 'dashed'
+    }
+];
+export const qrCodeErrorCorrectionLevel = [
+    {
+        'label': i18n('common.qr.errorCorrectionLevel.low'),
+        'value': 'L'
+    },
+    {
+        'label': i18n('common.qr.errorCorrectionLevel.medium'),
+        'value': 'M'
+    },
+    {
+        'label': i18n('common.qr.errorCorrectionLevel.quartile'),
+        'value': 'Q'
+    },
+    {
+        'label': i18n('common.qr.errorCorrectionLevel.high'),
+        'value': 'H'
     }
 ];
