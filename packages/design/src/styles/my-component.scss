@@ -94,7 +94,7 @@
   -webkit-transition: background-color .2s linear, opacity .2s linear;
   height: 15px;
   /* there must be 'bottom' or 'top' for ps__rail-x */
-  bottom: 0px;
+  bottom: 0;
   /* please don't change 'position' */
   position: absolute;
 }
@@ -398,12 +398,15 @@
       &::-webkit-input-placeholder {
         color: rgba(0, 0, 0, 0.25);
       }
+
       &:-moz-placeholder {
         color: rgba(0, 0, 0, 0.25);
       }
+
       &::-moz-placeholder {
         color: rgba(0, 0, 0, 0.25);
       }
+
       &:-ms-input-placeholder {
         color: rgba(0, 0, 0, 0.25);
       }
@@ -682,4 +685,8 @@
       }
     }
   }
+}
+
+.my-popover_container {
+  overflow: hidden;
 }

@@ -89,6 +89,7 @@ function record(snapshot: Snapshot) {
         content: JSON.stringify(snapshot, (key, value) => {
             if ('parent' == key) return undefined;
             if ('target' == key) return undefined;
+            if ('nestColumnList' == key) return undefined;
             return value;
         }),
         label: action

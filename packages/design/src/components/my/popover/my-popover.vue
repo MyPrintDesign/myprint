@@ -7,9 +7,10 @@
          @click.stop.prevent="togglePopperShow">
         <slot name="reference"></slot>
     </div>
-    <teleport to="body">
+    <teleport to=".my-popover_container">
         <div class="my-popover_content"
              ref="contentRef"
+             :style="styles"
              v-show="data.visible">
             <slot></slot>
         </div>
@@ -18,10 +19,11 @@
 
 <script setup lang="ts">
 import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue-demi';
-import { createPopper } from '@popperjs/core';
+import { createPopper, detectOverflow, Modifier, State } from '@popperjs/core';
 import { onClickOutside } from '@vueuse/core';
 //@ts-ignore
 import { Placement } from '@popperjs/core/lib/enums';
+import { fromPairs } from 'lodash';
 
 defineExpose({ close });
 
@@ -42,10 +44,100 @@ const data = reactive({
 const referenceRef = ref<HTMLElement>();
 const contentRef = ref<HTMLElement>();
 let popperInstance: any = null;
+const styles = ref({});
+
+function deriveState(state: State) {
+    const elements = Object.keys(state.elements) as unknown as Array<
+        keyof State['elements']
+    >;
+    
+    const styles = fromPairs(
+        elements.map(
+            (element) =>
+                [element, state.styles[element] || {}] as [
+                    string,
+                    State['styles'][keyof State['styles']]
+                ]
+        )
+    );
+    
+    const attributes = fromPairs(
+        elements.map(
+            (element) =>
+                [element, state.attributes[element]] as [
+                    string,
+                    State['attributes'][keyof State['attributes']]
+                ]
+        )
+    );
+    
+    return {
+        styles,
+        attributes
+    };
+}
+
+const stateUpdater = {
+    name: 'updateState',
+    enabled: true,
+    phase: 'write',
+    fn: ({ state }) => {
+        if (!data.visible) {
+            return;
+        }
+        
+        const sss = detectOverflow(state, {
+            // elementContext: 'reference', // 'popper' by default
+        });
+        console.log(sss);
+        const derivedState = deriveState(state);
+        // console.log(derivedState);
+        Object.assign(styles.value, derivedState.styles.popper);
+        // console.log(state.elements.popper);
+        // const rect = state.elements.popper.getBoundingClientRect();
+        // console.log(styles.value);
+        // console.log(state.elements.popper.offsetLeft);
+        // const scroll = state.scrollParents.reference[0];
+        // console.log(scroll);
+        // const scrollElementRect = (scroll as Element).getBoundingClientRect();
+        // console.log(scrollElementRect);
+        // console.log(document.body.clientWidth, rect.x + rect.width, styles.value.transform, rect);
+        // console.log(scrollElementRect.right, rect.right);
+        // if (scrollElementRect.right < rect.right) {
+        //     //
+        //     console.log(scrollElementRect.right);
+        //
+        //     // styles.value['transform'] = `translate3d(0px, 309px, 0)`;
+        // }
+        //
+        
+        // console.log(derivedState);
+        // Object.assign(states.value, derivedState)
+    },
+    requires: ['computeStyles']
+} as Modifier<'updateState', any>;
+
 // 创建 popper 实例
 const createPopperInstance = () => {
     popperInstance = createPopper(referenceRef.value!, contentRef.value!, {
         modifiers: [
+            {
+                name: 'preventOverflow',
+                options: {
+                    altAxis: true,
+                    mainAxis: true,
+                    tether: false,
+                    // boundary: document, // true by default
+                    // rootBoundary: document // true by default
+                }
+            },
+            {
+                name: 'flip',
+                enabled: false,
+                options: {
+                    fallbackPlacements: ['top', 'right']
+                }
+            },
             {
                 name: 'offset',
                 options: {
@@ -53,12 +145,15 @@ const createPopperInstance = () => {
                     offset: [0, 10]
                 }
             },
+            // stateUpdater,
             {
                 name: 'arrow',
                 options: {
                     element: '.popper-arrow'
                 }
             }
+            // { name: 'applyStyles', enabled: false }
+        
         ],
         placement: props.placement
     });
@@ -88,7 +183,7 @@ watch(() => data.visible, (visible, _o) => {
 
 onMounted(() => {
     createPopperInstance();
-    contentRef.value!.style.minWidth = referenceRef.value!.offsetWidth + 'px';
+    // contentRef.value!.style.minWidth = referenceRef.value!.offsetWidth + 'px';
 });
 
 onUnmounted(() => {

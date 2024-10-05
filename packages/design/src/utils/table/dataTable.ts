@@ -10,7 +10,7 @@ import {
 import numberUtil from '@myprint/design/utils/numberUtil';
 import { parse, stringify } from '@myprint/design/utils/utils';
 import { reactive } from 'vue-demi';
-import { installParentElement, setCurrentElement } from '@myprint/design/utils/elementUtil';
+import { installParentElement, setCurrentElement, setElementWidthPx } from '@myprint/design/utils/elementUtil';
 
 
 export function recursionForTableCell(tableHeadList: TableHeadProviderCellElement[], callback: (providerCell: TableHeadProviderCellElement) => void) {
@@ -274,6 +274,11 @@ export function lastHeadList(tableHeadListList: TableCellElement[][]) {
     return lastHeadList;
 }
 
+/**
+ * 计算表格的宽高和位置
+ * @param target
+ * @param tableHeadListList
+ */
 export function computedTableCell(target: HTMLElement, tableHeadListList: TableCellElement[][]) {
     const tableRect = target.getBoundingClientRect() as DOMRect;
 
@@ -293,11 +298,15 @@ export function computedTableCell(target: HTMLElement, tableHeadListList: TableC
                 continue;
             }
 
+            if (recursionColumnDisable(tableCellElement)) {
+                continue;
+            }
+
             const target = tableCellElement.runtimeOption.target as HTMLElement;
             const tdRect = target.getBoundingClientRect();
 
-            const tdY = tdRect.y - tableRect.y;
-            const tdX = tdRect.x - tableRect.x;
+            const tdY = numberUtil.sub(tdRect.y, tableRect.y);
+            const tdX = numberUtil.sub(tdRect.x, tableRect.x);
 
             if (tableCellElement.colspan > 1) {
                 if (row + 1 < tableHeadListList.length) {
@@ -367,6 +376,77 @@ export function handleTableCellInitHeight(tableHeadListList: TableCellElement[][
     }
 }
 
+// 表格转嵌套表头
+export function tableHeadList2Nest(lastHeadList: TableCellElement[], tableHeadNest: TableCellElement[] = []) {
+
+    for (let tableCellElement of lastHeadList) {
+        if (tableCellElement.runtimeOption.cellParent) {
+            re(tableCellElement, tableHeadNest);
+        } else {
+            tableHeadNest.push(tableCellElement);
+        }
+    }
+
+    return tableHeadNest;
+
+}
+
+function re(tableCellElement: TableCellElement, tableHeadNest: TableCellElement[] = []) {
+    const cellParent: TableCellElement = tableCellElement.runtimeOption.cellParent;
+    if (cellParent == null) {
+        if (tableHeadNest.length == 0 || tableHeadNest[tableHeadNest.length - 1] != tableCellElement) {
+            tableHeadNest.push(tableCellElement);
+        }
+        return;
+    }
+    if (cellParent.runtimeOption.nestColumnList == null) {
+        cellParent.runtimeOption.nestColumnList = [];
+    }
+    if (cellParent.runtimeOption.nestColumnList.length == 0 || cellParent.runtimeOption.nestColumnList[cellParent.runtimeOption.nestColumnList.length - 1] != tableCellElement) {
+        cellParent.runtimeOption.nestColumnList.push(tableCellElement);
+    }
+    re(cellParent, tableHeadNest);
+}
+
+export function computedDisableColumn(rowColumnList: TableCellElement[][]) {
+    const disableCellMap = {};
+    for (let row = 0; row < rowColumnList.length; row++) {
+        const columnList = rowColumnList[row];
+        if (columnList == null) {
+            continue;
+        }
+        for (let col = 0; col < columnList.length; col++) {
+
+            const column = columnList[col];
+
+            if (column == null) {
+                continue;
+            }
+
+            if (column.option.enable == 0) {
+                for (let k = 0; k < column.colspan; k++) {
+                    disableCellMap[col + k] = 1;
+                }
+            }
+        }
+    }
+
+    return disableCellMap;
+}
+
+export function recursionColumnDisable(column: TableCellElement) {
+    if (column == null) {
+        return false;
+    }
+    if (column.option.enable == 0) {
+        return true;
+    }
+    if (column.runtimeOption.cellParent) {
+        return recursionColumnDisable(column.runtimeOption.cellParent);
+    }
+    return false;
+}
+
 // 表格处理 树形表头展开
 export function recursionHandleTableHead(tableHeadListList: TableCellElement[][], tableHeadList: TableHeadProviderCellElement[], deep: number) {
     const tableHeadListTmp = tableHeadListList[deep];
@@ -382,7 +462,7 @@ export function recursionHandleTableHead(tableHeadListList: TableCellElement[][]
             let width = 0;
             for (let tableHeadCellElement of childList) {
                 colspan += tableHeadCellElement.colspan;
-                width += tableHeadCellElement.width;
+                width = numberUtil.sub(width, tableHeadCellElement.width);
             }
 
             tableHeadCell.colspan = colspan;
@@ -403,6 +483,36 @@ export function recursionHandleTableHead(tableHeadListList: TableCellElement[][]
             }
         }
 
+    }
+}
+
+// 重新统计colspan 和宽
+export function computeColumnColspan(tableHeadList: TableCellElement[], deep: number) {
+    for (let j = 0; j < tableHeadList.length; j++) {
+        const tableHeadCell = tableHeadList[j];
+        const childList = tableHeadCell.runtimeOption.nestColumnList;
+        if (childList != null && childList.length > 0) {
+            // tableHeadCell.rowspan = 1;
+
+            computeColumnColspan(childList, deep + 1);
+            let colspan = 0;
+            let width = 0;
+            let widthEx = 0;
+            for (let tableHeadCellElement of childList) {
+                if (tableHeadCellElement.option.enable == 0) {
+                    continue;
+                }
+                colspan += tableHeadCellElement.colspan;
+                width = numberUtil.sum(width, tableHeadCellElement.width);
+                widthEx = numberUtil.sum(widthEx, tableHeadCellElement.runtimeOption.width);
+            }
+
+            tableHeadCell.colspan = colspan;
+            setElementWidthPx(widthEx, tableHeadCell);
+
+        } else {
+            tableHeadCell.colspan = 1;
+        }
     }
 }
 

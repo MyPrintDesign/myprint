@@ -13,7 +13,7 @@
         <!--        <div class="my-table-tool"/>-->
         
         <div class="my-table-highlight-sort"
-             :style="{left: data.highlightSort.x + 'px', top: data.highlightSort.y + 'px', height: data.highlightSort.height + 'px',}"
+             :style="{left: data.highlightSort.x + 'px', top: data.highlightSort.y + 'px', height: data.highlightSort.height + 'px'}"
              v-show="data.highlightSort.visibility == 'visible'" />
         
         <div class="my-table-highlight-column pointer-events"
@@ -22,7 +22,7 @@
         left: (data.highlightColumn.x-1)+'px',
         top: (data.highlightColumn.y)+'px',
         width: (data.highlightColumn.width+2)+'px',
-        height: (data.highlightColumn.height + 3)+'px',
+        height: (data.highlightColumn.height + 3)+'px'
            }"
         />
         
@@ -48,6 +48,24 @@
              :key="index"
              style="background: white !important"
              :style="{top: (item.y-1)+'px'}" />
+        
+        <my-popover
+            trigger="click"
+            ref="popoverRef"
+            class="table-more-icon_popover"
+            placement="top">
+            <template #reference>
+                <div class="table-more-icon"
+                     ref="containerMoveIconRef">
+                    <i class="icon-setting iconfont " />
+                </div>
+            </template>
+            <my-scrollbar height="200px">
+                <div class="table_header_setting">
+                    <my-tree-list @change="changeColumnEnable" nullActive :list="tableHeadNest" />
+                </div>
+            </my-scrollbar>
+        </my-popover>
     </template>
 
 </template>
@@ -59,24 +77,33 @@ import { defaultElement, elementHandleStatusList } from '@myprint/design/constan
 import { useAppStoreHook } from '@myprint/design/stores/app';
 import { sortColumn } from '@myprint/design/utils/utils';
 import { freshMoveableOption, updateMoveableRect } from '@myprint/design/plugins/moveable/moveable';
-import {throttle} from 'lodash';
+import { throttle } from 'lodash';
 import {
     getRecursionParentPanel,
     recursionUpdateCellParentInitWidth,
     recursionUpdateCellParentWidth,
     setCurrentElement,
-    setElementHeightPx, setElementOffsetWidthPx,
+    setElementHeightPx,
+    setElementOffsetWidthPx,
     setElementWidthPx
 } from '@myprint/design/utils/elementUtil';
 import {
+    computeColumnColspan,
+    computedDisableColumn,
     computedTableCell,
     getChildByParent,
     getTableCell,
-    getTableCellDown, initTableCell,
+    getTableCellDown,
+    initTableCell,
     lastHeadList,
-    selectCell
+    selectCell,
+    tableHeadList2Nest
 } from '@myprint/design/utils/table/dataTable';
 import { tableColClone } from '@myprint/design/utils/myprint';
+import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
+import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
+import MyTreeList from '@myprint/design/components/my/tree-list/MyTreeList.vue';
+import numberUtil from '@myprint/design/utils/numberUtil';
 
 type MyRow = Record<number, number[]>
 
@@ -121,7 +148,9 @@ const data = reactive({
 });
 const tableRef = ref();
 const useApp = useAppStoreHook();
+let resizeObserver: ResizeObserver;
 
+// 处理表格行
 const bodyList = computed(() => {
     const bodyList = [...props.element.tableHeadList, ...props.element.tableBodyList, ...props.element.statisticsList];
     // console.log('computed-bodyList');
@@ -130,14 +159,24 @@ const bodyList = computed(() => {
         data.lastHeadList = lastHeadList(props.element.tableHeadList);
         
         initTableCell(bodyList);
+        initTableNest();
         
         computeColumn();
         computeColumnHeight();
     });
     return bodyList;
 });
-let resizeObserver: ResizeObserver;
+const tableHeadNest = ref<TableCellElement[]>([]);
+
+function initTableNest() {
+    // 不处理enable
+    tableHeadNest.value = [];
+    tableHeadList2Nest(data.lastHeadList, tableHeadNest.value);
+}
+
 onMounted(() => {
+    // console.log(props.element);
+    // console.log(props.element.tableHeadList);
     // 创建 ResizeObserver 实例
     resizeObserver = new ResizeObserver((entries) => {
         // entries 是 ResizeObserverEntry 对象的数组
@@ -203,11 +242,13 @@ onUnmounted(() => {
     resizeObserver.disconnect();
 });
 
+/**
+ * 排序控制点事件
+ */
 function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
     
     data.row = row;
     data.col = col;
-    // console.log(row, col);
     data.controlPointMouseDownIs = true;
     data.handleIng = true;
     
@@ -232,7 +273,6 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
     tableColClone.show(columnLeft, columnTop, columnCell.runtimeOption.width, rowCellList);
     
     // 设置可移动范围
-    // console.log(childByParentList);
     let targetIndex: number | undefined = undefined;
     
     function controlPointMouseMove(ev: MouseEvent) {
@@ -251,6 +291,7 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
                     continue;
                 }
                 
+                // 判断排序高亮的绿色竖线是否显示
                 if (offsetX >= (i == 0 ? columnCellTmp.runtimeOption.x - columnCell.width : columnCellTmp.runtimeOption.x)
                     && offsetX <= columnCellTmp.runtimeOption.x + (i == childByParentList.length - 1 ? columnCellTmp.runtimeOption.width + columnCell.runtimeOption.width : columnCellTmp.runtimeOption.width)) {
                     if (offsetX <= columnCellTmp.runtimeOption.x + columnCellTmp.runtimeOption.width / 2) {
@@ -387,6 +428,9 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
 //     document.addEventListener('mouseup', controlPointMouseUp);
 // }
 
+/**
+ * 更改列尺寸
+ */
 function resizeMouseDown(ev: MouseEvent, col: number) {
     const clientStartX = ev.clientX;
     const columnElement = data.lastHeadList[col];
@@ -483,6 +527,22 @@ function removeStatisticsRow(item: any) {
     props.element.statisticsList.splice(item.row, 1);
     // console.log(bodyList.value.length);
     bodyList.value;
+}
+
+function changeColumnEnable() {
+    props.element.disableCellMap = computedDisableColumn(props.element.tableHeadList);
+    
+    computeColumnColspan(tableHeadNest.value, 0);
+    let widthTotal = 0;
+    for (let lastHeadListElement of data.lastHeadList) {
+        widthTotal = numberUtil.sum(widthTotal, lastHeadListElement.runtimeOption.width);
+    }
+    setElementWidthPx(numberUtil.sum(widthTotal, 1), props.element);
+    
+    nextTick(() => {
+        computedTableCell(props.element.runtimeOption.target, bodyList.value);
+        computeColumn();
+    });
 }
 
 watch(() => props.element.option.tableHeightType, (n, _o) => {

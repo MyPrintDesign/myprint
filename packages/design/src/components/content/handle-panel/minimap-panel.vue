@@ -50,16 +50,18 @@
                 <!--        <div>手势</div>-->
                 <div class="display-flex space-between width-100-p mini-map-toolbar_control_scale">
                     <tip-icon :tips="i18n('common.panel.minimap.zoom.out')" @click="startScale(-0.1)"
+                              placement="top"
                               class="icon-suoxiao iconfont mini-map-toolbar-icon" />
                     <div class="mini-map-toolbar_control_ratio">
                         {{ MathCalc.mul(scaleUtil.miniMap.scale, 100) }}%
                     </div>
                     <tip-icon :tips="i18n('common.panel.minimap.zoom.in')" @click="startScale(0.1)"
+                              placement="top"
                               class="icon-fangda iconfont mini-map-toolbar-icon" />
-                    <tip-icon :tips="i18n('common.panel.minimap.navigation')"
-                              :modelValue="configStore.settingPanel.miniMap.visible"
-                              @update:model-value="flag => configStore.settingPanel.miniMap.visible = flag"
-                              class="icon-map iconfont mini-map-toolbar-icon" />
+<!--                    <tip-icon :tips="i18n('common.panel.minimap.navigation')"-->
+<!--                              :modelValue="configStore.settingPanel.miniMap.visible"-->
+<!--                              @update:model-value="flag => configStore.settingPanel.miniMap.visible = flag"-->
+<!--                              class="icon-map iconfont mini-map-toolbar-icon" />-->
                 </div>
             </div>
         </div>

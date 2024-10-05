@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress';
 import { search as zhSearch } from './zh';
 
 export const shared = defineConfig({
-    title: 'MyPrint | 打印设计器',
+    title: 'MyPrint',
     description: '操作简单，组件丰富的一站式打印解决方案打印设计器',
 
     lastUpdated: true,
@@ -30,13 +30,14 @@ export const shared = defineConfig({
 
     /* prettier-ignore */
     head: [
+        ['meta', { name: 'baidu-site-verification', content: 'codeva-XE3SgMWFkT' }],
         ['link', { rel: 'icon', type: 'image/svg+xml', href: '/myprint-icon.svg' }],
         ['link', { rel: 'icon', type: 'image/png', href: '/base-icon-01.png' }],
         ['meta', { name: 'theme-color', content: '#5f67ee' }],
         ['meta', { property: 'og:type', content: 'website' }],
         ['meta', { property: 'og:locale', content: 'zh' }],
         ['meta', { property: 'og:title', content: 'MyPrint | 打印设计器' }],
-        ['meta', { property: 'og:site_name', content: 'MyPrint' }],
+        ['meta', { property: 'og:site_name', content: 'MyPrint | 打印设计器' }],
         ['meta', { property: 'og:image', content: 'https://vitepress.dev/vitepress-og.jpg' }],
         ['meta', { property: 'og:url', content: 'https://myprint.top/' }],
         ['script', {

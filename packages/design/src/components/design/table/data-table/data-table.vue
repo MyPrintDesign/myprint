@@ -7,28 +7,35 @@
             <template v-for="(column) in columnList">
                 <column-view
                     :key="'head'+column.id"
-                    v-if="column != null"
+                    v-if="column != null && !recursionColumnDisable(column)"
                     :column="column" />
             </template>
         </tr>
         <tr class="my-print-border-box" :key="rowIndex" v-for="(bodyRowList, rowIndex) in props.element.tableBodyList">
-            <td class="my-print-table-column_body" v-for="(body) in bodyRowList"
-                :key="'body' + rowIndex + '-' + body.id"
-                :ref="(el)=>setItemRef(body, el)"
-                :style="bodyStyle(body)">
-                <TextView v-if="body.type === 'Text'" :element="body" />
-                <!--        <ImageView v-if="column.type === 'Image'" :element="convert(column, rowData, indexTr)"/>-->
-            </td>
+            <template v-for="(body, index) in bodyRowList">
+                <td class="my-print-table-column_body"
+                    :key="'body' + rowIndex + '-' + body.id"
+                    v-if="props.element.disableCellMap == null ||  props.element.disableCellMap[index] != 1"
+                    :ref="(el)=>setItemRef(body, el)"
+                    :style="bodyStyle(body)">
+                    <TextView v-if="body.type === 'Text'" :element="body" />
+                    <!--        <ImageView v-if="column.type === 'Image'" :element="convert(column, rowData, indexTr)"/>-->
+                </td>
+            </template>
+        
         </tr>
         
         <tr class="my-print-border-box" :key="rowIndex" v-for="(bodyRowList, rowIndex) in props.element.statisticsList">
-            <td class="my-print-table-column_body" v-for="(body) in bodyRowList"
-                :key="'s'+rowIndex + '-' + body.id"
-                :ref="(el)=>setItemRef(body, el)"
-                :style="bodyStyle(body)">
-                <TextView v-if="body.type === 'Text'" :element="body" />
-                <!--        <ImageView v-if="column.type === 'Image'" :element="convert(column, rowData, indexTr)"/>-->
-            </td>
+            <template v-for="(body, index) in bodyRowList">
+                <td class="my-print-table-column_body"
+                    :key="'s'+rowIndex + '-' + body.id"
+                    v-if="props.element.disableCellMap == null ||  props.element.disableCellMap[index] != 1"
+                    :ref="(el)=>setItemRef(body, el)"
+                    :style="bodyStyle(body)">
+                    <TextView v-if="body.type === 'Text'" :element="body" />
+                    <!--        <ImageView v-if="column.type === 'Image'" :element="convert(column, rowData, indexTr)"/>-->
+                </td>
+            </template>
         </tr>
         </tbody>
     </table>
@@ -40,6 +47,7 @@ import ColumnView from './column-view.vue';
 import TextView from '@myprint/design/components/design/text';
 import { CSSProperties } from 'vue-demi';
 import { MyElement } from '@myprint/design/types/entity';
+import { recursionColumnDisable } from '@myprint/design/utils/table/dataTable';
 
 const props = withDefaults(defineProps<{
     element: MyElement

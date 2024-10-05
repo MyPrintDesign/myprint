@@ -2,7 +2,7 @@
     <my-tooltip :content="tips"
                 :disabled="tips == ''"
                 trigger="hover"
-                placement="bottom">
+                :placement="placement">
         <my-icon :disabled="disabled"
                  :class="props.class"
                  :size="size"
@@ -28,6 +28,7 @@ const props = withDefaults(defineProps<{
         class?: string,
         size?: number,
         padding?: string,
+        placement?: string,
     }>(),
     {
         tips: '',
@@ -35,6 +36,7 @@ const props = withDefaults(defineProps<{
         modelValue: false,
         class: '',
         size: null!,
-        padding: null!
+        padding: null!,
+        placement: 'bottom'
     });
 </script>

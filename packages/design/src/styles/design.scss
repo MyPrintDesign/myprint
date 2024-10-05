@@ -29,6 +29,33 @@
   transform: translate(calc(100% + 5px), 18px);
 }
 
+.table-more-icon_popover {
+  position: absolute;
+  text-align: center;
+
+  display: inline-block;
+  line-height: 1;
+  top: 0;
+  left: calc(100% + 7px);
+  width: 16px;
+  height: 16px;
+}
+
+.table-more-icon {
+  text-align: center;
+
+  display: inline-block;
+  line-height: 1;
+
+  width: 16px;
+  height: 16px;
+}
+
+.table_header_setting {
+  padding: 5px 9px 5px 5px;
+  background: white;
+}
+
 .container_over {
   z-index: 1;
   outline: 4px solid var(--drag-h-color);
@@ -273,6 +300,7 @@
       width: 250px;
       margin-bottom: 15px;
     }
+
     .choose-image-url-btn {
       width: 250px;
       height: 30px;
@@ -381,4 +409,17 @@
     top: -8px;
   }
 
+}
+
+.my-tree-list {
+  .my-tree-list-item_wrapper {
+    .my-tree-list-item {
+      display: flex;
+    }
+
+    .my-tree-list-child {
+      margin-left: 30px;
+    }
+
+  }
 }

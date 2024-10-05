@@ -46,6 +46,10 @@ const install = {
         installMessage(app);
 
         initDisplayRatio();
+
+        const container = document.createElement('div');
+        container.classList.add('my-popover_container');
+        document.body.appendChild(container);
     }
 };
 export { install };

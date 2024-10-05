@@ -253,9 +253,9 @@ export function initElement(panel: Panel, element: MyElement, index: number) {
                         label: '序号',
                         height: element.columnList[0].height,
                         option: <ElementOption>{
-                            disableSort: true,
-                            disableEnable: false,
-                            enable: true,
+                            disableSort: 1,
+                            disableEnable: 0,
+                            enable: 1,
                             formatter: '{{autoIncrement}}'
                         }
                     } as TableHeadProviderCellElement;
@@ -608,7 +608,7 @@ function findGroup(idList: string[]) {
 }
 
 export function element2PreviewWrapper(element: MyElement | PreviewWrapper): PreviewWrapper {
-    const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList', 'previewWrapperList'), reactive({}) as PreviewWrapper);
+    const previewWrapper = parse(stringify(element, 'parent', 'target', 'elementList', 'previewWrapperList', 'nestColumnList'), reactive({}) as PreviewWrapper);
     previewWrapper.id = generateUUID();
     previewWrapper.heightIs = true;
     previewWrapper.runtimeOption.parent = element.runtimeOption.parent;
@@ -818,9 +818,10 @@ export function elementCommonPositionStyle(element: MyElement): CSSProperties {
         fontSize: element.option.fontSize + getFontSizeUnit(getRecursionParentPanel(element))
     } as CSSProperties;
 }
+
 export function elementBarCodeValueStyle(element: MyElement, cssStyle?: CSSProperties): CSSProperties {
     if (cssStyle == null) {
-        cssStyle = {} as CSSProperties
+        cssStyle = {} as CSSProperties;
     }
 
     const option = element.option!;

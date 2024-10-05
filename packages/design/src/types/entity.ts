@@ -344,6 +344,7 @@ export interface MyElement extends Container {
     columnList: TableHeadProviderCellElement[];
     tableHeadList: TableCellElement[][];
     tableBodyList: TableCellElement[][];
+    disableCellMap: Record<number, 0 | 1 | undefined>;
     // 数据行合并单元格-预留
     // 统计行
     statisticsList: TableStatisticsCellElement[][];
@@ -434,6 +435,8 @@ export interface RuntimeElementOption extends Position {
     workEnvironment: elementType;
     cellType: cellType;
 
+    nestColumnList: TableCellElement[];
+
     // 是否拖拽进入
     dragInIs: boolean;
 
@@ -472,10 +475,10 @@ export interface ElementOption {
     sort: number;
     hiddenLabel: boolean;
     labelSplit: boolean;
-    disableSort: boolean;
-    disableEnable: boolean;
+    disableSort: number;
+    disableEnable: number;
     autoTextHeight: boolean;
-    enable: boolean;
+    enable: number;
     padding: Position;
     margin: Position;
     formatter?: string;
