@@ -229,6 +229,8 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
                     }
                     await autoTextElement(previewDataTmp, true);
                 }
+
+                previewWrapper.data = previewDataTmp;
                 if (previewWrapper.contentType == 'QrCode') {
                     previewContext.currentPage.previewWrapperList.push(previewWrapper);
                     await nextTick();
