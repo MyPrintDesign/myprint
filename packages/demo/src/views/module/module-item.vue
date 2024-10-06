@@ -5,7 +5,12 @@
                 <Lock />
             </el-icon>
         </div>
-        <div class="module_item-title display-flex">{{ node.label }}</div>
+        <div class="module_item-title display-flex">
+            <el-icon class="module_item-title_icon">
+                <Files />
+            </el-icon>
+            {{ node.label }}
+        </div>
         <popover-menu-list :menu-list="data.menuList"
                            :item="node.data"
                            v-model:visible="data.moreVisible"
@@ -27,7 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { Lock, More } from '@element-plus/icons-vue';
+import { Files, Lock, More } from '@element-plus/icons-vue';
 import { reactive } from 'vue';
 import { Module } from '@/types/R';
 import RenameDialog from '@/components/dialog/rename-dialog.vue';

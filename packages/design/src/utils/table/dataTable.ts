@@ -218,11 +218,26 @@ export function computedCellRect(cellList: TableCellElement[]) {
     return rect;
 }
 
+/**
+ * 往上找，看有没有不为空的节点
+ * @param floorHeaderList
+ * @param col
+ * @param deep
+ */
 export function findUpperCell(floorHeaderList: TableCellElement[][], col: number, deep: number) {
     for (let i = deep; i >= 0; i--) {
         const cell = floorHeaderList[i][col];
         if (cell != null) {
             return floorHeaderList[i][col];
+        }
+    }
+}
+
+export function findUpperCellIndex(floorHeaderList: TableCellElement[][], col: number, deep: number) {
+    for (let i = deep; i >= 0; i--) {
+        const cell = floorHeaderList[i][col];
+        if (cell != null) {
+            return i;
         }
     }
 }
@@ -276,11 +291,13 @@ export function lastHeadList(tableHeadListList: TableCellElement[][]) {
 
 /**
  * 计算表格的宽高和位置
- * @param target
+ * @param tableElement
+ * @param table
  * @param tableHeadListList
  */
-export function computedTableCell(target: HTMLElement, tableHeadListList: TableCellElement[][]) {
-    const tableRect = target.getBoundingClientRect() as DOMRect;
+export function computedTableCell(tableElement: MyElement, table: HTMLElement, tableHeadListList: TableCellElement[][]) {
+    const tableRect = table.getBoundingClientRect() as DOMRect;
+    const disableCellMap = tableElement.disableCellMap ?? {};
 
     const rowHeightList: number[] = [];
     for (let row = 0; row < tableHeadListList.length; row++) {
@@ -289,24 +306,8 @@ export function computedTableCell(target: HTMLElement, tableHeadListList: TableC
         for (let col = 0; col < tableHeadListListElement.length; col++) {
             const tableCellElement = tableHeadListListElement[col];
             if (tableCellElement == null) {
-
-                // const tableCellElementTmp = findUpperCell(tableHeadListList, col, row)!;
-                // if (tableCellElementTmp == null) {
-                //     continue;
-                // }
-                // x = x + tableCellElementTmp.runtimeOption.width;
                 continue;
             }
-
-            if (recursionColumnDisable(tableCellElement)) {
-                continue;
-            }
-
-            const target = tableCellElement.runtimeOption.target as HTMLElement;
-            const tdRect = target.getBoundingClientRect();
-
-            const tdY = numberUtil.sub(tdRect.y, tableRect.y);
-            const tdX = numberUtil.sub(tdRect.x, tableRect.x);
 
             if (tableCellElement.colspan > 1) {
                 if (row + 1 < tableHeadListList.length) {
@@ -325,13 +326,25 @@ export function computedTableCell(target: HTMLElement, tableHeadListList: TableC
                 }
             }
 
+            if (recursionColumnDisable(tableCellElement)) {
+                continue;
+            }
+            if (disableCellMap[col]) {
+                continue;
+            }
+
+            const target = tableCellElement.runtimeOption.target as HTMLElement;
+            const tdRect = target.getBoundingClientRect();
+
+            const tdY = numberUtil.sub(tdRect.y, tableRect.y);
+            const tdX = numberUtil.sub(tdRect.x, tableRect.x);
+
             tableCellElement.runtimeOption.x = tdX;
             tableCellElement.runtimeOption.y = tdY;
             tableCellElement.runtimeOption.width = tdRect.width;
             tableCellElement.runtimeOption.height = tdRect.height;
 
             height = numberUtil.div(tableCellElement.runtimeOption.height, tableCellElement.rowspan);
-
         }
 
         rowHeightList.push(height);
@@ -377,35 +390,43 @@ export function handleTableCellInitHeight(tableHeadListList: TableCellElement[][
 }
 
 // 表格转嵌套表头
-export function tableHeadList2Nest(lastHeadList: TableCellElement[], tableHeadNest: TableCellElement[] = []) {
+// + + + + + - - - + +
+// - - - - + + - + - -
+// - - - - - + + - - -
+export function tableHeadList2Nest(headListList: TableCellElement[][], row: number, col: number, size: number) {
+    const tableHeadNest: TableCellElement[] = [];
+    const headList = headListList[row];
+    for (let i = col; i < col + size; i++) {
+        const column = headList[i];
+        if (column == null) {
+            continue;
+        }
 
-    for (let tableCellElement of lastHeadList) {
-        if (tableCellElement.runtimeOption.cellParent) {
-            re(tableCellElement, tableHeadNest);
-        } else {
-            tableHeadNest.push(tableCellElement);
+        tableHeadNest.push(column);
+
+        if (row < headListList.length - 1) {
+
+            let colspan = 1;
+            for (let j = i + 1; j < headList.length; j++) {
+                const cell = headList[j];
+                if (row > 0) {
+                    const upperCellIndex = findUpperCellIndex(headListList, j, row);
+                    if (upperCellIndex != null) {
+                        break;
+                    }
+                }
+
+                if (cell != null) {
+                    break;
+                }
+                colspan++;
+            }
+            if (colspan > 1) {
+                column.runtimeOption.nestColumnList = tableHeadList2Nest(headListList, row + 1, i, colspan);
+            }
         }
     }
-
     return tableHeadNest;
-
-}
-
-function re(tableCellElement: TableCellElement, tableHeadNest: TableCellElement[] = []) {
-    const cellParent: TableCellElement = tableCellElement.runtimeOption.cellParent;
-    if (cellParent == null) {
-        if (tableHeadNest.length == 0 || tableHeadNest[tableHeadNest.length - 1] != tableCellElement) {
-            tableHeadNest.push(tableCellElement);
-        }
-        return;
-    }
-    if (cellParent.runtimeOption.nestColumnList == null) {
-        cellParent.runtimeOption.nestColumnList = [];
-    }
-    if (cellParent.runtimeOption.nestColumnList.length == 0 || cellParent.runtimeOption.nestColumnList[cellParent.runtimeOption.nestColumnList.length - 1] != tableCellElement) {
-        cellParent.runtimeOption.nestColumnList.push(tableCellElement);
-    }
-    re(cellParent, tableHeadNest);
 }
 
 export function computedDisableColumn(rowColumnList: TableCellElement[][]) {

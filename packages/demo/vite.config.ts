@@ -15,7 +15,7 @@ export default defineConfig({
         proxy: { //配置多个代理
             '/api': {
                 // target: 'http://127.0.0.1:2020/',
-                target: "https://demo.myprint.server.chushenshen.com/",
+                target: "https://demo.server.myprint.top/",
                 changeOrigin: true,///设置访问目标地址允许跨域
                 rewrite: (p) => p.replace(/^\/api/, '')
             }

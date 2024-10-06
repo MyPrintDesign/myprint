@@ -5,7 +5,12 @@
                 <Lock />
             </el-icon>
         </div>
-        <div class="module_item-title display-flex">{{ node.label }}</div>
+        <div class="module_item-title display-flex">
+            <el-icon class="module_item-title_icon">
+                <FolderOpened />
+            </el-icon>
+            {{ node.label }}
+        </div>
         
         <el-link :underline="false"
                  class="module_item-more"
@@ -34,7 +39,7 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-import { Lock, More, Plus } from '@element-plus/icons-vue';
+import { FolderOpened, Lock, More, Plus } from '@element-plus/icons-vue';
 import PopoverMenuList from '@/components/popover/popover-menu-list.vue';
 import { MenuItem } from '@/types/entity';
 import { ModuleGroup } from '@/types/R';

@@ -26,6 +26,7 @@ import { Placement } from '@popperjs/core/lib/enums';
 import { fromPairs } from 'lodash';
 
 defineExpose({ close });
+const emit = defineEmits(['show']);
 
 const props = withDefaults(defineProps<{
     disabled?: boolean
@@ -126,7 +127,7 @@ const createPopperInstance = () => {
                 options: {
                     altAxis: true,
                     mainAxis: true,
-                    tether: false,
+                    tether: false
                     // boundary: document, // true by default
                     // rootBoundary: document // true by default
                 }
@@ -195,14 +196,14 @@ function mouseenter() {
     if (props.trigger != 'hover') {
         return;
     }
-    data.visible = true;
+    show();
 }
 
 function mouseleave() {
     if (props.trigger != 'hover') {
         return;
     }
-    data.visible = false;
+    close();
 }
 
 const togglePopperShow = () => {
@@ -219,12 +220,12 @@ const togglePopperShow = () => {
     } else {
         if (stopHandle == null) {
             stopHandle = onClickOutside(contentRef, () => {
-                data.visible = false;
+                close();
             }, {
                 ignore: [referenceRef]
             });
         }
-        data.visible = true;
+        show();
     }
 };
 
@@ -236,6 +237,11 @@ function onClose() {
 
 function close() {
     onClose();
+}
+
+function show() {
+    emit('show');
+    data.visible = true;
 }
 
 watch(

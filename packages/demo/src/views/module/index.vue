@@ -108,10 +108,22 @@
     <el-dialog
         v-model="data.addModuleGroupVisible"
         title="添加"
+        @close="cancelAddModule"
         width="400">
         <el-radio-group v-model="data.addModuleGroupType">
-            <el-radio-button label="分组" value="GROUP" />
-            <el-radio-button label="模块" value="MODULE" />
+            <el-radio-button label="GROUP" value="GROUP"
+                             :disabled="data.addModuleType == 'MODULE'">
+                <el-icon>
+                    <FolderOpened />
+                </el-icon>
+                分组
+            </el-radio-button>
+            <el-radio-button label="MODULE" value="MODULE">
+                <el-icon>
+                    <Files />
+                </el-icon>
+                模块
+            </el-radio-button>
         </el-radio-group>
         
         <div class="add_module_group_wrapper" v-if="data.addModuleGroupType == 'GROUP'">
@@ -126,6 +138,7 @@
                 <el-select
                     v-model="data.addModule.moduleGroupId"
                     placeholder="请选择分组"
+                    :disabled="data.addModuleType == 'MODULE'"
                     style="width: 240px">
                     <el-option
                         v-for="(item) in data.dbModuleGroupList"
@@ -146,7 +159,7 @@
             <div class="dialog-footer">
                 <el-button @click="cancelAddModule">取消</el-button>
                 <el-button type="primary"
-                           :disabled="emptyIs(data.addModuleGroup.name) && emptyIs(data.addModule.name)"
+                           :disabled="(data.addModuleGroupType == 'GROUP' && emptyIs(data.addModuleGroup.name)) || (data.addModuleGroupType == 'MODULE' && (emptyIs(data.addModule.name) || emptyIs(data.addModule.moduleGroupId)))"
                            @click="clickAddModuleSure">确认
                 </el-button>
             </div>
@@ -164,7 +177,7 @@ import { templateDelete, templatePage, templateUpdate } from '@/api/template';
 import ModuleItem from '@/views/module/module-item.vue';
 import ModuleGroupView from '@/views/module/module-group.vue';
 import { moduleCreate, moduleDelete, moduleDetail, moduleUpdate } from '@/api/module';
-import { Coin, Edit, Lock, More, Plus, Setting } from '@element-plus/icons-vue';
+import { Coin, Edit, Files, FolderOpened, Lock, More, Plus, Setting } from '@element-plus/icons-vue';
 import RenameDialog from '@/components/dialog/rename-dialog.vue';
 import PopoverMenuList from '@/components/popover/popover-menu-list.vue';
 import { MenuItem } from '@/types/entity';
@@ -201,7 +214,7 @@ const data = reactive({
     
     ] as MenuItem[],
     addModule: {
-        moduleGroupId: 1,
+        moduleGroupId: null,
         name: '',
         provider: '{}'
     } as Module,
@@ -225,7 +238,8 @@ const data = reactive({
     addModuleGroupVisible: false,
     renameModuleName: null,
     deleteModuleName: null,
-    addModuleGroupType: 'GROUP'
+    addModuleGroupType: 'GROUP',
+    addModuleType: null
 });
 
 const elTreeRef = ref();
@@ -244,11 +258,14 @@ function filterChange() {
 }
 
 function addModuleGroup() {
+    data.addModuleGroupType = 'GROUP';
+    data.addModuleType = null;
     data.addModuleGroupVisible = true;
 }
 
 function groupAddModule(moduleGroup: ModuleGroup) {
     data.addModuleGroupType = 'MODULE';
+    data.addModuleType = 'MODULE';
     data.addModule.moduleGroupId = moduleGroup.id;
     data.addModuleGroupVisible = true;
 }

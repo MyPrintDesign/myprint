@@ -33,12 +33,23 @@ withDefaults(defineProps<{
     });
 
 function parentChange(item: any) {
+    setColumnList(item, item.option.enable);
     if (item.option.enable == 1 && item.runtimeOption.nestColumnList) {
         for (let nestColumnListElement of item.runtimeOption.nestColumnList) {
             nestColumnListElement.option.enable = 1;
         }
     }
     emit('change');
+}
+
+function setColumnList(item: any, val: number) {
+    if (item.runtimeOption.nestColumnList == null) {
+        return;
+    }
+    for (let nestColumnListElement of item.runtimeOption.nestColumnList) {
+        nestColumnListElement.option.enable = val;
+        setColumnList(nestColumnListElement, val);
+    }
 }
 
 function childChange(item: any) {

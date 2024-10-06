@@ -286,7 +286,7 @@ function clickSureImageHttpUrl() {
 }
 
 function handleCloseChooseImageDialog() {
-    imageHttpUrlInput.value = ''
+    imageHttpUrlInput.value = '';
 }
 
 function clickPlus(_ev: any) {
@@ -322,8 +322,9 @@ function loadData() {
 }
 
 function loadImg() {
-    const ratioTmp = imgRef.value!.width / imgRef.value!.height;
-    // props.element.option.keepRatio = ratioTmp
-    return ratioTmp;
+    // console.log(props.element, imgRef);
+    // if (imgRef.value!) {
+    //     const ratioTmp = imgRef.value!.width / imgRef.value!.height;
+    // }
 }
 </script>

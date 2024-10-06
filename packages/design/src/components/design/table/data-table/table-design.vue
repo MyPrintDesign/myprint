@@ -52,6 +52,7 @@
             trigger="click"
             ref="popoverRef"
             class="table-more-icon_popover"
+            @show="showTableEnableSetting"
             placement="top">
             <template #reference>
                 <div class="table-more-icon"
@@ -101,7 +102,7 @@ import {
 import { tableColClone } from '@myprint/design/utils/myprint';
 import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
 import MyScrollbar from '@myprint/design/components/my/scrollbar/my-scrollbar.vue';
-import MyTreeList from '@myprint/design/components/my/tree-list/MyTreeList.vue';
+import MyTreeList from '@myprint/design/components/my/tree-list/my-tree-list.vue';
 import numberUtil from '@myprint/design/utils/numberUtil';
 
 type MyRow = Record<number, number[]>
@@ -154,7 +155,7 @@ const bodyList = computed(() => {
     const bodyList = [...props.element.tableHeadList, ...props.element.tableBodyList, ...props.element.statisticsList];
     // console.log('computed-bodyList');
     nextTick(() => {
-        data.tableRowHeightList = computedTableCell(tableRef.value.$el, bodyList);
+        data.tableRowHeightList = computedTableCell(props.element, tableRef.value.$el, bodyList);
         data.lastHeadList = lastHeadList(props.element.tableHeadList);
         
         initTableCell(bodyList);
@@ -169,8 +170,7 @@ const tableHeadNest = ref<TableCellElement[]>([]);
 
 function initTableNest() {
     // 不处理enable
-    tableHeadNest.value = [];
-    tableHeadList2Nest(data.lastHeadList, tableHeadNest.value);
+    tableHeadNest.value = tableHeadList2Nest(props.element.tableHeadList, 0, 0, props.element.tableHeadList[0].length);
 }
 
 onMounted(() => {
@@ -189,7 +189,7 @@ onMounted(() => {
             setElementHeightPx(entry.contentRect.height + 1, props.element);
             setElementWidthPx(entry.contentRect.width + 1, props.element);
             nextTick(() => {
-                data.tableRowHeightList = computedTableCell(tableRef.value.$el, bodyList.value);
+                data.tableRowHeightList = computedTableCell(props.element, tableRef.value.$el, bodyList.value);
                 if (data.cellList && data.cellList.length > 0) {
                     selectCell(data.highlightColumn, data.cellList);
                 }
@@ -240,6 +240,10 @@ onMounted(() => {
 onUnmounted(() => {
     resizeObserver.disconnect();
 });
+
+function showTableEnableSetting() {
+    initTableNest();
+}
 
 /**
  * 排序控制点事件
@@ -345,7 +349,7 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
                 // }
                 
                 nextTick(() => {
-                    computedTableCell(props.element.runtimeOption.target, bodyList.value);
+                    computedTableCell(props.element, props.element.runtimeOption.target, bodyList.value);
                     computeColumn();
                 });
                 // const rect = computedCellRect(data.cellList);
@@ -456,7 +460,7 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
         // 计算辅助位置
         if (data.highlightColumn.visibility == 'visible') {
             nextTick(() => {
-                computedTableCell(props.element.runtimeOption.target, bodyList.value);
+                computedTableCell(props.element, props.element.runtimeOption.target, bodyList.value);
                 selectCell(data.highlightColumn, data.cellList);
             });
             
@@ -539,7 +543,7 @@ function changeColumnEnable() {
     setElementWidthPx(numberUtil.sum(widthTotal, 1), props.element);
     
     nextTick(() => {
-        computedTableCell(props.element.runtimeOption.target, bodyList.value);
+        computedTableCell(props.element, props.element.runtimeOption.target, bodyList.value);
         computeColumn();
     });
 }
