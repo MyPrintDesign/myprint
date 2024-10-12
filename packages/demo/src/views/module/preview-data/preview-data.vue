@@ -112,7 +112,7 @@ function addPreviewData() {
 
 function recursiveHandleTableColumn(columnList: any[], callback: (column: any[]) => void) {
     for (let columnListElement of columnList) {
-        if (columnListElement.childList != null) {
+        if (columnListElement.childList != null && columnListElement.childList.length > 0) {
             recursiveHandleTableColumn(columnListElement.childList, callback);
         } else {
             callback(columnListElement);
@@ -132,7 +132,6 @@ function recursiveHandleData(dataList: any[], columnList: any[]) {
                 for (let tableDatum of tableData) {
                     const tableDataTmp = {};
                     recursiveHandleTableColumn(column.columnList, (col: any) => {
-                        debugger
                         tableDataTmp[col['prop']] = tableDatum[col['prop']];
                     });
                     tableDataTmpList.push(tableDataTmp);
@@ -153,6 +152,7 @@ function recursiveHandleData(dataList: any[], columnList: any[]) {
 
 function save() {
     // 保存
+    console.log(stringify(recursiveHandleData(data.previewData, data.columnList), 'id', '$editIs'));
     data.module.previewDataByte = gzip(stringify(recursiveHandleData(data.previewData, data.columnList), 'id', '$editIs'));
     // console.log(data.module.previewDataByte);
     data.module.provider = null;

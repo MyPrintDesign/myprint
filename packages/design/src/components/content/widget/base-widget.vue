@@ -74,12 +74,12 @@ function dragStart(ev: MouseEvent) {
         
         if (element.type == 'DataTable') {
             // 转表格行
+            
             recursionForTableCell(element.columnList, providerCell => {
                 const columnCell = providerCell;
                 if (columnCell.height == null) {
                     columnCell.height = 7;
                 }
-                debugger
                 if (!columnCell.data) {
                     columnCell.data = columnCell.label;
                 }
@@ -126,7 +126,7 @@ function dragStart(ev: MouseEvent) {
                 if (columnCell.height == null) {
                     columnCell.height = 7;
                 }
-                if (columnCell.columnList != null) {
+                if (!columnCell.data) {
                     columnCell.data = columnCell.label;
                 }
             });

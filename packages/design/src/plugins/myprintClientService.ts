@@ -2,14 +2,14 @@ import { useSocket } from '@myprint/design/stores/socket';
 import { ClientCmd, ClientResult, Panel, Printer, PrintOptions, PrintResult } from '@myprint/design/types/entity';
 import { generateUUID } from '@myprint/design/utils/utils';
 import { unit2unit } from '@myprint/design/utils/devicePixelRatio';
-import { getCurrentPanelUnit } from '@myprint/design/utils/elementUtil';
+import { getCurrentPanelUnit, getPrintRealHeight } from '@myprint/design/utils/elementUtil';
 
 export const myPrintClientService = {
     print(clientCmd: ClientCmd, panel: Panel) {
         const options = clientCmd.options!;
         if (options.html != null) {
             options.width = unit2unit(getCurrentPanelUnit(panel), 'mm', panel.width);
-            options.height = unit2unit(getCurrentPanelUnit(panel), 'mm', panel.height);
+            options.height = unit2unit(getCurrentPanelUnit(panel), 'mm', getPrintRealHeight(panel));
         }
         return new Promise<ClientResult>((resolve, _reject) => {
             useSocket().SEND(clientCmd.taskId, JSON.stringify(clientCmd)).then((msg: ClientResult) => {

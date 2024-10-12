@@ -1,4 +1,4 @@
-import { valueUnit } from '@myprint/design/utils/elementUtil';
+import { getPrintRealHeight, valueUnit } from '@myprint/design/utils/elementUtil';
 import { printCssStyle } from '@myprint/design/utils/utils';
 import { Panel, TableCellElement } from '@myprint/design/types/entity';
 
@@ -60,7 +60,7 @@ export const tableColClone = {
 tableColClone.init();
 
 export function getPrintElementHtml(htmlElement: HTMLElement[], pageList: any[]) {
-    let html = '<div style="!important; --tcolor: black;">';
+    let html = '<div>';
     for (let i = 0; i < htmlElement!.length; i++) {
         html += htmlElement![i].outerHTML;
     }
@@ -76,13 +76,14 @@ export function iFramePrint(panel: Panel, html: string) {
     iframe.setAttribute('id', 'print-box');
     iframe.setAttribute(
         'style',
-        `height: ${valueUnit(panel.height)}; width: ${valueUnit(panel.width)}; 
-        display: none; 
+        `height: ${valueUnit(getPrintRealHeight(panel))}; width: ${valueUnit(panel.width)}; 
+         
         position: absolute; 
-        left: 99999; 
+        left: 0; 
         top: 0;border: 0;
       z-index: 10000;`
     );
+    // display: none;
     // 在页面插入iframe
     document.body.appendChild(iframe);
     // 获取iframe内的html
@@ -100,7 +101,7 @@ export function iFramePrint(panel: Panel, html: string) {
     *{ margin:0;padding:0; }
     @media print {
       @page {
-        size: ${valueUnit(panel.width)} ${valueUnit(panel.height)};
+        size: ${valueUnit(panel.width)} ${valueUnit(getPrintRealHeight(panel))};
         margin: 0;
       }
     }
@@ -118,7 +119,7 @@ export function iFramePrint(panel: Panel, html: string) {
     iframe.contentWindow!.print();
     // 移除iframe
     setTimeout(function() {
-        document.body.removeChild(iframe);
+        // document.body.removeChild(iframe);
         //     // data.pageList = [];
     }, 10000);
 }

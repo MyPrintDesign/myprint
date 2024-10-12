@@ -442,6 +442,7 @@ export interface RuntimeElementOption extends Position {
 
     // 下标
     index: number;
+    printRealHeight: number;
 }
 
 export interface ElementOption {
@@ -492,7 +493,8 @@ export interface ElementOption {
 
     tableBodyBgStyleType: 'NONE' | 'COMMON' | 'CUSTOM';
 
-    tablePageHeadIs: boolean;
+    tablePageHeadIs: number;
+    tableHiddenHeadIs: number;
 
     tableBodyHeightType: 'FIXED' | 'AUTO';
     tableBodyHeight: number;

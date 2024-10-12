@@ -354,6 +354,12 @@ export const clientProtocolList = [
 
 export const pageSizeList = [
     {
+        label: i18n('common.auto.height'),
+        value: 'AutoHeight',
+        width: 100,
+        height: 200
+    },
+    {
         label: i18n('common.custom'),
         value: 'Custom',
         width: 150,

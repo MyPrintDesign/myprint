@@ -45,6 +45,7 @@
                                              :historyLabel="i18n('handle.page.width')" />
                     <my-history-input-number class="width-66" v-model="panel.height"
                                              @change="changePanelHeight"
+                                             :disabled="panel.pageSize == 'AutoHeight'"
                                              :historyLabel="i18n('handle.page.height')" />
                     <my-unit />
                 </my-group>

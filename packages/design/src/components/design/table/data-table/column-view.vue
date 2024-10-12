@@ -37,7 +37,7 @@ const headStyle = computed(() => {
     } as CSSProperties;
     
     if (props.column.option.borderAll) {
-        style['border'] = '1px solid var(--tcolor)';
+        style['border'] = '1px solid black';
     } else {
         // style['border'] = '1px solid transparent';
     }

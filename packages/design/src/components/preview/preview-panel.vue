@@ -31,8 +31,7 @@
             </my-scrollbar>
             <div class="preview-panel__tool display-flex-column display-flex-wrap">
                 <div>名称：{{ panel.name }}</div>
-                <div>打印份数：测试</div>
-                <div>客户端未连接，无法使用直接打印功能，去下载</div>
+<!--                <div>打印份数：测试</div>-->
                 <template v-if="MyPrinter.clientConnectIs()">
                     <div>{{ i18n('toolbar.printer') }}：
                         <my-select v-model="data.printer" placeholder="请选择" size="middle"
@@ -43,6 +42,7 @@
                         }}
                     </my-button>
                 </template>
+                <div v-else>客户端未连接，无法使用直接打印功能，去下载</div>
                 
                 <my-button class="preview-panel__tool_button" @click="printChromePdf">{{ i18n('toolbar.chrome.print')
                     }}
@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, reactive, ref } from 'vue-demi';
+import { computed, reactive, ref } from 'vue-demi';
 import { toPdf } from '@myprint/design/utils/pdfUtil';
 import { download } from '@myprint/design/utils/utils';
 import { unit2px } from '@myprint/design/utils/devicePixelRatio';
@@ -187,9 +187,7 @@ function handleChromePreview(printProps: PrintOptions) {
     
     return new Promise<PrintResult>((resolve, _reject) => {
         data.resolveMap[printProps.taskId!] = resolve;
-        nextTick(() => {
-            autoPage(data.pageList, panel.value, printProps.previewDataList);
-        });
+        autoPage(previewContentRef, data.pageList, panel.value, printProps.previewDataList);
     });
 }
 

@@ -118,7 +118,7 @@ export const pkgRoot = resolve(projRoot, 'packages');
 // export const localeRoot = resolve(pkgRoot, 'locale');
 export const epRoot = resolve(pkgRoot, 'design', 'src');
 export const epPackage = resolve(pkgRoot, 'design', 'package.json');
-const epOutput =resolve(pkgRoot, 'design', 'dist', 'myprint-design')
+const epOutput = resolve(pkgRoot, 'design', 'dist', 'myprint-design');
 
 
 // export const PKG_PREFIX = '@element-plus';
@@ -132,7 +132,7 @@ function cleanFilePath(id: string) {
 }
 
 async function copyDtsTest(pkgDirName: string) {
-    const dtsPaths = await glob(['**/*.ts', '**/*.vue'], {
+    const dtsPaths = await glob(['**/*.ts', '**/*.vue', '!**/m_tmp', '!**/moveable_local_tmp.ts', '!**/moveable_local.ts', '!**/moveable_js_tmp.js'], {
         cwd: resolveProjectPath('packages', 'design', 'src'),
         absolute: false,
         onlyFiles: true

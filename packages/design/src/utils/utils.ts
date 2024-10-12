@@ -167,13 +167,8 @@ export function printCssStyle() {
   width: 100%;
   height: 100%;
   display: flex;
-  //word-break: break-all;
   outline: 0;
   box-sizing: border-box;
-  // tmp
-  color: var(--tcolor);
-  caret-color: var(--tcolor);
-
   vertical-align: top;
   word-break: break-all;
   flex-grow: 1;
@@ -234,7 +229,6 @@ export function printCssStyle() {
   position: relative;
   word-break: break-all;
   height: 100%;
-  color: var(--tcolor);
 
   box-sizing: border-box;
   padding: 0;
@@ -257,7 +251,6 @@ export function printCssStyle() {
   box-sizing: border-box;
   overflow: hidden;
   padding: 0;
-  color: var(--tcolor);
 }
 
 .my-print-container_over {
@@ -294,7 +287,6 @@ export function printCssStyle() {
 .my-print-preview-panel__content_page {
   position: relative;
   overflow: hidden;
-  //border: var(--tcolor) 1px solid;
   //box-sizing: border-box;
   background: white;
 }

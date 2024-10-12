@@ -370,6 +370,14 @@
                     @update:model-value="(val:any)=>multipleElementSetValue('option.tablePageHeadIs', val)"
                     class="ml-2" />
             </my-form-item>
+            
+            <my-form-item :label="i18n('handle.table.hidden.head')"
+                          v-if="includeProps('type','tablePageHead')">
+                <my-switch
+                    :model-value="multipleElementGetValue('option.tableHiddenHeadIs')"
+                    @update:model-value="(val:any)=>multipleElementSetValue('option.tableHiddenHeadIs', val)"
+                    class="ml-2" />
+            </my-form-item>
         
         </my-divider-panel>
         

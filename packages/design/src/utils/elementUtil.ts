@@ -239,7 +239,6 @@ export function initElement(panel: Panel, element: MyElement, index: number) {
             case 'DataTable':
                 initWidth = 200;
                 initHeight = 30;
-
                 if (element.option.tableHeightType == null) {
                     element.option.tableHeightType = 'AUTO';
                     // element.option.tableHeightType = "FIXED"
@@ -282,6 +281,7 @@ export function initElement(panel: Panel, element: MyElement, index: number) {
                     const floorHeaderList = tableHeadListList[deep - 1];
                     let maxHeadHeight = -1, maxBodyHeight = -1;
                     // let tableWidth = 0;
+
 
                     for (let i = 0; i < floorHeaderList.length; i++) {
                         let tableHeadCellElement = floorHeaderList[i];
@@ -922,7 +922,7 @@ export function elementCommonStyle(element: MyElement, cssStyle?: CSSProperties)
         // cssStyle.maxWidth = (element.runtimeOption.init.width - 1) + 'px';
     } else {
         if (option.borderAll) {
-            cssStyle.border = '1px solid var(--tcolor)';
+            cssStyle.border = '1px solid black';
             cssStyle.boxSizing = 'border-box';
         }
     }
@@ -1258,6 +1258,27 @@ export function multipleElementSetValue(props: string, val: any) {
     }
 }
 
-export function newPanel(): Panel {
-    return {} as Panel;
+export function autoComputedPanelHeight() {
+    const panel = getCurrentPanel();
+    if (panel.pageSize != 'AutoHeight') {
+        return;
+    }
+    if (panel.elementList == null || panel.elementList.length == 0) {
+        return;
+    }
+    let maxY = 0;
+    for (let myElement of panel.elementList) {
+        const tmpY = myElement.y + myElement.height;
+        maxY = Math.max(tmpY, maxY);
+    }
+    panel.height = maxY;
+}
+
+export function getPrintRealHeight(panel?: Panel) {
+    panel = getCurrentPanel(panel);
+    if (panel.pageSize == 'AutoHeight') {
+        return panel.runtimeOption.printRealHeight;
+    }
+    return panel.height;
+
 }

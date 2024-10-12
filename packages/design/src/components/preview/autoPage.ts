@@ -6,15 +6,16 @@ import {
     stringify
 } from '@myprint/design/utils/utils';
 import { px2unit, unit2px } from '@myprint/design/utils/devicePixelRatio';
-import { nextTick, reactive } from 'vue-demi';
+import { nextTick, reactive, Ref } from 'vue-demi';
 import {
     FormatterVariable,
     MyElement,
     Panel,
     PreviewContainerWrapper,
+    PreviewContext,
     PreviewWrapper,
     RuntimeElementOption,
-    TableCellElement, PreviewContext
+    TableCellElement
 } from '@myprint/design/types/entity';
 import { element2PreviewWrapper, formatter } from '@myprint/design/utils/elementUtil';
 import numberUtil from '@myprint/design/utils/numberUtil';
@@ -26,7 +27,7 @@ import {
 } from '@myprint/design/utils/table/dataTable';
 import { isEmpty } from 'lodash';
 
-export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: Panel, previewDataList?: any[]) {
+export async function autoPage(previewEl: Ref<HTMLDivElement[] | undefined>, pageList: Array<PreviewContainerWrapper>, panel: Panel, previewDataList?: any[]) {
     if (previewDataList == null) {
         previewDataList = [{}];
     }
@@ -123,6 +124,17 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
         previewContext.currentPage = pageList[i];
         variable.pageIndex = i + 1;
         await installPreviewElement(fixedPreviewElementList);
+    }
+
+    // 所有的都处理完，如果是自动高度，要重新计算一下高度
+    if (panel.pageSize == 'AutoHeight') {
+        await nextTick();
+        const lastElementChild = previewEl.value![0].lastElementChild;
+        if (lastElementChild) {
+            const rect = lastElementChild.getBoundingClientRect();
+            pageList[0].height = px2unit(rect.bottom, panel);
+            panel.runtimeOption.printRealHeight = pageList[0].height;
+        }
     }
 
     async function installPreviewElement(previewElementList: PreviewWrapper[]) {
@@ -328,6 +340,9 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
     }
 
     async function autoTableRow(previewContext: PreviewContext, previewDataList: Array<any>, index: number) {
+        if (previewDataList == null) {
+            previewDataList = [];
+        }
         let previewWrapper = previewContext.currentPreview;
         if (previewWrapper.option.tableHeightType == 'AUTO') {
             previewWrapper.heightIs = false;
@@ -452,6 +467,9 @@ export async function autoPage(pageList: Array<PreviewContainerWrapper>, panel: 
     async function isNeedNewPage(y: number | undefined, bottom: number | undefined, callback?: () => void) {
 
         if (!previewContext.autoPageIs) {
+            return false;
+        }
+        if (previewContext.panel.pageSize == 'AutoHeight') {
             return false;
         }
 

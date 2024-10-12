@@ -67,7 +67,7 @@ function handleChromePrint(printProps: PrintOptions) {
         
         data.panel = printProps.panel as Panel;
         await nextTick();
-        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        await autoPage(previewContentRef, data.pageList, data.panel, printProps.previewDataList);
         await nextTick();
         handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
         printArea();
@@ -85,7 +85,7 @@ function handleClientPrint(printProps: PrintOptions) {
         if (printProps.panel) {
             data.panel = printProps.panel as Panel;
             await nextTick();
-            await autoPage(data.pageList, data.panel, printProps.previewDataList);
+            await autoPage(previewContentRef, data.pageList, data.panel, printProps.previewDataList);
             await nextTick();
         }
         
@@ -134,7 +134,7 @@ function handleChromeDownloadImg(printProps: PrintOptions) {
         handleTimeOut(printProps, data.previewTimeOutMap, data.resolveMap);
         data.panel = printProps.panel as Panel;
         await nextTick();
-        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        await autoPage(previewContentRef, data.pageList, data.panel, printProps.previewDataList);
         chrome2Img(previewContentRef.value, {
             width: unit2px(data.panel.width, data.panel), height: unit2px(data.panel.height, data.panel)
         }).then(blobList => {
@@ -157,7 +157,7 @@ function handleServerDownloadImg(printProps: PrintOptions) {
         data.panel = printProps.panel as Panel;
         
         await nextTick();
-        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        await autoPage(previewContentRef, data.pageList, data.panel, printProps.previewDataList);
         const html = getPrintElementHtml(previewContentRef.value!, data.pageList);
         downloadImg({
             content: html,
@@ -187,7 +187,7 @@ function handleChromeDownloadPdf(printProps: PrintOptions) {
         data.panel = printProps.panel as Panel;
         
         await nextTick();
-        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        await autoPage(previewContentRef, data.pageList, data.panel, printProps.previewDataList);
         toPdf(previewContentRef.value, {
             width: unit2px(data.panel.width, data.panel), height: unit2px(data.panel.height, data.panel)
         }).then(blob => {
@@ -216,7 +216,7 @@ function handleClientDownloadPdf(printProps: PrintOptions) {
         data.panel = printProps.panel as Panel;
         
         await nextTick();
-        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        await autoPage(previewContentRef, data.pageList, data.panel, printProps.previewDataList);
         
         myPrintClientService.print({
             options: { html: getPrintElementHtml(previewContentRef.value!, data.pageList) },
@@ -242,7 +242,7 @@ function handleServerDownloadPdf(printProps: PrintOptions) {
         data.panel = printProps.panel as Panel;
         
         await nextTick();
-        await autoPage(data.pageList, data.panel, printProps.previewDataList);
+        await autoPage(previewContentRef, data.pageList, data.panel, printProps.previewDataList);
         const html = getPrintElementHtml(previewContentRef.value!, data.pageList);
         downloadPdf({
             content: html,

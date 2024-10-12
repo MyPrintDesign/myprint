@@ -33,7 +33,7 @@ export function findTableHeadDeep(tableHeadList: TableHeadProviderCellElement[],
 }
 
 // 根据位置获取对应的cell，级下面所有行
-export function getTableCellDown(tableHeadList: TableCellElement[][], row: number, col: number) {
+export function getTableCellDown(element: MyElement, tableHeadList: TableCellElement[][], row: number, col: number) {
     const rowCellList: TableCellElement[][] = [];
     const cellList: TableCellElement[] = [];
     let rowStart = 0;
@@ -51,7 +51,7 @@ export function getTableCellDown(tableHeadList: TableCellElement[][], row: numbe
             break;
         }
 
-        if (tableHeadCellElement == null) {
+        if (cellIsContinue(element, tableHeadCellElement, i)) {
             continue;
         }
 
@@ -82,57 +82,69 @@ export function getTableCellDown(tableHeadList: TableCellElement[][], row: numbe
     return { cellList, rowCellList, colIndex };
 }
 
+export function cellIsContinue(element: MyElement, tableHeadCellElement: TableCellElement, col: number) {
+    if (tableHeadCellElement == null) {
+        return true;
+    }
+    if (tableHeadCellElement.enable == 0) {
+        return true;
+    }
+    if (element.disableCellMap && element.disableCellMap[col]) {
+        return true;
+    }
+    return false;
+}
+
 // 根据位置获取对应的cell
-export function getTableCell(tableHeadList: TableCellElement[][], row: number, col: number) {
+export function getTableCell(element: MyElement, tableHeadList: TableCellElement[][], chooseRow: number, chooseCol: number) {
 
     const cellList: TableCellElement[] = [];
-    if (row >= 0 && col >= 0) {
+    if (chooseRow >= 0 && chooseCol >= 0) {
         let rowStart = 0;
-        for (let i = 0; i < tableHeadList[row].length; i++) {
-            let tableHeadCellElement = tableHeadList[row][i];
+        for (let col = 0; col < tableHeadList[chooseRow].length; col++) {
+            let tableHeadCellElement = tableHeadList[chooseRow][col];
+            if (cellIsContinue(element, tableHeadCellElement, col)) {
+                continue;
+            }
 
-            if (tableHeadCellElement && col == rowStart) {
+            if (tableHeadCellElement && chooseCol == rowStart) {
                 cellList.push(tableHeadCellElement);
                 break;
             }
 
-            if (tableHeadCellElement == null) {
-                continue;
-            }
-
             rowStart++;
             if (tableHeadCellElement.colspan > 1) {
-                i = i + tableHeadCellElement.colspan - 1;
+                col = col + tableHeadCellElement.colspan - 1;
             }
 
         }
 
-    } else if (col < 0) {
+    } else if (chooseCol < 0) {
         // 整行
-        for (let i = 0; i < tableHeadList[row].length; i++) {
-            let tableHeadCellElement = tableHeadList[row][i];
-            if (tableHeadCellElement == null) {
+        for (let col = 0; col < tableHeadList[chooseRow].length; col++) {
+            let tableHeadCellElement = tableHeadList[chooseRow][col];
+            if (cellIsContinue(element, tableHeadCellElement, col)) {
                 continue;
             }
 
             cellList.push(tableHeadCellElement);
 
             if (tableHeadCellElement.colspan > 1) {
-                i = i + tableHeadCellElement.colspan - 1;
+                col = col + tableHeadCellElement.colspan - 1;
             }
         }
-    } else if (row < 0) {
+    } else if (chooseRow < 0) {
         // 整列
-        for (let i = 0; i < tableHeadList.length; i++) {
-            let tableHeadCellElement = tableHeadList[i][col];
-            if (tableHeadCellElement == null) {
+        for (let col = 0; col < tableHeadList.length; col++) {
+            let tableHeadCellElement = tableHeadList[col][chooseCol];
+            if (cellIsContinue(element, tableHeadCellElement, col)) {
                 continue;
             }
 
             cellList.push(tableHeadCellElement);
 
             if (tableHeadCellElement.rowspan > 1) {
-                i = i + tableHeadCellElement.rowspan - 1;
+                col = col + tableHeadCellElement.rowspan - 1;
             }
         }
     }
@@ -334,6 +346,12 @@ export function computedTableCell(tableElement: MyElement, table: HTMLElement, t
             }
 
             const target = tableCellElement.runtimeOption.target as HTMLElement;
+
+            if (target == null) {
+                // 被隐藏了
+                continue;
+            }
+
             const tdRect = target.getBoundingClientRect();
 
             const tdY = numberUtil.sub(tdRect.y, tableRect.y);
@@ -551,6 +569,19 @@ export function addStatisticsRow(tableElement: MyElement) {
     tableElement.statisticsList.push(statisticsRowList);
 }
 
+export function tableRealCol(tableElement: MyElement, colList: TableCellElement[], col: number) {
+    let realCol = 0;
+    for (let i = 0; i < colList.length; i++) {
+        if (cellIsContinue(tableElement, colList[i], i)) {
+            continue;
+        }
+        if (realCol == col) {
+            return colList[i];
+        }
+        realCol++;
+    }
+}
+
 // preview
 export function previewTableStatisticsList(tableStatisticsTmpList: TableStatisticsCellElement[][], tableStatisticsList: TableStatisticsCellElement[][],
                                            statisticsListWrapper: Record<number, any[]>,
@@ -663,3 +694,4 @@ export function statisticsData(previewDataList: any[], statisticsListWrapper: Re
         }
     }
 }
+

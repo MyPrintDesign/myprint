@@ -45,7 +45,7 @@ curl --request POST \
   --header 'User-Agent: PostmanRuntime-ApipostRuntime/1.1.0' \
   --data '{
     "cmd": "print",
-    "content": "<div style=\"  --tcolor: black;\"><div>中文sdf123 - myprint</div></div>",
+    "content": "<div><div>中文sdf123 - myprint</div></div>",
     "height": 297,
     "width": 210
 }'

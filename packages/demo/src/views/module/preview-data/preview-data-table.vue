@@ -137,6 +137,7 @@ function clickLinkTablePreviewData({ row }, item) {
 }
 
 function sureTablePreviewData() {
+    console.log(data.tmpItem.prop, data.tablePreviewData);
     data.tablePreviewDataVisible = false;
     data.tmpRow[data.tmpItem.prop] = data.tablePreviewData;
 }

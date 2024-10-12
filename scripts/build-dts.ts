@@ -60,7 +60,7 @@ function checkPackageType(project: Project) {
 async function copyDts(pkgDirName: string) {
     // console.log(pkgDirName);
     // console.log(resolveProjectPath('packages', 'design', 'dist', 'types', 'packages', pkgDirName, 'src'));
-    const dtsPaths = await glob(['**/*.d.ts'], {
+    const dtsPaths = await glob(['**/*.d.ts', '!**/m_tmp'], {
         cwd: resolveProjectPath('packages', 'design', 'dist', 'types', 'packages', pkgDirName, 'src'),
         absolute: false,
         onlyFiles: true
@@ -75,7 +75,7 @@ async function copyDts(pkgDirName: string) {
             'src',
             dts
         );
-        const cjsPath = resolvePackagePath(pkgDirName, 'dist','myprint-design', 'lib', dts);
+        const cjsPath = resolvePackagePath(pkgDirName, 'dist', 'myprint-design', 'lib', dts);
         const esmPath = resolvePackagePath(pkgDirName, 'dist', 'myprint-design', 'es', dts);
         let content = fs.readFileSync(dtsPath, { encoding: 'utf8' });
         // console.log(cjsPath);
@@ -156,7 +156,7 @@ async function generateTypesDefinitions(
     const project = new Project({
         compilerOptions,
         tsConfigFilePath: tsWebBuildConfigPath,
-        skipAddingFilesFromTsConfig: true,
+        skipAddingFilesFromTsConfig: true
     });
 
     const sourceFiles = await addSourceFiles(project, pkgSrcDir);

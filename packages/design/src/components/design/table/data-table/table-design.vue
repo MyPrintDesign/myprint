@@ -88,6 +88,7 @@ import {
     setElementWidthPx
 } from '@myprint/design/utils/elementUtil';
 import {
+    cellIsContinue,
     computeColumnColspan,
     computedDisableColumn,
     computedTableCell,
@@ -97,7 +98,7 @@ import {
     initTableCell,
     lastHeadList,
     selectCell,
-    tableHeadList2Nest
+    tableHeadList2Nest, tableRealCol
 } from '@myprint/design/utils/table/dataTable';
 import { tableColClone } from '@myprint/design/utils/myprint';
 import MyPopover from '@myprint/design/components/my/popover/my-popover.vue';
@@ -263,7 +264,7 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
     
     const tableLeft = tableRect.left;
     const tableWidth = tableRect.width;
-    const { rowCellList, colIndex } = getTableCellDown(bodyList.value, data.row, data.col);
+    const { rowCellList, colIndex } = getTableCellDown(props.element, bodyList.value, data.row, data.col);
     const childByParentList = getChildByParent(bodyList.value, data.row, colIndex);
     
     let columnCell: MyElement = rowCellList[0][0];
@@ -333,7 +334,7 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
         
         if (clientStartX == clientEndX && clientEndY == clientStartY) {
             // 选取整列
-            const { cellList } = getTableCellDown(bodyList.value, data.row, data.col);
+            const { cellList } = getTableCellDown(props.element, bodyList.value, data.row, data.col);
             data.cellList = cellList;
             selectCell(data.highlightColumn, data.cellList);
         } else {
@@ -432,16 +433,18 @@ function controlPointMouseDown(ev: MouseEvent, row: number, col: number) {
 // }
 
 /**
- * 更改列尺寸
+ * 更改列宽
  */
 function resizeMouseDown(ev: MouseEvent, col: number) {
     const clientStartX = ev.clientX;
-    const columnElement = data.lastHeadList[col];
-    const columnOldWidth = data.lastHeadList[col].runtimeOption.width;
+    const realHeadCell = tableRealCol(props.element, data.lastHeadList, col)!;
+    const columnElement = realHeadCell;
+    const columnOldWidth = realHeadCell.runtimeOption.width;
     const tableOldWidth = props.element.runtimeOption.width;
     useApp.dataRotation = 'col-resize';
     data.status = 'RESIZE';
     data.handleIng = true;
+    console.log(col);
     
     function resizeMouseMove(ev: MouseEvent) {
         const offsetX = ev.clientX - clientStartX;
@@ -451,7 +454,7 @@ function resizeMouseDown(ev: MouseEvent, col: number) {
             setElementWidthPx(tableOldWidth + offsetX, props.element);
             recursionUpdateCellParentWidth(columnElement, offsetX, getRecursionParentPanel(props.element));
             // 更新body 的宽
-            setElementOffsetWidthPx(offsetX, props.element.tableBodyList[0][col]);
+            setElementOffsetWidthPx(offsetX, tableRealCol(props.element, props.element.tableBodyList[0], col)!);
             // 更新
             updateMoveableRect();
             // 更新resize位置
@@ -491,9 +494,9 @@ function tableMouseDown(ev: MouseEvent) {
     // console.log(data);
     // console.log(data.row, data.col);
     // console.log(data.tableRowHeightList);
-    data.cellList = getTableCell(bodyList.value, data.row, data.col);
+    data.cellList = getTableCell(props.element, bodyList.value, data.row, data.col);
     // 选取范围
-    // console.log(cellList);
+    console.log(data.cellList);
     // const rect = computedCellRect(props.element.runtimeOption.target, data.cellList);
     // console.log(rect);
     
@@ -574,10 +577,12 @@ const computeColumn = throttle(() => {
     data.controlPointList.length = 0;
     data.resizeControlList.length = 0;
     
+    // 控制点
     for (let tableHeadListElement of props.element.tableHeadList) {
         const pointListTmp: any[] = [];
-        for (let tableCellElement of tableHeadListElement) {
-            if (tableCellElement == null) {
+        for (let col = 0; col < tableHeadListElement.length; col++) {
+            let tableCellElement = tableHeadListElement[col];
+            if (cellIsContinue(props.element, tableCellElement, col)) {
                 continue;
             }
             
@@ -589,9 +594,12 @@ const computeColumn = throttle(() => {
         data.controlPointList.push(pointListTmp);
     }
     
-    for (let i = 0; i < data.lastHeadList.length; i++) {
-        let tableCellElement = data.lastHeadList[i];
-        
+    // 缩放列宽度
+    for (let col = 0; col < data.lastHeadList.length; col++) {
+        let tableCellElement = data.lastHeadList[col];
+        if (cellIsContinue(props.element, tableCellElement, col)) {
+            continue;
+        }
         data.resizeControlList.push({
             x: tableCellElement.runtimeOption.x + tableCellElement.runtimeOption.width - 5,
             y: 0

@@ -3,6 +3,7 @@
            ref="tableRef" border="0" cellspacing="0">
         <tbody>
         <tr class="my-print-border-box" :key="'t-'+headRowIndex"
+            v-if="props.element.option.tableHiddenHeadIs != 1"
             v-for="(columnList, headRowIndex) in props.element.tableHeadList">
             <template v-for="(column) in columnList">
                 <column-view
@@ -87,7 +88,7 @@ const bodyStyle = (column: MyElement) => {
     
     if (column.option.borderAll) {
         // console.log(column.option.borderAll)
-        style['border'] = '1px solid var(--tcolor)';
+        style['border'] = '1px solid black';
     } else {
         // style['border'] = '1px solid transparent';
     }

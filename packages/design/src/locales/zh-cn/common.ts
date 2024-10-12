@@ -1,5 +1,6 @@
 
 export default {
+    'common.auto.height': '自动高度',
     'common.custom': '自定义',
     'common.default.name': '默认名称',
     'common.width': '宽',

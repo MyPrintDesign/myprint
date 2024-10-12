@@ -42,6 +42,7 @@ export default {
     'handle.print.strategy': '打印策略',
     'handle.display.strategy': '显示策略',
     'handle.height.attr': '高度属性',
+    'handle.table.hidden.head': '隐藏表头',
     'handle.table.page.head': '分页表头',
     'handle.add.statistics.row': '新增统计行',
     'handle.column': '列',
