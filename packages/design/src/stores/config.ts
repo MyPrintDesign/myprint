@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { store } from '../stores'
 
 export const useConfigStore = defineStore('myPrintConfig', {
     state: () => {
@@ -41,3 +42,7 @@ export const useConfigStore = defineStore('myPrintConfig', {
 
     persist: true
 });
+
+export function useConfigStoreWithOut() {
+    return useConfigStore(store)
+}

@@ -1,4 +1,4 @@
-import { useSocket } from '@myprint/design/stores/socket';
+import { useSocketWithOut } from '@myprint/design/stores/socket';
 import { ClientCmd, ClientResult, Panel, Printer, PrintOptions, PrintResult } from '@myprint/design/types/entity';
 import { generateUUID } from '@myprint/design/utils/utils';
 import { unit2unit } from '@myprint/design/utils/devicePixelRatio';
@@ -12,29 +12,29 @@ export const myPrintClientService = {
             options.height = unit2unit(getCurrentPanelUnit(panel), 'mm', getPrintRealHeight(panel));
         }
         return new Promise<ClientResult>((resolve, _reject) => {
-            useSocket().SEND(clientCmd.taskId, JSON.stringify(clientCmd)).then((msg: ClientResult) => {
+            useSocketWithOut().SEND(clientCmd.taskId, JSON.stringify(clientCmd)).then((msg: ClientResult) => {
                 resolve(msg);
             });
         });
     },
 
     connectIs() {
-        return useSocket().connect;
+        return useSocketWithOut().connect;
     },
 
     getPrinterList() {
-        return useSocket().printerList as Printer[];
+        return useSocketWithOut().printerList as Printer[];
     },
 
     asyncGetPrinterList() {
         return new Promise<Printer[]>((resolve, reject) => {
-            if (useSocket().connect) {
+            if (useSocketWithOut().connect) {
                 const taskId = generateUUID();
-                useSocket().SEND(taskId, JSON.stringify({
+                useSocketWithOut().SEND(taskId, JSON.stringify({
                     taskId,
                     cmd: 'printerList'
                 })).then((res: ClientResult) => {
-                    useSocket().SET_PRINTER_LIST(res.data);
+                    useSocketWithOut().SET_PRINTER_LIST(res.data);
                     resolve(res.data);
                 }).catch(e => {
                     reject(e);
