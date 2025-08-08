@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { printCssStyle } from '@myprint/design/utils/utils';
 import { useConfigStore } from './config';
 import { ClientCmd, ClientResult, Printer } from '@myprint/design/types/entity';
+import { store } from '../stores'
 
 let lockReconnect: any;
 export const useSocket = defineStore('myPrintSocket', {
@@ -149,3 +150,7 @@ export const useSocket = defineStore('myPrintSocket', {
         }
     }
 });
+
+export function useSocketWithOut() {
+    return useSocket(store)
+}

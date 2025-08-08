@@ -26,10 +26,10 @@
     overflow: auto;
     box-sizing: border-box;
   }
-}
 
-.el-tabs--border-card > .el-tabs__content {
-  padding: 5px !important;
+  .el-tabs--border-card > .el-tabs__content {
+    padding: 5px !important;
+  }
 }
 
 .user-select-none {

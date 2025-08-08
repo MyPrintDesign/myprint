@@ -54,12 +54,12 @@ export function displayPreview(element: MyElement) {
 // }
 
 export function setCurrentPanel(panel: Panel) {
-    appStore().currentPanel = panel;
+    appStore().SET_CURRENT_PANEL(panel);
     appStore().lastPageUnit = panel.pageUnit;
 }
 
 export function getCurrentPanel(panel?: Panel): Panel {
-    return panel != null ? panel : appStore().currentPanel as Panel;
+    return panel != null ? panel : appStore().getCurrentPanel as Panel;
 }
 
 export function setPreviewData(previewData?: any[]) {

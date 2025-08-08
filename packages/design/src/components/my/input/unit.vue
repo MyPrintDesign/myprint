@@ -1,6 +1,6 @@
 <template>
     <div class="my-input-unit__wrapper">
-        {{ useAppStore.currentPanel.pageUnit }}
+        {{ useAppStore.getCurrentPanel.pageUnit }}
     </div>
 </template>
 

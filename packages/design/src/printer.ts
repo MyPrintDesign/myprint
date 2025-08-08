@@ -16,7 +16,7 @@ import { myPrintClientService } from './plugins/myprintClientService';
 import i18n from './locales';
 import { useAppStoreHook } from './stores/app';
 import { useConfigStore } from './stores/config';
-import { useSocket } from './stores/socket';
+import { useSocketWithOut } from './stores/socket';
 
 export const myPrintOptions: MyPrintConfig = {
     disabledClient: false
@@ -141,7 +141,7 @@ export const MyPrinter = {
         } else {
             useConfigStore().clientUrl = clientUrl;
         }
-        useSocket().INIT_SOCKET();
+        useSocketWithOut().INIT_SOCKET();
     },
 
     setServerUrl(serverUrl: string) {

@@ -6,7 +6,7 @@ import enUs from './en-us';
 const i18nInit = createI18n({
     legacy: false,
     globalInjection: true, // 全局模式，可以直接使用 $t
-    locale: window.localStorage.getItem('lang') || 'zhCn',
+    locale: window.localStorage.getItem('print-lang') || 'zhCn',
     messages: {
         zhCn,
         enUs
