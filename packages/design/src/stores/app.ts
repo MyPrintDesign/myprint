@@ -26,7 +26,15 @@ export const useAppStoreHook = defineStore('myPrintApp', {
             dataRotation: -1 as number | 'rotate' | 'move' | 'none' | 'col-resize' | 'ns-resize'
         };
     },
+    getters: {
+      getCurrentPanel(state): Panel {
+          return state.currentPanel
+      }
+    },
     actions: {
+        SET_CURRENT_PANEL(panel: Panel) {
+            this.currentPanel = panel;
+        },
         SET_LOCALE<T extends typeof i18n.global.locale.value>(locale: T) {
             //语言切换
             this.locale = locale;

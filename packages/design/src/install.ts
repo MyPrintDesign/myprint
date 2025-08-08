@@ -23,21 +23,17 @@ const install = {
         // console.log('~~~MyPrint 初始化~~~');
         // console.log(app)
 
-        if (app.config.globalProperties.$pinia) {
-            // Pinia 插件已安装
-        } else {
-            setupStore(app)
-        }
+        setupStore(app)
         app
             // .use(i18n)
             .use(VueCropper)
             // @ts-ignore
             .use(Vue3ColorPicker);
         app.provide(mittKey, mitt);
-        
+
         // 确保store初始化完成后再调用
         useConfigStoreWithOut().initConfig();
-        
+
         // 延迟初始化socket，确保store完全设置好
         if (!myPrintOptions.disabledClient) {
             setTimeout(() => {
