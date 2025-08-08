@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 
-export const useConfigStore = defineStore({
-    id: 'myPrintConfig',
+export const useConfigStore = defineStore('myPrintConfig', {
     state: () => {
         return {
             // cursor: null,
